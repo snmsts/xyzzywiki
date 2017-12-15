@@ -1,0 +1,88 @@
+~->[[tips]]
+
+多分大丈夫だと思いますがマズイところがあれば
+直していただけたら、と思います。m(__)m
+
+*Description [#ne420a3c]
+- 2ch-modeで新着レスに「new!!」のマークをつけます
+- j で新着レスの最初へジャンプします
+
+*Code [#wc5fa91b]
+ (in-package "2ch")
+ (defvar *new-mark* "new!!")    ;新着レスに付ける文字
+ (defvar *thread-attribute-new* ;↑の装飾
+   '(:foreground 8))
+ (defun insert-mark-new-res ()
+   (let* ((last (or (tbk-value thread-tbk 'last-load-number)
+                    (tbk-value thread-tbk 'last-parse-number) 0))
+          (num (save-excursion
+                 (goto-char (point-max))
+                 (thread-current-number)))
+          (pos (progn (thread-goto (1+ last)) (point)))
+          (dat-file (if (fboundp 'other-bbs-type-p)
+                        (thread-path-data thread-host thread-path thread-dat thread-bbs)
+                      (thread-path-data thread-host thread-path thread-dat)))
+          (start t) category)
+     (when (/= last num)
+       (save-excursion
+         (goto-char pos)
+         (while start
+           (multiple-value-bind (beg end tag)
+               (find-text-attribute 'number :start pos)
+             (setq start beg)
+             (when beg
+               (goto-char beg)
+               (next-line)
+               (goto-eol)
+               (apply 'set-text-attribute
+                      (point)
+                      (progn
+                        (insert (format nil "~A~A~A"
+                                        (if (bolp) "" " ")
+                                        *new-mark*
+                                        (if (bolp) "\n" "")))
+                        (point))
+                      'new
+                      *thread-attribute-new*)
+               (setq pos (point)))))))
+     (thread-tbk-set-value 'last-load-number num)
+     (unless (local-variable-p 'mode-line-format)
+       (make-local-variable 'mode-line-format))
+     (dolist (c *menu-list* category)
+       (unless (or (equal *favorits-name* (category-name c))
+                   (equal *tracking-name* (category-name c)))
+         (dolist (m (category-menu c))
+           (when (menu-equal m (list thread-board thread-host thread-path))
+             (setq category (category-name c))
+             (return)))))
+     (setf mode-line-format
+           (format nil "[新:~D 全:~D 消:~D]  ~A  [~A/~A] ~DKB"
+                   (- num last) num
+                   (length (tbk-x-aborn thread-tbk))
+                   thread-title thread-board category
+                   (truncate (third (get-file-info dat-file)) 1024)))))
+ (add-hook '*thread-show-hook* 'insert-mark-new-res)
+ ;新着レスの最初へジャンプ
+ (define-key *thread-map* #\j
+             #'(lambda() (interactive)
+                 (let ((pos (find-text-attribute 'new :start (point-min))))
+                   (if pos (goto-char pos)
+                     (message "新着レスがありません")))))
+
+*Changes [#xf6221b2]
+- 2007.04.17 新着数以外の情報もモードラインに表示するように修正
+
+*Comment [#t1796b38]
+- 七秒以内にスレを閉じると、モードラインが正しく元に戻らなくなるみたいです。 --  &new{2005-12-17 (土) 19:57:17};
+- 書いた者です。修正してみました。set-bufferにhookがあればもっとスマートにやれそうですが…。一応、励ましあえその７の949っぽくやればできなくはなさそうですが、encap依存になるのでどうなのかなーと思ってます。 -- [[シロ]] &new{2005-12-17 (土) 22:36:28};
+- どうもです。 insert-mark-new-thread を書き換えたら最後の三行はなくてもいいような気がします。それから (setq mode-line-format ... の前にこんなのを入れるといいかなと思いました。 --  &new{2005-12-17 (土) 23:09:57};
+    (unless (local-variable-p 'mode-line-format)
+      (make-local-variable 'mode-line-format))
+- make-local-variableは知りませんでした。ありがとうございます。local-variableにすれば他のバッファに弊害もなく、元に戻すかどうかは好み(自分は不要)だと思うのでコメントアウトにしてみました。 -- [[シロ]] &new{2005-12-18 (日) 14:05:12};
+- 本当にすみません。*thread-show-hook*が実行される時点でbuffer-read-onlyはまだnilなので、abornが動かなくなっていたバグを修正しました。 -- [[シロ]] &new{2005-12-18 (日) 15:38:20};
+- .tbkファイルに最後に読み込んだレス番号を保存してみました --  &new{2005-12-25 (日) 22:57:54};
+- 新着数以外の情報もモードラインに表示するように修正しました。 --  &new{2006-11-12 (日) 02:37:00};
+- 1 -- [[-1']] &new{2014-11-10 (月) 18:12:18};
+-- 1' -- [[1]] &new{2015-02-15 (日) 05:49:13};
+
+#comment

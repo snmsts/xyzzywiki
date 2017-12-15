@@ -1,0 +1,63 @@
+* *buffer-bar-context-menu* *buffer-bar-context-menu-buffer* switch-to-buffer-other-window [#n99eceb0]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[nakano]]
+-優先順位: 低
+-状態: 保留
+-カテゴリー: 新規項目
+-投稿日: 2004-09-02 (木) 18:59:50
+-バージョン: 
+
+**メッセージ [#ld78d142]
+ <chapter>
+ <title>*buffer-bar-context-menu-buffer*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ 最後に右クリックしたバッファタブのバッファを値として持ちます．
+ </description>
+ <seealso>*buffer-bar-context-menu*</seealso>
+ <seealso>*buffer-bar-context-menu-handler*</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>buffer.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*buffer-bar-context-menu*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ バッファーバーのタブを右クリックした際に表示するメニューです．
+ 値の設定の仕方はdefine-popup-menuを参照してください．
+ </description>
+ <seealso>define-popup-menu</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>buffer.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>switch-to-buffer-other-window</title>
+ <type>Function</type>
+ <arguments>switch-to-buffer-other-window BUFFER &optional NOWARN</arguments>
+ <package>editor</package>
+ <description>
+ 他のウィンドウに移ってからバッファを切り替えます．
+ ウィンドウ数が1の時は，ウィンドウを分割します．
+ 
+ BUFFER : このバッファにカレントウィンドウを切り替えます．
+ NOWARN : non-nilならば，指定したバッファが他のアプリケーションにより更新されているかのチェックを行いません．
+ </description>
+ <seealso>switch-to-buffer</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>buffer.l</file>
+ </chapter>
+
+----
+-20041115 で switch-to-buffer-other-window の追加を確認しました。*buffer-bar-context-menu* *buffer-bar-context-menu-buffer* については既に別の記述があったようで、ここで「新規項目」として書かれたことは反映されていませんでした。カテゴリー「ツッコミをいれる」で再度 wiki に書かれるのが、管理の面でわかりやすいかもしれません。 -- [[OHKUBO]] &new{2004-11-27 (土) 10:10:29};
+
+#comment

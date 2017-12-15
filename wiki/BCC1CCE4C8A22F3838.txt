@@ -1,0 +1,28 @@
+* [www-mode] Shift-TABで一つ前のリンクに移動 [#ha6f5de6]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2005-05-18 12:11:47 (水)
+
+** メッセージ [#m3a85b7e]
+www-modeを使うときに
+  TABで「次のリンクにカーソルを移動」
+の逆
+  Shift-TABで「一つ前のリンクにカーソルを移動」
+を実現できないでしょうか?
+
+~/.www に
+(define-key *www-view-mode-map* #\S-TAB 'www-view-previous-link)
+を追加したのですが、M-x www と実行したときに「SHIFTは指定できません: S-TAB」と言われてしまいます。仕方なく
+(define-key *www-view-mode-map* #\C-I 'www-view-previous-link)
+を追加すると、今度は C-i(TAB)でも「一つ前のリンクにカーソルを移動」になってしまいました。
+
+----
+ ;;; ~/.www へ
+ (set-extended-key-translate-table exkey-S-tab #\F20)
+ (define-key *www-view-mode-map* #\F20 'www-view-previous-link) 
+
+ご参考→[[refwiki:set-extended-key-translate-table]]
+-こんな手段があったんですね! 思い通りに設定できた上に、これまで知らなかった手段を覚えました。ありがとうございました。 --  &new{2005-05-19 16:29:11 (木)};
+
+#comment

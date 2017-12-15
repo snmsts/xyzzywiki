@@ -1,0 +1,62 @@
+* defun, defvar, defparameter [#d393549b]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[anonymous]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: ツッコミをいれる
+-投稿日:     2007-01-23 (火) 20:46:07
+-バージョン: 
+
+** メッセージ [#va77657f]
+mule の説明を消して少し加筆してみました。ついでに defparameter も。
+
+ <chapter>
+ <title>defparameter</title>
+ <type>Macro</type>
+ <arguments>defparameter NAME VALUE &amp;optional DOC</arguments>
+ <package>lisp</package>
+ <description>
+ グローバルなスペシャル変数を宣言し、指定した値に設定します。
+ defvar に似ていますが、VALUE は省略できません。
+ また NAME がすでに値を持つ場合でも VALUE が評価され、結果が変数値として
+ 設定されます。
+ </description>
+ <seealso>defvar</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file>evalmacs.l</file>
+ </chapter>
+
+ <chapter>
+ <title>defvar</title>
+ <type>Macro</type>
+ <arguments>defvar NAME &amp;optional (INITIAL-VALUE () SV) DOC</arguments>
+ <package>lisp</package>
+ <description>
+ グローバルなスペシャル変数を宣言します。
+ 宣言された変数はダイナミックなスコープを持つようになります。
+ INITIAL-VALUE が与えられた場合、NAME が変数としての値を持たなければ
+ INITIAL-VALUE を評価し、その結果を変数値として設定します。
+ </description>
+ <seealso>defparameter</seealso>
+ <section>変数と定数</section>
+ <file>evalmacs.l</file>
+ </chapter>
+
+ <chapter>
+ <title>defun</title>
+ <type>Macro</type>
+ <arguments>defun NAME (&amp;rest LAMBDA-LIST) &amp;body BODY</arguments>
+ <package>lisp</package>
+ <description>
+ 関数を定義します。NAME がすでに関数定義を持つ場合は上書きされます。
+ BODY の先頭に documentation 文字列や interactive 宣言を含めることができます。
+ </description>
+ <seealso>lambda</seealso>
+ <section>関数</section>
+ <file>evalmacs.l</file>
+ </chapter>
+
+----
+
+#comment

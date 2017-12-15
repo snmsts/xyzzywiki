@@ -1,0 +1,18 @@
+- [[xyzzy-ml:07959]] より（亀井さん）
+ (defmacro save-match-data (&body body)
+   `(let ((#1=#:data (match-data)))
+	 (unwind-protect
+	     (progn ,@body)
+	   (store-match-data #1#))))
+- [[xyzzy-ml:08375]] より（須田さん）
+ ;; まんまや
+ (defmacro save-match-data (&rest body)
+   "Execute BODY forms, restoring the global value of the match data."
+   (let ((original (make-symbol "match-data")))
+     (list 'let (list (list original '(match-data)))
+           (list 'unwind-protect
+                 (cons 'progn body)
+                 (list 'store-match-data original)))))
+
+----
+#comment

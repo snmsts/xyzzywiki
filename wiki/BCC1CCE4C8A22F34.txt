@@ -1,0 +1,20 @@
+* fortran mode になりません。 [#e432d422]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 投稿者反応待ち
+-投稿日: 2003-09-30 (火) 14:33:52
+
+** メッセージ [#f8555521]
+fortran　programを作っていますが、xyzzyはそのモードはありません。fotran.lというファイルをdownload しまして、compileしてみましたが、やはりfortranモードを認識できません。
+
+助けてください。
+
+メールもください。
+
+mail: moyun at crl.tel.co.jp
+
+----
+-これFAQかなぁsiteinitか.xyzzyに(pushnew '("\\.f$" . fortran-mode) *auto-mode-alist* :test 'equal)とか書くと大丈夫でしょうか。メールが欲しい場合はMLを使うのが手だと思います。 -- [[佐野]] SIZE(10){2003-09-30 (火) 15:25:02}
+-日本語ネイティブでない方の日本語が直接的なのは仕方ないとして、何か勘違いされてやいませんか。 --  SIZE(10){2003-09-30 (火) 22:50:35}
+
+#comment

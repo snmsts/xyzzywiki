@@ -1,0 +1,12 @@
+* makefile-mode [#m3d4a9af]
+-ページ: [[WishList]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2005-01-18 (火) 15:49:25
+
+** メッセージ [#x3bf4506]
+Makefile 用のモードが欲しいです。
+----
+- http://chechepon.at.infoseek.co.jp/tool/tool.html にありそうですよ。 -- [[benok]] &new{2007-02-08 (木) 19:05:27};
+
+#comment

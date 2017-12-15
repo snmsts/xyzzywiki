@@ -1,0 +1,65 @@
+[[tips]]
+* about [#r24b7f5e]
+メーラーに den8view を使う人は少ないようですが、電信八号を先に起動しておかなければならなかったり、いろいろ面倒な所があるのが原因かもしれない（？）ので、一応設定例を書いておきます。
+
+[[こちら>http://fun.sci.fukuoka-u.ac.jp/wiki/index.php?xyzzy]]でも設定例が紹介されていました。
+
+他にもお勧めの設定などありましたら、追加お願いします。
+
+----
+
+- まず、siteinit.l で評価する場合には、den8view.l 中で使用されている etc-path は nil のままのようなので、(require "den8view") は .xyzzy に記述する必要があると思います。
+
+（siteinit.l に記述する場合には、
+ (setq *etc-path* (merge-pathnames "etc" (si:system-root)))
+を (require "den8view") の前に追加すれば一応動くと思います）
+
+- den8view を新しいフレームで起動し、同時に電八も起動する。
+ (require "den8view")
+ (require "wip/winapi")
+ 
+ (defvar *den8-pseudo-frame-name* "Den8 View")
+ 
+ (defun start-den8-View ()
+   (let ((hwnd (winapi::FindWindow 0 (si::make-string-chunk "電信八号"))))
+     (if (zerop hwnd)
+ 	(call-process "D:/applications/Den8/DENSHIN8.EXE" ;電八のパス
+ 		      :no-std-handles t :show :minimize :exec-directory *den8-directory*)
+       (ShowWindow hwnd 6))
+     (if (find-pseudo-frame *den8-pseudo-frame-name*)
+ 	(switch-pseudo-frame *den8-pseudo-frame-name*)
+       (new-pseudo-frame *den8-pseudo-frame-name*))))
+ (add-hook '*den8-view-mode-hook* 'start-den8-View)
+ (global-set-key #\C-8 'den8-viewer)
+
+- den8view を終了するときに、関係するバッファとフレームを閉じる。
+ (defun quit-den8-View ()
+   (interactive)
+   (let ((den8-buffer-list
+ 	 (list "*Den8 View*" "*Den8 Summary*" "*Den8 Draft*")))
+     (dolist (buffer den8-buffer-list)
+       (when (find-buffer buffer)
+ 	(delete-buffer buffer)))
+     (when (find-pseudo-frame *den8-pseudo-frame-name*)
+       (switch-pseudo-frame *den8-pseudo-frame-name*)
+       (delete-pseudo-frame))
+     (message "Den8 View を終了しました")))
+ (define-key *den8-view-mode-map* #\Q 'quit-den8-View)
+ (define-key *den8-summary-mode-map* #\Q 'quit-den8-View)
+ (define-key *den8-draft-mode-map* #\Q 'quit-den8-View)
+
+- clickable-uri を使用する場合は、以下も追加するといいかもしれないです。
+ (defun den8-mouse-left-press ()
+   (interactive)
+   (let ((owindow (selected-window)))
+     (set-window *last-mouse-window*)
+     (cond ((eq buffer-mode 'den8-summary-mode)
+ 	   (goto-last-mouse-point)
+ 	   (if (> *last-mouse-click-count* 1)
+ 	       (den8-summary-jump-to-mail))
+ 	   t)
+ 	  (t
+ 	   (set-window owindow)
+ 	   (clickable-uri-mouse-left-press)))))
+----
+#comment

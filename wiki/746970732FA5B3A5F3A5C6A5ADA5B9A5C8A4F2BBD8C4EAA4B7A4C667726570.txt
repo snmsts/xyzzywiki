@@ -1,0 +1,5 @@
+[[Memo/Grep関連]]
+- 無視するコンテキストのみ指定可能です
+#ref(grep-context.l)
+----
+#comment

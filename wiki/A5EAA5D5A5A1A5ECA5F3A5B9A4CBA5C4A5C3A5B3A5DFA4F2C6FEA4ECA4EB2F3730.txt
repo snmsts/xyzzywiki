@@ -1,0 +1,100 @@
+*some, every, notany, notevery [#ub801409]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[nakano]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-07-28 (水) 23:49:13
+-バージョン: 
+
+**メッセージ [#oc25df94]
+ <chapter>
+ <title>some</title>
+ <type>Function</type>
+ <arguments>some PREDICATE SEQUENCE &amp;rest MORE-SEQUENCES</arguments>
+ <package>lisp</package>
+ <description>
+ SEQUENCEの先頭の要素から順番にPREDICATEを適用していき，PREDICATEが
+ 非nilな値を返すと，その値をSOMEの返り値としてすぐに終了します．
+ PREDICATEを満たす要素が見つからない時は nil を返します．
+ 
+ MORE-SEQUNCESが与えられた時，SEQUENCEの中で最も短いものの終わりまで実行されます．
+ 
+ </description>
+ <seealso>every</seealso>
+ <seealso>notany</seealso>
+ <link></link>
+ <section>シーケンス</section>
+ <file>sequence.l</file>
+ </chapter>
+
+
+
+ <chapter>
+ <title>every</title>
+ <type>Function</type>
+ <arguments>every PREDICATE SEQUENCE &amp;rest MORE-SEQUENCES</arguments>
+ <package>lisp</package>
+ <description>
+ SEQUENCEの先頭の要素から順番にPREDICATEを適用していき，PREDICATEが
+ nil を返すと，nilをすぐに返します．
+ 全ての要素がPREDICATEを満たす場合， t を返します．
+ 
+ MORE-SEQUNCESが与えられた時，SEQUENCEの中で最も短いものの終わりまで実行されます．
+ 
+ </description>
+ <seealso>some</seealso>
+ <seealso>notevery</seealso>
+ <link></link>
+ <section>シーケンス</section>
+ <file>sequence.l</file>
+ </chapter>
+
+
+
+ <chapter>
+ <title>notany</title>
+ <type>Function</type>
+ <arguments>not-any PREDICATE SEQUENCE &amp;rest MORE-SEQUENCES</arguments>
+ <package>lisp</package>
+ <description>
+ SEQUENCEの先頭の要素から順番にPREDICATEを適用していき，PREDICATEが
+ 非nilな値を返すと， nil をすぐに返します．
+ PREDICATEを満たす要素が見つからない時は t を返します．
+ 
+ MORE-SEQUNCESが与えられた時，SEQUENCEの中で最も短いものの終わりまで実行されます．
+ 
+ </description>
+ <seealso>notevery</seealso>
+ <seealso>some</seealso>
+ <link></link>
+ <section>シーケンス</section>
+ <file>sequence.l</file>
+ </chapter>
+
+
+
+ <chapter>
+ <title>notevery</title>
+ <type>Function</type>
+ <arguments>notevery PREDICATE SEQUENCE &amp;rest MORE-SEQUENCES</arguments>
+ <package>lisp</package>
+ <description>
+ SEQUENCEの先頭の要素から順番にPREDICATEを適用していき，PREDICATEが
+ nil を返すと，t をすぐに返します．
+ 全ての要素がPREDICATEを満たす場合， nil を返します．
+ 
+ MORE-SEQUNCESが与えられた時，SEQUENCEの中で最も短いものの終わりまで実行されます．
+ 
+ </description>
+ <seealso>notany</seealso>
+ <seealso>every</seealso>
+ <link></link>
+ <section>シーケンス</section>
+ <file>sequence.l</file>
+ </chapter>
+
+----
+
+#comment

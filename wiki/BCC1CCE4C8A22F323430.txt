@@ -1,0 +1,13 @@
+* kamail OFFLINE 切り替え [#h7a88062]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2008-02-29 (金) 11:47:30
+
+** メッセージ [#o58f47d7]
+kamailでM-tでONLINE/OFFLINE切り替えが出来るようなのですが、
+ONLINEからOFFLINEへの切り替えは出来ますが、OFFLINE状態で、M-tをすると「不正なﾃﾞｰﾀ型です：nil：number」と表示され、ONLINEへの切り替えが出来ません。どのようにすれば、OFFLINEからONLINEへの切り替えが出来るのでしょうか?
+
+----
+
+#comment

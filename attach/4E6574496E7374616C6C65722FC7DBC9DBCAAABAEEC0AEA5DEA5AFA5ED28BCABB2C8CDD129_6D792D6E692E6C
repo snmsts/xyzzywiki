@@ -1,0 +1,49 @@
+;;; -*- Mode: Lisp; Package: editor -*-
+
+;;; NetInstaller用 パッケージ追加関数（開発環境分離型）
+
+;;; usage:
+;;;
+;;;   M-x load-library[RET]
+;;;   Load library: my-ni[RET]
+;;;   M-x pkg-update[RET]
+;;;   pkg: ... [RET]    ：パッケージ名（*pkg-dir*配下のディレクトリ名から補完）
+;;;   file: ... [RET]   ：アップロード用アーカイブ名
+
+;;; directory:
+;;;
+;;;  My Documents
+;;;  └My Projects
+;;;    └xyzzy_netinstaller          ：*pkg-dir*
+;;;      ├cobol-mode
+;;;      │└site-lisp
+;;;      │  ├ni-autoload
+;;;      │  │└cobol-mode.l        ：（初期化用）
+;;;      │  └cobol-mode.l          ：（本体）
+;;;      ├favorites
+;;;      │└site-lisp
+;;;      │  ├ni-autoload
+;;;      ：  ：
+;;;      │
+;;;      ├cobol-mode20030430.lzh    ：アップロード用アーカイブ
+;;;      ├favorites20030430-1.lzh   ：アップロード用アーカイブ
+;;;      ：
+;;;
+;;;  ・こんな感じで*pkg-dir*配下にパッケージごとにその名称でディレクトリを掘ります。
+;;;  　作成したディレクトリを$XYZZYに見立てて、その下にファイルを配置します。
+;;;  ・pkg-updateした後で、*pkg-dir*に出来たアーカイブとpackages.lをアップロードして完了です。
+
+(require "ni/setup")
+
+(defvar *pkg-dir* (merge-pathnames "My Projects/xyzzy_netinstaller/" (user-homedir-pathname)))
+
+(defun pkg-update (&optional pkg file)
+  (interactive)
+  (unless pkg
+    (setq pkg (completing-read "pkg: " (mapcar #'remove-trail-slash (directory *pkg-dir* :directory-only t)) :must-match t))
+    (setq file (read-file-name "file: " :default (merge-pathnames pkg *pkg-dir*))))
+  (create-archive
+   file
+   (directory (merge-pathnames pkg *pkg-dir*) :absolute t)
+   (merge-pathnames pkg *pkg-dir*))
+  (ni::local-app-add file pkg))

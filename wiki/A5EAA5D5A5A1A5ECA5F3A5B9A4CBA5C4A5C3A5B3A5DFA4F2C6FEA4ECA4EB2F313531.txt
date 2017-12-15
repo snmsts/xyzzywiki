@@ -1,0 +1,58 @@
+*limit系 [#ube3d80c]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-09-20 09:11:45 (火)
+-バージョン: 
+
+**メッセージ [#z9899e64]
+ <chapter>
+ <title>lambda-parameters-limit</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>lisp</package>
+ <description>
+ lambdaに与えることのできる引数の個数の限界値
+ 
+ 参照例： 
+   lambda-parameters-limit
+   =&gt; 536870911
+ 
+ </description>
+ <seealso>call-arguments-limit</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>call-arguments-limit</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>lisp</package>
+ <description>
+ 関数に与えることのできる引数の個数の限界値
+ 
+ 参照例： 
+   call-arguments-limit
+   =&gt; 536870911
+ 
+ </description>
+ <seealso>lambda-parameters-limit</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file></file>
+ </chapter>
+
+
+あとmultiple-values-limitという名前から自明なのがあるんですけど
+ちょいと時間切れ。
+----
+-どーもです。「引数の限界値」というのは「引数の個数の限界値」という理解でOKですか？ -- [[NANRI]] &new{2005-09-20 19:08:28 (火)};
+-Common Lispの仕様ではそうっぽいです。これ意味のある制約なのかな？32bitメモリ空間でconsセルこんなに作れるかなぁと純粋な興味。 -- [[佐野]] &new{2005-09-21 03:08:01 (水)};
+-取り込みました。→[[refwiki:call-arguments-limit]], [[refwiki:lambda-parameters-limit]] -- [[NANRI]] &new{2005-10-23 00:45:30 (日)};
+
+#comment

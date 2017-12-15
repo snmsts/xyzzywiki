@@ -1,0 +1,23 @@
+[[tips]]
+
+* 赤黒木 [#l2da359e]
+
+赤黒木を実装した拡張lispです．
+M.Hiroiさんのところの赤黒木をベースに実装してあります．
+Hiroiさんには，改変&再公開の許可を頂きありがとうございました．
+
+赤黒木が良く分からない人は，~
+・[[Hiroiさんの説明:http://www.geocities.jp/m_hiroi/clisp/clispb03.html]]~
+・%%[[赤黒木のデモ:http://www.ececs.uc.edu/~franco/C321/html/RedBlack/redblack.html]]%% (リンク切れでした)~
+
+
+イテレータや map / mapc 関数，集合上の演算が実装してあります．
+
+サンプルを参考に，何ができるか感じてください．
+#ref(rbtree-sample.l)
+#ref(README)
+#ref(rbtree.lzh)
+
+バグ報告は，ここでも構いません．
+----
+#comment

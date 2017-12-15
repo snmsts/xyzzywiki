@@ -1,0 +1,21 @@
+* typepに極少追加 [#n1941106]
+-ページ:     [[patch]]
+-投稿者:     [[yis]]
+-優先順位:   普通
+-状態:       提案
+-カテゴリー: 訂正
+-投稿日:     2008-12-30 (火) 20:11:41
+-バージョン: 
+
+** メッセージ [#xb9867ab]
+typep や check-type は非常に便利なのですが、xyzzy(.235)では si:canonicalize-type
+を使わなければ機能しないことも多く,余り使われていないようです。私は一年程前から,こっそりと lisp/typespec.l(247行)に
+     (defun typep (object type)
+       (setq type (canonicalize-type type)) ;; <- 追加行 
+       (let (r) ...
+を入れておきましたが,何の問題もなく非常に快適です。(バイトコンパイルと再dumpが必要)
+	(check-type n (mod 5))
+などもそのまま使えて,check-typeの使用量が激増しました。(あくまで私的なtipsとしてお知らせします)
+----
+
+#comment

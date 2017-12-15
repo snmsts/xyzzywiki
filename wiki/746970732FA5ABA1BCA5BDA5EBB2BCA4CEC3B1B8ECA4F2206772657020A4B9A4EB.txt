@@ -1,0 +1,88 @@
+制限
+-ファイル名のないバッファでは検索できない
+-検索対象のファイルは現在のファイルと同じ拡張子のみ
+
+ (require "grepd")
+ 
+ (defun grep-current-word ()
+   (interactive)
+   (unless (get-buffer-file-name)
+     (return-from grep-current-word nil))
+ 
+   (grep-lookup-word
+    #'(lambda (start end)
+        (let ((word (buffer-substring start end))
+              (ext (if (string-match "^[^.]+\\."
+                                     (reverse (get-buffer-file-name)))
+                       (reverse (match-string 0))
+                     ""))
+              (dir (directory-namestring (get-buffer-file-name))))
+          (ed::scan-files word (concat "*" ext) dir)))))
+ 
+ (defun grep-lookup-word (fn)
+   (apply fn (save-excursion
+               (list (progn
+                       (skip-syntax-spec-forward "w_")
+                       (point))
+                     (progn
+                       (skip-syntax-spec-backward "w_")
+                       (point))))))
+ 
+ (global-set-key '(#\C-c #\C-g) 'grep-current-word)
+
+----
+-カーソル直下の単語で grep-dialogのパターンのところを埋めてダイアログを開くことはできますか？ --  SIZE(10){2003-06-14 (土) 04:23:05}
+
+-これでどうでしょう http://hie.s64.xrea.com/xyzzy/note/search.html#extension-grep-dialog 。拡張子とかはみていませんが。 -- [[ひえ]] SIZE(10){2003-06-14 (土) 09:55:00}
+-かなり便利になりました．ありがとうございました． また時間があるときに，サイトを一読させてもらいます． --  SIZE(10){2003-06-15 (日) 15:09:40}
+-検索対象をモード毎に決めうちでやることはできますか？例えばCモードなら*.c;*.h,C++なら*.cpp;*.h,hoge-modeなら*.hoge、みたいにです。ほとんどの場合は同じ拡張子で検索しますし、これ以外のをやる場合はこの下のGrep-dialog開いてやればいいので。 --  SIZE(10){2003-09-01 (月) 16:14:28}
+ (defvar *mode-ext-alist* '((lisp-mode . "*.l") (c-mode . "*.c;*.h") (c++-mode . "*.cpp;*.h") (hoge-mode . "*.hoge")))
+ (require "grepd")
+ (defun grep-current-word-2 ()
+   (interactive)
+   (unless (get-buffer-file-name)
+     (return-from grep-current-word-2 nil))
+   (grep-lookup-word
+    #'(lambda (start end)
+        (let ((word (buffer-substring start end))
+              (ext (cdr (assoc buffer-mode *mode-ext-alist*)))
+              (dir (directory-namestring (get-buffer-file-name))))
+          (ed::scan-files word (split-string ext #\; t " ") dir)))))
+-pathname-type ... --  SIZE(10){2003-09-20 (土) 14:15:36}
+-ありがとうございます！すばらしいです！ --  SIZE(10){2003-09-21 (日) 10:41:32}
+
+#comment
+
+----
+**カーソル直下の単語でgrep-dialogを行う． [#kdfde3b6]
+-バッファにファイル名があれば，デフォルトでその拡張子が対象ファイルに指定される
+-バッファにファイル名があれば，デフォルトでファイルがあるディレクトリが対象ディレクトリに指定される
+
+ (defun uniq (%list)
+   (cond ((null %list) nil)
+ 	(t (cons (car %list)
+ 		 (uniq (remove (car %list) %list :test #'equal))))))
+ 
+ (defun grep-dialog-with-word-and-filename ()
+   (interactive)
+   (unless (pre-selection-p)
+     (skip-syntax-spec-forward "w_")
+     (ed::begin-selection)
+     (skip-syntax-spec-backward "w_"))
+   (let ((bufname (get-buffer-file-name)))
+    (when bufname
+      (message "~A" bufname)
+      (push (directory-namestring bufname) ed::*grep-directory-history*)
+      (push (concat "*." (car (last (split-string (file-namestring bufname) #\.))))
+	 ed::*grep-file-history*)))
+   (setf ed::*grep-directory-history* (uniq ed::*grep-directory-history*))
+   (setf ed::*grep-file-history* (uniq ed::*grep-file-history*))
+   (grep-dialog))
+
+-拡張子と対象ディレクトリもファイル名から入れるようにしてみたつもりです．おかしなところがあったらビシバシ直してください． -- [[上で質問した人]] SIZE(10){2003-07-02 (水) 01:54:19}
+-historyから重複した要素を取り除くようにしました．
+-これ最強ですね。まさに理想形です。ありがとうございます。 -- [[2chの質問者]] SIZE(10){2003-07-02 (水) 09:12:38}
+-. (ドット) を複数持つファイル名の時に，拡張子が正しく取れていなかったのを修正 --  SIZE(10){2003-07-12 (土) 11:22:42}
+-バックアップファイル上で grep したとき制御文字列のエラーが出るので (message bufname) => (message "~A" bufname) と修正しました。 -- [[横からです]] &new{2004-12-08 (水) 01:59:09};
+
+#comment

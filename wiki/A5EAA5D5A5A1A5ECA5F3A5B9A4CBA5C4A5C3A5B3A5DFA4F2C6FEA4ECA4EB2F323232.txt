@@ -1,0 +1,55 @@
+* multiple-value [#j70af931]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-07-04 (火) 00:08:20
+-バージョン: 20060629
+
+** メッセージ [#vbd61c8a]
+ <chapter>
+ <title>multiple-value-prog1</title>
+ <type>Special Form</type>
+ <arguments>multiple-value-prog1 FORM {FORM}*</arguments>
+ <package>lisp</package>
+ <description>
+ フォームを順番に評価して最初のフォームの結果を多値で返します。
+ 
+ prog1 に似ていますが、最初のフォームが多値を返した場合でも prog1 の戻
+ り値は多値になりません。
+ </description>
+ <seealso>prog1</seealso>
+ <seealso>values</seealso>
+ <seealso>multiple-value-bind</seealso>
+ <link></link>
+ <section>制御構造</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>multiple-value-call</title>
+ <type>Special Form</type>
+ <arguments>multiple-value-call FUNCTION {FORM}*</arguments>
+ <package>lisp</package>
+ <description>
+ FORM の戻り値を引数として FUNCTION を呼びます。
+ apply と違って多値で返された二番目以降の戻り値も渡します。
+ 
+ 使用例：
+   (multiple-value-call #'+ (values 1 2 3) (values 4 5))
+   =&gt; 15
+ </description>
+ <seealso>multiple-value-bind</seealso>
+ <seealso>apply</seealso>
+ <seealso>values</seealso>
+ <link></link>
+ <section>制御構造</section>
+ <file>builtin.l</file>
+ </chapter>
+
+--------
+- どーもです。表現をリファレンスにあわせました。 -- [[NANRI]] &new{2006-07-22 (土) 14:12:30};
+
+#comment

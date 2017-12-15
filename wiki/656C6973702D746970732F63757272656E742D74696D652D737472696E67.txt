@@ -1,0 +1,15 @@
+- [[xyzzy-ml:08375]] より（須田さん）
+ ;;; たぶん
+ (defun current-time-string ()
+   (format-date-string "%a %b %d %H:%M:%S %Y" (get-universal-time)))
+
+引数も取るみたいなので
+ (defun current-time-string (&optional time-value)
+   (format-date-string
+    "%a %b %d %H:%M:%S %Y"
+    (if time-value
+        (+ (* (first time-value) (expt 2 16)) (second time-value))
+      (get-universal-time))))
+
+----
+#comment

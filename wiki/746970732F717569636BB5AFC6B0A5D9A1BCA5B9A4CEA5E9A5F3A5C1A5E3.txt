@@ -1,0 +1,32 @@
+[[tips]]
+
+[[紫藤さんの>http://www.geocities.jp/shido_takafumi/xyzzy/xyz-launch.html]]は環境毎に設定をしないといけないので~
+ずぼらな僕には結構厳しそうだった。~
+ほっといても3ストロークでアプリケーション起動！とか。嬉しいのは僕だけか… 佐野 06/01/10
+
+ (defun ql-path ()
+   (merge-pathnames "Microsoft/Internet Explorer/Quick Launch" (si:getenv "APPDATA")))
+ 
+ (defun ql-setup ()
+   (eval `(add-popup-menu *app-menu*
+ 			 (define-popup-menu
+ 			   ,@(let (tmp)
+ 			       (dolist (i (remove-if (lambda (x) (string-match "\\.ini$" x)) (directory (ql-path))))
+ 				 (push `(:item nil ,(pathname-name i)
+ 					 (lambda ()
+ 					   (interactive)
+ 					   (shell-execute
+ 					    (map-slash-to-backslash
+ 					     ,(if (string-match "\\.lnk" i)
+ 						  (resolve-shortcut (merge-pathnames i (ql-path)))
+ 						(merge-pathnames i (ql-path)))))))
+ 				       tmp))
+ 			       (reverse tmp)))
+ 			 "&Quick Launch")))
+ 
+ (add-hook '*init-app-menus-hook* #'ql-setup)
+----
+- コードも相当ずぼらな感じで… -- [[佐野]] &new{2006-01-10 (火) 02:13:03};
+- こりゃいいね。おもしろい。 --  &new{2006-01-10 (火) 12:45:31};
+
+#comment

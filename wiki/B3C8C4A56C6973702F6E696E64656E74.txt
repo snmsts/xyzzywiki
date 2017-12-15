@@ -1,0 +1,27 @@
+[[拡張lisp]]
+
+*nindentについて [#pe1871ca]
+余計なインデントはいらない！という方のためのマイナーモード。~
+TAB=Selfinsert~
+Enter=newline~
+をキープします。
+
+*使い方 [#h7375468]
+ロードします
+ (require "nindent")
+
+トグルします
+ (no-indent-mode)
+
+オンします
+ (no-indent-mode t)
+
+オフします
+ (no-indent-mode nil)
+
+*ダウンロード [#m7718e2e]
+#ref(nindent030529.lzh)
+**BackSpace=delete-backward-char-or-selectionもキープするようにしてみた。 [#je63e3ef]
+#ref(nindent-20041230.lzh)
+*呼び名 [#d23b8c09]
+NoIndentなりNormalIndentなりどーでも

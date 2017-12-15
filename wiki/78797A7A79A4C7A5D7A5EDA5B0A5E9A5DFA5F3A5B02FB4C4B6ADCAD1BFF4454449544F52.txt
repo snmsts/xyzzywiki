@@ -1,0 +1,55 @@
+*環境変数EDITOR [#g8ec187b]
+#contents
+
+**概要 [#n739b366]
+環境変数EDITORにxyzzyを指定して外部エディタとして使用する場合、''xyzzycli.exe''に"-wait"オプションをつけて指定します。
+
+**SVN_EDITOR [#ff63e055]
+例えばSubversionのコメントを記述するための外部エディタとしてxyzzyを使用する場合は、以下のように設定します。
+
+-変数名: SVN_EDITOR
+-変数値: (xyzzyをインストールした場所)\xyzzycli.exe -wait
+
+コメントが必要なsvnコマンドを、コマンドラインや、execute-subprocess(C-x &)、"M-x shell" などから起動すると、以下のようなバッファが開きます。
+ 
+ --This line, and those below, will be ignored--
+ 
+ M    lib/hoge.jar
+ M    src/java/Hoge.java
+
+あとは、このラインの上を編集し、バッファを保存、kill-buffer(C-x k) などで削除してやります。
+
+なにも編集せずにバッファを削除すると、以下のように尋ねられます。この場合、バッファに"a"を入力しただけでは駄目で、"a"のあとに、quote-char(C-q) で"C-m"((Ctrl + q のあと Ctrl + m を入力))を入力、もしくは、"M-x control-code-dialog-box"で、"CR"を入力してから、リターンしなくてはなりません。
+ Log message unchanged or not specified
+ a)bort, c)ontinue, e)dit
+ a^M
+
+**CVS_EDITOR [#f3f9c7fe]
+
+**関連情報 [#zf89bd1f]
+-[[xyzzy:06348 Re: Xyzzycli を外部エディタとして使いたい>xyzzy-ml:06348]]
+
+**コメント [#w51ae31e]
+- CVSだとファイルまたはディレクトリがないと怒られます。　解決策ご存知のかたいますか？　cvs-modeもうまくいきませんでした。cygwinのCVSです。 --  &new{2007-05-09 (水) 19:48:53};
+-- あ、見落としてた。できればどんな風に怒られるかコピペしてもらうと推測しやすいのですが、もし「cvs commit: cannot exec "C:\Program: No such file or directory」とかなら、環境変数EDITOR に、「C:\PROGRA~1\xyzzy\xyzzycli.exe -wait」と短いファイル名で指定するといいかも。外してる気もするけど。 --  &new{2007-05-15 (火) 21:49:15};
+
+--- zshを使っているのですが、.zshrcに
+export CVSEDITOR="D:\xyzzy\xyzzycli.exe -wait"
+と記述し、CVSのコミットをすると、xyzzyは起動するのですが、
+d:/tmp/cvs7mW756
+ファイルまたはディレクトリが見つかりません
+と怒られてしまいます。
+ちなみに　D:\xyzzy　以下にxyzzy.exe等などを一式置いているのですが、上記の短いファイル名で指定の仕方は.zshrcに
+export CVSEDITOR="D:\PROGRA~1\xyzzy\xyzzycli.exe -wait"と記載することを指しているのでしょうか？
+-- cygwinルールのパスをcygwin配下ではないxyzzyにそのまま渡しているのが原因でしょう。Windowsのパスに直してxyzzyに渡す必要があります。 --  &new{2007-05-16 (水) 12:12:19};
+
+-- ありがとうございます。
+その線で、検索してみたら
+http://www.bookshelf.jp/2ch/unix/1076240971.html
+にヒントが有りました。
+cygpath なるものでパスの変換が必要みたいです。
+やりかたがわかっていませんが挑戦してみます。
+出来たらまた書き込みます。
+--- うまくいくかどうか分かりませんが、この辺とか参考になりそうです→[[xyzzy-ml:08107]],[[xyzzy-ml:08108]],[[xyzzy-ml:08109]]  --  &new{2007-05-21 (月) 21:10:26};
+
+#comment

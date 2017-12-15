@@ -1,0 +1,58 @@
+* ref-viewのフレーム対応 [#b0d1c218]
+
+-ページ: [[patch]]
+-投稿者: [[OMA]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: その他
+-投稿日: 2006-01-25 (水) 18:57:34
+-バージョン: 
+
+** メッセージ [#q674d76c]
+ ;ref-viewのpframe対応
+ (in-package "ref-view")
+ ;;;以下追加
+ (defvar *ref-view-pframe-name* "ref-view")
+ (defun ref-view-delete-all ()
+   (let ((pframe))
+     (and (find-buffer *ref-view-buffer-name*)
+          (delete-buffer *ref-view-buffer-name*))
+     (and (setq pframe (find-pseudo-frame *ref-view-pframe-name*))
+          (delete-pseudo-frame pframe))))
+ ;;;以下修正関数
+ (defun user::ref-view (&optional rebuild)
+   "Start ref-view."
+   (interactive "P")
+   ;; データをまだ読み込んでない場合、または前置引数をつけた場合、
+   ;; バッファにファイルを読み込んでスキャン
+   (setf *ref-view-old-winconf* (current-window-configuration))
+   (when (or (not *ref-view-data-list*)
+             rebuild)
+     (ref-view-parse-reference-files))
+   ;; 表示
+   (if (setq pframe (find-pseudo-frame *ref-view-pframe-name*)) ;Add
+       (select-pseudo-frame pframe)                             ;Add
+       (new-pseudo-frame *ref-view-pframe-name*))               ;Add
+   (if (find-buffer *ref-view-buffer-name*)
+       (set-buffer *ref-view-buffer-name*)
+       (ref-view-insert-chapter))
+   (goto-char (point-min))
+   (ref-view-mode))
+ (defun ref-view-quit ()
+   "Quit ref-view."
+   (interactive)
+   (mapc #'delete-buffer
+         (remove "ref-view-search: " (buffer-list)
+                 :test-not #'string-match
+                 :key #'buffer-name))
+   ;Del (delete-buffer *ref-view-buffer-name*)
+   (ref-view-delete-all)                                        ;Add
+   (set-window-configuration *ref-view-old-winconf*))
+ (in-package "user")
+
+--------
+- すいません。現在手元にあるバージョンでは、フレームに表示するように変更してあったのですが、まだアップロードしてませんでした。時間があり次第アップしますのでしばらくお待ちください。 -- [[Nomura]] &new{2006-01-25 (水) 20:29:52};
+- 「よかったら取り込んでちょーだいな。」のスタンスで書き込みました。ゆっくりと次バージョンでお願いします。 -- [[OMA]] &new{2006-01-26 (木) 18:40:33};
+- 最新バージョンをアップしておきました。どうもでした。 -- [[Nomura]] &new{2006-01-28 (土) 20:51:46};
+
+#comment

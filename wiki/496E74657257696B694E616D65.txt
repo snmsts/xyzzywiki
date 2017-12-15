@@ -1,0 +1,54 @@
+-[http://www.c2.com/cgi/wiki? WikiWikiWeb] raw WikiNameのみなのでraw。
+-[http://www.todo.org/cgi-bin/jp/tiki.cgi?c=v&p= Tiki] euc
+-[http://www.hyuki.com/yukiwiki/yukiwiki.cgi? YukiWiki] yw
+-[http://www.jin.gr.jp/~nahi/RWiki/?cmd=view;name= RWiki] euc
+-[http://www.factage.com/sng/pukiwiki/pukiwiki.php? PukiWiki]
+// -[http://pukiwiki.org/index.php? pukiwiki] utf8
+-[http://pukiwiki.sourceforge.jp/? pukiwiki] utf8
+// -[http://pukiwiki.sourceforge.jp/? pukiwiki.org] utf8
+-[http://www.gembook.jp/html/moin/moin.cgi/ ウヰキエリア] moin
+-[http://tiki.is.os-omicron.org/tiki.cgi?c=v&p= Omicron]
+
+-[http://www.google.co.jp/search?ie=utf8&oe=utf8&q=$1&lr=lang_ja&hl=ja Google] utf8 IEのGoogleツールバー対策でUTF-8になってます。
+-[http://search.yahoo.co.jp/bin/search?p= Yahoo] euc
+-[http://www.shiro.dreamhost.com/scheme/wiliki/wiliki.cgi?$1&l=jp WiLiKi]
+-[http://www.emacswiki.org/cgi-bin/wiki.pl? EmacsWiki]
+-[http://xyzzy.s53.xrea.com/ml/?$1 xyzzy-ml]
+-[http://xyzzy.s53.xrea.com/reference/wiki.cgi?p=$1 refwiki] euc
+-[http://xyzzy.s53.xrea.com/reference/wiki.cgi?w=$1&a=search リファレンス検索] euc
+
+-[http://xyzzy.s53.xrea.com/$1 root] raw asis
+
+-[http://xyzzy.s53.xrea.com/reference/$1 reference] raw asis
+-[http://xyzzy.s53.xrea.com/qanda/jump/p.cgi? qanda] euc
+-[http://xyzzy.s53.xrea.com/qanda/jump/section.cgi? qasection] euc
+
+-[http://xyzzy.s53.xrea.com/extlib/apart/ extlib] euc
+-[http://xyzzy.s53.xrea.com/extlib/ extlibfully] euc
+
+-[http://www.bookshelf.jp/cgi-bin/goto.cgi?file=meadow&node= MeadowMemo] raw
+
+
+-[http://makimo.to/2ch/yasai_win/979/979930156.html# 2chmain]
+-[http://makimo.to/2ch/yasai_win/994/994321779.html# 2chmain2]
+-[http://makimo.to/2ch/pc_win/1001/1001707308.html# 2chmain3]
+-[http://makimo.to/2ch/pc_win/1008/1008057054.html# 2chmain4]
+-[http://makimo.to/2ch/pc_win/1013/1013042550.html# 2chmain5]
+-[http://makimo.to/2ch/pc3_win/1019/1019691417.html# 2chmain6]
+-[http://makimo.to/2ch/pc3_win/1032/1032910212.html# 2chmain7]
+-[http://makimo.to/2ch/pc5_win/1041/1041613876.html# 2chmain8]
+-[http://makimo.to/2ch/pc5_win/1053/1053880433.html# 2chmain9]
+-[http://makimo.to/2ch/pc5_win/1067/1067394259.html# 2chmain10]
+-[http://makimo.to/2ch/pc5_win/1085/1085301777.html# 2chmain11]
+-[http://makimo.to/cgi-bin/dat2html/dat2html.cgi?pc8/2/win/1103400818/&st= 2chmain12]
+-[http://pc8.2ch.net/test/read.cgi/win/1127783135/ 2chmain13]
+
+-[http://pc8.2ch.net/test/read.cgi/hp/1005046309/ 2chtag]
+
+-[http://makimo.to/2ch/pc5_software/1041/1041326960.html# 2chbeginner]
+-[http://makimo.to/2ch/pc5_software/1054/1054141308.html# 2chbeginner2]
+-[http://makimo.to/2ch/pc2_software/1063/1063367821.html# 2chbeginner3]
+-[http://makimo.to/2ch/pc5_software/1073/1073911622.html# 2chbeginner4]
+-[http://makimo.to/2ch/pc5_software/1088/1088948470.html# 2chbeginner5]
+-[http://makimo.to/2ch/pc8_software/1103/1103791938.html# 2chbeginner6]
+-[http://pc7.2ch.net/test/read.cgi/software/1116710824/ 2chbeginner7]

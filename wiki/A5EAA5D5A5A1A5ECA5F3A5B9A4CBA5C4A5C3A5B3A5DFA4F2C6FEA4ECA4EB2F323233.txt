@@ -1,0 +1,81 @@
+* parse-point-syntax [#ec19360d]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[甘栗]]
+-優先順位: 普通
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-08-03 (木) 07:34:44
+-バージョン: 
+
+** メッセージ [#r85042f0]
+>:tag     set-syntax-tagで指定されたキャラクタに囲まれた領域
+
+とありますが、これを動作させるには
+変数"html-highlight-mode"の値がnon-nilでないと動作しないようです。~
+"html-highlight-mode"については、grepでlispフォルダ内を検索しても詳しいことは分かりませんでした。
+--------
+- どーもです。html-highlight-modeの値でシンタックステーブルの扱いが変わるみたいですね。 -- [[NANRI]] &new{2006-08-04 (金) 00:19:22};
+ <chapter>
+ <title>html-highlight-mode</title>
+ <type>BufferLocal</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ non-nilならばシンタックスの :tag が利用可能になります。
+ </description>
+ <seealso>set-syntax-tag</seealso>
+ <seealso>parse-point-syntax</seealso>
+ <link></link>
+ <section>シンタックス</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>parse-point-syntax</title>
+ <type>Function</type>
+ <arguments>parse-point-syntax &amp;optional POINT</arguments>
+ <package>editor</package>
+ <description>
+ 指定された位置のシンタックスを返します。
+   :string  set-syntax-stringで指定されたキャラクタに囲まれた領域           
+   :comment set-syntax-comment-column
+            set-syntax-start-c++-comment
+            set-syntax-end-c++-comment
+            set-syntax-start-comment
+            set-syntax-end-comment
+            set-syntax-start-multi-comment
+            set-syntax-end-multi-comment
+            set-syntax-start-column-comment
+            で指定された領域
+   :tag     set-syntax-tagで指定されたキャラクタに囲まれた領域
+            (ただしhtml-highlight-modeがnon-nilのときのみ)
+   nil      上記以外の領域
+ </description>
+ <seealso>syntax-table</seealso>
+ <link></link>
+ <section>シンタックス</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>set-syntax-tag</title>
+ <type>Function</type>
+ <arguments>set-syntax-tag SYNTAX-TABLE OPEN-CHAR CLOSE-CHAR</arguments>
+ <package>editor</package>
+ <description>
+ シンタックステーブルにタグの開始記号と終了記号を設定します。
+ HTMLやXML系のモードに設定するといいみたいです。
+ 実際に利用する際にはさらにhtml-highlight-modeをnon-nilにす
+ る必要があります。
+ 
+ 使用例：
+   ;;; htmlmode.lでの定義
+   (set-syntax-tag *html-mode-syntax-table* #\&lt; #\&gt;)
+ </description>
+ <seealso></seealso>
+ <section>シンタックス</section>
+ <file>builtin.l</file>
+ </chapter>
+
+#comment

@@ -1,0 +1,17 @@
+#freeze
+[[tips]]
+
+デフォルトブラウザで開くようになります。
+
+ (setq jtc::*jtc-info-hook*
+      #'(lambda (u)
+		  (make-process (concatenate 'string "rundll32 url.dll,FileProtocolHandler \"" u "\""))))
+
+----
+これでよさそうな気がします。
+ (setq jtc::*jtc-info-hook* #'(lambda (x)
+                                (shell-execute x t)))
+
+----
+ありがとうございます。
+ShellExecuteまであったんですね。おかげで効率よくすることできました。

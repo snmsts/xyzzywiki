@@ -1,0 +1,55 @@
+;;; -*- Mode: Lisp; Package: EDITOR -*-
+;;;
+; Last updated: <2004-11-16T19:36:24+09:00>
+;
+;(rss-filter-regist "http://hie.s64.xrea.com/zzoops/modules/news/\\(.*\\)?" 'ZZoops-news-filter)
+;
+; rss/filters/ZZoops-news.l
+(require "rss/main")
+
+(provide "rss/filters/ZZoops-news")
+
+(in-package "rss")
+
+(defun ZZoops-news-parse-buffer (url)
+  (let (items
+        title
+        anchor
+        date)
+    (save-excursion
+      (goto-char (point-min))
+      (while (scan-buffer "<div class=\"itemHead\"><span class=\"itemTitle\"><a href='[^\']*'>[^<>]*</a>&nbsp;:&nbsp;<a href='\\([^\']*\\)'>[^<>]*</a></span></div>"
+                          :regexp t
+                          :tail t)
+        (setq title (match-string 0))
+        (setq anchor (match-string 1))
+        (scan-buffer "<span class=\"itemPostDate\">投稿日時： \\([0-9]+-[0-9]+-[0-9]+\\)[^<>]*</span>"
+                     :regexp t :tail t)
+        (setq date (match-string 1))
+        (while (string-match "\\([^<]*\\)<[^>]*>\\([^<]*\\)</?[^>]*>\\(.*\\)" title)
+          (setq title (string-replace-match title "\\1\\2\\3")))
+        (setq title (ed::xmlpm-decode-special-chars title))
+        ; rss-create-item では dc:date に対応していないので title に日付を
+        (push (rss-create-item (concat "<" date "> " title)
+                               anchor)
+              items))
+      (nreverse items))))
+
+;; フィルタ関数
+;; (チャネル, ファイルを引数にfuncallされる)
+(defun ZZoops-news-filter (channel file)
+  (let ((url (rss-link channel))
+        (title (or (and (rss-title channel)
+                        (not (equal (rss-title channel) *rss-menu-temp-buffer-suffix*))
+                        (rss-title channel))
+                   (read-string "Site Title: ")))
+        items)
+    (save-excursion
+      (set-buffer (get-buffer-create *rss-buffer-temp*))
+      (erase-buffer (selected-buffer))
+      (insert-file-contents file)
+      (setq items (ZZoops-news-parse-buffer url))
+      (delete-buffer (selected-buffer)))
+    ; 元のファイルを上書き
+    (convert-to-rss (rss-create title url nil items)
+                    file)))

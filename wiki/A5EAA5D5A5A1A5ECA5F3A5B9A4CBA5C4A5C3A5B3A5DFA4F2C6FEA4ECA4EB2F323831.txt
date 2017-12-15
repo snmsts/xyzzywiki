@@ -1,0 +1,170 @@
+* バイナリ操作 [#b9aa6beb]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[lambda]]
+-優先順位:   低
+-状態:       着手
+-カテゴリー: 新規項目
+-投稿日:     2007-05-10 (木) 11:29:36
+-バージョン: 
+
+** メッセージ [#i5ec7ebc]
+ <chapter>
+ <title>deposit-field</title>
+ <type>Function</type>
+ <arguments>deposit-field NEWBYTE BYTESPEC INTEGER</arguments>
+ <package>lisp</package>
+ <description>
+ 指定されたフィールドを NEWBYTE の同じフィールドの内容で置き換えた値を返
+ します。
+ 
+ 使用例：
+   (format nil "~2,'0x" (deposit-field #x0f (byte 4 4) #xa7))
+   =&gt;"07"
+   (format nil "~2,'0x" (deposit-field #xaa (byte 4 4) #x0f))
+   =&gt;"af"
+ </description>
+ <seealso>ldb</seealso>
+ <seealso>dpb</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+
+ <chapter>
+ <title>dpb</title>
+ <type>Function</type>
+ <arguments>dpb NEWBYTE BYTESPEC INTEGER</arguments>
+ <package>lisp</package>
+ <description>
+ 指定されたフィールドを NEWBYTE で置き換えた値を返します。
+ 
+ 使用例：
+   (format nil "~2,'0x" (dpb #x0f (byte 4 4) #xa7))
+   =&gt;"f7"
+   (format nil "~2,'0x" (dpb #x0a (byte 4 4) #x0f))
+   =&gt;"af"
+ </description>
+ <seealso>ldb</seealso>
+ <seealso>deposit-field</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+
+ <chapter>
+ <title>mask-field</title>
+ <type>Function</type>
+ <arguments>mask-field BYTESPEC INTEGER</arguments>
+ <package>lisp</package>
+ <description>
+ 指定されたフィールド以外を 0 とした値を返します。
+ 
+   ;; ldb との比較
+   (format nil "~2,'0x" (ldb (byte 4 4) #xaf))
+   =&gt;"0a"
+   (format nil "~2,'0x" (mask-field (byte 4 4) #xaf))
+   =&gt;"a0"
+ </description>
+ <seealso>ldb</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+
+ <chapter>
+ <title>ldb-test</title>
+ <type>Function</type>
+ <arguments>ldb-test BYTESPEC INTEGER</arguments>
+ <package>lisp</package>
+ <description>
+ 指定されたフィールドが non-zero かどうかを判定します。
+ (not (zerop (ldb BYTESPEC INTEGER))) と同じです。
+ </description>
+ <seealso>ldb</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+
+ <chapter>
+ <title>ldb</title>
+ <type>Function</type>
+ <arguments>ldb BYTESPEC INTEGER</arguments>
+ <package>lisp</package>
+ <description>
+ 指定されたフィールドの値を取り出します。
+ フィールドを指定する byte specifier は関数 byte で作ります。
+ 
+ 例：
+   ;;; 最下位ビットを取り出す
+   (ldb (byte 1 0) #x02)  =&gt; 0
+   (ldb (byte 1 0) #x0f)  =&gt; 1
+   ;;; (最下位バイトの)上位 4 ビットを取り出す
+   (ldb (byte 4 4) #x0f)  =&gt; 0
+   (ldb (byte 4 4) #xaf)  =&gt; 10
+   (ldb (byte 4 4) #xf0)  =&gt; 15
+ </description>
+ <seealso>dpb</seealso>
+ <seealso>byte</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+
+ <chapter>
+ <title>byte-position</title>
+ <type>Function</type>
+ <arguments>byte-position BYTESPEC</arguments>
+ <package>lisp</package>
+ <description>
+ byte specifier の位置を返します。
+ 
+ 内部的には cdr と同じです。
+ </description>
+ <seealso>byte</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+
+ <chapter>
+ <title>byte-size</title>
+ <type>Function</type>
+ <arguments>byte-size BYTESPEC</arguments>
+ <package>lisp</package>
+ <description>
+ byte specifier のサイズを返します。
+ 
+ 内部的には car と同じです。
+ </description>
+ <seealso>byte</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+
+ <chapter>
+ <title>byte</title>
+ <type>Function</type>
+ <arguments>byte SIZE POSITION</arguments>
+ <package>lisp</package>
+ <description>
+ byte specifier を作ります。
+ 「0 を基底として POSITION ビット目から始まる SIZE ビット」
+ を表すオブジェクトを返します。
+ 
+ 内部的には cons と同じです。
+ </description>
+ <seealso>dpb</seealso>
+ <seealso>ldb</seealso>
+ <seealso>byte-position</seealso>
+ <seealso>byte-size</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+
+----
+- どーもです。 -- [[NANRI]] &new{2007-05-12 (土) 22:43:23};
+
+#comment

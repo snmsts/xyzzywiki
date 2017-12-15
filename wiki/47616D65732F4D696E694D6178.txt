@@ -1,0 +1,334 @@
+M.Hiroi さんのサイト M.Hiroi's Home Page
+
+http://www.geocities.jp/m_hiroi/index.html
+
+の Puzzle DE Programming の所で紹介されています
+
+「MiniMax」http://www.geocities.jp/m_hiroi/puzzle/minimax1.html
+
+を xyzzy lisp に移植してみました -- こばやし
+
+ ;; 数字を取り合うゲーム (更新日 2005-03-23)
+ ;;
+ ;; 遊びかた：
+ ;;
+ ;; 1. 下のコードを xyzzy の *scratch* バッファに貼り付けます
+ ;; 2. M-x eval-buffer します
+ ;; 3. M-x minimax でゲームが始まります(デフォルトのレベルは 3 です)
+ ;; 3-1. minimax に前置引数を渡すとレベルを変更できます。
+ ;;      例) C-u 5 M-x minimax とすればレベルは 5 に設定されます。
+ ;;          0 < レベル < 7 までの値を指定できます。
+ ;;          ※ レベルを高くすると、処理に時間がかかるかもしれません。
+ 
+ (defconstant board-size 8)
+ (defconstant no-value 1000000)
+ 
+ (defvar *depth* 3)
+ (defvar *board* (make-array (list board-size board-size)))
+ 
+ (defun init-board ()
+   (dotimes (i board-size)
+     (dotimes (j board-size)
+       (setf (aref *board* i j) (- (random 19) 9)))))
+ 
+ (defun print-board (line)
+   (princ "  ")
+   (dotimes (i board-size)
+     (format t "~3D" i))
+   (format t "~%  --------------------------~%")
+   (dotimes (i board-size)
+     (format t "~A " (if (= line i) "[" " "))
+     (dotimes (j board-size)
+       (let ((num (aref *board* j i)))
+         (if (= no-value num)
+             (princ " **")
+           (format t "~3D" num))))
+     (format t " ~A~%" (if (= line i) "]" " "))))
+ 
+ (defun finish-game-p (x y no-val-lst)
+   (or (finish-line-p y no-val-lst :horizontal t)
+       (finish-line-p x no-val-lst)))
+ 
+ (defun finish-line-p (line no-val-lst &key horizontal)
+   (labels ((rec (lst acc)
+              (if (null lst)
+                  (= board-size acc)
+                (let ((n (if horizontal (cdar lst) (caar lst))))
+                  (rec (cdr lst) (if (= line n) (1+ acc) acc))))))
+     (rec no-val-lst 0)))
+ 
+ (defun board-score (x y)
+   (aref *board* x y))
+ 
+ (defun select-first (his no-val-lst first-val last-val)
+   (let ((py (cdar no-val-lst)))
+     (labels ((rec (x value move)
+                (cond ((< x 0)
+                       (values value move))
+                      ((member (cons x py) no-val-lst :test #'equal)
+                       (rec (1- x) value move))
+                      (t
+                       (let ((val (select-last
+                                   (1+ his)
+                                   (cons (cons x py) no-val-lst)
+                                   (+ first-val (board-score x py))
+                                   last-val)))
+                         (if (or (= value no-value)
+                                 (> val value)) ; 評価値の高いものを選ぶ
+                             (rec (1- x) val (cons x py))
+                           (rec (1- x) value move)))))))
+       (if (or (= his *depth*)
+               (finish-line-p py no-val-lst :horizontal t))
+           (- first-val last-val)
+         (rec (1- board-size) no-value nil)))))
+ 
+ (defun select-last (his no-val-lst first-val last-val)
+   (let ((px (caar no-val-lst)))
+     (labels ((rec (y value move)
+                (cond ((< y 0)
+                       (values value move))
+                      ((member (cons px y) no-val-lst :test #'equal)
+                       (rec (1- y) value move))
+                      (t
+                       (let ((val (select-first
+                                   (1+ his)
+                                   (cons (cons px y) no-val-lst)
+                                   first-val
+                                   (+ last-val (board-score px y)))))
+                         (if (or (= value no-value)
+                                 (< val value)) ; 評価値の低いものを選ぶ
+                             (rec (1- y) val (cons px y))
+                           (rec (1- y) value move)))))))
+       (if (or (= his *depth*)
+               (finish-line-p px no-val-lst))
+           (- first-val last-val)
+         (rec (1- board-size) no-value nil)))))
+ 
+ (defun input-integer (y)
+   (loop
+     (let ((n (read-integer "0 - 7 の数値:")))
+       (if (and (>= n 0) (<= n 7))
+           (if (= (board-score n y) no-value)
+               (format t "~A には数字がありません~%" n)
+             (return n))
+         (format t "入力エラー:0 - 7 の数値を入力して下さい~%")))))
+ 
+ (defun play ()
+   (with-output-to-selected-buffer
+     (format t "level = ~A~%" *depth*)
+     (let ((first-value 0)       ; 先手の得点
+           (last-value  0)       ; 後手の得点
+           (no-value-lst nil)    ; no-value にセットされた座標リスト
+           x y turn)
+       (labels ((disp-msg (&key first)
+                  (format t "~A (~A,~A) ~2D を選びます:"
+                          (if first "先手" "後手") x y (board-score x y))
+                  (disp-score))
+                (disp-score ()
+                  (format t "先手 ~3D 点 : 後手 ~3D 点~%" first-value last-value))
+                (update-board ()
+                  (setf (aref *board* x y) no-value)
+                  (push (cons x y) no-value-lst)))
+         (loop
+           (if (setq turn (not turn))
+               (progn            ; 先手
+                 (setq y (or (cdar no-value-lst) 0))
+                 (print-board y)
+                 (recenter)
+                 (setq x (input-integer y))
+                 (incf first-value (board-score x y))
+                 (disp-msg :first t))
+             (multiple-value-bind (no-use move) ; 後手
+                 (select-last 0 no-value-lst first-value last-value)
+               (setq x (car move)
+                     y (cdr move))
+               (incf last-value (board-score x y))
+               (disp-msg)))
+           (update-board)
+           (goto-char (point-max))
+           (when (finish-game-p x y no-value-lst)
+             (princ "試合終了")
+             (return))
+           )))))
+ 
+ (defun minimax (&optional (level 3))
+   (interactive "p")
+   (let ((buf-name "*minimax*"))
+     (set-buffer (or (find-buffer buf-name)
+                     (create-new-buffer buf-name))))
+   (erase-buffer (selected-buffer))
+   (set-buffer-fold-width nil)
+   (setq kept-undo-information nil)
+   (setq need-not-save t)
+   (setq auto-save nil)
+   (setq *depth* (if (and (> level 0) (< level 7)) level 3))
+   (init-board)
+   (play))
+ 
+ 
+ (dolist (fn '(init-board print-board
+               finish-game-p finish-line-p board-score
+               select-first select-last play input-integer minimax))
+   (compile fn))
+
+
+http://www.geocities.jp/m_hiroi/puzzle/minimax2.html
+
+を参考に αβ枝刈りを用いたバージョン
+
+ ; 更新日(2005-03-24)
+ 
+ (defconstant board-size 8)
+ (defconstant no-value 10000)
+ (defconstant max-limit  1000)
+ (defconstant min-limit -1000)
+ 
+ (defvar *depth* 3)
+ (defvar *board* (make-array (list board-size board-size)))
+ 
+ (defun init-board ()
+   (dotimes (i board-size)
+     (dotimes (j board-size)
+       (setf (aref *board* i j) (- (random 19) 9)))))
+ 
+ (defun print-board (line)
+   (princ "  ")
+   (dotimes (i board-size)
+     (format t "~3D" i))
+   (format t "~%  --------------------------~%")
+   (dotimes (i board-size)
+     (format t "~A " (if (= line i) "[" " "))
+     (dotimes (j board-size)
+       (let ((num (board-score j i)))
+         (if (= no-value num)
+             (princ " **")
+           (format t "~3D" num))))
+     (format t " ~A~%" (if (= line i) "]" " "))))
+ 
+ (defun finish-game-p (x y no-val-lst)
+   (or (finish-line-p y no-val-lst :horizontal t)
+       (finish-line-p x no-val-lst)))
+ 
+ (defun finish-line-p (line no-val-lst &key horizontal)
+   (labels ((rec (lst acc)
+              (if (null lst)
+                  (= board-size acc)
+                (let ((n (if horizontal (cdar lst) (caar lst))))
+                  (rec (cdr lst) (if (= line n) (1+ acc) acc))))))
+     (rec no-val-lst 0)))
+ 
+ (defun board-score (x y)
+   (aref *board* x y))
+ 
+ (defun select-first (his no-val-lst first-val last-val limit)
+   (let ((py (cdar no-val-lst)))
+     (labels ((rec (x value move)
+                (cond
+                 ((or (>= value limit) ; αβ枝刈り
+                      (< x 0))
+                  (values value move))
+                 ((member (cons x py) no-val-lst :test #'equal)
+                  (rec (1- x) value move))
+                 (t
+                  (let ((val (select-last (1+ his)
+                                          (cons (cons x py) no-val-lst)
+                                          (+ first-val (board-score x py))
+                                          last-val
+                                          value)))
+                    (if (or (= value no-value)
+                            (> val value)) ; 評価値の高いものを選ぶ
+                        (rec (1- x) val (cons x py))
+                      (rec (1- x) value move)))))))
+       (if (or (= his *depth*)
+               (finish-line-p py no-val-lst :horizontal t))
+           (- first-val last-val)
+         (rec (1- board-size) min-limit nil)))))
+ 
+ (defun select-last (his no-val-lst first-val last-val limit)
+   (let ((px (caar no-val-lst)))
+     (labels ((rec (y value move)
+                (cond
+                 ((or (<= value limit) ; αβ枝刈り
+                      (< y 0))
+                  (values value move))
+                 ((member (cons px y) no-val-lst :test #'equal)
+                  (rec (1- y) value move))
+                 (t
+                  (let ((val (select-first (1+ his)
+                                           (cons (cons px y) no-val-lst)
+                                           first-val
+                                           (+ last-val (board-score px y))
+                                           value)))
+                    (if (or (= value no-value)
+                            (< val value)) ; 評価値の低いものを選ぶ
+                        (rec (1- y) val (cons px y))
+                      (rec (1- y) value move)))))))
+       (if (or (= his *depth*)
+               (finish-line-p px no-val-lst))
+           (- first-val last-val)
+         (rec (1- board-size) max-limit nil)))))
+ 
+ (defun input-integer (y)
+   (loop
+     (let ((n (read-integer "0 - 7 の数値:")))
+       (if (and (>= n 0) (<= n 7))
+           (if (= (board-score n y) no-value)
+               (format t "~A には数字がありません~%" n)
+             (return n))
+         (format t "入力エラー:0 - 7 の数値を入力して下さい~%")))))
+ 
+ (defun play ()
+   (with-output-to-selected-buffer
+     (format t "level = ~A~%" *depth*)
+     (let ((first-value 0)       ; 先手の得点
+           (last-value  0)       ; 後手の得点
+           (no-value-lst nil)    ; no-value にセットされた座標リスト
+           x y turn)
+       (labels ((disp-msg (&key first)
+                  (format t "~A (~A,~A) ~2D を選びます: "
+                          (if turn "先手" "後手") x y (board-score x y))
+                  (format t "先手 ~3D 点 : 後手 ~3D 点~%" first-value last-value)))
+         (loop
+           (if (setq turn (not turn))
+               (progn            ; 先手
+                 (setq y (or (cdar no-value-lst) 0))
+                 (print-board y)
+                 (recenter)
+                 (setq x (input-integer y))
+                 (incf first-value (board-score x y)))
+             (multiple-value-bind (no-use move) ; 後手
+                 (select-last 0 no-value-lst first-value last-value min-limit)
+               (setq x (car move)
+                     y (cdr move))
+               (incf last-value (board-score x y))))
+           (disp-msg)
+           (setf (aref *board* x y) no-value)
+           (push (cons x y) no-value-lst)
+           (goto-char (point-max))
+           (when (finish-game-p x y no-value-lst)
+             (princ "試合終了")
+             (return))
+           )))))
+ 
+ (defun minimax (&optional (level 3))
+   (interactive "p")
+   (let ((buf-name "*minimax*"))
+     (set-buffer (or (find-buffer buf-name)
+                     (create-new-buffer buf-name))))
+   (erase-buffer (selected-buffer))
+   (set-buffer-fold-width nil)
+   (setq kept-undo-information nil)
+   (setq need-not-save t)
+   (setq auto-save nil)
+   (setq *depth* (if (and (> level 0) (< level 7)) level 3))
+   (init-board)
+   (play)
+   )
+ 
+ (dolist (fn '(init-board print-board
+               finish-game-p finish-line-p board-score
+               select-first select-last play))
+   (compile fn))
+
+** コメント欄 [#u633f160]
+-ソースの修正、大歓迎です。 -- [[こばやし]] &new{2005-03-24 06:00:15 (木)};

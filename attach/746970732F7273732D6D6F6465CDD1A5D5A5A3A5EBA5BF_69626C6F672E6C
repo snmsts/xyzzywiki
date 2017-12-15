@@ -1,0 +1,38 @@
+;;; -*- Mode: Lisp; Package: EDITOR -*-
+;;;
+; Last updated: <2004-04-28T03:00:35+09:00>
+;
+; ■iBlogが出力するRSSに対応するためのフィルタ for rss-mode
+;
+; なにが原因なのかよく分からないのですが、iBlog が出力する RSS は rss-mode
+; (or xml-parser-modoki.l ?) と相性が悪く、うまく parse できないので、何とか
+; してみました。具体的には、なんとなく悪さをしていそうなマーク区間を外し、改
+; 行を整理しました。
+; 
+; (rss-filter-regist "http://homepage.mac.com/.*" 'iblog-filter)
+;
+; rss/filters/iblog.l
+(require "rss/main")
+
+(provide "rss/filters/iblog")
+
+(in-package "rss")
+
+;; フィルタ関数
+(defun iblog-filter (channel file)
+  (save-excursion
+    (set-buffer (get-buffer-create *rss-buffer-temp*))
+    (erase-buffer (selected-buffer))
+    (insert-file-contents file)
+    (goto-char (point-min))
+    (let (beg end str)
+      (while (scan-buffer "<![CDATA[")
+        (setq beg (point))
+        (scan-buffer "]]>" :tail t)
+        (setq end (point))
+        (setq str (buffer-substring (+ beg (length "<![CDATA[")) (- end (length "]]>"))))
+        (delete-region beg end)
+        (insert (ed::xmlpm-encode-special-chars (substitute-string str "\n" "")))
+        ))
+    (write-region (point-min) (point-max) file nil *encoding-utf8*)
+    (delete-buffer (selected-buffer))))

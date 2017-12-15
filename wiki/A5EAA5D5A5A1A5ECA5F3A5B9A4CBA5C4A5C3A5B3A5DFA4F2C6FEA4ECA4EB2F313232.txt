@@ -1,0 +1,94 @@
+*compile-file-pathname, scroll-window-horizontally, forward-virtual-line, previous-window, next-window [#l523beca]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-05-04 21:10:58 (水)
+-バージョン: 
+
+**メッセージ [#a650ff84]
+ <chapter>
+ <title>compile-file-pathname</title>
+ <type>Function</type>
+ <arguments>compile-file-pathname PATHNAME</arguments>
+ <package>lisp</package>
+ <description>
+ xyzzy でバイトコンパイルした時の出力ファイル名を返します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>scroll-window-horizontally</title>
+ <type>Function</type>
+ <arguments>scroll-window-horizontally ARG</arguments>
+ <package>editor</package>
+ <description>
+ ウィンドウを指定桁数分、右にスクロールします。
+ 負の数値を指定すると逆方向にスクロールします。
+ </description>
+ <seealso>scroll-window</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>forward-virtual-line</title>
+ <type>Function</type>
+ <arguments>forward-virtual-line &amp;optional (ARG 1)</arguments>
+ <package>editor</package>
+ <description>
+ 表示行で次行へ移動します。
+ </description>
+ <seealso>forward-line</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>previous-window</title>
+ <type>Function</type>
+ <arguments>previous-window WINDOW &amp;optional MINIBUF</arguments>
+ <package>editor</package>
+ <description>
+ WINDOW の前のウィンドウを返します。
+   
+   MINIBUF : ミニバッファウィンドウを候補に入れるか
+        nil    無視する
+    non-nil    候補に入れる
+ </description>
+ <seealso>next-window</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>next-window</title>
+ <type>Function</type>
+ <arguments>next-window WINDOW &amp;optional MINIBUF</arguments>
+ <package>editor</package>
+ <description>
+ WINDOW の次のウィンドウを返します。
+ 
+   MINIBUF : ミニバッファウィンドウを候補に入れるか
+        nil    無視する
+    non-nil    候補に入れる
+ </description>
+ <seealso>previous-window</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-取り込みます→[[refwiki:compile-file-pathname]], [[refwiki:scroll-window-horizontally]], [[refwiki:forward-virtual-line]], [[refwiki:previous-window]], [[refwiki:next-window]] -- [[NANRI]] &new{2005-06-11 23:18:03 (土)};
+
+#comment

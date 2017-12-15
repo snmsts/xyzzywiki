@@ -1,0 +1,46 @@
+#freeze
+*window関連 [#ze92b756]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[miyamuko]]
+-優先順位: 普通
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2003-08-13 (水) 06:16:31
+-バージョン: 
+
+**メッセージ [#v723e39b]
+ ■window-coordinate
+ [Type       ]: Function
+ [Arguments  ]: window-coordinate &optional WINDOW
+ [Package    ]: editor
+ [File       ]: builtin.l
+ [Section    ]: ウィンドウ
+ [Description]: 
+ 指定されたウィンドウの座標をリストで返します。
+ (左端のx座標 左端のy座標 右端のx座標 右端のy座標)
+ 
+ 座標軸は左上が (0 0) で右下にいくほど値が大きくなり、
+ 単位はピクセルです。
+ 
+ 使用例:
+   (window-coordinate)
+   => (0 0 693 636)
+
+
+ ■shrink-window
+ [Type       ]: Function
+ [Package    ]: editor
+ [Seealso    ]: enlarge-window
+ [File       ]: builtin.l
+ [Section    ]: ウィンドウ
+ [Description]:
+ カーソルのあるウィンドウの高さを小さくします。 
+
+----
+-余談ですけどEmacsだとsplit-window-verticallyで横に分割なんですね。 -- [[miyamuko]] SIZE(10){2003-08-13 (水) 06:22:06}
+-ML のアーカイブで話題になっていたのを見た覚えがあります。　・・・　[[xyzzy-ml:00212]] のあたりですね。 -- [[NANRI]] SIZE(10){2003-08-13 (水) 14:04:06}
+-ありがとうございます。shrink-windowはあるかと思ったら、shrink-window-horizontallyしか今までなかったのですね。追加しておきます。 -- [[山本]] SIZE(10){2003-08-13 (水) 20:01:50}
+-あ、なるほど。縦にならべるように横に分割するからverticallyなんですね。 -- [[miyamuko]] SIZE(10){2003-08-14 (木) 16:18:49}
+
+#comment

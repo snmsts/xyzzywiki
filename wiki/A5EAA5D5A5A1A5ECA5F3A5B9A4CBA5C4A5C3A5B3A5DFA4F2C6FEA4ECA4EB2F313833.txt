@@ -1,0 +1,311 @@
+* フレーム関連 [#if5af04e]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-12-03 (土) 17:45:54
+-バージョン: 
+
+** メッセージ [#t8abd592]
+pframe.lでexportされているものです。呼び方は「フレーム」でいいのかとか（偽フレームのほうがいい？）、sectionはウィンドウでいいのかとかツッコミお願いします。
+
+ <chapter>
+ <title>*select-pseudo-frame-hook*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ フレームを選択、移動、および新規作成したときに実行されます。
+ すべてのフレームに対して適用されます。
+ 
+ フレームごとに違う動作をさせたい場合は、
+ フレーム構造体のスロット selected-fn に関数を設定します。
+ </description>
+ <seealso>フレームの概要</seealso>
+ <seealso>new-pseudo-frame</seealso>
+ <seealso>select-pseudo-frame</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>pframe.l</file>
+ </chapter>
+
+ <chapter>
+ <title>pseudo-frame-selector</title>
+ <type>Function</type>
+ <arguments>pseudo-frame-selector</arguments>
+ <package>editor</package>
+ <description>
+ ダイアログからフレームを選択します。
+ </description>
+ <seealso>switch-pseudo-frame</seealso>
+ <seealso>select-pseudo-frame</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>pframe.l</file>
+ </chapter>
+
+ <chapter>
+ <title>switch-pseudo-frame</title>
+ <type>Function</type>
+ <arguments>switch-pseudo-frame NAME</arguments>
+ <package>editor</package>
+ <description>
+ 対話的にフレームを選択します。
+ </description>
+ <seealso>select-pseudo-frame</seealso>
+ <seealso>pseudo-frame-selector</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>pframe.l</file>
+ </chapter>
+
+ <chapter>
+ <title>rename-pseudo-frame</title>
+ <type>Function</type>
+ <arguments>rename-pseudo-frame NAME</arguments>
+ <package>editor</package>
+ <description>
+ 現在選択しているフレームの名前を NAME に変更します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>pframe.l</file>
+ </chapter>
+
+ <chapter>
+ <title>delete-all-pseudo-frames</title>
+ <type>Function</type>
+ <arguments>delete-all-pseudo-frames &amp;optional (CREATE-NEW t)</arguments>
+ <package>editor</package>
+ <description>
+ フレームをすべて削除します。
+ 
+   CREATE-NEW : すべて削除した後に、新しいフレームを作るかどうか
+         t        作る
+         nil      作らない
+ 
+ 各フレームごとにスロット deleted-fn に登録された関数が実行されます。
+ </description>
+ <seealso>フレームの概要</seealso>
+ <seealso>delete-pseudo-frame</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>pframe.l</file>
+ </chapter>
+
+ <chapter>
+ <title>delete-pseudo-frame</title>
+ <type>Function</type>
+ <arguments>delete-pseudo-frame &amp;optional (FRAME ed::*current-pseudo-frame*)</arguments>
+ <package>editor</package>
+ <description>
+ フレームを削除します。[C-x 6 0]
+ 最後のひとつを削除した場合、即座に新しいフレームが作られます。
+ 
+   FRAME : 削除するフレーム
+ 
+ FRAME のスロット deleted-fn に関数が設定されている場合、FRAME が削除される前に funcall されます。
+ </description>
+ <seealso>フレームの概要</seealso>
+ <seealso>new-pseudo-frame</seealso>
+ <seealso>delete-all-pseudo-frames</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>pframe.l</file>
+ </chapter>
+
+ <chapter>
+ <title>previous-pseudo-frame</title>
+ <type>Function</type>
+ <arguments>previous-pseudo-frame</arguments>
+ <package>editor</package>
+ <description>
+ 前のフレームに移動します。[C-x 6 p]
+ </description>
+ <seealso>next-pseudo-frame</seealso>
+ <seealso>other-pseudo-frame</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>pframe.l</file>
+ </chapter>
+
+ <chapter>
+ <title>next-pseudo-frame</title>
+ <type>Function</type>
+ <arguments>next-pseudo-frame</arguments>
+ <package>editor</package>
+ <description>
+ other-pseudo-frame の別名です。
+ </description>
+ <seealso>previous-pseudo-frame</seealso>
+ <seealso>other-pseudo-frame</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file></file>
+ </chapter>
+
+ <chapter>
+ <title>other-pseudo-frame</title>
+ <type>Function</type>
+ <arguments>other-pseudo-frame</arguments>
+ <package>editor</package>
+ <description>
+ 次のフレームに移動します。[C-x 6 o]
+ </description>
+ <seealso>previous-pseudo-frame</seealso>
+ <seealso>next-pseudo-frame</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>pframe.l</file>
+ </chapter>
+
+ <chapter>
+ <title>select-pseudo-frame</title>
+ <type>Function</type>
+ <arguments>select-pseudo-frame FRAME</arguments>
+ <package>editor</package>
+ <description>
+ フレーム FRAME を選択します。
+ 
+ FRAME のスロット selected-fn に関数が設定されている場合、それを funcall します。
+ 最後に *select-pseudo-frame-hook* を実行します。
+ </description>
+ <seealso>フレームの概要</seealso>
+ <seealso>switch-pseudo-frame</seealso>
+ <seealso>pseudo-frame-selector</seealso>
+ <seealso>find-pseudo-frame</seealso>
+ <seealso>new-pseudo-frame</seealso>
+ <seealso>*select-pseudo-frame-hook*</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>pframe.l</file>
+ </chapter>
+
+ <chapter>
+ <title>find-pseudo-frame</title>
+ <type>Function</type>
+ <arguments>find-pseudo-frame NAME</arguments>
+ <package>editor</package>
+ <description>
+ 現在のフレームの中から名前が NAME であるものを探して返します。
+ </description>
+ <seealso>select-pseudo-frame</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>pframe.l</file>
+ </chapter>
+
+ <chapter>
+ <title>new-pseudo-frame</title>
+ <type>Function</type>
+ <arguments>new-pseudo-frame NAME &amp;optional SAVE-P SELECTED-FN DELETED-FN</arguments>
+ <package>editor</package>
+ <description>
+ 新しいフレームを作って返します。[C-x 6 2]
+ 
+   NAME        : フレームの名前
+   SAVE-P      : セッション保存時にこのフレームを保存するかどうか
+   SELECTED-FN : このフレームを選択した時に実行される関数
+   DELETED-FN  : このフレームを削除した時に実行される関数
+ 
+ フレームは構造体として定義されており、これらの引数はそれぞれ
+ 同名のスロットに設定されます。
+ 
+ インタラクティブに呼んだ場合 NAME は自動的に割り振られ、SAVE-P は t に設定されます。
+ 前置引数をつけて呼べば NAME を対話的に入力できます。
+ </description>
+ <seealso>フレームの概要</seealso>
+ <seealso>select-pseudo-frame</seealso>
+ <seealso>delete-pseudo-frame</seealso>
+ <seealso>*select-pseudo-frame-hook*</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>pframe.l</file>
+ </chapter>
+
+ <chapter>
+ <title>selected-pseudo-frame</title>
+ <type>Function</type>
+ <arguments>selected-pseudo-frame</arguments>
+ <package>editor</package>
+ <description>
+ 現在選択しているフレームを返します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>pframe.l</file>
+ </chapter>
+
+ <chapter>
+ <title>フレームの概要</title>
+ <type>Tips</type>
+ <arguments></arguments>
+ <package></package>
+ <description>
+ フレームは pseudo-frame という構造体として、pframe.l 内で定義されています。
+ この構造体は以下のようなスロットを持っています。
+   name        : フレームの名前
+   winconf     : このフレームにおけるウィンドウの状態
+   save-p      : セッション保存時にこのフレームを保存するかどうか
+   selected-fn : このフレームを選択したときに実行される関数
+   deleted-fn  : このフレームを削除するときに実行される関数
+ 
+ フレームを新しく作成するには new-pseudo-frame を使えばよく、
+ winconf 以外のスロットは new-pseudo-frame の引数として指定できます。
+ winconf はフレーム作成時や移動時に自動的に設定されます。
+ 
+ selected-fn および delete-fn に設定された関数は funcall によって呼び出されます。
+ *select-pseudo-frame-hook* と異なり、フレームごとに異なる関数を割り当てることができます。
+ また、selected-fn の関数は *select-pseudo-frame-hook* より先に実行されます。
+ </description>
+ <seealso>new-pseudo-frame</seealso>
+ <seealso>select-pseudo-frame</seealso>
+ <seealso>delete-pseudo-frame</seealso>
+ <seealso>*select-pseudo-frame-hook*</seealso>
+ <link>http://xyzzy.s53.xrea.com/qanda/wiki.cgi?p=e1d59f7af8a5ebd071340560b6ed41a2</link>
+ <link>http://xyzzy.s53.xrea.com/wiki/index.php?QuickTour%2Fframe</link>
+ <section>ウィンドウ</section>
+ <file></file>
+ </chapter>
+--------
+- あと、*select-pseudo-frame-hook*は現在「変数と定数」に入っていますが、これらと一緒にしたほうがいいと思いましたがどうでしょう。現状でどこまで「変数と定数」に入れるべきかがよくわからないのでなんともいえませんが。 --  &new{2005-12-03 (土) 17:49:19};
+- どーもです。呼び方もsectionもこのままでよいと思います。一部、SELECTED-FNやDELETED-FNが唐突に現れているように感じるのですが、フレームが構造体であることに言及して、フレーム構造体のスロットであるという風な説明がいるような気がします。 -- [[NANRI]] &new{2005-12-03 (土) 23:48:12};
+- そこはちょっと迷ったところです。あんまりくどく書くのもよくないかと思って、ちょっとだけ言及してseealsoにnew-pseudo-frameを入れてみたのですが、かえって混乱をまねくだけかもしれません。必要な情報はnew-pseudo-frameのところに書いてあるので、リンクだけ残して削除してもいいかもしれません。 --  &new{2005-12-04 (日) 00:46:55};
+- 今はまとめてみているので、SELECTED-FNやDELETED-FNがnew-pseudo-frameの引数で設定されたものだと(だから大文字で書いてあるのだということも)推測できますが、他の記述と混ざったら分からないと思いますよ。また、フレームが構造体だと理解するとnew-pseudo-frameの引数で設定できるということはあまり関係ないので、そこから引っ張ってくるのも違和感があります。 -- [[NANRI]] &new{2005-12-04 (日) 21:01:48};
+ ; こういうこともできるわけですし
+ (progn
+   (new-pseudo-frame "hoge")
+   (let ((pframe (find-pseudo-frame "hoge")))
+     (setf (ed::pseudo-frame-selected-fn pframe)
+           #'(lambda () (ed::set-pseudo-frame-name pframe (concat (ed::pseudo-frame-name pframe) "hoge"))))))
+- 個人的にはフレームについても説明を入れたいんですが、以前佐野さんに「それは余計な情報じゃないですか？」と言われて以来、関数そのものの説明でない場合どこまで書くべきかわからなくなってます。なんとなく佐野さんとNANRIさんでスタンスが違うように思うので、できれば佐野さんの意見も聞いてみたいです。あるいはほかの方の意見も。 --  &new{2005-12-04 (日) 21:43:08};
+- うーん。難しいですね。すみません余計っていうのは間違っていたかと思います。自明なことを載せたくないというのは索引性能を上げたかったからなのですが自分が上ったから脚立を外すような卑怯な行為に思えてきました。[[xyzzy-ml:04005]]の延長のつもりだったのですが、書きたい人の足を引っ張るポリシーに従ってはいけないと反省しております。検索性は別の方向からなんとかする方が良いかも知れません。そういう意味ではtagの整理などをする方が建設的だと今は思っています。なんにしてもpframeはxyzzy独自なのでいままでのどのポリシーからも誰からも反対されないと思います。と、こんな感じの切り口でよいでしょうか？ -- [[佐野]] &new{2005-12-04 (日) 23:28:33};
+- [[refwiki:パッケージ]] や [[refwiki:バッファの内部構造]]みたいに，シンボル名じゃないタイトルをつけるのもひとつの方法じゃないでしょうか -- 中野 &new{2005-12-05 (月) 00:39:36};
+- 佐野さん、中野さん、どうもです。個人的なスタンスは「自分と同じ苦労をほかの人にしてほしくない」というもので、そのせいでついつい余計なことまで書いてしまいます。このスタンスが万人共通のものだとは思いませんし、検索性を損なうという反対意見もよくわかります。いずれにせよ、書いた後に「その情報は不要だ」と言われると結構へこむので、少々様子見中です。ほかの方の意見も聞かせてもらえるとうれしいです。 -- [[書いた人]] &new{2005-12-05 (月) 02:01:02};
+- リファレンスとしての完成度を高めるのを最優先するとして，それでも書いた情報が利用されないとへこむのは，痛いほど分かりすぎます．．． 個人的には，フレームがdefstruct構造体だったと知って新鮮な驚きを感じました． あと，大量のリファレンス投稿にはすごく感心するのと，励みにもなってます．  -- [[中野]] &new{2005-12-05 (月) 03:12:53};
+- ごめんなさい。ほんとにごめんなさい。受験生の単語帳みたいなレベル要素とかがあるとみんなハッピーなのかなという思いつきを。 -- [[佐野]] &new{2005-12-05 (月) 03:20:36};
+- リファレンスは関数リファレンスで、lispを書くとき・読むときに有益な情報を集めるというのが自分の認識です。基本的に情報の取捨選択はしたくないと思っています。関数について書かれた項目は必要だと感じる人がいるという認識のもと、基本的に取り込みます。リファレンスの全体像が見えていないので線引きができないというのも理由です。一方、関数以外(というかシンボル以外というほうがいいかな)の項目については、内容次第ですが、より適切な場所があると感じればそちらにまわします。このときの基準は言葉にするのは難しいのですが、「開発者視点」か「ユーザー視点」か、というような雰囲気のような気がします。 -- [[NANRI]] &new{2005-12-05 (月) 21:54:16};
+- みなさま、ご意見どうもありがとうございました。遅くなりましたが、フレームについての説明を書き、NANRIさんのコメントをもとに微妙に説明を修正してみました。またツッコミなどありましたらお願いします。 --  &new{2005-12-10 (土) 21:07:24};
+- QandAやQuickTourでフレームの機能についての解説はあるので、リファレンスではpseudo-frame構造体の説明だけでよいような気がします。で、<type>Struct</type>として書くのが納まりがよいように思います。 -- [[NANRI]] &new{2005-12-13 (火) 23:23:09};
+- QandAにリンクを貼って、その分説明を削りました。<type>Struct</type>については、titleとかargumentとかどうするのかよくわからないので保留しました。 --  &new{2005-12-14 (水) 00:08:41};
+- イメージとしてはこんな感じです。 -- [[NANRI]] &new{2005-12-14 (水) 00:28:50};
+ <chapter>
+ <title>ed::pseudo-frame</title>
+ <type>Struct</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ 
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>pframe.l</file>
+ </chapter>
+- 取り込みました。→[[refwiki:ed::pseudo-frame]], [[refwiki:selected-pseudo-frame]], [[refwiki:new-pseudo-frame]], [[refwiki:find-pseudo-frame]], [[refwiki:select-pseudo-frame]], [[refwiki:other-pseudo-frame]], [[refwiki:next-pseudo-frame]], [[refwiki:previous-pseudo-frame]], [[refwiki:delete-pseudo-frame]], [[refwiki:rename-pseudo-frame]], [[refwiki:delete-all-pseudo-frames]], [[refwiki:switch-pseudo-frame]], [[refwiki:pseudo-frame-selector]], [[refwiki:*select-pseudo-frame-hook*]] -- [[NANRI]] &new{2006-02-13 (月) 23:12:43};
+
+#comment

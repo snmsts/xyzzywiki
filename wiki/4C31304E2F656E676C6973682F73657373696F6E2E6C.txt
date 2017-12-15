@@ -1,0 +1,30 @@
+[[L10N/english]]
+
+ session.l:145:	      (yes-or-no-p "~A~%はすでに存在します。上書きしますか?"
+-~A~% is existing. Overwrite? --  &new{2005-03-04 21:12:08 (金)};
+
+#comment
+ session.l:193:      (error "セッションファイルではありません")))
+-This file is not Session file. --  &new{2005-03-04 21:07:08 (金)};
+
+#comment
+ session.l:205:  '(("ｾｯｼｮﾝﾌｧｲﾙ(*.ssn)" . "*.ssn")
+-Session files(*.ssn) --  &new{2005-03-04 21:06:02 (金)};
+
+#comment
+ session.l:206:    ("すべてのﾌｧｲﾙ(*.*)" . "*.*")))
+-All files(*.*) --  &new{2005-03-04 21:03:54 (金)};
+
+#comment
+ session.l:210:  (let ((file (file-name-dialog :title "ｾｯｼｮﾝを開く"
+-Open Session --  &new{2005-03-04 21:04:57 (金)};
+
+#comment
+ session.l:213:				:extension "ssn")))
+-ssn --  &new{2005-03-04 21:05:10 (金)};
+
+#comment
+ session.l:222:				:title "ｾｯｼｮﾝの保存"
+-Save Session --  &new{2005-03-04 21:05:28 (金)};
+
+#comment

@@ -1,0 +1,216 @@
+[[tips]]
+
+- [[tips/過剰なdabbrev-popup]]とlispmode.l、complete.lを参考にさせていただいて作ってみました。
+- デフォルトではTabにキーを割り当てていますが適当に変更して下さい。
+- 動作にはこちら（http://hie.s64.xrea.com/xyzzy/note/major_mode.html#lisp-mode）の*lisp-keyword-hash-table*の設定が必要です。
+- (setq *popup-completion-list-default* :always)としないと動かないと思います。
+- ポップアップリスト以外でも動かしたい場合は適当に修正して下さい。
+
+ ;; 過剰な lisp-complete-symbol
+ (if (not (boundp '*post-command-hook*))
+     (setq *post-command-hook* nil))
+ (setq *popup-completion-list-default* :always)
+ (in-package "editor")
+ (defvar *excess-lisp-complete-symbol-command* ; ここで指定したコマンドの時に実行
+   '(self-insert-command
+     backward-delete-char-untabify-or-selection
+     delete-backward-char-or-selection
+     toggle-excess-lisp-complete-symbol
+     ))
+ 
+ (defun my-popup-completion-list (list from &optional (to from))
+   (let ((buffer (selected-buffer))
+ 	(point (point)))
+     (popup-list list #'(lambda (string)
+ 			 (when (and (eq buffer (selected-buffer))
+ 				    (= point (point)))
+ 			   (let ((l (- to from)))
+ 			     (when (and (>= (length string) l)
+ 					(save-excursion
+ 					  (goto-char from)
+ 					  (looking-for (subseq string 0 l))))
+ 			       (incf from l)
+ 			       (setq string (subseq string l))))
+ 			   (delete-region from to)
+ 			   (insert string)
+ 			   (refresh-screen)
+ 			   (toggle-excess-lisp-complete-symbol t)))
+ 		from)))
+ 
+ (defun my-print-completion-list (list prefix &optional string popup-p from to)
+   (unless *executing-macro*
+     (let ((last-string *completion-last-string*))
+       (setq *completion-last-string* string)
+       (setq list (sort list #'string<))
+       (cond (*print-completion-list-hook*
+ 	     (funcall *print-completion-list-hook* list prefix))
+ 	    ((and (cond ((eq popup-p ':always) t)
+ 			((eq popup-p ':never) nil)
+ 			((eq *popup-completion-list-default* ':always) t)
+ 			((eq *popup-completion-list-default* ':never) nil)
+ 			(t popup-p))
+ 		  from to)
+ 	     (my-popup-completion-list list (if prefix (+ from (length prefix)) from) to))
+ 	    ((and (eq *last-command* 'minibuffer-complete)
+ 		  (equal string last-string)
+ 		  (scroll-completion-list list prefix)))
+ 	    (t
+ 	     (long-operation
+ 	       (message "Making completion list...")
+ 	       (let ((w (selected-window))
+ 		     (buffer (selected-buffer)))
+ 		 (unwind-protect
+ 		     (with-output-to-temp-buffer (" *Completion*")
+ 		       (setq *completion-list* list)
+ 		       (setq *completion-related-buffer* buffer)
+ 		       (setq *completion-prefix* prefix)
+ 		       (use-keymap *completion-list-keymap*)
+ 		       (cond ((< (apply #'max (mapcar #'length *completion-list*)) 40)
+ 			      (format t "Possible completions are:~%~%~{~A~^~39T ~A~%~}"
+ 				      *completion-list*)
+ 			      (setq *completion-list-column* 2))
+ 			     (t
+ 			      (format t "Possible completions are:~%~%~{~A~^~%~}"
+ 				      *completion-list*)
+ 			      (setq *completion-list-column* 1)))
+ 		       (setq buffer-read-only t))
+ 		   (set-window w)
+ 		   (unless (eq buffer (selected-buffer))
+ 		     (pop-to-buffer buffer))))
+ 	       (message "Making completion list...done")))))))
+ 
+ (defvar *lisp-completion-list* nil)
+ 
+ (defun make-lisp-completion-list ()
+   (unless *lisp-completion-list*
+     (with-set-buffer
+       (setq *lisp-completion-list* (make-list-from-keyword-table *lisp-keyword-hash-table*))
+       (let ((buffer (tags-setup-buffer))
+ 	    no-dup)
+ 	(save-excursion
+ 	  (set-buffer buffer)
+ 	  (while (scan-buffer (compile-regexp "[]") :no-dup no-dup)
+ 	    (setq no-dup t)
+ 	    (push (buffer-substring (1+ (point))
+ 				    (progn
+ 				      (skip-chars-forward "^")
+ 				      (point))) *lisp-completion-list*))))))
+   (append *lisp-completion-list*
+ 	  (and (boundp 'build-summary-function)
+ 	       (mapcan #'(lambda (x) (cdr x)) (funcall build-summary-function)))))
+ 
+ (defun my-do-completion-internal (from to type &optional compl not-uniq-ok word last-char popup-p)
+   (let ((string (buffer-substring from to)))
+     (when (and (member type '(:file-name :exist-file-name
+ 			      :file-name-list :directory-name))
+ 	       (string-match "\\(^\\|[\\/]\\)\\.\\.[\\/]?$" string)
+ 	       (or (string-match "[\\/]$" string)
+ 		   (null (directory (concat string "*") :count 1))))
+       (delete-region from to)
+       (insert (append-trail-slash (namestring string)))
+       (return-from my-do-completion-internal t))
+     (long-operation
+       (multiple-value-bind (result list prefix)
+ 	  (*do-completion string type word compl)
+ 	(multiple-value-bind (result1 list1 prefix1) ; キーワードファイル・tagsファイル・関数からも補完
+ 	    (*do-completion string :list word (make-lisp-completion-list))
+ 	  (and prefix list1 ; prefixを取り除く
+ 	       (let ((list2 (copy-alist list1)))
+ 		 (setq list1 nil)
+ 		 (dolist (x list2)
+ 		   (if (string-match (concat "^" prefix) x)
+ 		       (push (substring x (length prefix)) list1)
+ 		     (push x list1)))))
+ 	  (setq list (delete-duplicates (nconc list list1) :test 'equal))
+ 	  (when (or (and (stringp result) ; resultの調整
+ 			 (stringp result1)
+ 			 (< 0 (length result1) (length result)))
+ 		    (eq result :no-completions)
+ 		    (eq result :no-match)
+ 		    (and (eq result :solo-match)
+ 			 (eq result1 :not-unique)))
+ 	    (setq result result1))
+ 	  (cond ((stringp result)
+ 		 (unless (or (eq string result)
+ 			     (eq *this-command* 'backward-delete-char-untabify-or-selection)
+ 			     (eq *this-command* 'delete-backward-char-or-selection))
+ 		   (delete-region from to)
+ 		   (insert result)
+ 		   (setq to (+ from (length result))))
+ 		 (cond ((completion-insert-self string list prefix last-char to)
+ 			t)
+ 		       (*completion-auto-help*
+ 			(my-print-completion-list list prefix string popup-p from to)
+ 			't)
+ 		       (t
+ 			(setq *completion-last-string* string)
+ 			:ambigous)))
+ 		((eq result :not-unique)
+ 		 (cond ((completion-insert-self string list prefix last-char to)
+ 			t)
+ 		       (t
+ 			(or not-uniq-ok
+ 			    (my-print-completion-list list prefix string popup-p from to))
+ 			result)))
+ 		(t result)))))))
+ 
+ (defun my-do-completion (from to type &optional compl word last-char
+ 			      (popup-p *popup-completion-list-default*))
+   (completion-message
+    (if (eq type ':command-line)
+        (complete-command-line from word)
+      (my-do-completion-internal from to type compl nil word last-char popup-p))))
+ 
+ (defun my-lisp-complete-symbol ()
+   (interactive "*")
+   (let ((otab (syntax-table)))
+     (use-syntax-table *lisp-mode-syntax-table*)
+     (unwind-protect
+ 	(protect-match-data
+ 	  (let* ((list nil)
+ 		 (end (point))
+ 		 (start (progn
+ 			  (when (skip-syntax-spec-backward "w_")
+ 			    (skip-syntax-spec-forward "'"))
+ 			  (point)))
+ 		 (type (cond ((looking-back "#\\")
+ 			      (setq list *lisp-character-name-list*)
+ 			      :list)
+ 			     ((and (looking-back "(")
+ 				   (progn
+ 				     (forward-char -2)
+ 				     (not (looking-at "[('#]"))))
+ 			      :function-name)
+ 			     (t
+ 			      :non-trivial-symbol-name))))
+ 	    (goto-char end)
+ 	    (when (<= start end)
+ 	      (my-do-completion start end type list nil nil
+ 				*lisp-popup-completion-list*))))
+       (use-syntax-table otab))))
+ 
+ (defun excess-lisp-complete-symbol ()
+   (if (find *this-command* *excess-lisp-complete-symbol-command*)
+       (my-lisp-complete-symbol)
+     (toggle-excess-lisp-complete-symbol t)))
+ 
+ (defun toggle-excess-lisp-complete-symbol (&optional off)
+   (interactive "*")
+   (lisp-indent-line)
+   (if (or off
+ 	  (find 'excess-lisp-complete-symbol *post-command-hook*)
+ 	  (not (looking-at "\\_>")))
+       (progn
+ 	(delete-hook '*post-command-hook* 'excess-lisp-complete-symbol)
+ 	(message "excess-lisp-complete-symbol turns off."))
+     (progn
+       (add-hook '*post-command-hook* 'excess-lisp-complete-symbol)
+       (message "excess-lisp-complete-symbol turns on.")
+       (my-lisp-complete-symbol))))
+ 
+ (dolist (keymap (list *lisp-mode-map*
+ 		      *lisp-interaction-mode-map*))
+   (define-key keymap #\TAB 'toggle-excess-lisp-complete-symbol))
+ (in-package "user")
+
+#comment

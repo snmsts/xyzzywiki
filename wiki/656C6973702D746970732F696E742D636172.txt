@@ -1,0 +1,6 @@
+- [[xyzzy-ml:08375]] より（須田さん）
+
+ (defun int-char (i)
+   (digit-char i))
+----
+#comment

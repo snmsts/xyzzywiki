@@ -1,0 +1,66 @@
+[[trash]]
+
+[[Games/Tetris]]で話題になっていたので、なんとなし結果はわかっていたけれども~
+書いてみました。他の実験でも大筋のところはパクれるんじゃ無いかと…~
+佐野~
+
+ ;;si:performance-counterはクロックが変動するPCとかデュアルとかでは正確に値が取れないかも
+ ;;しかも補助アプリでも組まないと周期が謎なので、ベンチマークにしか使えない…
+ 
+ ;;incfとsetqの速度比較。
+ (setq f
+       #'(lambda (x)
+ 	  (let (tmp
+ 		t1)
+ 	    (setq tmp 0)
+ 	    (format t "setq ~A" x)
+ 	    (setq t1 (si:performance-counter))
+ 	    (dotimes (i 100000)
+ 	      (setq tmp (+ 1 tmp))
+ 	      )
+ 	    (format t "\t~A~%" (- (si:performance-counter) t1))
+ 	    (setq tmp 0)
+ 	    (format t "incf ~A" x)
+ 	    (setq t1 (si:performance-counter))
+ 	    (dotimes (i 100000)
+ 	      (incf tmp)
+ 	      )
+ 	    (format t "\t~A~%" (- (si:performance-counter) t1))
+ 	    )))
+ #<lexical-closure: (anonymous)>
+ 
+ (funcall f "without compile")
+ setq without compile	3610249468
+ incf without compile	60869100467
+ nil
+ ;;incfオセー
+ 
+ (funcall (compile nil f) "with compile")
+ setq with compile	72659727
+ incf with compile	71797551
+ nil
+ 
+ ;;コンパイルはえーincfの速度のぶれは誤差範囲っぽいです。
+ ;;マクロの構造が理解できてれば当然の結果ですけど…
+
+ベンチマークの友
+ (defmacro gettime (func)
+   `(let ((otime (si:performance-counter)))
+      ,func
+      (format t "~A~%" (- (si:performance-counter) otime))))
+
+ (gettime
+  (mapcar (lambda (x) x)
+ 	(mapcar (let ((x 0))
+ 	  (lambda (a) (setq x (1+ x))))
+ 		(make-list 100000))))
+ 2543399
+
+ (gettime
+  (dotimes (i 100000)
+    i))
+ 22582247
+
+なんだこりゃ
+
+06/03/10 佐野

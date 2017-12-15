@@ -1,0 +1,24 @@
+[[アンケート一覧]]
+
+にちゃんねるでちょっと話題になったのでアンケートを作ってみました。
+
+~皆さんのお使いのファイラを教えてください((理由を付けていただけるとベターです。もし、項目が足りないようでしたら適当に足してやってください。項目の追加は画面上下の編集をクリックすればできます))。
+
+#vote([[内蔵ファイラ (C-c C-f)>ファイラのManual]][51],漢らしくC-x C-fのみ[3],Explorer[16],[[MDIE>http://cres.s28.xrea.com/soft/mdie.html]][6],[[あふ>http://www.h5.dion.ne.jp/~akt/]][59],[[Dyna>http://hp.vector.co.jp/authors/VA004117/dyna.html]][38],[[PPx>http://homepage1.nifty.com/toro/slwin4.html]][10],[[まめFile4>http://www6.plala.or.jp/amasoft/]][18],[[X-Finder>http://www.eonet.ne.jp/~gakana/]][16],[[DF>http://homepage1.nifty.com/bee/df/]][15],[[SpringM>http://www.vector.co.jp/soft/win95/util/se049220.html]][4],[[Avesta>http://lamoo.s53.xrea.com/app/index.html]][4],[[卓駆★>http://www.valley.ne.jp/~com/]][1],[[WinFD>http://www.starseed.ne.jp/winfd/]][1],[[lister>http://homepage2.nifty.com/seiya-suda/xyzzy.html]][4])
+
+----
+- あふ使ってます。キーバインドをxyzzy風にして。 --  &new{2006-12-05 (火) 10:10:48};
+- DFも入れて欲しい。 --  &new{2006-12-05 (火) 15:26:22};
+- SpringMはダメですかそうですか --  &new{2006-12-05 (火) 19:29:08};
+- 他ソフトと連携しにくいら内蔵使ってない。xyzzyが起動してないときも内蔵ファイラを立ち上げられればいいんだけど。 -- [[DFユーザ]] &new{2006-12-07 (木) 07:47:44};
+- ニ画面?は好みじゃないので、PPx(色とキーはSpringM風)使ってます。 --  &new{2006-12-07 (木) 14:04:09};
+- 連携しにくいというのは気のせいじゃないだろうか。 --  &new{2006-12-11 (月) 23:00:44};
+- dk/wとかWHFはマイナーですか？ --  &new{2006-12-23 (土) 12:03:47};
+- Explorerはマウスで楽に操作できるのが便利。縦置きタスクバーと組み合わせて、xyzzyのウィンドウとExplorerのウィンドウを一緒に複数並べておけるのもグー。 --  &new{2006-12-27 (水) 22:08:37};
+- listerを改造して使ってます。やっぱりテキストベースはいいですね。 --  &new{2006-12-30 (土) 08:18:47};
+- Xfinderってどうよ？ --  &new{2007-07-29 (日) 21:48:20};
+- dk/wに一票 --  &new{2007-09-11 (火) 16:33:15};
+- Servant Salamanderユーザはいないのでしょうか･･････日本語パスに弱いけどorz --  &new{2007-09-12 (水) 17:08:29};
+- だいなファイラーお勧め --  &new{2009-04-04 (土) 21:35:16};
+
+#comment

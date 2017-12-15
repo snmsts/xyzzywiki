@@ -1,0 +1,69 @@
+昔、Toy さんのところからいただいたものをすこし改造したものです。
+
+たしかB型向けだったはず。
+
+ ;; C-c b
+ ;; siteinit.l をコンパイルして、ダンプファイルを削除
+ (defun compile-and-delete-dump-file ()
+   (interactive)
+   (and (find-buffer "siteinit.l")
+        (eval-buffer "siteinit.l"))
+   (and (file-exist-p (concat (si:system-root) "site-lisp/siteinit.lc"))
+        (byte-compile-file
+         (concat (si:system-root) "site-lisp/siteinit.l")))
+   (let ((dumpfile
+          (concat (si:system-root) "xyzzy.w"
+                  (case (os-platform)
+                    (windows-2000 "2k")
+                    (windows-nt "nt")
+                    (windows-98 "98")
+                    (windows-95 "95")
+                    (whistler "xp")
+                    (windows-xp "xp")
+                    (t "nt")))))
+     (and (file-exist-p dumpfile)
+          (delete-file dumpfile))))
+ (global-set-key '(#\C-c #\b) 'compile-and-delete-dump-file)
+--
+-siteinit.l はバイトコンパイルせず、常に siteinit.lc が存在しない状態のほうがよいのでは。
+-有った場合にはコンパイルしなおしているので、これを使いつづける限り無問題な気がします。”手動でやる癖”とかが出ると困るだろうけど… 佐野 2003-05-01
+
+ 	 (copy-file dumpfile
+ 		    (concat dumpfile ".bak")
+ 		    :if-exists :overwrite)
+ 	 (delete-file dumpfile))))
+--
+-(and (file-exist-p dumpfile) と (delete-file dumpfile)))) の間に入れてバックアップもとっておくとか -- [[B型]] &new{2004-06-20 (日) 12:46:26};
+----
+- xyzzy ver0.2.2.235からWindowsXPの時の(os-platform)の返りが"whistler"から"windows-xp"に変わっています。よって.235からは(whistler "xp")を(windows-xp "xp")へ要変更。 -- [[血液型不明人]] &new{2005-12-09 (金) 22:45:51};
+
+----
+
+ ;; C-c b
+ ;; siteinit.l をコンパイルして、ダンプファイルを削除
+ (defun compile-and-delete-dump-file ()
+   "siteinit.l をコンパイルして、ダンプファイルを削除"
+   (interactive)
+   (and (find-buffer "siteinit.l")
+        (eval-buffer "siteinit.l"))
+   (and (file-exist-p (merge-pathnames "site-lisp/siteinit.lc" (si:system-root)))
+        (byte-compile-file (merge-pathnames "site-lisp/siteinit.l" (si:system-root))))
+   (and (file-exist-p (si:dump-image-path))
+        (copy-file (si:dump-image-path) (concat (si:dump-image-path) ".bak")
+                   :if-exists :overwrite)
+        (delete-file (si:dump-image-path))))
+ (global-set-key '(#\C-c #\b) 'compile-and-delete-dump-file)
+- 全部まとめてこんなで。 -- [[B型]] &new{2005-12-10 (土) 16:58:21};
+- siteinit.lをeval-bufferしている理由を教えていただけませんか？ -- [[A]] &new{2006-10-22 (日) 22:21:39};
+- 書いた人ではないので本来の理由は分かりませんが、バイトコンパイル前にeval-bufferしておくことで、コンパイル時のエラー発生が減少することが期待されます。ちゃんとした説明は大変なので省略しますが、eval-bufferしてバイトコンパイルに必要な環境を整えているということです。 -- [[NANRI]] &new{2006-10-28 (土) 04:23:07};
+----
+  ;; siteinit.lを保存したら、自動でbyte-compile & delete-dump-file
+  (add-hook '*after-save-buffer-hook*
+  	  #'(lambda()
+  	      (interactive)
+  	      (when (equal (get-buffer-file-name)
+  			   (concat (si:system-root) "site-lisp/siteinit.l"))
+  		(compile-and-delete-dump-file))))
+
+- こんなのを書いてみたんですけど、何度かセーブすると、評価結果でしょうか、ステータスバーに、なにやら#<lexical-closure:(anonymous)> というのが、どんどん増えていってしまいます。どなたか添削してもらえないでしょうか... -- benok &new{2014-07-24 (木) 22:46:07};
+#comment

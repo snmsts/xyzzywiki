@@ -1,0 +1,32 @@
+ファイラからファイルのフルパスを取得したかったので作りました。
+
+  (defun my-filer-make-clipboard-string (lst)
+    (apply #'concat (mapcar #'(lambda (x) (concat x "\n")) lst)))
+  
+  (defun my-filer-marked-filename-to-clipboard ()
+    (interactive)
+    (let ((selected-files (or (filer-get-mark-files)
+  			    (list (filer-get-current-file)))))
+      (copy-to-clipboard (my-filer-make-clipboard-string selected-files))
+      (message "ファイル名をコピーしました")))
+
+あとは適当にバインドして
+  (define-key filer-keymap #\C-0 'my-filer-marked-filename-to-clipboard)
+
+**使い方
+ファイラを立ち上げて例えばXYZZY_HOMEにいるときに
+site-lisp,usrをマークした状態で実行すると
+
+  C:/home/tools/xyzzy/site-lisp/
+  C:/home/tools/xyzzy/usr/
+
+のような文字列がクリップボードに保存されます。
+***補足
+マークがないときは現在のファイラのカーソルの位置にあるファイルの
+フルパスがクリップボードに保存されます。
+
+----
+-Hieさんのxyzzy Note内の[[関連ページ>http://hie.s64.xrea.com/xyzzy/note/filer.html#filer-get-filenamestring]] --  &new{2004-04-16 (金) 18:03:36};
+-あらら、すでにあったんですね。 -- [[作った人]] &new{2004-04-16 (金) 18:04:45};
+
+#comment

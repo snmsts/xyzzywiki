@@ -1,0 +1,64 @@
+* setf の多値対応 [#d189a679]
+-ページ:     [[patch]]
+-投稿者:     [[bowbow99]]
+-優先順位:   低
+-状態:       提案
+-カテゴリー: 機能追加
+-投稿日:     2009-07-09 (木) 19:54:32
+-バージョン: 
+
+** メッセージ [#od2367bd]
+defsetf や define-setf-method で newvalue の式が返した多値を受け取ることができなかったので、<xyzzy>/lisp/setf.l を改修してみました。
+
+ --- lisp/setf.l	2009-07-08 22:12:25.515625000 +0900
+ +++ site-lisp/setf.l	2009-07-08 23:41:50.109375000 +0900
+ @@ -93,8 +93,6 @@
+  (defun get-setf-method (form &optional env)
+    (multiple-value-bind (vars vals stores store-form access-form)
+        (get-setf-method-multiple-value form env)
+ -    (unless (= (list-length stores) 1)
+ -      (error "複数の格納変数があります"))
+      (values vars vals stores store-form access-form)))
+ 
+  (defun optimize-setf-method (vars vals stores store-form access-form newvalues)
+ @@ -112,16 +110,7 @@
+  	    (t
+  	     (push (car var) new-vars)
+  	     (push (car val) new-vals))))
+ -    (do ((store stores (cdr store))
+ -	 (newvalue newvalues (cdr newvalue)))
+ -	((endp store))
+ -      (if (or (constantp (car newvalue))
+ -	      (symbolp (car newvalue)))
+ -	  (setq store-form (nsubst (car newvalue) (car store) store-form :test #'eq))
+ -	(progn
+ -	  (push (car store) new-stores)
+ -	  (push (car newvalue) new-newvalues))))
+ -    (values new-vars new-vals new-stores store-form access-form new-newvalues)))
+ +    (values new-vars new-vals stores store-form access-form newvalues)))
+  
+  ;;;(defun setf-expand-1 (place newvalue env)
+  ;;;  (if (atom place)
+ @@ -155,13 +144,12 @@
+        (multiple-value-bind (vars vals stores store-form access-form)
+  	  (get-setf-method place env)
+  	(multiple-value-setq (vars vals stores store-form access-form newvalue)
+ -			     (optimize-setf-method vars vals stores store-form
+ -						   access-form (list newvalue)))
+ +	  (optimize-setf-method vars vals stores store-form
+ +				access-form (list newvalue)))
+  	(if (or vars stores)
+ -	    `(let* ,(mapcar #'list
+ -			    (append vars stores)
+ -			    (append vals newvalue))
+ -	       ,store-form)
+ +	    `(let* ,(mapcar #'list vars vals)
+ +	       (multiple-value-bind ,stores ,(car newvalue)
+ +		 ,store-form))
+  	  store-form)))))
+
+----
+// 小人さん乙です
+- setf-values という名前で公開しました。 ttp://bowbow99.sakura.ne.jp/xyzzy/packages.l -- [[bowbow99]] &new{2009-07-17 (金) 12:32:50};
+
+#comment

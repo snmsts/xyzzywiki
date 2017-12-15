@@ -1,0 +1,52 @@
+*はじめに [#fb40b409]
+w3mでフレームをテーブルにしてたり通常通り表示したりします。
+www-modeのファイルを一部書き換えたり、w3mの変更が必要になる場合があるのでご注意ください。
+''大きな問題点もあります''
+
+*必要なもの [#x4894832]
+[[w3m-mee>http://pub.ks-and-ks.ne.jp/prog/w3mmee/]] が必要です。[[w3m-mee>http://pub.ks-and-ks.ne.jp/prog/w3mmee/]]からソースを取得しcygwinでコンパイルしてください。
+
+*設定 [#d88d1e71]
+**.www [#s3e908d8]
+ (setq *www-w3m-command*
+    (map-slash-to-backslash "C:/cygwin/usr/local/bin/w3m.exe"))
+を
+ (setq *www-w3m-command*
+    (map-slash-to-backslash "C:/cygwin/usr/local/bin/w3my.exe -F -e -dump=source,half-buffer"))
+に変更します。
+**www-w3m.l [#q55e7157]
++www-w3m.lの適当なところに
+ (defvar *my-www-w3m-frame-flag* t)
+ (defun my-www-w3m-command (url &optional opts cols)
+ 	(format nil "~A ~@[ -cols ~D~] ~A"
+ 			*www-w3m-command*
+ 			cols
+ 			url))
+ (defun my-www-w3m-frame-toggle ()
+   (interactive)
+   (if *my-www-w3m-frame-flag*
+ 	  (setq *my-www-w3m-frame-flag* nil)
+ 	(setq *my-www-w3m-frame-flag* t))
+   (www-reread))
+ (define-key *www-view-mode-map* #\2 'my-www-w3m-frame-toggle)
+を追加します。
+ 
++(defun www-w3m-halfdump (url &key post kcode)
+・・・
+)
+内にある
+ (let ((command (www-w3m-command (map-slash-to-backslash temp)
+   opts
+ (window-columns)))
+の部分を
+ (let ((command (if *my-www-w3m-frame-flag*
+   (my-www-w3m-command url opts (window-columns))
+   (www-w3m-command (map-slash-to-backslash temp) opts (window-columns))))
+に変更します。  
+**最後に [#n4803745]
+www-w3m.lをバイトコンパイルし、必要に応じてダンプをします。
+*使い方 [#ub7988f0]
+www-modeを起動してフレームを使ったサイトを見てください。
+''2'' を押すとフレームを置き換えた表示と通常の表示がトグルします。
+*問題点 [#nd999bd6]
+フレームの最初のページしか表示できないようです。解決策が全く思いつきません…

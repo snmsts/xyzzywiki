@@ -1,0 +1,107 @@
+#freeze
+*accents [#l1f3a052]
+
+a―[C-7]→á とか n―[C-0]→ñ とか。もっとスマートな方法があったら勝手に書き換えといてください。
+
+ (defvar *accents-ignore-list* '(#\LFD #\RET #\NUL #\SPC #\TAB "　"))
+ 
+ (defvar *accents-grave-char-list*
+   '(#\A #\x0140 #\a #\x0160
+     #\E #\x0148 #\e #\x0168
+     #\I #\x014C #\i #\x016C
+     #\O #\x0152 #\o #\x0172
+     #\U #\x0159 #\u #\x0179))
+ (defun accents-add-grave ()
+   (interactive "*")
+   "+ accent grave (`)"
+   (add-accents *accents-grave-char-list*))
+ 
+ (defvar *accents-aigu-char-list*
+   '(#\A #\x0141 #\a #\x0161
+     #\E #\x0149 #\e #\x0169
+     #\I #\x014D #\i #\x016D
+     #\O #\x0153 #\o #\x0173
+     #\U #\x015A #\u #\x017A
+     #\Y #\x015D #\y #\x017D))
+ (defun accents-add-aigu ()
+   (interactive "*")
+   "+ accent aigu (')"
+   (add-accents *accents-aigu-char-list*))
+ 
+ (defvar *accents-circonflexe-char-list*
+   '(#\A #\x0142 #\a #\x0162
+     #\E #\x014A #\e #\x016A
+     #\I #\x014E #\i #\x016E
+     #\O #\x0154 #\o #\x0174
+     #\U #\x015B #\u #\x017B))
+ (defun accents-add-circumflex ()
+   (interactive "*")
+   "+ accent circonflexe (^)"
+   (add-accents *accents-circonflexe-char-list*))
+ 
+ (defvar *accents-tilde-char-list*
+   '(#\A #\x0143 #\a #\x0163
+     #\O #\x0155 #\o #\x0175
+     #\N #\x0151 #\n #\x0171))
+ (defun accents-add-tilde ()
+   (interactive "*")
+   "+ tilde (~)"
+   (add-accents *accents-tilde-char-list*))
+ 
+ (defvar *accents-trema-char-list*
+   '(#\A #\x0144 #\a #\x0164
+     #\E #\x014B #\e #\x016B
+     #\I #\x014F #\i #\x016F
+     #\O #\x0156 #\o #\x0176
+     #\U #\x015C #\u #\x017C
+                 #\y #\x017F))
+ (defun accents-add-trema ()
+   (interactive "*")
+   "+ trema (\")"
+   (add-accents *accents-trema-char-list*))
+ 
+ (defvar *accents-misc-char-list*
+   '(#\! #\x0121 #\? #\x013F
+     #\< #\x012B #\> #\x013B
+     #\A #\x0145 #\a #\x0165
+     #\E #\x0146 #\e #\x0166
+     #\C #\x0147 #\c #\x0167
+     #\D #\x0150 #\d #\x0170
+     #\O #\x0158 #\o #\x0178
+     #\P #\x015E #\p #\x017E
+     #\s #\x015F))
+ (defun accents-add-misc ()
+   (interactive "*")
+   "+ ?"
+   (add-accents *accents-misc-char-list*))
+ 
+ (defun add-accents (aclist)
+   (interactive "*")
+   "+ accents"
+   (let (fc (n 0) (ins nil) (bwc nil))
+     (when (member (following-char) *accents-ignore-list*)
+       (backward-char)
+       (setq bwc t))
+     (setq fc (following-char))
+     (while (and (nth (* 2 n) aclist)
+                 (not ins))
+       (when (equal fc (nth (* n 2) aclist))
+         (setq ins t)
+         (delete-char)
+         (insert (nth (+ 1 (* n 2)) aclist))
+         (unless bwc
+           (backward-char)))
+       (incf n))
+     (if (and (not ins) bwc) (forward-char))))
+
+C-o を使う人は適当に。
+
+ (global-set-key '#\C-8 'accents-add-grave)
+ (global-set-key '#\C-7 'accents-add-aigu)
+ (global-set-key '#\C-^ 'accents-add-circumflex)
+ (global-set-key '#\C-2 'accents-add-trema)
+ (global-set-key '#\C-0 'accents-add-tilde)
+ (global-set-key '#\C-o 'accents-add-misc)
+
+**更新 [#r0c842ff]
+- 2005/01/11, 某こだわらない人が取敢ず書いてみた

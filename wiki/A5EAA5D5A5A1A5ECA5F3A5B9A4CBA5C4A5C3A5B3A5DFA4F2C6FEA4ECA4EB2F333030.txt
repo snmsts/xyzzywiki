@@ -1,0 +1,42 @@
+* display-buffer [#t087b169]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[nakano]]
+-優先順位:   低
+-状態:       着手
+-カテゴリー: 新規項目
+-投稿日:     2008-04-04 (金) 21:17:40
+-バージョン: 
+
+** メッセージ [#q8d80fbc]
+
+ <chapter>
+ <title>display-buffer</title>
+ <type>Function</type>
+ <arguments>display-buffer BUFFER &amp;optional NOT-THIS-WINDOW</arguments>
+ <package>editor</package>
+ <description>
+ BUFFER が、現在表示されているウィンドウのどれにも表示されていなければ、
+ ウィンドウに BUFFER を表示します。
+ ウィンドウ数が1の場合は、*pop-up-windows* により分割方法を指定します。
+ *pop-up-windows*: 分割する行数を指定します。
+     t    : 上下ニ分割します。 (デフォルト)
+     整数 : 指定行数で分割します。
+     nil  : ウィンドウが分割されていない場合でも新たに分割しません。
+ 
+   NOT-THIS-WINDOW: 
+        non-nil の時は、現在のウィンドウに既に表示されていても、
+        別ウィンドウに BUFFER を表示します。
+ 
+ 戻り値:
+   BUFFER を表示しているウィンドウを返します。
+ </description>
+ <seealso>switch-to-buffer-other-window</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>window.l</file>
+ </chapter>
+
+----
+- どーもです。 -- [[NANRI]] &new{2010-04-29 (木) 04:04:22};
+
+#comment

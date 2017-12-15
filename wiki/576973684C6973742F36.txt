@@ -1,0 +1,13 @@
+* lookup 
+-ページ: [[WishList]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2003-10-16 (木) 00:40:10
+
+** メッセージ 
+辞書を引き引きしたいな。
+
+http://lookup.sourceforge.net/
+----
+
+#comment

@@ -1,0 +1,53 @@
+すたっふー%%化膿曳航%%でわない
+ [#q280d914]
+箇条書き
+--aaaaaaaaaaaaa
+-bbbbbbbbbb
+  ccccccccccccc
+*その２ [#g78e900a]
+ｈｊｈｌｋｊｋｌ
+- [[test>test/hoge]]
+*テスト [#g78e900a]
+abc
+def
+test
+
+[[LDAP]]
+
+*(transient-mark-mode nil)もどき [#we20149c]
+
+- セレクションとリージョンを統合して、
+emacs の (transient-mark-mode nil) な環境もどきを作ってみました。
+lisp の l の字も知らないうえに xyzzy は一昨日から使い始めたところなので、
+かなり変なことしています多分。あと、肝は rv-region.l からパクりました。
+
+- transit.l
+
+-- \C-SPC を二度続けて叩くか、マウスで範囲指定すると、
+transient region を作って、セレクション色で表示します。
+
+-- transient region があるときに replace 系のコマンドを実行すると、
+transient region に対して働きます。
+
+-- transient region は普通の region でもあるので、
+transient region があるときに
+indent-region など region 限定系のコマンドを実行すると、
+transient region に対して働きます。
+
+-- transient region は普通の selection でもあるので、
+transient region があるときに
+copy-selection-to-clipboard (\C-Insert) など
+selection 系のコマンドを実行すると、transient region に対して働きます。
+
+-- transient region がないときは、普通に mark で region してます。
+
+-- Windows 系エディターに慣れた人も、
+もうセレクションとリージョンに悩まなくて良くて幸せ。
+
+-- でももっと簡潔に書けないかな?
+
+- 添付ファイルの更新の練習。うまく行かない……。
+同名のファイルをもう一度アップロードしても駄目なのか。
+どうしたらいいんだろう。
+
+- &ref(transit_2.l);

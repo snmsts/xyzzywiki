@@ -1,0 +1,52 @@
+* 標準lispの変更 [#s3012d91]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2012-07-23 (月) 22:48:46
+
+** メッセージ [#c833b780]
+C-x C-bにバインドされているlist-buffers
+で,新しいウィンドウを開くのをやめさせようと思って
+標準lispを見ていたらどうもmisc.lの
+with-output-to-temp-bufferが
+(popup t)と初期値をtにしているのをnilに変えれば良いようだと
+思い変えてコンパイルしてみたのですが,
+「`return-from'のキャッチャを参照できません: nil」
+とエラーが出ます。
+
+標準lispは拡張リスプのようにbyte-compile
+=> C-S ダブルクリック(xyzzycli.exe)
+では変更できないのでしょうか?
+
+----
+- できます。なぜエラーが出るのかは分かりませんが。list-buffersの定義を書き換えないとうまくいかないと思います。 --  &new{2012-07-27 (金) 16:24:42};
+ (defun list-buffers (&optional file-only)
+   (interactive "p")
+   (let ((selected (selected-buffer)))
+     (with-output-to-temp-buffer ("*Buffer List*" nil)
+       (set-buffer "*Buffer List*")
+       (let ((tmp (selected-buffer)))
+         (princ " MR Buffer            Size    Line  Mode          File\n")
+         (princ " -- ------            ----    ----  ----          ----\n")
+         (dolist (buffer (buffer-list))
+           (when (not (eq buffer tmp))
+             (let ((bufname (buffer-name buffer))
+                   (filename (get-buffer-file-name buffer)))
+               (unless (or (string= bufname " " :end1 1)
+                           (and (null filename) file-only))
+                 (let ((size (buffer-size buffer))
+                       (lines (buffer-lines buffer)))
+                   (format t "~:[ ~;.~]~:[ ~;*~]~:[ ~;%~] ~A~VT ~D~VT ~D~35T ~A~:[~;~49T ~:*~A~]~%"
+                           (eq buffer selected)
+                           (buffer-modified-p buffer)
+                           (buffer-local-value buffer 'buffer-read-only)
+                           bufname
+                           (- 24 (if (zerop size) 0 (floor (log size 10)))) size
+                           (- 32 (if (zerop lines) 0 (floor (log lines 10)))) lines
+                           (buffer-local-value buffer 'mode-name)
+                           filename)))))))
+       (goto-char (point-min))
+       (buffer-menu-mode))))
+- あなたが神か！なんかよくわかりませんがたしかに解決しました^o^ --  &new{2012-07-28 (土) 20:28:57};
+
+#comment

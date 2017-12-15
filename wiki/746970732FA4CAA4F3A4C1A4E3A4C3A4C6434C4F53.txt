@@ -1,0 +1,441 @@
+[[tips]]
+
+*索引 [#ia109829]
+
+#contents
+
+*ソース [#m3cf97d6]
+
+ ;;; -*- Mode: lisp -*-
+ 
+ (provide "clos")
+ (defpackage "clos")
+ (in-package "clos")
+ 
+ (export '(defclass defmethod make-instance slot-value))
+ 
+ (defconstant *classes* (make-hash-table))
+ 
+ (defstruct *class*
+   name
+   supers
+   class-slots      ;  class slots
+   slots            ;  *slot* のリスト
+   slot-index-table ;  （シンボル＆インスタンス上のslotsでのインデックス）のハッシュ表
+   initarg-table    ;  :initarg に対応するインデックスを集めたハッシュ表
+   slots-count)     ;  インスタンスのスロットの数
+ 
+ (defstruct *instance*
+   class
+   slots)
+ 
+ (defstruct *slot*
+   name
+   index       ;; (eq allocation :instance)のときのインデックス。
+   allocation
+   initform)
+ 
+ ;;;
+ ;;; make-instance
+ ;;;
+ (defun make-pairs (rest)
+   (do ((list rest (cdr list))
+        (result)
+        (car))
+       ((null list) result)
+     (setq car (car list))
+     ;;(unless (keywordp car) (throw 'abort "not keyword in make-instance"))
+     (setq list (cdr list))
+     (when (null list) (throw 'abort "no initial value in make-instance"))
+     (push (cons car (car list)) result)))
+ 
+ (defun make-instance (class-symbol &rest rest)
+   (let ((class (gethash class-symbol *classes*))
+         (pairs (make-pairs rest))
+         obj-slots)
+     (when (null class) (throw 'abort "no such a class"))
+     (let ((obj (make-*instance* :class class))
+           (initarg-table (*class*-initarg-table class)))
+       (setf (*instance*-class obj) class)
+       (setq obj-slots (make-array (*class*-slots-count class)))
+       (setf (*instance*-slots obj) obj-slots)
+       ;; init with :initform
+       (let ((slots (*class*-slots class)))
+         (dolist (a-slot slots)
+           (unless (eq :class (*slot*-allocation a-slot))
+             (setf (aref obj-slots (*slot*-index a-slot)) (eval (*slot*-initform a-slot))))))
+       ;; init with :initarg
+       (dolist (pair pairs)
+         (let* ((key (car pair))
+                (val (cdr pair))
+                (index (gethash key initarg-table)))
+           (when (null index) (throw 'abort (format nil "no such a :initarg '~A', when call make-instance" key)))
+           (setf (aref obj-slots index) val)))
+       obj)))
+ 
+ ;;;
+ ;;; slot-value (getter)
+ ;;;
+ (defun slot-value (obj slot)
+   (unless (*instance*-p obj) (throw 'abort "not object in slot-value"))
+   (let* ((class (*instance*-class obj))
+          (slots (*instance*-slots obj))
+          (slot-index-table (*class*-slot-index-table class))
+          (a-slot (gethash slot slot-index-table))
+          (allocation (*slot*-allocation a-slot))
+          (result))
+     (setq result (if (eq allocation :class)
+                      (gethash slot (*class*-class-slots class))
+                    (aref slots (*slot*-index a-slot))))
+     result))
+ 
+ ;;; slot-value (setter)
+ (defsetf slot-value (obj slot) (value)
+   `(unless (*instance*-p ,obj) (throw 'abort "not object in slot-value"))
+   `(let* ((class (*instance*-class ,obj))
+           (slots (*instance*-slots ,obj))
+           (class-slots (*class*-class-slots class))
+           (slot-index-table (*class*-slot-index-table class))
+           (a-slot (gethash ,slot slot-index-table))
+           (allocation))
+      (when (null a-slot) (throw 'abort "no such a feature"))
+      (setq allocation (*slot*-allocation a-slot))
+      (if (eq allocation :class)
+          (let ()
+            (setf (gethash ,slot class-slots) ,value))
+        (setf (aref slots (*slot*-index a-slot)) ,value))
+     ,value))
+ 
+ 
+ 
+ ;;;
+ ;;; defclass macro
+ ;;;
+ (defun set-super-slots (list index-table base)
+   (if (null list)
+       base
+     (let* ((class-name (car list))
+            (cdr (cdr list))
+            (class (gethash class-name *classes*)))
+       (when (null class) (throw 'abort (concatenate 'string "undefined superclass " (symbol-name class-name))))
+       (let ((slots (*class*-slots class))
+             (supers (*class*-supers class))
+             (index base))
+         (dolist (item slots)
+           (let* ((slot-name (*slot*-name item))
+                  (allocation (*slot*-allocation item))
+                  (initform (*slot*-initform item))
+                  (a-slot (make-*slot*
+                           :name slot-name
+                           :allocation allocation
+                           :initform initform)))
+             (unless (eq :class allocation)
+               (setf (*slot*-index a-slot) index)
+               (setf (gethash slot-name index-table) a-slot)
+               (incf index))))
+         (unless (null supers)
+           (setf index (set-super-slots supers index-table index)))
+         (set-super-slots cdr index-table index)))))
+ 
+ 
+ (defmacro defclass (name supers slots)
+   (let* ((index-table (make-hash-table))
+          (initarg-table (make-hash-table))
+          (index (set-super-slots supers index-table 0))
+          (slot-list))
+     (do* ((list slots (cdr list))
+           (item (car list) (car list))
+           (initarg nil nil)
+           ;(a-slot (make-*slot*)))
+	   (a-slot (make-*slot*) (make-*slot*)))
+         ((null list))
+       (if (consp item)
+           (let ((slot-name (car item))
+                 (list2 (cdr item)))
+             (setf (*slot*-name a-slot) slot-name)
+             ;;  キーワード:accessor,:reader,:writer,:initarg,:initform,:allocationを処理する。
+             (do* ((lst list2 (cdr lst)))
+                 ((null lst))
+               (let ((key (car lst))
+                     (value))
+                 (when (null (cdr lst)) (throw 'abort (concatenate 'string "キーワードに対応する引数がありません。 (" (symbol-name name) ")")))
+                 (setq lst (cdr lst))
+                 (setq value (car lst))
+                 (case key
+                   (:accessor
+                    (eval `(defsetf ,value (obj) (val)
+                             (let ((sym ',slot-name))
+                               `(setf (slot-value ,obj ',sym) ,val))))
+                    (eval `(defmethod ,value ((obj ,name))
+                             (slot-value obj ',slot-name))))
+                   (:reader
+                    (eval `(defmethod ,value ((obj ,name))
+                             (slot-value obj ',slot-name))))
+                   (:writer
+                    (eval `(defmethod ,value (val (obj ,name))
+                             (setf (slot-value obj ',slot-name) val))))
+                   (:initarg (setq initarg value))
+                   (:initform (setf (*slot*-initform a-slot) value))
+                   (:allocation (setf (*slot*-allocation a-slot) value))
+                   (t (throw 'abort (concatenate 'string "不適当なキーワードです。 "
+                                                 (format nil "~A" key)))))))
+             (unless (eq :class (*slot*-allocation a-slot))
+               (setf (*slot*-index a-slot) index)
+               (unless (null initarg)
+                 (setf (gethash initarg initarg-table) index))
+               (incf index))
+             (setf (gethash slot-name index-table) a-slot))
+         ;; not (consp item)
+         (progn
+           (setf (*slot*-name a-slot) item)
+           (setf (*slot*-index a-slot) index)
+           (setf (gethash item index-table) a-slot)
+           (incf index)))
+       (push a-slot slot-list)) ; end do*
+ 
+     (let ((class (make-*class* :name name
+                                :supers supers
+                                :class-slots (make-hash-table)
+                                :slots slot-list
+                                :slots-count index
+                                :initarg-table initarg-table
+                                :slot-index-table index-table)))
+       (setf (gethash name *classes*) class)
+       class)))
+ 
+ ;;;
+ ;;; defmethod
+ ;;;
+ 
+ (defstruct *method*
+   name
+   args   ;; arg length
+   list)  ;; list of *method-body*
+ 
+ (defstruct *method-body*
+   args
+   body)
+ 
+ (defconstant *method-table* (make-hash-table)) ;; table of *method*
+ 
+ (defun regular-param (args)
+   (if (null args)
+       nil
+     (let ((car (car args))
+           (cdr (cdr args))
+           result)
+       (if (consp car)
+           (progn
+             (setq result (car car)))
+         (progn
+           (setq result car)))
+       (if (null cdr)
+           (cons result nil)
+         (cons result (regular-param cdr))))))
+ 
+ (defun match-super-type (supers type)
+   (dolist (super supers nil)
+     (when (eq super type) (return-from match-super-type t))
+     (let ((class (gethash super *classes*)))
+       (unless (null class)
+         (let ((super-supers (*class*-supers class)))
+           (match-super-type super-supers type))))))
+ 
+ (defun match-type (obj type)
+   (if (typep obj type)
+       t
+     (if (*instance*-p obj)
+         (let* ((class (*instance*-class obj))
+                (class-name (*class*-name class))
+                (supers (*class*-supers class)))
+           (if (eq class-name type)
+               t
+             (match-super-type supers type)))
+       nil)))
+ 
+ (defun match-params (params args)
+   (do* ((list1 params (cdr list1))
+         (list2 args (cdr list2))
+         (param (car list1) (car list1))
+         (arg (car list2) (car list2)))
+       ((null list1) t)
+     (when (consp param)
+       (let ((type (cadr param)))
+         (unless (match-type arg type)
+           (return-from match-params nil))))))
+ 
+ (defun lookup-method (method args)
+   (let ((list (*method*-list method))
+         (result nil))
+     (dolist (method-body list result)
+       (let ((param (*method-body*-args method-body)))
+         (when (match-params param args)
+           (return-from lookup-method method-body))))))
+ 
+ (defun quote-list (list)
+   (if (null list)
+       nil
+     (let ((car (car list))
+           (cdr (cdr list)))
+       (cons `',car (quote-list cdr)))))
+ 
+ 
+ (defun method-dispatcher (name args)
+   (let ((method  (gethash name *method-table*)))
+     (when (null method) (throw 'abort (concatenate 'string "no such a method " (symbol-name name))))
+     (let ((body (lookup-method method args)))
+       (when (null body) (throw 'abort (concatenate 'string "not match arguments in method " (symbol-name name))))
+       (let* ((body-args (*method-body*-args body))
+              (param (regular-param body-args))
+              (args2 (quote-list args))
+              (fun-body (*method-body*-body body))
+              (fun `(lambda ,param ,@fun-body)))
+         (eval `(funcall #',fun ,@args2))))))
+ 
+ (defun count-cons (lst)
+   (let ((result 0))
+     (dolist (item lst result)
+       (when (consp item) (incf result)))))
+ 
+ (defun regist-method (method method-body)
+   (let* ((args (*method-body*-args method-body))
+          (cons-count (count-cons args))
+          (list (*method*-list method))
+          (not-pushed t)
+          (result))
+     (when (null list)
+       (push method-body (*method*-list method))
+       (return-from regist-method))
+     ;; ここで*method*-listの中を特殊なメソッドから先頭に持ってこなければならない。
+     (dolist (item list)
+       (let* ((args2 (*method-body*-args item))
+              (count2 (count-cons args2)))
+         (if (and not-pushed (>= cons-count count2))
+             (progn
+               (push method-body result)
+               (push item result)
+               (setq not-pushed nil))
+           (push item result))))
+     (when not-pushed (push method-body result))
+     (setq result (reverse result))
+     (setf (*method*-list method) result)))
+ 
+ 
+ (defmacro defmethod (name args . body)
+   (let* ((method (gethash name *method-table*))
+          (method-body (make-*method-body* :args args :body body)))
+     (if (null method)
+       (progn
+         (setq method (make-*method*))
+         (setf (*method*-name method) name)
+         (setf (*method*-args method) (length args))
+         (regist-method method method-body)
+         (setf (gethash name *method-table*) method)
+         `(defun ,name (&rest rest)
+            (method-dispatcher ',name rest)))
+       (progn
+         (unless (= (*method*-args method) (length args))
+           (throw 'abort "don't match method arg length"))
+         (regist-method method method-body)
+         `',name))))
+ 
+
+
+*使い方 [#vd26d8ef]
++clos.l っていう名前で site-lisp に保存する。
++.xyzzyに下記の２行を追加。 
+ (require "clos")
+ (use-package 'clos)
+
+*特徴 [#d96ba39d]
++あくまでＣＬＯＳ風な偽ＣＬＯＳです。（多大な期待はしないように。）
++make-instanceやdefclass等がキーワード引数に対応していない。（対応済）
+
+*ChangeLog [#h33a95c8]
++2005-04-12 初版公開
++2005-04-13 スーパークラスのメソッドが呼べなかったのを修正
++2005-04-13その２　キーワード引数等に対応
++2006-10-07 :initform の引数が評価されなかったのを修正
+
+とりあえず、これで当初の目標は達成したのであとは各自改造してお使いください。
+
+*ライセンス [#mae7e534]
+NYSLです。
+（要するにどう使おうが使う人の勝手です。）
+
+*サンプル [#q0f1bf01]
+
+ (defclass test () (a b))
+ (setq x (make-instance 'test))
+ (slot-value x 'a)
+ (setf (slot-value x 'a) 8)
+ (slot-value x 'a)
+ 
+ (defclass test2 ()
+    ((a :allocation :class)
+      b))
+ (setq y (make-instance 'test2))
+ (setq z (make-instance 'test2))
+ (setf (slot-value y 'a) "class instance")
+ (slot-value z 'a)
+ 
+ (defmethod combine (x y) (list x y))
+ (combine 'a 'b)
+ 
+ (defclass rectangle ()
+    (height width))
+ 
+ (defclass circle ()
+    (radius))
+ 
+ (defmethod area ((x rectangle))
+    (* (slot-value x 'height) (slot-value x 'width)))
+ 
+ (defmethod area ((x circle))
+    (* 3.14 (expt (slot-value x 'radius) 2)))
+ 
+ (setq rect (make-instance 'rectangle))
+ (setf (slot-value rect 'width) 8)
+ (setf (slot-value rect 'height) 9)
+ 
+ (setq c (make-instance 'circle))
+ (setf (slot-value c 'radius) 2)
+ 
+ (setq rect-area (area rect))
+ (setq circle-area (area c))
+ 
+ (defclass colored ()
+    (color))
+ 
+ (defclass colored-circle (circle colored)
+    ())
+ 
+ (setq cc (make-instance 'colored-circle))
+ (setf (slot-value cc 'radius) 7)
+ (setf (slot-value cc 'color) 'red)
+ (setq c-area (area cc))
+ 
+ (defclass test3 ()
+   ((a :reader get-a :writer set-a :accessor t-a :initform "init" :initarg :a)))
+ 
+ (setq obj (make-instance 'test3))
+ (setq obj2 (make-instance 'test3 :a "initarg"))
+ (get-a obj)
+ (get-a obj2)
+ (set-a "hello" obj)
+ (t-a obj)
+ (t-a obj2)
+ (setf (t-a obj) 5)
+ (setf (t-a obj2) 10)
+
+*コメント（ご意見・ご感想をどうぞ） [#jf4f1fee]
+- 気合と根性が沸いた人のためのポインタを。http://www.cs.cmu.edu/Groups/AI/html/faqs/lang/lisp/part5/faq-doc-1.html　ポータブル？らしいちょっと見てみたけれどもとてもポータブルに見えなかった。ぐったり -- [[佐野]] &new{2005-11-18 (金) 07:38:27};
+- clos.l の対応度は不明ですが，CLOSは http://www.geocities.jp/m_hiroi/clisp/#chap02 が参考になります． --  &new{2005-11-19 (土) 12:00:49};
+- initformでフォームを指定してもmake-instanceで評価されないみたいなんですが… --  &new{2006-02-01 (水) 23:23:39};
+- ↑直しました。これでどうでしょう？ --  &new{2006-10-07 (土) 22:59:58};
+- ひとつのスロットの値を変更すると、ほかのも変わってしまうようなんですが。 --  &new{2008-04-24 (木) 02:53:09};
+- 直った気がする --  &new{2008-04-24 (木) 12:44:44};
+- defclassで:initargを指定しても，サブクラスで:initargが効かない様です。例えば上記サンプルで，(defclass circle () ((radius :initarg :radius)))とした後に，(area (make-instance 'circle :radius 7))を評価すると153.86が返ってきますが，(area (make-instance 'colored-circle :radius 7))を評価しても何も返ってきません。 --  &new{2009-09-08 (火) 20:39:09};
+- すいません，何か変な注釈がついてしまいました。前の*2が含まれる部分を全角で書き直すと（ｄｅｆｃｌａｓｓ　ｃｉｒｃｌｅ　（）　（（ｒａｄｉｕｓ　：ｉｎｉｔａｒｇ　：ｒａｄｉｕｓ）））です。 --  &new{2009-09-08 (火) 20:42:43};
+
+#comment

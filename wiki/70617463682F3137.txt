@@ -1,0 +1,143 @@
+* outline-tree/cr-lisp.l の read による不都合回避 [#o7a25044]
+
+-ページ: [[patch]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 訂正
+-投稿日: 2006-09-06 (水) 04:41:40
+-バージョン: 2006.04.04
+
+** メッセージ [#ma0dd8cc]
+lisp のアウトラインを作成すると、その後で、シンボルの衝突が起こってライブラリが読み込めなくなったりします。lisp-maketags を参考に、とりあえず以下のようにして回避しています。
+
+ (defun outline-tree-create-outline-lisp (root-node)
+  (let (package)
+    (unwind-protect
+        (progn
+          (do ((i 0 (+ i 1)))
+              ((let ((name (format nil "OLT2-~D" i)))
+                 (unless (find-package name)
+                   (setq package (make-package name :external-size 0))))))
+          (labels ((trim-text (str)
+                     (substitute-string str "OLT2-[0-9]+::" ""))
+                   (outline-tree-create-outline-lisp-defvar-type (root-node section-name regexp)
+                     (let (section-node range-node from to lst name val doc pos)
+                       (goto-char (point-min))
+                       (setq section-node (outline-tree-insert-section-node section-name root-node))
+                       (while (scan-buffer regexp :regexp t)
+                         (setf pos (match-end 0))
+                         (setq from (point))
+                         (skip-chars-forward " \t")
+                         (when (and (eq (parse-point-syntax) nil)
+                                    (goto-matched-parenthesis))
+                           (setq to (1+ (point)))
+                           (with-input-from-buffer ((selected-buffer) from)
+                             (let ((*package* package))
+                               (handler-case
+                                   (setq lst (read *standard-input* nil))
+                                 (error (c)
+                                   (setq lst nil)))))
+                           (when lst
+                             (when (<= 2 (length lst))
+                               (setq name (nth 1 lst)))
+                             (setq range-node (outline-tree-insert-range-node
+                                               (trim-text (format nil "~S" name)) section-node :whole-range (cons from to)))
+                             (when (setq doc (and (stringp (cadddr lst)) (cadddr lst)))
+                               (outline-tree-insert-info-node (concat "【" doc "】") range-node))
+                             (when (<= 3 (length lst))
+                               (setq val (nth 2 lst))
+                               (outline-tree-insert-info-node (trim-text (format nil "~S" val)) range-node))))
+                         (goto-char pos))
+                       (unless range-node
+                         (outline-tree-remove-section-node section-node))))
+                   (outline-tree-create-outline-lisp-defun-type (root-node section-name regexp commandp)
+                     (let (section-node range-node from to lst name doc args pos)
+                       (goto-char (point-min))
+                       (setq section-node (outline-tree-insert-section-node section-name root-node))
+                       (while (scan-buffer regexp :regexp t)
+                         (setf pos (match-end 0))
+                         (setq from (point))
+                         (skip-chars-forward " \t")
+                         (when (and (eq (parse-point-syntax) nil)
+                                    (goto-matched-parenthesis))
+                           (setq to (1+ (point)))
+                           (with-input-from-buffer ((selected-buffer) from)
+                             (let ((*package* package))
+                               (handler-case
+                                   (setq lst (read *standard-input* nil))
+                                 (error (c)
+                                   (setq lst nil)))))
+                           (when lst
+                             (when (<= 2 (length lst))
+                               (setq name (nth 1 lst)))
+                             (when (if commandp
+                                       (lisp::find-interactive (cdddr lst))
+                                     (not (lisp::find-interactive (cdddr lst))))
+                               (setq range-node (outline-tree-insert-range-node
+                                                 (trim-text (format nil "~S" name)) section-node :whole-range (cons from to)))
+                               (when (setq doc (lisp::find-documentation (cdddr lst)))
+                                 (outline-tree-insert-info-node (concat "【" doc "】") range-node))
+                               (when (<= 3 (length lst))
+                                 (setq args (nth 2 lst))
+                                 (dolist (arg args)
+                                   (outline-tree-insert-info-node (trim-text (format nil "~S" arg)) range-node))))))
+                         (goto-char pos))
+                       (unless range-node
+                         (outline-tree-remove-section-node section-node)))))
+            (outline-tree-create-outline-lisp-defvar-type
+             root-node "[defconstant]" (compile-regexp "[ \t]*(defconstant\\_S"))
+            (outline-tree-create-outline-lisp-defvar-type
+             root-node "[defvar-local]" (compile-regexp "[ \t]*(defvar-local\\_S"))
+            (outline-tree-create-outline-lisp-defvar-type
+             root-node "[defvar]" (compile-regexp "[ \t]*(defvar\\_S"))
+            (outline-tree-create-outline-lisp-defvar-type
+             root-node "[defparameter]" (compile-regexp "[ \t]*(defparameter\\_S"))
+            (outline-tree-create-outline-lisp-defvar-type
+             root-node "[define-history-variable]"
+             (compile-regexp "[ \t]*(define-history-variable\\_S"))
+            (outline-tree-create-outline-lisp-defun-type
+             root-node "[defun (not command)]" (compile-regexp "[ \t]*(defun\\_S") nil)
+            (outline-tree-create-outline-lisp-defun-type
+             root-node "[defun (command)]" (compile-regexp "[ \t]*(defun\\_S") t)
+            (outline-tree-create-outline-lisp-defun-type
+             root-node "[defmacro (not command)]" (compile-regexp "[ \t]*(defmacro\\_S") nil)
+            (outline-tree-create-outline-lisp-defun-type
+             root-node "[defmacro (command)]" (compile-regexp "[ \t]*(defmacro\\_S") t)))
+      (when package
+        (delete-package package)))))
+
+--------
+- ごめんなさい。ちょっと間違ってました。trim-text 内の string-looking-at → string-match に変更。 --  &new{2006-09-06 (水) 19:33:10};
+- ここのページの問題と直接の関係はありませんが、上の関数のローカル定義関数内の~
+ (when (and (eq (parse-point-syntax) nil)
+            (goto-matched-parenthesis))
+の部分を~
+ (when (and (eq (parse-point-syntax) nil)
+            (not (find (char-before from) '(#\' #\`)))
+            (goto-matched-parenthesis))
+てな風にすると良いかもしれません。~
+'(defun ...) みたいなりストがあってもエラーが出なくなります(evalmacs.l などで)~
+あまり起こらないことでしょうが...
+- substitute-string なんてのがあったとは…。 てなわけで変更。 --  &new{2006-09-10 (日) 01:35:23};
+
+----
+- 二点とも取り込んで更新しました(2006.10.21)。ありがとうございます。 -- [[OHKUBO]] &new{2006-10-21 (土) 18:54:51};
+- (lisp::find-interactive (cdddr lst))でインタラクティブかどうかを取得できていないせいでdefunが全てnot commandになってしまうようです。 --  &new{2008-02-19 (火) 00:51:55};
+- 上の問題はoutline-tree2 (2006/10/25版)でも同様です。  --  &new{2008-02-19 (火) 00:54:43};
+- パッケージが違っているのが原因のようなので、この関数
+ (defun outline-tree-find-interactive (body)
+   (if (endp body)
+       (values nil body)
+     (if (and (consp (car body))
+ 	     (string= (car (car body)) "interactive"))
+ 	(values (list (car body)) (cdr body))
+       (if (and (stringp (car body))
+ 	       (not (endp (cdr body)))
+ 	       (consp (car (cdr body)))
+ 	       (string= (car (car (cdr body))) "interactive"))
+ 	  (values (list (car (cdr body))) (cons (car body) (cdr (cdr body))))
+ 	(values nil body)))))
+を追加してlisp::find-interactiveをoutline-tree-find-interactiveに置き換えれば一応動くようです。間違っているようでしたら修正お願いします。 --  &new{2008-02-19 (火) 03:04:05};
+
+#comment

@@ -1,0 +1,39 @@
+[[tips]]
+
+[[質問箱]]により着火。~
+マクロと関数空間の操作の割と良さげなサンプルになったっぽいのでここに置いておく。~
+用途他は補完できる人にお任せ。
+
+ (defmacro makbookmark (a)
+   `(let* (mark
+ 	  (a ,a)
+ 	  )
+      (setf (symbol-function (intern (concat "add-bookmark" ,a)))
+ 	   #'(lambda ()
+ 		 (interactive)
+ 		 (global-mark-add)
+ 		 (message (concat "しおり" a "をセットしました"))
+ 		 (setq mark (car ed::*global-mark-list*))))
+      (setf (symbol-function (intern (concat "jump-bookmark" ,a)))
+ 	   #'(lambda ()
+ 		   (interactive)
+ 		   (if mark
+ 		       (global-mark-goto mark)
+ 		     (message (concat "しおり" a "はセットされてません")))))
+      t))
+
+使い方。
+栞を作りたい数だけ作る
+ (makbookmark "0")
+とやるとadd-bookmark0とjumpbookmark0関数が定義される。~
+それを適当キーバインドに割り付ければ動くと思う。（未検証…投げやりすぎ
+----
+
+-なんかmessageが出ていない気がする… -- [[佐野]] SIZE(10){2003-09-10 (水) 22:38:32}
+-(dotimes (i 10) (makbookmark (format nil "~D" i))) を実行し、add-bookmark0, add-bookmark1, ... add-bookmark9 まで関数を定義し、（キーバインドから）呼び出すと message がどの関数で呼び出しても「しおり10をセットしました」となってしまいます。dotimes を使用しないで一つずつ、すなわち、(makbookmark "0") (makbookmark "1") ... (makbookmark "9")とした場合は、ちゃんと指定した添え字(0,1,...,9)が表示されるようになります。なぜ dotimes の方では、しおり「10」と表示されるのでしょうか？カーソルの移動が目的なので message の表示は特に必要ないので無視すればいいのですが、dotimes でなぜ「しおり10」と表示されるのかが非常に気になってます。 -- [[小林]] SIZE(10){2003-09-11 (木) 22:51:36}
+-動作(カーソル移動)自体は、正しく動作しています。 -- [[小林]] SIZE(10){2003-09-11 (木) 23:01:25}
+-高速で表示されただけでは． messageのかわりに msgboxを使ってみては --  SIZE(10){2003-09-11 (木) 23:20:33}
+-あーミスったっぽいなぁ。展開後のマクロの評価されるされないがまだよく解っていない模様。 -- [[佐野]] SIZE(10){2003-09-12 (金) 00:40:00}
+-直ったかもしれない。直らないかもしれない。処理系に対する理解がまだまだ甘い予感。 -- [[佐野]] SIZE(10){2003-09-12 (金) 00:43:53}
+
+#comment

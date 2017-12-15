@@ -1,0 +1,116 @@
+#freeze
+* 複数行のコメントについて [#i8877ed0]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2005-01-18 (火) 13:19:18
+
+** メッセージ [#pf8f868b]
+以下のようなサンプルを作成したところ、set-syntax-start-multi-commentで定義したコメントが適用されません。記述に問題があるのでしょうか。
+
+ (provide "xml-mode")
+ (export '(*xml-mode-hook* *xml-mode-map* xml-mode *xml-comment-column*))
+ (defvar *xml-keyword-hash-table* nil)
+ (defvar *xml-mode-hook* nil)
+ (defun xml-mode ()
+   (interactive)
+   (kill-all-local-variables)
+   (setq buffer-mode 'xml-mode)
+   (setq mode-name "xml")
+   (use-keymap *xml-mode-map*)
+   (when *xml-keyword-hash-table*
+    (make-local-variable 'keyword-hash-table)
+    (setq keyword-hash-table *xml-keyword-hash-table*))
+   (make-local-variable 'regexp-keyword-list)
+   (setq regexp-keyword-list *xml-regexp-keyword-list*)
+   (use-syntax-table *xml-mode-syntax-table*)
+   (run-hooks '*xml-mode-hook*)
+   )
+ (defvar *xml-mode-syntax-table* nil)
+ (unless *xml-mode-syntax-table*
+   (setq *xml-mode-syntax-table* (make-syntax-table))
+   (set-syntax-string *xml-mode-syntax-table* #\")
+   (set-syntax-tag *xml-mode-syntax-table* #\< #\>)
+   (set-syntax-start-multi-comment *xml-mode-syntax-table* "<!--")
+   (set-syntax-end-multi-comment *xml-mode-syntax-table* "-->")
+   )
+ (defvar *xml-regexp-keyword-list*
+   (compile-regexp-keyword-list
+    `(
+ 	 ("[a-z0-9:]+=" t (:keyword 2) t 0 0 )
+ 	 ("<\\/?[a-z:-]+>?" t (:keyword 0))
+ 	 ("/?>" t (:keyword 0))
+ 	 )
+    )
+   )
+ (defvar *xml-mode-map* nil)
+ (unless *xml-mode-map*
+   (setq *xml-mode-map* (make-keymap))
+   )
+
+読み込ませたファイルは以下。
+
+ <project name="ant" default="compile">
+   <property name="src" value="src"/>
+   <property name="classes" value="classes"/>
+ <!-- コメント -->
+   <target name="compile">
+     <javac srcdir="${src}"
+       destdir="${classes}"/>
+   </target>
+   <target name="run" depends="compile">
+     <java classname="aaa.Main"
+         classpath="${classes}" >
+     </java>
+   </target>
+ </project>
+
+以上、よろしくお願いします。
+
+----
+-set-syntax-start-multi-commentなどは2文字しか認識しないそうです。[[xyzzy-ml:07486]]からのスレッドを参照してください。xml-modeは[[sugiさんの>http://chez-sugi.net/xyzzy/000954.html]]がありますので参考にしてください。 -- [[NANRI]] &new{2005-01-19 (水) 10:50:05};
+-回答有難う御座います。コメント開始を<! コメント終了を -> として所、正常に表示されました。
+ここら辺はリファレンスにあるとよいかもしれませんね。既存のxml-modeがあるのは知っていたのですが
+お勉強ということで自分で作っていました。-- [[質問者]] &new{2005-01-19 (水) 11:40:29};
+-すでに解決済みですが、以下に変更した所初期の要望を満たす動きになりました。 -- [[質問者]] &new{2005-01-20 (木) 15:12:53};
+
+ (provide "xml-mode")
+ (export '(*xml-mode-hook* *xml-mode-map* xml-mode *xml-comment-column*))
+ (defvar *xml-keyword-hash-table* nil)
+ (defvar *xml-mode-hook* nil)
+ (defun xml-mode ()
+   (interactive)
+   (kill-all-local-variables)
+   (setq buffer-mode 'xml-mode)
+   (setq mode-name "xml")
+   (use-keymap *xml-mode-map*)
+   (when *xml-keyword-hash-table*
+     (make-local-variable 'keyword-hash-table)
+     (setq keyword-hash-table *xml-keyword-hash-table*))
+   (make-local-variable 'regexp-keyword-list)
+   (setq regexp-keyword-list *xml-regexp-keyword-list*)
+   (use-syntax-table *xml-mode-syntax-table*)
+   (run-hooks '*xml-mode-hook*)
+   )
+ (defvar *xml-mode-syntax-table* nil)
+ (unless *xml-mode-syntax-table*
+   (setq *xml-mode-syntax-table* (make-syntax-table))
+   (set-syntax-string *xml-mode-syntax-table* #\")
+   (set-syntax-tag *xml-mode-syntax-table* #\< #\>)
+   )
+ (defvar *xml-regexp-keyword-list*
+   (compile-regexp-keyword-list
+    `(
+ 	 ("[a-z0-9:]+=" t (:keyword 2) t 0 0 )
+ 	 ("<\\/?[a-z:-]+>?" t (:keyword 0))
+ 	 ("/?>" t (:keyword 0))
+ 	 ("<!--[^.]*-->" t (:keyword :comment))
+ 	 )
+    )
+   )
+ (defvar *xml-mode-map* nil)
+ (unless *xml-mode-map*
+   (setq *xml-mode-map* (make-keymap))
+   )
+
+//#comment

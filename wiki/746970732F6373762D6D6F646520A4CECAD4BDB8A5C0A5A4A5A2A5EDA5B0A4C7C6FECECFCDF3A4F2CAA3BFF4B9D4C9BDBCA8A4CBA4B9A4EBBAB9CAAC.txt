@@ -1,0 +1,240 @@
+[[tips]]
+
+[[csv-mode:http://ohkubo.s53.xrea.com/xyzzy/index.html#csv-mode]] 0.0.3.0 への差分です
+- 関数 csv-edit-dialog を置き換えます
+- 入力欄の高さを指定するスペシャル変数 *csv-edit-dialog-edit-ctrl-height* を追加します
+
+*差分 [#w5d6e610]
+ *** csv-mode.l	Sat Oct 21 19:39:26 2006
+ --- csv-mode_.l	Tue Sep 14 04:39:58 2010
+ ***************
+ *** 1034,1039 ****
+ --- 1034,1041 ----
+     (interactive)
+     (csv-edit-dialog t))
+   
+ + (defvar *csv-edit-dialog-edit-ctrl-height* 28
+ +   "csv-mode: ダイアログでの入力欄の高さ")
+   (defun csv-edit-dialog (&optional selection)
+     "csv-mode: 現在の行の内容をダイアログで編集"
+     (interactive "p")
+ ***************
+ *** 1042,1048 ****
+           column-list header-list control-list column-symbol-list
+           (column-choices-list (list '()))
+           column-list-initializers column-index-initializers
+ !         combobox)
+       ;; 各列の全文字列リストの取得
+       (when selection
+         (long-operation
+ --- 1044,1050 ----
+           column-list header-list control-list column-symbol-list
+           (column-choices-list (list '()))
+           column-list-initializers column-index-initializers
+ !         combobox n)
+       ;; 各列の全文字列リストの取得
+       (when selection
+         (long-operation
+ ***************
+ *** 1077,1083 ****
+           (push (cons (elt column-symbol-list i) (elt column-choices-list i))
+                 column-list-initializers))
+         (setq column-list-initializers (nreverse column-list-initializers)))
+ !     
+       ;; 見だし文字列の取得
+       (if csv-header-flag
+           (setq header-list (csv-get-header-column-list t))
+ --- 1079,1085 ----
+           (push (cons (elt column-symbol-list i) (elt column-choices-list i))
+                 column-list-initializers))
+         (setq column-list-initializers (nreverse column-list-initializers)))
+ ! 
+       ;; 見だし文字列の取得
+       (if csv-header-flag
+           (setq header-list (csv-get-header-column-list t))
+ ***************
+ *** 1091,1097 ****
+         (if (or (not selection) (csv-header-line-p))
+             (setq combobox nil)
+           (setq combobox t))
+ !       
+         ;; 現在行から decode した値の取得
+         (setq column-list (csv-get-column-list t))
+   
+ --- 1093,1099 ----
+         (if (or (not selection) (csv-header-line-p))
+             (setq combobox nil)
+           (setq combobox t))
+ ! 
+         ;; 現在行から decode した値の取得
+         (setq column-list (csv-get-column-list t))
+   
+ ***************
+ *** 1106,1117 ****
+   
+         ;; dialog 用 control の準備
+         (setq control-list nil)
+         ;; 現在の列から入力させる。
+         (let (j)
+           (dotimes (i (- max-column-number (1- column-number)))
+             (setq j (+ i (1- column-number)))
+             (push `(:static nil ,(nth j header-list) #x50020000
+ !                   1 ,(+ (* j 15) 3) ,*csv-edit-dialog-header-width* 8)
+                   control-list)
+             (push (if combobox
+                       `(:combobox ,(elt column-symbol-list j)
+ --- 1108,1120 ----
+   
+         ;; dialog 用 control の準備
+         (setq control-list nil)
+ +       (setq n (if combobox 15 (1+ *csv-edit-dialog-edit-ctrl-height*)))
+         ;; 現在の列から入力させる。
+         (let (j)
+           (dotimes (i (- max-column-number (1- column-number)))
+             (setq j (+ i (1- column-number)))
+             (push `(:static nil ,(nth j header-list) #x50020000
+ !                   1 ,(+ (* j n) 3) ,*csv-edit-dialog-header-width* 8)
+                   control-list)
+             (push (if combobox
+                       `(:combobox ,(elt column-symbol-list j)
+ ***************
+ *** 1119,1168 ****
+                         ,(+ 1 *csv-edit-dialog-header-width* 1) ,(+ (* j 15) 1)
+                         ,(- *csv-edit-dialog-width* 1 *csv-edit-dialog-header-width* 1 1) 72)
+                     `(:edit ,(elt column-symbol-list j)
+ !                     ,(nth j column-list) #x50810080
+ !                     ,(+ 1 *csv-edit-dialog-header-width* 1) ,(+ (* j 15) 1)
+ !                     ,(- *csv-edit-dialog-width* 1 *csv-edit-dialog-header-width* 1 1) 14))
+                   control-list)))
+         ;;
+         (push `(:button nil "" #x50000007
+                 ,(- *csv-edit-dialog-width* 2 (* (+ 26 1) 4) 26 2 (* (+ 2 50) 2) 2)
+ !               ,(- (* max-column-number 15) 2)
+                 ,(+ 2 (* (+ 26 1) 4) 26 2) 22) control-list)
+         (push `(:button move-nil "定(&F)" #x50000009
+                 ,(- *csv-edit-dialog-width* (* (+ 26 1) 4) 26 2 (* (+ 2 50) 2) 2)
+ !               ,(+ (* max-column-number 15) 6)
+                 26 10) control-list)
+         (push `(:button move-next "次(&N)" #x50000009
+                 ,(- *csv-edit-dialog-width* (* (+ 26 1) 3) 26 2 (* (+ 2 50) 2) 2)
+ !               ,(+ (* max-column-number 15) 6)
+                 26 10) control-list)
+         (push `(:button move-previous "前(&P)" #x50000009
+                 ,(- *csv-edit-dialog-width* (* (+ 26 1) 2) 26 2 (* (+ 2 50) 2) 2)
+ !               ,(+ (* max-column-number 15) 6)
+                 26 10) control-list)
+         (push `(:button move-jump "跳(&J)" #x50000009
+                 ,(- *csv-edit-dialog-width* (* (+ 26 1) 1) 26 2 (* (+ 2 50) 2) 2)
+ !               ,(+ (* max-column-number 15) 6)
+                 26 10) control-list)
+         (push `(:edit move-jump-line nil #x50810086
+                 ,(- *csv-edit-dialog-width* 26 2 (* (+ 2 50) 2) 2)
+ !               ,(+ (* max-column-number 15) 4)
+                 26 14) control-list)
+         (push `(:spin move-jump-line-spin nil #x500000b6
+                 ,(- *csv-edit-dialog-width* 16 2 (* (+ 2 50) 2) 2)
+ !               ,(+ (* max-column-number 15) 4)
+                 10 14) control-list)
+         ;;
+         (push `(:button IDOK "OK" #x50010001
+ !               ,(- *csv-edit-dialog-width* 50 2 50 2) ,(+ (* max-column-number 15) 4)
+                 50 14) control-list)
+         (push `(:button IDCANCEL "キャンセル" #x50010000
+ !               ,(- *csv-edit-dialog-width* 50 2) ,(+ (* max-column-number 15) 4)
+                 50 14) control-list)
+         ;;
+         (dotimes (i (1- column-number))
+           (push `(:static nil ,(nth i header-list) #x50020000
+ !                 1 ,(+ (* i 15) 3) ,*csv-edit-dialog-header-width* 8)
+                 control-list)
+           (push (if combobox
+                     `(:combobox ,(elt column-symbol-list i)
+ --- 1122,1172 ----
+                         ,(+ 1 *csv-edit-dialog-header-width* 1) ,(+ (* j 15) 1)
+                         ,(- *csv-edit-dialog-width* 1 *csv-edit-dialog-header-width* 1 1) 72)
+                     `(:edit ,(elt column-symbol-list j)
+ !                     ,(nth j column-list) #x50a10004
+ !                     ,(+ 1 *csv-edit-dialog-header-width* 1) ,(+ (* j n) 1)
+ !                     ,(- *csv-edit-dialog-width* 1 *csv-edit-dialog-header-width* 1 1)
+ !                     ,*csv-edit-dialog-edit-ctrl-height*))
+                   control-list)))
+         ;;
+         (push `(:button nil "" #x50000007
+                 ,(- *csv-edit-dialog-width* 2 (* (+ 26 1) 4) 26 2 (* (+ 2 50) 2) 2)
+ !               ,(- (* max-column-number n) 2)
+                 ,(+ 2 (* (+ 26 1) 4) 26 2) 22) control-list)
+         (push `(:button move-nil "定(&F)" #x50000009
+                 ,(- *csv-edit-dialog-width* (* (+ 26 1) 4) 26 2 (* (+ 2 50) 2) 2)
+ !               ,(+ (* max-column-number n) 6)
+                 26 10) control-list)
+         (push `(:button move-next "次(&N)" #x50000009
+                 ,(- *csv-edit-dialog-width* (* (+ 26 1) 3) 26 2 (* (+ 2 50) 2) 2)
+ !               ,(+ (* max-column-number n) 6)
+                 26 10) control-list)
+         (push `(:button move-previous "前(&P)" #x50000009
+                 ,(- *csv-edit-dialog-width* (* (+ 26 1) 2) 26 2 (* (+ 2 50) 2) 2)
+ !               ,(+ (* max-column-number n) 6)
+                 26 10) control-list)
+         (push `(:button move-jump "跳(&J)" #x50000009
+                 ,(- *csv-edit-dialog-width* (* (+ 26 1) 1) 26 2 (* (+ 2 50) 2) 2)
+ !               ,(+ (* max-column-number n) 6)
+                 26 10) control-list)
+         (push `(:edit move-jump-line nil #x50810086
+                 ,(- *csv-edit-dialog-width* 26 2 (* (+ 2 50) 2) 2)
+ !               ,(+ (* max-column-number n) 4)
+                 26 14) control-list)
+         (push `(:spin move-jump-line-spin nil #x500000b6
+                 ,(- *csv-edit-dialog-width* 16 2 (* (+ 2 50) 2) 2)
+ !               ,(+ (* max-column-number n) 4)
+                 10 14) control-list)
+         ;;
+         (push `(:button IDOK "OK" #x50010001
+ !               ,(- *csv-edit-dialog-width* 50 2 50 2) ,(+ (* max-column-number n) 4)
+                 50 14) control-list)
+         (push `(:button IDCANCEL "キャンセル" #x50010000
+ !               ,(- *csv-edit-dialog-width* 50 2) ,(+ (* max-column-number n) 4)
+                 50 14) control-list)
+         ;;
+         (dotimes (i (1- column-number))
+           (push `(:static nil ,(nth i header-list) #x50020000
+ !                 1 ,(+ (* i n) 3) ,*csv-edit-dialog-header-width* 8)
+                 control-list)
+           (push (if combobox
+                     `(:combobox ,(elt column-symbol-list i)
+ ***************
+ *** 1170,1183 ****
+                       ,(+ 1 *csv-edit-dialog-header-width* 1) ,(+ (* i 15) 1)
+                       ,(- *csv-edit-dialog-width* 1 *csv-edit-dialog-header-width* 1 1) 72)
+                   `(:edit ,(elt column-symbol-list i)
+ !                   ,(nth i column-list) #x50810080
+ !                   ,(+ 1 *csv-edit-dialog-header-width* 1) ,(+ (* i 15) 1)
+ !                   ,(- *csv-edit-dialog-width* 1 *csv-edit-dialog-header-width* 1 1) 14))
+                 control-list))
+         (setq control-list (nreverse control-list))
+         (multiple-value-bind (result data)
+             (dialog-box
+ !            `(dialog 0 0 ,*csv-edit-dialog-width* ,(+ (* max-column-number 15) 2 19)
+                       (:caption ,(concat (cond
+                                           ((csv-header-line-p) "ヘッダ編集")
+                                           (combobox            "選択編集")
+ --- 1174,1188 ----
+                       ,(+ 1 *csv-edit-dialog-header-width* 1) ,(+ (* i 15) 1)
+                       ,(- *csv-edit-dialog-width* 1 *csv-edit-dialog-header-width* 1 1) 72)
+                   `(:edit ,(elt column-symbol-list i)
+ !                   ,(nth i column-list) #x50a10004
+ !                   ,(+ 1 *csv-edit-dialog-header-width* 1) ,(+ (* i n) 1)
+ !                   ,(- *csv-edit-dialog-width* 1 *csv-edit-dialog-header-width* 1 1)
+ !                   ,*csv-edit-dialog-edit-ctrl-height*))
+                 control-list))
+         (setq control-list (nreverse control-list))
+         (multiple-value-bind (result data)
+             (dialog-box
+ !            `(dialog 0 0 ,*csv-edit-dialog-width* ,(+ (* max-column-number n) 2 19)
+                       (:caption ,(concat (cond
+                                           ((csv-header-line-p) "ヘッダ編集")
+                                           (combobox            "選択編集")
+
+パッチを当てるには、[[どっか:http://w32tex.org/w32/patch-diff-w32.zip]]から Windows 用の patch コマンドを入手して、
+カレントディレクトリを csv-mode.l のあるディレクトリ (~/site-lisp/) にしてから
+ patch --dos < csv-mode.diff
+を実行してください((上記の差分を '''csv-mode.diff''' というファイル名で保存した場合))

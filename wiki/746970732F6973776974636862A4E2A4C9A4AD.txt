@@ -1,0 +1,91 @@
+バッファ選択　いろいろ機能付けてみました　Emacs のiswitchbは使ったこと無いです…
+
+ (defun iswitchb-list-grep (list input)
+  "listを input によって絞り込み"  ; 空白区切りは & とみなす
+  (remove-if
+   #'(lambda (x)
+ 	   (dolist (s (split-string input " "))
+ 		 (if (not (string-matchp (regexp-quote s) x))
+ 			 (return t))))
+   list))
+  
+ (defun iswitchb-buffer-list-init ()
+  "iswitchb で選択するバッファ名リストの取り出し（初期値）"
+  (remove-if
+   #'(lambda (x) (string-match "^ " x)) ; ミニバッファ以外
+   (mapcar #'buffer-name
+ 		   (buffer-list :buffer-bar-order *next-buffer-in-tab-order*))))
+ 
+ (defun iswitchb-buffer-list-init-rotate (list name)
+  "list を name が先頭に来るまで回転"
+  (when (position name list :test 'string=)
+ 	(while (< 0 (position name list :test 'string=))
+ 	  (setq list (append (cdr list) (list (car list))))))
+  list)
+ 
+ (defun iswitchb ()
+  "バッファの切り替え"
+  (interactive)
+  (let ((buffer-list
+ 		 (iswitchb-buffer-list-init-rotate
+ 		  (iswitchb-buffer-list-init)
+ 		  (buffer-name (other-buffer))))
+ 		(input "")
+ 		(pre-buffer (selected-buffer))
+ 		(top-buffer (buffer-name (selected-buffer)))
+ 		(buffer-list-grepd)
+ 		(c))
+ 	(loop  ; iswitchb-mode ...
+ 	  (setq buffer-list-grepd (iswitchb-list-grep buffer-list input))
+ 	  (message "~S" buffer-list-grepd)
+ 	  (when (< 0 (length buffer-list-grepd))
+ 		(when (string/= top-buffer (car buffer-list-grepd))
+ 		  (setq top-buffer (car buffer-list-grepd))
+ 		  (switch-to-buffer top-buffer)))
+ 	  (ed:minibuffer-prompt "iswitchb: ~A" input)
+ 	  (setq c (read-char ed:*keyboard*))
+ 	  (case c
+ 		((#\C-g #\ESC)
+ 		 (switch-to-buffer pre-buffer) (quit))
+ 		((#\Left #\Up #\C-r #\Home #\PageDown) ; 'iswitchb-prev-match
+ 		 (when (< 1 (length buffer-list-grepd))
+ 		   (while (string= top-buffer (car (iswitchb-list-grep buffer-list input)))
+ 			 (setq buffer-list (append (last buffer-list) (butlast buffer-list))))))
+ 		((#\Right #\Down #\C-s #\End #\PageUp) ;'iswitchb-next-match
+ 		 (when (< 1 (length buffer-list-grepd))
+ 		   (while (string= top-buffer (car (iswitchb-list-grep buffer-list input)))
+ 			 (setq buffer-list (append (cdr buffer-list) (list (car buffer-list)))))))
+ 		((#\C-m #\RET) ;'iswitchb-exit-minibuffer
+ 		 (return (switch-to-buffer top-buffer)))
+ 		((#\C-j)
+ 		 (switch-to-buffer top-buffer))
+ 		((#\C-a)
+ 		 (setq input ""))
+ 		((#\C-h)
+ 		 (ignore-errors (setq input (substring input 0 -1))))
+ 		((#\TAB)
+ 		 (ignore-errors
+ 		  (multiple-value-bind (result list prefix)
+ 		      (*do-completion input :buffer-name)
+ 		    (cond ((eq result :solo-match)
+ 			   (return (switch-to-buffer top-buffer)))
+ 			  ((stringp result)
+ 			   (setf input result))))))
+ 		(t
+ 		 (setq input (format nil "~A~A" input c)))
+ 		))))
+-佐野さんの 03/04/02 を機能いろいろ付けてみました。バッファツールバーがリアルタイムに切り替わらないのが難点です… -- [[nazoking]] &new{2004-02-26 (木) 21:17:07};
+-TAB押したときにバッファ名の補完できるようになりませんかね？ -- [[7shi]] &new{2004-03-12 (金) 18:44:17};
+-部分検索なんできっちり打つ必要はないですし、スペース区切りすれば「AND条件で絞り込み」しますし、絞り込んだ物はカーソルキーとかで順番に回っていきますが、補完の必要ってどういう状況でしょう？ -- [[nazoking]] &new{2004-03-15 (月) 12:04:21};
+-普通のswitch-to-bufferと同じような補完が欲しいということなんですけども。 -- [[7shi]] &new{2004-03-15 (月) 12:56:11};
+-minibuffer-prompt で補完を表示させたり色変えたりする方法が分かりません（；´Д｀） -- [[nazoking]] &new{2004-03-17 (水) 10:54:59};
+-minibufferもバッファだから insertとかできないかな． それから insertした文字を選択状態にすれば色も付くし -- [[nakano]] &new{2004-03-19 (金) 04:38:46};
+-TABで補完に関しては( (#\TAB) (ignore-errors (setq input (*do-completion input :buffer-name) ) ) ) --  &new{2004-03-20 (土) 00:00:55};
+-wiki なんだから↑のコード反映させてよ。と言って見るテスト --  &new{2004-03-22 (月) 14:47:13};
+-wiki なんだから気づいた人が反映させてよ。と言って見るテスト --  &new{2004-03-22 (月) 19:53:22};
+-「気づいた人が反映させてよ。」って言ってる人が反映させてよと言って見る(以下エンドレス)つーわけで反映させたよ。 --  &new{2004-03-22 (月) 19:54:45};
+-気づいたからちょっと賢くして反映させました。 --  &new{2004-03-22 (月) 21:49:42};
+-以前に書いた iswitchb を添付しておきました。比較的オリジナルに近い動きを（ちゃんと動いたら）すると思います。 -- [[fei]] &new{2004-07-10 (土) 00:03:42};
+- 添付ファイルのほうを使わせてもらってます。migemoを使って補完されるようになりませんでしょうか？ -- [[neko]] &new{2009-10-09 (金) 03:09:12};
+
+#comment

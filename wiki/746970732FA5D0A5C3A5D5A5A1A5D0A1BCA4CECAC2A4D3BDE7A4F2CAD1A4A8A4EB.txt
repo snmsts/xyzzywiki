@@ -1,0 +1,53 @@
+[[tips]]
+
+* バッファバーの並び順を変える [#vf3f6b3d]
+
+
+ (defun reorder-buffer-bar (ordered-buffer-list)
+   "ordered-buffer-list の順序でバッファバーのタブの並び順を変えます．"
+   (save-excursion
+     (let ((*buffer-bar-selected-buffer-to-first* t))
+       (dolist (b (reverse ordered-buffer-list))
+         (when (char/= #\SPC (char (buffer-name b) 0))
+           (set-buffer b)
+           (refresh-screen 1))))))
+ 
+ (defun sort-buffer-bar ()
+   "バッファバーのタブの並び順をソートします．"
+   (interactive)
+   (reorder-buffer-bar (sort (buffer-list) #'string> :key #'buffer-name)))
+
+- M-x sort-buffer-bar で実行するか， (global-set-key #\C-F7 'sort-buffer-bar) など適当なキーにバインドしてください． 
+- *scratch* は常に一番左にあって欲しい，などいろいろ？と直すところがあると思うので，できる人　↓ここ↓ にどうぞ〜．
+ (defun my-buffer-bar-sort-sequence (s1 s2)
+   "*印のバッファは先頭になるようにしました"
+   (if (and (string= (substring s1 0 1) "*") (string= (substring s2 0 1) "*"))
+ 	  (return-from my-buffer-bar-sort-sequence (string< (substring s1 1) (substring s2 1))))
+   (if (and (string= (substring s1 0 1) "*") (string/= (substring s2 0 1) "*"))
+ 	  (return-from my-buffer-bar-sort-sequence 1))
+   (if (and (string/= (substring s1 0 1) "*") (string= (substring s2 0 1) "*"))
+ 	  (return-from my-buffer-bar-sort-sequence nil))
+   (return-from my-buffer-bar-sort-sequence (string< s1 s2)))
+ 
+ (defun sort-buffer-bar ()
+   "バッファバーのタブの並び順をソートします．"
+   (interactive)
+   (reorder-buffer-bar (sort (buffer-list) #'my-buffer-bar-sort-sequence :key #'buffer-name)))
+- こんな感じでしょうか？ --  &new{2006-04-12 (水) 12:57:48};
+ 
+----
+- 実行後元のバッファに戻るように、と非表示バッファをスキップするように書き換えました。おまけでこんなのとか。 -- [[NANRI]] &new{2006-04-12 (水) 20:22:13};
+ (defun foo (&optional (f #'string>))
+   #'(lambda (s1 s2)
+       (cond ((or (char= #\* (char s1 0) (char s2 0))
+                  (and (char/= #\* (char s1 0))
+                       (char/= #\* (char s2 0))))
+              (funcall f s1 s2))
+             (t
+              (string= "*" s1 :end2 1)))))
+ (defun hoge ()
+   (interactive)
+   (reorder-buffer-bar (cons (find-buffer "*scratch*") (sort (buffer-list) #'string> :key #'buffer-name))))
+- 新しいバッファを開いた時にソートしたい場合　こんな感じでしょうか？　(add-hook 'ed::*create-buffer-hook* #'(lambda (x) (sort-buffer-bar)))　 --  &new{2007-02-26 (月) 20:34:17};
+
+#comment

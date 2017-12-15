@@ -1,0 +1,141 @@
+#freeze
+*アップデート・投稿 [#j845b9b8]
+みんなでバージョンアップの報告をしたり、自作のLispの宣伝をしたりするところ。
+ [[バージョンアップしたもの>URL]]
+のように書くとうまくいきます。
+----
+//#comment(below)
+- 修正してみました。 -- [[bulb]] &new{2007-08-03 (金) 11:43:42};
+- bulb さん > monday.l 使ってみました。string-capp マクロでエラーが出ます。string-capitalizep より後で defmacro しているからのようです。string-capitalizep より前に移したら正常動作しました。 -- [[taku]] &new{2007-08-03 (金) 00:05:02};
+- [[monday.vim>http://up.xyzzy.jp/public/bulb/]]見たいなものを作ってみました。 -- [[bulb]] &new{2007-07-22 (日) 19:47:36};
+- USB メモリからの xyzzy の起動を補助する [[xyzzyboot.vbs:http://fun.sci.fukuoka-u.ac.jp/wiki/index.php?xyzzy#t9b8b5e4]] を作ってみました -- [[matsuoka]] &new{2007-07-22 (日) 18:34:26};
+- [[niupの使いかた>http://snmsts.dreamhosters.com/archives/wink/niup.htm]]をつくりました。 -- [[佐野]] &new{2007-07-17 (火) 01:59:44};
+- ページャー・モードつくってみました。>http://nogaki.cocolog-nifty.com/optima/products/pager-mode.l -- [[J-NEX]] &new{2007-06-19 (火) 02:07:16};
+- 日経ソフトウェア2007年07号にちょこっとxyzzyが載ってました。（ちょっとうろ覚えですが20ページ前後くらいに少し載ってます。）付属DVDにはxyzzy本体が入っているようです。 -- [[稲原]] &new{2007-05-29 (火) 18:22:02};
+- Info Mode. <a href="http://www5f.biglobe.ne.jp/~memo/info2.zip" target="_blank" title="ttp to http (TYPE I)" style="text-decoration: none">ttp://www5f.biglobe.ne.jp/~memo/info2.zip</a> いくつも Info 起動できたりブックマークできたり。求むデバガ〜 Wiki 使い方わかんね。ファイルそのうち移動するかも。 -- [[めも]] &new{2007-04-11 (水) 16:42:36};
+
+- [[xyzzy上のスペルチェッカー作成:http://keijisaito.info/arc/spell/spell_check.htm]]にaspellの設定説明と片手でできるテンキー用スペルチェックのファイルがあります。 --  &new{2006-08-05 (土) 09:09:08};
+- [[06年度慶應SFC記号処理プログラミング>http://web.sfc.keio.ac.jp/~t03003sa/lisp06/hiki.cgi]] -- [[佐野]] &new{2006-04-19 (水) 18:33:33};
+- 佐野さんありがとうございます。とても参考になりました。[[いじってみました>http://blog.2310.net/contents/individual/000047.php]]。私の場合ホームディレクトリについては一時フォルダという感覚が強く.xyzzyの扱いについては現状のままですが。 -- [[2310]] &new{2006-04-15 (土) 13:39:23};
+- homedirの改造はinit.ccの132-158を削った方が早いかもしれません。usbで使うと割り切るのならそのほうが便利ですし。.xyzzyを固定してそのほかは環境依存にしたい？ -- [[佐野]] &new{2006-04-10 (月) 23:38:49};
+- [[xyzzyをほんの少し改造>http://blog.2310.net/contents/individual/000047.php]]。USBメモリから直接使うこととか考えています。 -- [[2310]] &new{2006-04-09 (日) 18:37:08};
+- cygwin Emacsの [[Makefile-mode>http://chechepon.at.infoseek.co.jp/tool/make-mode.l]] が一応動くようになりました。まだたくさん不具合があると思います。 -- [[chechepon]] &new{2006-02-19 (日) 23:39:49};
+----
+- [[HE-grep.l>http://members3.jcom.home.ne.jp/2116826401/kimagurenixyzzy.html]]が公開されています。 [[Hyper Estraier>http://hyperestraier.sourceforge.net/]]で抽出したファイルに対してGrepをかけることができるそうです。 -- [[稲原]] &new{2005-12-29 (木) 16:23:06};
+- あれ？意外と静かだ。佐野さんのアナウンスにもありますがxyzzyがオープンソース化。 --  &new{2005-12-27 (火) 19:31:46};
+- http://slashdot.jp/developers/article.pl?sid=05/12/19/0157238 -- [[佐野]] &new{2005-12-20 (火) 04:15:47};
+
+- ご紹介いただきありがとうございました。＞稲原さん　[[画面イメージ1:http://www.klavis.info/about/wupageref.png]]、[[画面イメージ2:http://www.klavis.info/about/wucolor.png]]、[[画面イメージ3:http://www.klavis.info/about/wudoccls.png]]があります。（直リンクしていただいて構いません。）何かご質問やご意見などありましたら[[私のBlog:http://klavis.seesaa.net/]]のほうにお願いします。 -- [[入力支援マクロを作った人]] &new{2005-12-15 (木) 09:09:59};
+- [[TeXやHTMLの入力支援マクロ>http://klavis.seesaa.net/article/10660099.html]]だそうです。まだ実装中だそうですが、[[画面イメージ>http://www.klavis.info/about.html]]もあるようです。 -- [[稲原]] &new{2005-12-14 (水) 19:56:57};
+- [[sound>http://miyamuko.s56.xrea.com/xyzzy/sound.html]]を[[作ってみました>http://d.hatena.ne.jp/miyamuko/20051209#p1]]。なんに使うのかよく分かりませんけど -- [[miyamuko]] &new{2005-12-10 (土) 04:17:42};
+- [[アップデート・投稿/0.2.2.235での変更]] -- [[佐野]] &new{2005-12-08 (木) 03:22:19};
+- [[cygwin-mount>http://miyamuko.s56.xrea.com/xyzzy/cygwin-mount.html]] を [[作ってみました>http://d.hatena.ne.jp/miyamuko/20051201#p1]]。いまいちですけど -- [[miyamuko]] &new{2005-12-02 (金) 01:06:37};
+- [[layered-window>http://miyamuko.s56.xrea.com/xyzzy/layered-window.html]] がアップデートされたようです。[[詳細についてはここなど。>http://d.hatena.ne.jp/miyamuko/20051125#p2]] --  &new{2005-11-28 (月) 17:28:47};
+- こんなぴったりの場所があったんですね。始めからここに投稿すればよかった&#65533;1s&。>rrb.l -- [[みずの]] &new{2005-11-22 (火) 23:56:18};
+- どなたか存じませんが、早速インストールさせていただきます。プログラムのことは何も理解できないものですが。 -- [[gosio]] &new{2005-11-22 (火) 22:12:24};
+- >gosio さん　autolookup 今はもうインストールできると思います。 --  &new{2005-11-22 (火) 18:26:39};
+- [[rrb.l>http://mzp.breeze.jp/]] 「Ruby Refactoring Browserのxyzzy用インターフェイス。rrb.elを移植したものです。」とのことです。 --  &new{2005-11-22 (火) 18:24:38};
+-autlookupについてです。 -- [[gosio]] &new{2005-09-23 10:04:55 (金)};
+-netinstallerからインストールしようとするとmd5が一致しませんのメッセージが出ています。 -- [[gosio]] &new{2005-09-23 10:02:45 (金)};
+-[[局所にうす>http://i9n.s38.xrea.com/]]が終わっちゃった(TT) --  &new{2005-08-10 14:22:46 (水)};
+-[[Junk Scripts>http://www7a.biglobe.ne.jp/~hat/]]復活。 --  &new{2005-04-25 15:27:26 (月)};
+-[[アップデート・投稿/0.2.2.234での変更]] -- [[佐野]] &new{2005-03-31 21:40:29 (木)};
+-[[xyzzy version 0.2.2.234>http://www.jsdlab.co.jp/~kamei/]] --  &new{2005-03-18 11:12:46 (金)};
+-[[専用ページ>拡張lisp/javascript-mode]]作りました。適当にアオリを書いて下さい。 -- [[佐野]] &new{2005-03-02 19:50:51 (水)};
+-javascript-mode添付しました。 -- [[ビスポ]] &new{2005-03-02 18:19:51 (水)};
+-[[Brain***k>http://www.kmonos.net/alang/etc/brainfuck.php]]インタプリタだそうです。[[Mug-G's>http://mug-g.halfmoon.jp/log/eid174.html]]からどうぞ。 --  &new{2005-02-28 01:43:03 (月)};
+-[[skk.l>http://www.geocities.jp/kiaswebsite/xyzzy/index.html#skk]] skk使いの方々はテストしてみてはいかがでしょう。 --  &new{2005-02-14 15:14:16 (月)};
+----
+-[[cobuol-mode>http://fun.sci.fukuoka-u.ac.jp/RWiki/rw-cgi.rb?cmd=view;name=xyzzy#label:2]], [[mbox-mode>http://fun.sci.fukuoka-u.ac.jp/RWiki/rw-cgi.rb?cmd=view;name=xyzzy#label:3]],[[isql-mode>http://fun.sci.fukuoka-u.ac.jp/RWiki/rw-cgi.rb?cmd=view;name=xyzzy#label:4]] --  &new{2004-12-12 (日) 15:59:55};
+-[[bibtex-mode>http://f55.aaa.livedoor.jp/~ynomura/xyzzy/index.html#bibtex-mode]] と [[reftex-mode>http://f55.aaa.livedoor.jp/~ynomura/xyzzy/index.html#reftex-mode]] 引越し --  &new{2004-11-05 (金) 22:21:44};
+----
+
+現在(2004-10-28)、404の[[Junk Scripts>http://www.mirai.ne.jp/~gyo/]]のファイルの入手方法まとめ((2005-01-07更新 POBox追加。))
+
+[[SourceForge.net>http://sourceforge.net/projects/kamail/]]から手に入るもの
+- [[まるごと>http://cvs.sourceforge.net/cvstarballs/kamail-cvsroot.tar.bz2]]
+- [[kamail>http://cvs.sourceforge.net/viewcvs.py/kamail/kamail/]]
+- [[2ch-mode>http://cvs.sourceforge.net/viewcvs.py/kamail/2ch/]](NetInstaller対応済み)
+- [[cftp>http://cvs.sourceforge.net/viewcvs.py/kamail/cftp/]]
+- [[gnugo>http://cvs.sourceforge.net/viewcvs.py/kamail/gnugo/]]
+- [[NetInstaller>http://cvs.sourceforge.net/viewcvs.py/kamail/ni/]]=>[[NetInstaller]]ページにあるgetni.lzhを使いましょう。
+- [[php-mode>http://cvs.sourceforge.net/viewcvs.py/kamail/php-mode/]]
+- [[rss-mode>http://cvs.sourceforge.net/viewcvs.py/kamail/rss/]](NetInstaller対応済み)
+- [[www-mode>http://cvs.sourceforge.net/viewcvs.py/kamail/www/]](NetInstaller対応済み)
+- [[xml-parser-modoki.l>http://cvs.sourceforge.net/viewcvs.py/kamail/xmlpm/]](NetInstaller対応済み)
+
+Internet Archiveから手に入るもの(古い可能性もあり)
+- [[ldap-search.l>http://web.archive.org/web/20040130102434/www.mirai.ne.jp/~gyo/xyzzy/ldap-search.l]]
+- [[namazu.l>http://web.archive.org/web/20040130102729/www.mirai.ne.jp/~gyo/xyzzy/namazu.l]]
+- [[rcs.l>http://web.archive.org/web/20040326074227/www.mirai.ne.jp/~gyo/xyzzy/rcs.l]]=>有野さんのところからという手もあり([[Omicron:xyzzy/rcs-mode]])
+- [[perlfns.l>http://web.archive.org/web/20040326073738/www.mirai.ne.jp/~gyo/xyzzy/perlfns.l]]
+- [[perldb.l>http://web.archive.org/web/20040130102657/www.mirai.ne.jp/~gyo/xyzzy/perldb.l]]
+- [[perl-misc.l>http://web.archive.org/web/20040130102515/www.mirai.ne.jp/~gyo/xyzzy/perl-misc.l]]
+- [[shell3.l>http://web.archive.org/web/20040130102337/www.mirai.ne.jp/~gyo/xyzzy/shell3.l]]
+- [[text-fill.l>http://web.archive.org/web/20040130102645/www.mirai.ne.jp/~gyo/xyzzy/text-fill.l]]
+- [[sl.l>http://web.archive.org/web/20030729183903/www.mirai.ne.jp/~gyo/xyzzy/sl.l]]
+- [[POBox>http://web.archive.org/web/20040130102343/www.mirai.ne.jp/~gyo/xyzzy/pobox.l]]
+- [[import.l>http://web.archive.org/web/20040124150934/http://www1.mirai.ne.jp/~gyo/xyzzy/kamail/misc/import.l]]　電八のメールをKaMailへインポートしたり
+----
+-[[cvs-mode>http://nokada.jin.gr.jp/xyzzy/cvs-mode-0.1.9.tar.gz]]引っ越し --  &new{2004-10-07 (木) 23:29:30};
+-http://blue.ribbon.to/~aotororo/prog/xyzzy.html --  &new{2004-09-25 (土) 13:47:46};
+-http://www.dab.hi-ho.ne.jp/sasa/biboroku/index.html#xyzzy --  &new{2004-09-25 (土) 07:39:17};
+-[[xyzzy備忘録>http://www.osamurai.flnet.org/memo/xyzzy/]] --  &new{2004-09-25 (土) 07:25:02};
+-[[c+++-mode>http://hw001.gate01.com/eggplant/tcf/lisp/cppp-mode.zip]] --  &new{2004-08-06 (金) 23:33:36};
+-すみません、上手く行きました。ありがとうございます。 --  &new{2004-02-03 (火) 01:34:13};
+-再現しません。通常の破損だと思うので.netinst/srcの中のautotimestamp.lzhを消して再挑戦してください。 -- [[佐野]] &new{2004-02-02 (月) 21:14:20};
+-netinstallerでauto-time-stampが「md5sumが一致しない」と言われます。 --  &new{2004-02-02 (月) 19:18:48};
+----
+-[[思いつくままxyzzy:http://www.jaist.ac.jp/~m-nakano/cgi-bin/blog/]] --&new{2003-12-16 (火) 11:40:32};
+-[[howm 02-12-01版>>http://homepage3.nifty.com/~ko-ji/archive/howm-wrap/howm-wrap_031201.zip]] --  &new{2003-12-02 (火) 12:47:02};
+-sqlplus-modeって今配布していない? --  &new{2003-12-02 (火) 09:37:09};
+-[[mof-mode v1.6>http://oops2.hp.infoseek.co.jp/#label:6]] --  SIZE(10){2003-10-16 (木) 17:53:13}
+-[[reference.xml 03/10/02版>http://www1.odn.ne.jp/ymtz/xyzzy_download.html]] --  SIZE(10){2003-10-02 (木) 21:54:54}
+-[[ci-mode->http://oops2.hp.infoseek.co.jp/]] --  SIZE(10){2003-09-21 (日) 21:13:08}
+-[[http://oops2.hp.infoseek.co.jp/ ci-mode]] --  SIZE(10){2003-09-21 (日) 21:12:38}
+-[[renumber-sections0051.l for xyzzy>http://www.venus.dti.ne.jp/~arbos/xyzzy.html]] --  SIZE(10){2003-09-13 (土) 10:46:49}
+-HIEたんトコって今netinstallエラーでてない？ --  SIZE(10){2003-09-06 (土) 07:47:05}
+--問題無しです。サイト引越しに伴いpackages.lの場所も変わってますが、変更しましたか？
+--アーカイブの置き場所が前のままになっているので、現在「404」が返ってきてますね。
+--すみません。変更したファイルをあげ忘れてました。 -- [[ひえ]] SIZE(10){2003-09-12 (金) 23:33:01}
+-[[xafs-mode>http://www.chem.s.u-tokyo.ac.jp/~yiwswlab/uw2.html]]　うろちょろしてて見つけたのだが、どういうことに使うのかよく分からない。 --  SIZE(10){2003-08-16 (土) 22:39:33}
+-[[ci-mode>http://oops2.hp.infoseek.co.jp/]] v1.1 --  SIZE(10){2003-08-16 (土) 14:17:01}
+-[[windzoom>http://oops2.hp.infoseek.co.jp/]] v1.2 --  SIZE(10){2003-08-15 (金) 23:16:54}
+-[[xyzzyと偽春菜の素敵な関係>http://www.din.or.jp/~tange/xyzzy.htm]] --  SIZE(10){2003-08-15 (金) 23:16:21}
+-[[「何か」with xyzzy>http://www.faireal.net/articles/4/17/#d20114]] --  SIZE(10){2003-08-15 (金) 23:15:54}
+-[[d-mode>http://f17.aaacafe.ne.jp/~labamba/]] --  SIZE(10){2003-08-12 (火) 00:12:57}
+-確認しました。ありがとうございます！ -- [[i9N]] SIZE(10){2003-08-04 (月) 00:46:06}
+-ソートしなおしてみた。コメントぶら下げるのが出来なくなった&#65533;1s&。 -- [[佐野]] SIZE(10){2003-08-03 (日) 01:31:55}
+-#commentをこんな感じにすればいいんだけど、旧来のをソートしないといけないのが面倒くさげ&#65533;1s&。 -- [[佐野]] SIZE(10){2003-08-03 (日) 01:25:01}
+-新しいのもほど上に表示するにはどうすればいいんでしょうかね？ -- [[i9N]] SIZE(10){2003-08-03 (日) 01:09:48}
+-[[ruby-testunit.l>http://bernie.s14.xrea.com/xyzzy/ruby-testunit.html]] --  SIZE(10){2003-08-03 (日) 01:05:55}
+-[[auto-scroll>http://bernie.s14.xrea.com/xyzzy/auto-scroll.html]] -- [[i9N]] SIZE(10){2003-08-02 (土) 13:57:41}
+-[[R-mode ver. 0.0.1.1>http://www.humeco.m.u-tokyo.ac.jp/~takeshou/xyzzy/index.html]] -- [[ひえ]] SIZE(10){2003-07-28 (月) 15:49:10}
+-[[ggrep 2003.07.28-2>http://members.tripod.co.jp/ohkubo/]] --  SIZE(10){2003-07-28 (月) 11:45:25}
+-[[局所ニュース>http://popup2.tok2.com/home/i9n/]] 復活？ -- [[佐野]] SIZE(10){2003-07-26 (土) 22:09:15}
+--頑張ります。 -- [[i9N]] SIZE(10){2003-07-26 (土) 23:27:17}
+---にうすの方どうもです。よろしく！ -- [[佐野]] SIZE(10){2003-07-28 (月) 00:15:28}
+-[[info-modoki-mode>http://hie.3.pro.tok2.com/xyzzy/mylib/]] Ver.1.04 -- [[i9N]] SIZE(10){2003-07-07 (月) 00:28:38}
+-[[ese-fortune>http://hie.3.pro.tok2.com/xyzzy/mylib/]] Ver.1.08.3 -- [[i9N]] SIZE(10){2003-07-07 (月) 00:24:53}
+-[[ndmacro>http://www.geocities.co.jp/SiliconValley-PaloAlto/5042/xyzzy/index.html#ndmacro]] 初版 - [[増井俊之さんの dmacro.el>http://www.csl.sony.co.jp/person/masui/]] にいわゆる連番の機能を持たせたものです。 -- [[i9N]] SIZE(10){2003-07-01 (火) 14:08:32}
+-[[xyzzy QandA>http://hie.3.pro.tok2.com/xyzzy/qanda/]] なんてものがひえさんとこに！　すばらしいです。 -- [[NANRI]] SIZE(10){2003-07-01 (火) 05:49:13}
+--おかしなことが書いてあったら，おしえてくださいませ。 -- [[ひえ]] SIZE(10){2003-07-02 (水) 06:50:12}
+-[[xyzzysetup.exe>http://www1.odn.ne.jp/ymtz/index.html]] 初版 --  SIZE(10){2003-06-19 (木) 00:31:20}
+-これどうしよう。 -- [[i9N]] SIZE(10){2003-06-05 (木) 17:48:29}
+-i9Nさんとの協議の結果名前を変更して継続することになりました。よろしくです。　:) -- [[佐野]] SIZE(10){2003-06-16 (月) 20:36:20}
+-[[comment.l>http://www.geocities.co.jp/SiliconValley-PaloAlto/5042/xyzzy/index.html#comment]] 2003-05-19版 --  SIZE(10){2003-05-20 (火) 01:17:39}
+--ずっと欲しいと思っていました。 -- [[NANRI]] SIZE(10){2003-05-20 (火) 01:23:08}
+-[[pdic.l>http://www.geocities.com/nobuaki.arima@sbcglobal.net/]] 2003.05.18版(不具合修正） --  SIZE(10){2003-05-19 (月) 06:13:59}
+--やってしまいました???。2003.05.17版は、.xyzzyで(load-library "pdic")とやってもうまく動きません。2003.05.17版をダウンロードされた方は、2003.05.18版に差し替えてください。 -- [[ありま]] SIZE(10){2003-05-19 (月) 06:17:00}
+-[[encap>http://www.geocities.co.jp/SiliconValley-PaloAlto/5042/xyzzy/index.html#encap]] 2003-05-16 - 公開版  --  SIZE(10){2003-05-19 (月) 01:07:00}
+--標準機能を上書きする人にはうれしいかと思います。実にlispらしい書き方が素敵。 -- [[佐野]] SIZE(10){2003-05-19 (月) 01:13:25}
+-[[pdic.l>http://www.geocities.com/nobuaki.arima@sbcglobal.net/]] 2003.05.17版 --  SIZE(10){2003-05-18 (日) 13:14:38}
+-- こうやって自分のを宣伝するのも可なんでしょうか。 -- [[ありま]] SIZE(10){2003-05-18 (日) 13:15:47}
+---ありだと思います。*app-popup-menu*とかどうでしょう。 -- [[佐野]] SIZE(10){2003-05-18 (日) 18:22:04}
+-[[favorites>http://www1.odn.ne.jp/ymtz/xyzzy_download.html]] 2003.05.10-1版 --  SIZE(10){2003-05-12 (月) 12:49:49}
+-[[watch>http://www1.odn.ne.jp/ymtz/xyzzy_download.html]] 2003.05.10版 --  SIZE(10){2003-05-12 (月) 12:48:43}
+-[[word-tools>http://oops2.hp.infoseek.co.jp/]] 2003-05-12 / v1.3 --  SIZE(10){2003-05-12 (月) 12:47:45}
+- [[Another refer-for>http://www.geocities.com/nobuaki.arima@sbcglobal.net/]] 2003.05.10版 --  SIZE(10){2003-05-12 (月) 12:46:08}
+-局所ニュースの前に「Xyzzy link page」だろ! &#65533;1s&s&っていつも思っております。ごめんなさい。 -- [[i9N]] SIZE(10){2003-05-11 (日) 20:37:30}
+-つーか、つっこみ以前にNot Found なんですけど。 --  SIZE(10){2003-05-11 (日) 21:05:14}
+--直してみました。 -- [[佐野]] SIZE(10){2003-05-11 (日) 21:07:26}

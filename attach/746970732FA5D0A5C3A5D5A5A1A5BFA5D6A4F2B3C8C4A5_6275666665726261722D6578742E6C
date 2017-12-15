@@ -1,0 +1,109 @@
+;;; -*- Mode: Lisp; -*-
+;;;
+;;; This file is not part of xyzzy.
+;;;
+;; バッファタブのダブルクリックでバッファを閉じる
+;;
+;; (require "bufferbar-ext")
+;;
+;; 不安定なので常用するのは無理です．
+;; splitter-menu.l を改悪しているので，そちらも参照してください
+;; 
+
+(provide "bufferbar-ext")
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (require "wip/winapi")
+  (unless (find-package "bufferbar-ext")
+    (defpackage "bufferbar-ext" (:use "lisp" "editor" "foreign" "winapi"))))
+
+(in-package "winapi")
+
+(*define-c-type FARPROC WNDENUMPROC)
+
+(*define-dll-entry DWORD GetClassLong (HWND int)
+  "user32" "GetClassLongA")
+(*define-dll-entry DWORD SetClassLong (HWND int LONG)
+  "user32" "SetClassLongA")
+(*define-dll-entry DWORD SetWindowLong (HWND int LONG)
+  "user32" "SetWindowLongA")
+(*define-dll-entry int GetClassName (HWND LPSTR int)
+  "user32" "GetClassNameA")
+(*define-dll-entry LRESULT CallWindowProc (WNDPROC HWND UINT WPARAM LPARAM)
+  "user32" "CallWindowProcA")
+(*define-dll-entry BOOL EnumChildWindows (HWND WNDENUMPROC LPARAM)
+  "user32" "EnumChildWindows")
+
+(*define GCL_MENUNAME -8)
+(*define GCL_HBRBACKGROUND -10)
+(*define GCL_HCURSOR -12)
+(*define GCL_HICON -14)
+(*define GCL_HMODULE -16)
+(*define GCL_CBWNDEXTRA -18)
+(*define GCL_CBCLSEXTRA -20)
+(*define GCL_WNDPROC -24)
+(*define GCL_STYLE -26)
+
+(*define GWL_WNDPROC -4)
+(*define GWL_HINSTANCE -6)
+(*define GWL_HWNDPARENT -8)
+(*define GWL_STYLE -16)
+(*define GWL_EXSTYLE -20)
+(*define GWL_USERDATA -21)
+(*define GWL_ID -12)
+
+(*define WM_DESTROY #x0002)
+(*define WM_CONTEXTMENU #x007B)
+
+(in-package "bufferbar-ext")
+
+
+(defvar *DefaultWindowProc2* 0)
+(defvar *buftab-ldblclk-hook* nil)
+
+(defun-c-callable
+  LRESULT buffertab-ext-wndproc
+  ((HWND hwnd) (UINT msg) (WPARAM wparam) (LPARAM lparam))
+  (cond ((and (= msg WM_LBUTTONDBLCLK)
+	      *buftab-ldblclk-hook*)
+	 (run-hooks '*buftab-ldblclk-hook*)
+	 ))
+ (CallWindowProc *DefaultWindowProc2* hwnd msg wparam lparam))
+
+(defun setup (hwnd)
+  (when (= *DefaultWindowProc2* 0)
+    ; 同じウィンドウプロシージャを共有してるみたいなので
+    ; 退避するのはひとつでいい．
+    (setq *DefaultWindowProc2* (GetWindowLong hwnd GWL_WNDPROC))
+    (SetWindowLong hwnd GWL_WNDPROC #'buffertab-ext-wndproc)
+    ;(setq *DefaultWindowProc2* (GetClassLong hwnd GCL_WNDPROC))
+    ;(SetClassLong hwnd GCL_WNDPROC #'buffertab-ext-wndproc)
+    ))
+
+
+(defvar *first* t)
+(defun-c-callable
+  BOOL enum-child-proc
+  ((HWND hwnd) (LPARAM lparam))
+  (let* ((buf (si:make-chunk nil 256))
+	 cls)
+    (GetClassName hwnd buf 256)
+    (setq cls (si:unpack-string buf 0 256))
+    ;(msgbox "cls [~A]" cls)
+    (if (and (string= cls "SysTabControl32")
+	     (= *DefaultWindowProc2* 0))
+	(if *first*
+	    (setq *first* nil)
+	  (setup hwnd)))
+    1))
+
+(if (= 0 *DefaultWindowProc2*)
+    (EnumChildWindows (editor::get-window-handle)
+		      #'enum-child-proc
+		      0))
+
+(add-hook '*buftab-ldblclk-hook* #'(lambda () (kill-buffer (selected-buffer))))
+
+
+;;
+;;

@@ -1,0 +1,75 @@
+[[Memo]]
+#contents
+
+* eq [#w5679512]
+|''eq''                                    |''CLtL2''    |''xyzzy''|h
+|(eq 'a 'b)                                |false        |false    |
+|(eq 'a 'a)                                |true         |true     |
+|(eq 3 3)                                  |COLOR(blue):½èÍý·Ï°ÍÂ¸ |COLOR(blue):true   |
+|(eq 3 3.0)                                |false        |false    |
+|(eq 3.0 3.0)                              |COLOR(blue):½èÍý·Ï°ÍÂ¸ |COLOR(blue):false  |
+|(eq #c(3 -4) #c(3 -4))                    |COLOR(blue):½èÍý·Ï°ÍÂ¸ |COLOR(blue):false  |
+|(eq #c(3 -4.0) #c(3 -4))                  |false        |false    |
+|(eq (cons 'a 'b) (cons 'a 'c))            |false        |false    |
+|(eq (cons 'a 'b) (cons 'a 'b))            |false        |false    |
+|(eq '(a . b) '(a . b))                    |COLOR(blue):½èÍý·Ï°ÍÂ¸ |COLOR(blue):false  |
+|(progn (setq x (cons 'a 'b)) (eq x x))    |true         |true     |
+|(progn (setq x '(a . b)) (eq x x))        |true         |true     |
+|(eq #\A #\A)                              |COLOR(blue):½èÍý·Ï°ÍÂ¸ |COLOR(blue):true   |
+|(eq "Foo" "Foo")                          |COLOR(blue):½èÍý·Ï°ÍÂ¸ |COLOR(blue):false  |
+|(eq "Foo" (copy-seq "Foo"))               |false        |false    |
+|(eq "FOO" "foo")                          |false        |false    |
+*eql [#j6afa34f]
+|''eql''                                   |''CLtL2''    |''xyzzy''|h
+|(eql 'a 'b)                               |false        |false    |
+|(eql 'a 'a)                               |true         |true     |
+|(eql 3 3)                                 |true         |true     |
+|(eql 3 3.0)                               |false        |false    |
+|(eql 3.0 3.0)                             |true         |true     |
+|(eql #c(3 -4) #c(3 -4))                   |true         |true     |
+|(eql #c(3 -4.0) #c(3 -4))                 |COLOR(blue):false      |COLOR(blue):true   |
+|(eql (cons 'a 'b) (cons 'a 'c))           |false        |false    |
+|(eql (cons 'a 'b) (cons 'a 'b))           |false        |false    |
+|(eql '(a . b) '(a . b))                   |COLOR(blue):½èÍý·Ï°ÍÂ¸ |COLOR(blue):false  |
+|(progn (setq x (cons 'a 'b)) (eql x x))   |true         |true     |
+|(progn (setq x '(a . b)) (eql x x))       |true         |true     |
+|(eql #\A #\A)                             |true         |true     |
+|(eql "Foo" "Foo")                         |COLOR(blue):½èÍý·Ï°ÍÂ¸ |COLOR(blue):false  |
+|(eql "Foo" (copy-seq "Foo"))              |false        |false    |
+|(eql "FOO" "foo")                         |false        |false    |
+*equal [#k62eeca5]
+|''equal''                                 |''CLtL2''    |''xyzzy''|h
+|(equal 'a 'b)                             |false        |false    |
+|(equal 'a 'a)                             |true         |true     |
+|(equal 3 3)                               |true         |true     |
+|(equal 3 3.0)                             |false        |false    |
+|(equal 3.0 3.0)                           |true         |true     |
+|(equal #c(3 -4) #c(3 -4))                 |true         |true     |
+|(equal #c(3 -4.0) #c(3 -4))               |COLOR(blue):false      |COLOR(blue):true   |
+|(equal (cons 'a 'b) (cons 'a 'c))         |false        |false    |
+|(equal (cons 'a 'b) (cons 'a 'b))         |true         |true     |
+|(equal '(a . b) '(a . b))                 |true         |true     |
+|(progn (setq x (cons 'a 'b)) (equal x x)) |true         |true     |
+|(progn (setq x '(a . b)) (equal x x))     |true         |true     |
+|(equal #\A #\A)                           |true         |true     |
+|(equal "Foo" "Foo")                       |true         |true     |
+|(equal "Foo" (copy-seq "Foo"))            |true         |true     |
+|(equal "FOO" "foo")                       |false        |false    |
+*equalp [#h4ff20a7]
+|''equalp''                                |''CLtL2''    |''xyzzy''|h
+|(equalp 'a 'b)                            |false        |false    |
+|(equalp 'a 'a)                            |true         |true     |
+|(equalp 3 3)                              |true         |true     |
+|(equalp 3 3.0)                            |true         |true     |
+|(equalp 3.0 3.0)                          |true         |true     |
+|(equalp #c(3 -4) #c(3 -4))                |true         |true     |
+|(equalp #c(3 -4.0) #c(3 -4))              |true         |true     |
+|(equalp (cons 'a 'b) (cons 'a 'c))        |false        |false    |
+|(equalp (cons 'a 'b) (cons 'a 'b))        |true         |true     |
+|(equalp '(a . b) '(a . b))                |true         |true     |
+|(progn (setq x (cons 'a 'b)) (equalp x x))|true         |true     |
+|(progn (setq x '(a . b)) (equalp x x))    |true         |true     |
+|(equalp #\A #\A)                          |true         |true     |
+|(equalp "Foo" "Foo")                      |true         |true     |
+|(equalp "Foo" (copy-seq "Foo"))           |true         |true     |
+|(equalp "FOO" "foo")                      |true         |true     |

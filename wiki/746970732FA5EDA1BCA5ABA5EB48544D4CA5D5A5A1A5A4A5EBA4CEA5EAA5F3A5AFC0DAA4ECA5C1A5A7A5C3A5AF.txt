@@ -1,0 +1,117 @@
+[[tips]]
+
+HTML のリンク切れをチェックします。相対URIで指定されていることを想定しています。
+
+ダイアログの書き方はあまりよくわからなかったので grepd.l のを流用させてもらってます。
+
+ (defvar *linkcheck-base-regexp* "<base\\s [^>]*href=\"\\(.+\\)\"")
+ (defvar *linkcheck-link-regexp* "<[^>]+href=\"\\([^\"]+\\)\"")
+ (defvar *linkcheck-name-format* "<a\\s [^>]*name=\"?~A\"?")
+ (defvar *linkcheck-work-buffer* " *linkcheck-work*")
+ (defvar *linkcheck-temp-buffer* " *linkcheck-temp*")
+ 
+ (defun linkcheck-1 (base fun)
+   "バッファの中身を base を基準としてリンク切れチェック
+ あればリンク対象ファイル名、行番号(、name)を引数として FUN を funcall."
+   (goto-char (point-min))
+   (if (scan-buffer *linkcheck-base-regexp* :regexp t)
+       (setq base (match-string 1)))
+   (while (scan-buffer *linkcheck-link-regexp* :case-fold t :regexp t :tail t)
+     (let* ((uri (match-string 1))
+            (pos (string-match "#" uri))
+            (file (merge-pathnames (if pos (substring uri 0 pos) uri) base))
+            (name (if pos (substring uri (1+ pos)))))
+       (cond ((string-match "\\sw+:" uri)
+              nil)                       ; とりあえず無視
+             ((equal 0 pos)
+              (unless (save-excursion
+                        (goto-char (point-min))
+                        (scan-buffer (format nil *linkcheck-name-format* name)
+                                     :case-fold t :regexp t))
+                (funcall fun file (current-line-number) name)))
+             ((not (file-exist-p file))
+              (funcall fun file (current-line-number)))
+             (name
+              (unless (let ((oldbuf (selected-buffer)))
+                        (save-excursion
+                          (set-buffer (get-buffer-create *linkcheck-work-buffer*))
+                          (erase-buffer (selected-buffer))
+                          (insert-file-contents file)
+                          (scan-buffer (format nil *linkcheck-name-format* name)
+                                       :case-fold t :regexp t)))
+                (funcall fun file (current-line-number) name)))
+             ))))
+ 
+ (defun linkcheck-buffer ()
+   (interactive)
+   (let ((file (get-buffer-file-name (selected-buffer))))
+     (save-excursion
+       (goto-char (point-min))
+       (linkcheck-1 (if file (directory-namestring file) (default-directory))
+                    #'(lambda (target line &optional name)
+                        (if name
+                            (error "Name not found(~D): ~A#~A." line target name)
+                          (error "File not found(~D): ~A." line target))))))
+   (message "Check finished succesfully."))
+ 
+ (define-history-variable *linkcheck-file-history* nil)
+ (define-history-variable *linkcheck-directory-history* nil)
+ 
+ (defun linkcheck-dialog ()
+   (interactive)
+   (multiple-value-bind (result data)
+       (dialog-box '(dialog 0 0 271 80
+                     (:caption "リンク切れチェック")
+                     (:font 9 "MS UI Gothic")
+                     (:control
+                      (:static nil "ファイル名(&F):" #x50020000 7 10 42 8)
+                      (:combobox file nil #x50210042 51 8 157 96)
+                      (:button wild "ワイルドカードを使う(&W)" #x50010003 51 25 80 8)
+                      (:static nil "ディレクトリ(&D):" #x50020000 7 45 42 8)
+                      (:combobox dir nil #x50210042 51 42 157 96)
+                      (:button subdir "ついでにサブディレクトリも(&U)" #x50010003 51 61 95 10)
+                      (:button IDOK "実行(&C)" #x50010001 214 7 50 14)
+                      (:button IDCANCEL "キャンセル" #x50010000 214 24 50 14)
+                      (:button ref "参照(&R)..." #x50010000 214 41 50 14)))
+                   (list (cons 'file (or (car *linkcheck-file-history*) "*.html"))
+                         (cons 'file *linkcheck-file-history*)
+                         (cons 'dir (or (car *linkcheck-directory-history*)
+                                        (default-directory)))
+                         (cons 'dir *linkcheck-directory-history*)
+                         (cons 'wild t)
+                         (cons 'subdir t)
+                         )
+                   `((file :disable t)
+                     (file-static :disable t)
+                     (subdir :disable nil)
+                     (ref :related dir :directory-name-dialog (:title "参照"))))
+     (when (eq result 'IDOK)
+       (let* ((wild (cdr (assoc 'wild data)))
+              (file (and wild (cdr (assoc 'file data))))
+              (dir (cdr (assoc 'dir data)))
+              (subdir (cdr (assoc 'subdir data)))
+              (oldbuf (selected-buffer))
+              (tmpbuf (get-buffer-create *linkcheck-temp-buffer*))
+              (dirs (directory dir :absolute t :recursive subdir :wild file :file-only t)))
+         (setq *linkcheck-file-history*
+               (cons file (delete file *linkcheck-file-history* :test #'string-equal)))
+         (setq *linkcheck-directory-history*
+               (cons dir (delete dir *linkcheck-directory-history* :test #'string-equal)))
+         (with-output-to-temp-buffer ("*link check*")
+           (format t "チェックしたファイル:~%~{ ~A~%~}~%~%" dirs)
+           (save-excursion
+             (set-buffer (get-buffer-create *linkcheck-temp-buffer*))
+             (dolist (file dirs (message "Checking file...done"))
+               (message "Checking file (~A)" file)
+               (erase-buffer (selected-buffer))
+               (insert-file-contents file)
+               (linkcheck-1 (directory-namestring file)
+                            #'(lambda (target line &optional name)
+                                (if name
+                                    (format t "~A(~D) Name not found: ~A\n"
+                                            file line name)
+                                  (format t "~A(~D) File not found: ~A\n"
+                                          file line target))))))
+           )))))
+----
+#comment

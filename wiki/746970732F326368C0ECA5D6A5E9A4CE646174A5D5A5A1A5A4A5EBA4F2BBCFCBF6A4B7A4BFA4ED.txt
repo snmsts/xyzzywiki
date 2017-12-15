@@ -1,0 +1,152 @@
+[[tips]]
+
+***dat-megane(?) [#xfbc6274]
+2chもネットも最近よう見んのだけど専ブラのフォルダ以下には膨大なdatがびっしり。整理したい！てことで作りました。datをxyzzyで直接開き、レスを整形された形で眺めつつ、後世に残したいレスをキーひとつでhowmに送ることができます。てわけで要howmとhowm-wrap-mode
+
+***導入 [#hc764f3a]
+howm-wrap-modeが使える状態で下コードをdat-megane.lとしてsite-lisp以下に置き、.xyzzyに
+ (require "dat-megane")
+ push '("\\.dat$" . dat-megane-mode) *auto-mode-alist*)
+とすればOK。
+***利用法 [#h15693fc]
+datをxyzzyで開くとモードラインにスレ名が出てるはず。この状態で'n'キー(下のレス)と'p'キー(上のレス)とカーソルを上下させると、別ウインドウにレス内容が表示されます。
+
+「これは後世に残すべき名レスだ！」
+
+というやつにでくわしたらためらわず'h'キーを押すと、裏でhowmメモが開き、レスがhowmメモとして保存されます。howmメモのバッファがある状態で'h'なら開いているhowmバッファに追加されますし、ない場合は新規メモが立ち上がるので、項目分けしたい時は使い分けて下さい。
+
+飽きたら'q'キーを叩けばヌケます。
+ ;;dat-megane.lとしてsite-lisp以下に保存
+ (defvar *thread-name* nil)
+ (defvar *scope-buffer* nil)
+ (defvar *dat-megane-mode-hook* nil)
+ (defvar *dat-megane-mode-map* nil)
+ (unless *dat-megane-mode-map*
+  (setq *dat-megane-mode-map* (make-sparse-keymap))
+  (define-key *dat-megane-mode-map* '#\q 'datm-quit-and-delete-buffer)
+  (define-key *dat-megane-mode-map* '#\n 'nextline)
+  (define-key *dat-megane-mode-map* '#\p 'prevline)
+  (define-key *dat-megane-mode-map* '#\h 'save-to-howm)
+  )
+ (defun dat-megane-mode ()
+  (interactive)
+  (kill-all-local-variables)
+  (setf buffer-mode 'dat-megane-mode)
+  (get-threadname)
+  (setf mode-name *thread-name* )
+  (use-keymap *dat-megane-mode-map*)
+  (toggle-read-only)
+  (run-hooks '*dat-megane-mode-hook*))
+ (defun nextline ()
+  (interactive)
+  (next-line)
+  (beginning-of-line)
+  (send-string))
+ (defun prevline ()
+  (interactive)
+  (previous-line)
+  (beginning-of-line)
+  (send-string))
+ (defun datm-quit-and-delete-buffer ()
+  (interactive)
+  (if *scope-buffer*
+      (progn
+	(delete-buffer *scope-buffer*)
+	(setf *scope-buffer* nil)
+	(delete-other-windows)))
+  (delete-buffer (find-buf ".dat$"))
+  )
+ (defun get-threadname ()
+  "スレの名前"
+  (interactive)
+  (save-excursion
+  (setf *thread-name*
+	(buffer-substring 
+	 (progn
+	   (beginning-of-buffer)
+	   (end-of-line)
+	   (point))
+	 (progn
+	   (re-search-backward "<>")
+	   (forward-char 2)
+	   (point)))))
+  *thread-name*)
+ (defun send-string ()
+  "カーソル上の行(レス)をパースしてdat-megane-scopeバッファに送る"
+  (interactive)
+  (let ((num (current-line-number))
+	(str)
+	(lst)
+	(scopebuf))
+    (beginning-of-line)
+    (setf str (buffer-substring (point)
+				(save-excursion
+				  (end-of-line)
+				  (point))))
+    (setf str (substitute-string str "<a href.+\">" ""))
+    (setf str (substitute-string str "</a>" ""))
+    (setf str (substitute-string str "<.?b>" ""))
+    (setf str (substitute-string str "&quot;" "\""))
+    (setf str (substitute-string str "&nbsp;" " "))
+    (setf str (substitute-string str "<br>" "\n" :case-fold t))
+    (setf lst (split-string str "<>" t " "))
+    (setf (nth 0 lst) (concat "名前:" (nth 0 lst)))
+    (setf (nth 2 lst) (concat " [" (nth 2 lst) "] "))
+    (setf (nth 4 lst) (concat (nth 4 lst) "\n\n"))
+    (setf str (lscat lst))
+    (setf str (substitute-string str "&gt;" ">"))
+    (setf str (substitute-string str "&lt;" "<"))
+    (setf str (concat (format nil "~D " num) str))
+    (setf scopebuf (get-buffer-create "*dat-megane-scope*"))
+    (pop-to-buffer "*dat-megane-scope*" 25)
+    (erase-buffer scopebuf)
+    (insert str)
+    (make-local-variable 'need-not-save)
+    (setf need-not-save t)
+    (make-local-variable 'auto-save)
+    (setf auto-save nil)
+    (beginning-of-buffer)
+    (other-window)
+    (setf *scope-buffer* scopebuf)
+    scopebuf))
+ (defun find-buf (regex)
+  (let ((buf))
+    (dolist (x (buffer-list))
+      (if (string-match regex (buffer-name x))
+	  (setf buf x)))
+    buf))
+ (defun howmbuf ()
+  "*.howmなバッファを特定。なければ作る"
+  (let ((buf))
+    (setf buf (find-buf ".howm$"))
+    (if (not buf)
+	(progn
+	  (howm-create)
+	  (setf buf (find-buf ".howm$"))))
+    buf))
+ (defun save-to-howm ()
+  (interactive)
+  (let ((scopestring)
+	(hbuf))
+    (if *scope-buffer*
+	(save-excursion
+	  (set-buffer *scope-buffer*)
+	  (setf scopestring
+		(buffer-substring
+		 (progn (beginning-of-buffer) (point))
+		 (progn (end-of-buffer) (point))))
+	  (set-buffer (howmbuf))
+	  (beginning-of-buffer)
+	  (end-of-line)
+	  (if (< (point) 3)
+	      (insert *thread-name*))
+	  (end-of-buffer)
+	  (insert scopestring)
+	  (insert "\n\n")
+	  (save-buffer)))))
+ (defun lscat (ls)
+  "ls(list)中の文字列をくっつける。"
+  (let ((str))
+    (dolist (x ls)
+      (setf str (concat str x)))
+    str))

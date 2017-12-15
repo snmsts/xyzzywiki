@@ -1,0 +1,105 @@
+[[tips]]
+
+ ;MS-IME Standard 2002 で動作を確認
+ ;さいた　　　　　あたたかい(not working?)
+ ;布を　　　　　　ミルク
+ ;花が　　　　　　春
+ ;時間を　　　　　
+ 
+ 
+ (in-package "winapi")
+ 
+ (setq *lpfnProc* 0)
+ 
+ (c:*define-c-type u_long WNDPROC)
+ 
+ (c:*define GWL_WNDPROC -4)
+ (c:*define WM_IME_REQUEST #x0288)
+ (c:*define IMR_DOCUMENTFEED #x0007)
+ 
+ (c:*define-dll-entry LONG SetWindowLong (HWND c:int LONG)
+   "user32" "SetWindowLongA")
+ (c:*define-dll-entry LONG GetWindowLong (HWND c:int)
+   "user32" "GetWindowLongA")
+ (c:*define-dll-entry LRESULT CallWindowProc (WNDPROC HWND UINT WPARAM LPARAM)
+   "user32" "CallWindowProcA")
+ 
+ (c:*define-c-struct
+   RECONVERTSTRING
+   (DWORD dwSize)
+   (DWORD dwVersion)
+   (DWORD dwStrLen)
+   (DWORD dwStrOffset)
+   (DWORD dwCompStrLen)
+   (DWORD dwCompStrOffest)
+   (DWORD dwTargetStrLen)
+   (DWORD dwTargetStrOffset))
+ 
+ (c:*defun-c-callable LRESULT ime-proc
+   ((HWND hwnd) (UINT msg) (WPARAM wparam) (LPARAM lparam))
+   (if (and (= msg WM_IME_REQUEST)
+            (= wparam IMR_DOCUMENTFEED))
+       (let*
+           ((str (ed:buffer-substring (ed:save-excursion (ed:goto-bol) (ed:point))
+                                      (ed:save-excursion (ed:goto-eol) (ed:point))))
+            (strlen (si:chunk-size (si:make-string-chunk str)))
+            (strOffset (ed:current-column)))
+         (when (/= lparam 0)
+             (let ((pReconv (make-RECONVERTSTRING nil lparam)))
+               (setf (RECONVERTSTRING-dwSize pReconv) (si:chunk-size pReconv))
+               (setf (RECONVERTSTRING-dwVersion pReconv) 0)
+               (setf (RECONVERTSTRING-dwStrLen pReconv) strlen)
+               (setf (RECONVERTSTRING-dwStrOffset pReconv) (si:chunk-size pReconv))
+               (setf (RECONVERTSTRING-dwCompStrLen pReconv) 0)
+               (setf (RECONVERTSTRING-dwCompStrOffest pReconv) 0)
+               (setf (RECONVERTSTRING-dwTargetStrLen pReconv) 0)
+               (setf (RECONVERTSTRING-dwTargetStrOffset pReconv) strOffset)
+               (setq schunk (si:make-chunk 'string strlen nil (+ lparam 32)))
+               (si:pack-string schunk 0 str)))
+         (return-from ime-proc (+ 32 strlen)))
+     (CallWindowProc *lpfnProc* hwnd msg wparam lparam)))
+               
+ 
+ (setq *ime-feedback* nil)
+ 
+ (setq *orig-wndproc* (GetWindowLong (ed::get-window-handle) GWL_WNDPROC))
+ 
+ (defun ime-feedback-on ()
+   (ed:interactive)
+   (setq *lpfnProc* (SetWindowLong (ed::get-window-handle) GWL_WNDPROC #'ime-proc))
+   (setq *ime-feedback* t))
+ 
+ (defun ime-feedback-off ()
+   (ed:interactive)
+   (SetWindowLong (ed::get-window-handle) GWL_WNDPROC *orig-wndproc*)
+   (setq *ime-feedback* nil))
+ 
+
+ 
+
+
+
+
+
+アンインストールのことは考えてません。　-deecay
+- おお！lispでもできるんですね。しかし、アンインストールしないと何か問題がでるということでしょうか？ --  &new{2008-02-21 (木) 03:13:36};
+- いや、(toggle-ime-xxx) みたいにできたらいいな、と。でもフックのはずし方がわかんないな、と。 -- [[deecay]] &new{2008-02-21 (木) 08:27:21};
+- ありがとうございます。imeの設定でこの機能をoffにできるので特にtoggleは無くてもいいような気がします。 --  &new{2008-02-21 (木) 08:56:21};
+- 以下のようにすれば
+ (ed::add-hook 'ed::*post-startup-hook* 'ime-feedback-on)
+siteinit.lに書いても動きそうです。 --  &new{2008-02-21 (木) 09:34:48};
+- C-gが効かないことがある副作用があるようです。 --  &new{2008-02-21 (木) 12:36:01};
+- C-gが効かない現象を確認しました。eval-buffer した後にM-x -> C-g が効かなくなりますね。なんでだろ。 -- [[deecay]] &new{2008-02-21 (木) 15:36:48};
+
+#comment
+
+------
+参考情報:
+
+xyzzy Part15 763-779
+
+[[IMEの前後参照変換機能に対応するには(@とぴやまのブログ):http://d.hatena.ne.jp/topiyama/20070703/]]
+
+[[ウィンドウのサブクラス化 その１:http://www.kumei.ne.jp/c_lang/sdk/sdk_36.htm]]
+
+[[Alphaのソース:http://svn.sourceforge.jp/cgi-bin/viewcvs.cgi/trunk/src/alpha/ascension/viewer.cpp?rev=84&root=alpha&view=markup]]

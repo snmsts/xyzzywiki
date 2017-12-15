@@ -1,0 +1,17 @@
+;;-*- Mode: Lisp; Package: EDITOR -*-
+(provide "enparam")
+(export '(enparam))
+(in-package "editor")
+
+(defun enparam (param &key
+		      (default "")
+		      (val)
+		      )
+  (unless val
+    (setq val param))
+  (make-variable-buffer-local val)
+  (set-default val default)
+  (delete (symbol-name param) *auto-mode-parameter-alist* :key #'car :test #'string=)
+  (push (cons (symbol-name param) #'(lambda (string) (set val string)))
+	*auto-mode-parameter-alist*)
+  )

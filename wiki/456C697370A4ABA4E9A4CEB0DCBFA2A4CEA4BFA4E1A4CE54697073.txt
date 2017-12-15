@@ -1,0 +1,89 @@
+#freeze
+-やはりEmacsの豊富な資産を使わない手はないでしょう。
+Emacsのあの機能とかあのモードが使いたいことがあります。
+-そんなときはどうしましょう。
++誰かが移植しているものをさがす。
++なさそうなので、そのままxyzzyで動かそうとする。
++エラーが出て動かない。エラーがでなくても動かない。
++まず「移植キット」をみてみる。
++xyzzyMLも検索してみる。
++なければelispのリファレンスとxyzzyのリファレンスを比べて自分でどうにかできそうか考えてみる。
++手に負えないのでWikiの質問箱に投げてみる。
++さじを投げる。
+~などとなってしまいますが、これらの作業のメモがわりに使えたらな、と思います。
+
+
+#hr
+- とりあえず「場所取り」だけしてみました。 -- [[上山完]] &new{2005-11-10 (木) 14:25:35};
+- とりあえずすぐ思いつくのは [[Emacslisp移植キット>http://web.archive.org/web/20100624030528/http://osuneko.at.infoseek.co.jp/xyzzy/xyzzy.html#emacs-lisp]] あたりですかね？ --  &new{2005-11-10 (木) 18:16:16};
+- あと移植されてきたものというとkimuraさんのhowm、OHKUBOさんの正規表現関連のいくつか、NomuraさんのTeX周りを思い出します。他にもあるかもしれません。 -- [[佐野]] &new{2005-11-10 (木) 19:32:36};
+- いろいろ書き込んでくださっているようなので「準備中」をはずしました。 -- [[上山完]] &new{2005-11-11 (金) 09:09:28};
+- Menuに追加してみました。 -- [[bulb]] &new{2005-11-11 (金) 09:38:17};
+- 果てしない作業が始まってる…。この状態で公開するのは果てしなく再利用性が低いような気がするのですがどうしましょうかねぇ。 -- [[佐野]] &new{2005-11-12 (土) 14:12:52};
+- TeX周りで言うなら[[kyotex-mode:http://www.ss.scphys.kyoto-u.ac.jp/person/yonezawa/contents/program/xyzzy/kyotex/]]もお忘れなく。 -- [[Nomura]] &new{2014-08-07 (木) 22:12:54};
+- XmpdcBcPVElVSA -- [[nuhpisgoqx]] &new{2015-03-21 (土) 19:00:23};
+
+#comment
+*索引 [#m59b6e0c]
+#contents
+*関連リンク [#y2c179a1]
+**xyzzy lisp (common lisp) 関係 [#bd101028]
+-[[xyzzy Lisp Programming>http://www.geocities.jp/m_hiroi/xyzzy_lisp.html]](M.Hiroiさん)
+-[[xyzzy Reference>refwiki:FrontPage]](Wiki)
+-[[xyzzy Reference>reference:archive]](各種アーカイブ)
+
+#comment
+**Emacs lisp 関係 [#wb241814]
+-[[Programming in Emacs Lisp (An introduction) 1.05 版の日本語訳>http://www.math.s.chiba-u.ac.jp/~matsu/lisp/emacs-lisp-intro-jp.html#SEC_Top]]
+-[[GNU Emacs Lisp Reference Manual(日本語版):http://flex.ee.uec.ac.jp/texi/eljman/eljman_toc.html]]
+
+#comment
+**移植作業関係 [#m5b15b79]
+-[[Emacs lisp移植キット>http://web.archive.org/web/20100624030528/http://osuneko.at.infoseek.co.jp/xyzzy/xyzzy.html#emacs-lisp]]
+-[[Emacs lisp移植キット (カスタム版)>https://github.com/mumurik/NAXEL/downloads]]
+-[[xyzzy Mailing List Archive>xyzzy-ml:toppage]]
+- meadow3のlispディレクトリを読み込めるようにしました。詳細はemacs.zipのreadmeにあります。http://code.google.com/p/xyzzy-elisp-loader/downloads/list -- [[masanori.k]] &new{2010-08-18 (水) 10:11:26};
+
+#comment
+**移植されたもの [#gd11cec0]
+|名称|ライセンス|移植キット使用|h
+|[[Emacs lisp移植キット>http://web.archive.org/web/20100624030528/http://osuneko.at.infoseek.co.jp/xyzzy/xyzzy.html]]|GPLv2|−|
+|[[Emacs lisp移植キット (カスタム版)>https://github.com/mumurik/NAXEL/downloads]]|GPLv2|−|
+|[[KaTeX>https://www.yatex.org/]]|GPLv2|○|
+|[[KaTeX (カスタム版)>https://github.com/mumurik/NAXEL/downloads]]|GPLv2|○|
+|[[bibtex-mode>http://web.archive.org/web/20080923160004/http://f55.aaa.livedoor.jp/~ynomura/xyzzy/#bibtex-mode]]|GPLv2|−|
+|[[RefTeX for xyzzy>http://web.archive.org/web/20080923160004/http://f55.aaa.livedoor.jp/~ynomura/xyzzy/#reftex]]|GPLv2|○|
+|[[howm-wrap(howm)>http://homepage3.nifty.com/~ko-ji/#howm-wrap]]|NYSL|−|
+|[[remember>http://www.geocities.jp/kiaswebsite/xyzzy/remember.html]]|GPLv2|−|
+|[[comment>http://www.geocities.jp/kiaswebsite/xyzzy/comment.html]]|GPLv2|−|
+|[[re-builder>http://ohkubo.s53.xrea.com/xyzzy/index.html#re-builder]]|GPLv2|−|
+|[[lisp-re>http://ohkubo.s53.xrea.com/xyzzy/index.html#lisp-re]]|GPLv2|−|
+|[[sregex>http://ohkubo.s53.xrea.com/xyzzy/index.html#sregex]]|GPLv2|−|
+|[[rx>http://ohkubo.s53.xrea.com/xyzzy/index.html#rx]]|GPLv2|−|
+|[[info>http://web.archive.org/web/20050108021810/http://www1.neweb.ne.jp/wa/sinj/xyzzy/]]|GPLv2|−|
+|[[py-mode>http://www.geocities.co.jp/Milano-Cat/2067/xyzzy.html]]|GPLv2|−|
+//|[[ruby-mode for xyzzy:http://homepage3.nifty.com/Yukimi_Sake/ruby.html]]||−|
+|[[fortran-mode>http://raido.sakura.ne.jp/southly/xyzzy/site-lisp/]]|GPLv2|−|
+|[[hexl>http://raido.sakura.ne.jp/southly/xyzzy/site-lisp/]]|GPLv2|−|
+|[[ndmacro>http://www.geocities.jp/kiaswebsite/xyzzy/ndmacro.html]]||−|
+|[[dmacro>http://wiki.trick-with.net/xyzzy.html]]||−|
+- RubyRefactoringBrowserを移植しました。http://mzp.breeze.jp/ -- [[みずの]] &new{2005-11-22 (火) 10:36:18};
+
+#comment
+*移植してほしいもの、しようとしているもの [#f0a58efb]
+- auctex を移植しようとして時々弄ってます。が、スキル不足なのか、なんだか一向に動くようになる気がしません。 --  &new{2005-11-12 (土) 00:02:30};
+- lookupが移植されて基本機能（単語検索とか）だけでも使えるようになればうれしいのですが、難しいですよね。（自分もやろうとしたのですが、あまりの量にあきらめてしまいました。）一から作ったほうが早いのかもしれませんが、これが用いるeblookは対話的なプログラムですので、難しそうです。 -- [[fen]] &new{2005-11-18 (金) 13:33:23};
+- po-modeがほしいなぁ。 -- [[ローカライズ]] &new{2006-01-28 (土) 15:41:58};
+- cperl-modeがほしいっす --  &new{2006-07-10 (月) 00:58:31};
+- emacs-wikiが欲しいです --  &new{2007-06-30 (土) 21:08:15};
+- hiki-mode が欲しいです -- [[kawachi]] &new{2007-09-16 (日) 23:44:32};
+- viper-modeに手をつけようと思ったけど一瞬で挫折しました --  &new{2009-01-24 (土) 08:00:05};
+
+#comment
+*tips索引 [#t8fe5dbb]
+#ls2(elisp-tips/)
+*いろいろ [#od4e73dd]
+**移植したもののライセンスは? [#md8f28ea]
+修正BSD or GPL？
+
+#comment

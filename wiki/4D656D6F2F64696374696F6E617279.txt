@@ -1,0 +1,55 @@
+#freeze
+*概要 [#j4eb53e1]
+辞書がらみの情報をまとめます。
+*link [#tb792e92]
+-[[基本（インストールなど）>QuickTour/etc/edict]]
+//-[[拡張(tsukushi氏)>http://www.haide.net/~tsukushi/xyzzy/#edict]]
+-[[英英(fukae氏)>http://www5e.biglobe.ne.jp/~fukafuka/xyzzy/tips/index.html#ee]]
+//-[[PDIC(有馬氏)>http://www.geocities.com/nobuaki.arima@sbcglobal.net/]]
+-[[簡易版(山本氏)>http://www1.odn.ne.jp/ymtz/tdict.html]]
+*解っていること [#kad79274]
+-gendicはedictが無いとエラー>LFが一個だけのファイルをedictというファイル名で置いておけばオッケー。
+-popupstringは日本語と英語しかポップアップできない((使っているAPIはWがついていない))>apiでがんばるしかないかも
+*欲しいもの [#xd8395f8]
+-辞書切り替えの機構
+-多言語に対応したedict-mode
+-lispなgendic
+----
+辞書の切り替えはmenuにこんなのを
+ (:popup nil "辞書の切り替え(&D)"
+ (:popup nil "英和(&E)"
+  (:item nil "英辞郎(&E)"
+   #'(lambda ()
+       (interactive)
+       (setq *edict-dictionary-path* "~/edict/eijiro/"))
+   #'(lambda ()
+       (if (path-equal *edict-dictionary-path*
+			 "~/edict/eijiro/") :check)))
+  (:item nil "GENE(&G)"
+   #'(lambda ()
+       (interactive)
+       (setq *edict-dictionary-path* "~/edict/gene/"))
+   #'(lambda ()
+       (if (path-equal *edict-dictionary-path*
+			 "~/edict/gene/") :check)))
+  ))
+を追加してやっています。
+.xyzzyには
+ (add-hook '*kill-xyzzy-hook*
+	  #'(lambda () (setq *edict-dictionary-path* "~/edict/eijiro/")))
+な感じで。
+
+
+-んー完璧ですね。解っている人の場合それで文句は無いんですけど、辞書フォルダと設定ファイルが差し込まれたら勝手にメニューが増えたりedict-modeで使う辞書とそれ以外の辞書を別々に切り替えて使えたりということを考えています。まぁてきとーですが。　佐野
+
+-辞書で思い出しましたが、和英辞書を引くとたまに"("や")"が欠落してませんか？　NANRI
+-fukae氏のページを参考に英英辞書に挑戦してるんですが、単語を引くと、「登録されていません」と怒られてしまいます。 英和辞典のほうは正常に動いてるんで、辞書の作成に失敗してるのかもしれません。どなたか助けて頂けないでしょうか。 -- [[pooh]] &new{2003-11-25 (火) 08:56:58};
+-fukae氏のページを参考に英英辞書に挑戦してるんですが、単語を引くと、「登録されていません」と怒られてしまいます。 英和辞典のほうは正常に動いてるんで、辞書の作成に失敗してるのかもしれません。どなたか助けて頂けないでしょうか。 -- [[pooh]] &new{2003-11-25 (火) 09:00:00};
+-辞書の置き場がおかしいのではないでしょうか。いま確認しましたが全く問題なく使えています。 -- [[佐野]] &new{2003-11-25 (火) 20:28:12};
+-解決しました。' /// ' を '\n'に置き換えてたのが原因でした。xyzzy上では'^J'ですね。 -- [[pooh]] &new{2003-11-26 (水) 03:56:35};
+-popwindow.lの127行目、*pop-window-width*と*pop-window-height*が逆のような気がします。 --  &new{2003-12-05 (金) 18:07:11};
+-了解です。あとで見ておきます。 -- [[佐野]] &new{2003-12-05 (金) 21:53:40};
+-多分直しました。 -- [[佐野]] &new{2003-12-08 (月) 21:49:37};
+- kukae氏のページのリンクが切れていたので修正しました --  &new{2008-10-18 (土) 05:11:47};
+
+//#comment

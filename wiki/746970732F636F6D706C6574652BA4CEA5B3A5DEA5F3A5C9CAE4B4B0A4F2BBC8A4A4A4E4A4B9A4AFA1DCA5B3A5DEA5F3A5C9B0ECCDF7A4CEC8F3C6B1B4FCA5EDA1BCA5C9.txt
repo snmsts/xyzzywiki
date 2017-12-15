@@ -1,0 +1,120 @@
+complete-bg.l
+ (in-package "complete+")
+ ;;--------------------------------------------------------------
+ ;;. self-insert-command 等のときに補完するように変更
+ (defun minibuffer-complete+ (&optional word)
+   (interactive "*p")
+   (unless *icompletion-next*
+     (setf *icompletion-next* t))
+   (multiple-value-bind (from to tag)
+       (find-text-attribute 'complete+)
+     (when (and from *complete+-case-fold*
+ 	       ;prefixを除いた入力が全部小文字の時
+ 	       (every #'(lambda (c)
+ 			  (or (not (alpha-char-p c))
+ 			      (lower-case-p c)))
+ 		      (buffer-substring (length *complete-prefix*) (point))))
+       (let (str)
+ 	(cond ((and (null (cdr *complete+-list*))
+ 		    (equalp (setf str (concat *complete-prefix* (car *complete+-list*)))
+ 			    (buffer-substring (point-min) (point-max)))
+ 		    (tail-is-slash str))
+ 	       (delete-region (point-min) (point-max))
+ 	       (insert str)
+ 	       (apply 'set-text-attribute
+ 		      from to 'complete+
+ 		      *complete+-current-item-attribute*))
+ 	      ; :smartならハイライト部分だけ小文字化
+ 	      ((eq *complete+-case-fold* :smart)
+ 	       (downcase-region (point) to))))))
+   (cond ((find *this-command* '(ed::self-insert-command complete+-self-insert-command))
+ 	 (do-completion+ (point-min) (point-max)
+ 			 (minibuffer-completion-type)
+ 			 (minibuffer-completion-list)
+ 			 word
+ 			 *last-command-char*
+ 			 *minibuffer-popup-completion-list*))
+ 	((eq *this-command* 'minibuffer-complete+)
+ 	 (if (pre-selection-p)
+ 	     (goto-eol)
+ 	   (do-completion+ (point-min) (point-max)
+ 			   (minibuffer-completion-type)
+ 			   (minibuffer-completion-list)
+ 			   word
+ 			   *last-command-char*
+ 			   *minibuffer-popup-completion-list*)))
+ 	((eql *last-command-char* #\SPC)
+ 	 (insert " "))
+ 	)
+   (setq *this-command* 'minibuffer-complete+))
+ 
+ 
+ ;;. 削除直後に補完を行わない
+ (defun complete+-delete-backward-char-or-selection (&optional (arg 1))
+   (interactive "*p")
+   (call-interactively 'ed::delete-backward-char-or-selection)
+   (init-icompletion)
+   ;(minibuffer-complete-input)
+   )
+ 
+ 
+ ;;--------------------------------------------------------------
+ ;;. 選択状態の削除は、選択場所＋直前の語
+ (defun complete+-delete-backward-char-or-selection (&optional (arg 1))
+   (interactive "*p")
+   (if (pre-selection-p)
+       (delete-selection))
+   (delete-backward-char arg)
+   (init-icompletion)
+   (minibuffer-complete-input))
+ 
+ 
+ (in-package "editor")
+ 
+ ;;--------------------------------------------------------------
+ ;;. 補完候補が1つだけのとき、確定するのではなく、残りを選択状態にする。
+ (defun do-completion-internal (from to type &optional compl not-uniq-ok word last-char popup-p)
+   (let ((string (buffer-substring from to)))
+     (when (and (member type '(:file-name :exist-file-name
+                               :file-name-list :directory-name))
+                (string-match "\\(^\\|[\\/]\\)\\.\\.[\\/]?$" string)
+                (or (string-match "[\\/]$" string)
+                    (null (directory (concat string "*") :count 1))))
+       (delete-region from to)
+       (insert (append-trail-slash (namestring string)))
+       (return-from do-completion-internal t))
+     (long-operation
+       (multiple-value-bind (result list prefix)
+           (*do-completion string type word compl)
+ 	(cond ((stringp result)
+ 	       (cond ((eq string result)
+ 		      (cond ((completion-insert-self string list prefix last-char to)
+ 			     t)
+ 			    (*completion-auto-help*
+ 			     (print-completion-list list prefix string popup-p from to)
+ 			     't)
+ 			    (t
+ 			     (setq *completion-last-string* string)
+ 			     :ambigous)))
+ 		     (t
+ 		      (delete-region from to)
+ 		      (insert result)
+ 		      ;; added from here
+ 		      (goto-char to)
+ 		      (start-selection 2 t (+ from (length result)))
+ 		      (fix-selection-point)
+ 		      (goto-char to)
+ 		      ;; ended here
+ 		      't)))
+               ((eq result :not-unique)
+                (cond ((completion-insert-self string list prefix last-char to)
+                       t)
+                      (t
+                       (or not-uniq-ok
+                           (print-completion-list list prefix string popup-p from to))
+                       result)))
+               (t result))))))
+
+
+
+----

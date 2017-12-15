@@ -1,0 +1,98 @@
+#freeze
+*xyzzy-ML Topics [#o3d757aa]
+
+xyzzy Mailing List Archiveで興味深い話題を見つけたら追加しましょう。
+
+-[[xyzzy-ml:08606]] .tterm configuration for cygterm 
+-[[xyzzy-ml:08459]] Fortranのコメントを色分け
+-[[xyzzy-ml:07892]] katex の自動改行を抑止したい
+-[[xyzzy-ml:07770]] katex-mode のショートカット
+-[[xyzzy-ml:07763]] mark-ring
+-[[xyzzy-ml:07649]] クリックした場所にカーソル移動
+-[[xyzzy-ml:07543]] ALT+F6 が反応しない
+-[[xyzzy-ml:07527]] shell-mode の環境サイズの変更
+-[[xyzzy-ml:07529]] 指定したディレクトリを Grep
+-[[xyzzy-ml:07240]] scroll-up, scroll-down 関数の実装
+-[[xyzzy-ml:07211]] ヘッダファイルへのジャンプ
+-[[xyzzy-ml:07071]] バッファが変更されての終了時のダイアログの質問を Windows らしく
+-[[xyzzy-ml:06552]] ロードの順番とか
+-[[xyzzy-ml:06365]] Alt+SPACEでシステムメニューを出す
+-[[xyzzy-ml:06354]] 編集された行にマークを付ける([[xyzzy-ml:07091]])
+-[[xyzzy-ml:06170]] キーボードマクロをキーに割り当てる
+-[[xyzzy-ml:06043]] ロード時のちょっとした違い
+-[[xyzzy-ml:06032]] view-register
+-[[xyzzy-ml:06010]] 起動時に IME を ON する
+-[[xyzzy-ml:05180]] 再変換を禁止する
+-[[xyzzy-ml:04752]] tterm起動Lisp
+-[[xyzzy-ml:04647]] Emacs風switch-to-buffer 
+-[[xyzzy-ml:04637]] processの結果をbufferに入れる 
+-[[xyzzy-ml:04627]] Ctrl-iとTAB 
+-[[xyzzy-ml:04591]] 矩形選択の使い方 
+-[[xyzzy-ml:04591]] 罫線モードの使い方 
+-[[xyzzy-ml:04620]] Bcc++, C++ Builder, VC++対応エラージャンプ 
+-[[xyzzy-ml:04586]] テキスト整形の文字数指定(fill-column) 
+-[[xyzzy-ml:04555]] ディレクトリ内のファイルのエンコーディングを一括変換 
+-[[xyzzy-ml:04503]] ダイヤログのリストボックス 
+-[[xyzzy-ml:04494]] C-hをいつも普通のバックスペースにするには 
+-[[xyzzy-ml:04492]] C-hとBackspaceに違う機能を割り当てる 
+-[[xyzzy-ml:04492]] エンコーディングを明示的に指定するには 
+-[[xyzzy-ml:04489]] browser.dllを縦に２分割 
+-[[xyzzy-ml:04484]] java-modeのインデント幅変更 
+-[[xyzzy-ml:04442]] テキストコンペア 
+-[[xyzzy-ml:04436]] 環境毎に読み込む設定ファイルを切替える 
+-[[xyzzy-ml:04435]] grep結果のバッファを書込み禁止にする 
+-[[xyzzy-ml:04432]] 書込み禁止属性の解除 
+-[[xyzzy-ml:04396]] クリップボード経由のコピーとエンコーディング 
+-[[xyzzy-ml:04368]] ファイラーのマスク 
+-[[xyzzy-ml:04339]] 文字列を正規表現で比較 
+-[[xyzzy-ml:04335]] 現在の位置から行末までの文字列を取得 
+-[[xyzzy-ml:04331]] *scratch*を閉じる時にファイル保存を尋ねるようにする 
+-[[xyzzy-ml:04325]] shell-modeでディレクトリ名に"#"が入っている場合 
+-[[xyzzy-ml:04322]] カーソル位置の文字コードを表示 
+-[[xyzzy-ml:04318]] "/"を"\"に置換 
+-[[xyzzy-ml:04314]] 保存する時にファイル名がない場合 
+-[[xyzzy-ml:04313]] Lispの中から関数をinteractiveに呼ぶ 
+-[[xyzzy-ml:04296]] 複数行のインデント 
+-[[xyzzy-ml:04273]] クリップボードとローカルバッファが同期したCopy/Kill 
+-[[xyzzy-ml:04233]] 文字セットをふやすには 
+-[[xyzzy-ml:04172]] kbd_macro キーボードマクロの保存と呼び出し 
+-[[xyzzy-ml:04166]] 改行だけの行を削除 
+-[[xyzzy-ml:04159]] PDICを使う 
+-[[xyzzy-ml:04157]] バッファの undo 情報のクリア 
+-[[xyzzy-ml:04144]] error-regexp の書式変更 
+-[[xyzzy-ml:04131]] lisp file icon
+-[[xyzzy-ml:04115]] set-bufferの仕様 
+-[[xyzzy-ml:04087]] which-function-mode 
+-[[xyzzy-ml:04086]] Filerで一気リネーム 
+-[[xyzzy-ml:04075]] iso-8859-1入力など 
+-[[xyzzy-ml:04005]] xyzzyのLispの種類 
+-[[xyzzy-ml:03992]] リファレンスの書き方 
+-[[xyzzy-ml:03988]] den8からアドレス抽出 
+-[[xyzzy-ml:03978]] w3c-html 
+-[[xyzzy-ml:03961]] www-modeからの電八呼出 
+-[[xyzzy-ml:03955]] www-mode での掲示板の書きこみ 
+-[[xyzzy-ml:03918]] 行番号つきラインコピー 
+-[[xyzzy-ml:03890]] ファイラのキーバインドなど 
+-[[xyzzy-ml:03871]] C-x C-cのデフォルト 
+-[[xyzzy-ml:03868]] kill-line-twice 
+-[[xyzzy-ml:03784]] KaMailのセットアップ 
+-[[xyzzy-ml:03782]] 同一語の連続の検出 
+-[[xyzzy-ml:03744]] バッファ毎のタブ設定 
+-[[xyzzy-ml:03744]] text-modeのタブ設定 
+-[[xyzzy-ml:03744]] 削除バッファとクリップボードの同期 
+-[[xyzzy-ml:03743]] c-modeのタブ設定 
+-[[xyzzy-ml:03730]] Ctrl-nで実際の次の行へ行くには? 
+-[[xyzzy-ml:03725]] ファイラからネットワーク共有ディレクトリへ 
+-[[xyzzy-ml:03727]] ファイラから共有、共有解除 
+-[[xyzzy-ml:03720]] 仮名変換後のundo 
+-[[xyzzy-ml:03691]] process-filterとpoint移動 
+-[[xyzzy-ml:03696]] 終了時に保存を問い合わせてこないバッファ 
+-[[xyzzy-ml:03682]] Ctrl-Spaceの設定 
+-[[xyzzy-ml:03654]] ファイラのキーマップ変更 
+-[[xyzzy-ml:03638]] (interactive "r") と(interactive "*r") の違い 
+-[[xyzzy-ml:03636]] dialog boxの作成方法 
+-[[xyzzy-ml:03631]] 指定文字数で改行するには？ 
+-[[xyzzy-ml:03576]] 電卓で計算結果をHEX・BINに 
+-[[xyzzy-ml:03558]] ファイラから「送る」 
+-[[xyzzy-ml:03561]] ファイラでキーボードでソート
+-[[xyzzy-ml:01643]] c-mode などのインデント設定

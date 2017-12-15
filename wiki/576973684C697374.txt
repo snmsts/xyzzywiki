@@ -1,0 +1,7 @@
+自分の希望をさらして神の降臨を待つページ。~
+言うのは簡単だけど…。
+** 追加する [#vc4447aa]
+#tracker(WishList)
+
+** WishList [#k5fc7562]
+#tracker_list(WishList,,state:SORT_ASC;_past:SORT_ASC)

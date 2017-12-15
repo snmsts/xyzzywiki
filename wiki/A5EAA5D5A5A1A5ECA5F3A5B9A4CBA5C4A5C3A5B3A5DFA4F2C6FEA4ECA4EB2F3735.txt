@@ -1,0 +1,149 @@
+*marker関連 [#g557df70]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-08-03 (火) 23:06:03
+-バージョン: 
+
+**メッセージ [#j4080681]
+マーカーに関する項目です。おかしかったら修正してください。
+
+ <chapter>
+ <title>make-marker</title>
+ <type>Function</type>
+ <arguments>make-marker &amp;optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ 空のマーカーを作って返します。
+ 
+   BUFFER : マーカーを作るバッファを指定します。
+ </description>
+ <seealso>set-marker</seealso>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>set-marker</title>
+ <type>Function</type>
+ <arguments>set-marker MARKER &amp;optional POINT</arguments>
+ <package>editor</package>
+ <description>
+ マーカーにポジションを設定します。
+ POINT が nil の場合は現在の位置を設定します。
+ 
+   POINT : マーカーに設定する位置
+ 
+ 使用例：
+   (setq m (make-marker))
+   =&gt; #<marker: *scratch*: ->
+   (set-marker m)
+   =&gt; #<marker: *scratch*: 62>
+   (marker-point m)
+   =&gt; 62
+ </description>
+ <seealso>make-marker</seealso>
+ <seealso>unset-marker</seealso>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>unset-marker</title>
+ <type>Function</type>
+ <arguments>unset-marker MARKER</arguments>
+ <package>editor</package>
+ <description>
+ マーカーのポジションを解除します。
+ オブジェクトはマーカーとして残ります。
+ 
+ 使用例：
+   (unset-marker m)
+   =&gt; t
+   m
+   =&gt; #<marker: *scratch*: ->
+ </description>
+ <seealso>set-marker</seealso>
+ <seealso>delete-marker</seealso>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>goto-marker</title>
+ <type>Function</type>
+ <arguments>goto-marker MARKER</arguments>
+ <package>editor</package>
+ <description>
+ マーカーのポジションへポイントを移動します。
+ goto-char と違い、ポイント（数字）を引数として受け取ることはできません。
+ </description>
+ <seealso>set-marker</seealso>
+ <seealso>goto-char</seealso>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>delete-marker</title>
+ <type>Function</type>
+ <arguments>delete-marker MARKER</arguments>
+ <package>editor</package>
+ <description>
+ マーカーを削除します。
+ オブジェクトはマーカーとして使えなくなります。
+ 成功した場合 t、すでに削除されていた場合は nil を返します。
+ 
+ 使用例：
+   (delete-marker m)
+   =&gt; t
+   m
+   =&gt; #<deleted-marker 128914348>
+ </description>
+ <seealso>unset-marker</seealso>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>marker-point</title>
+ <type>Function</type>
+ <arguments>marker-point MARKER</arguments>
+ <package>editor</package>
+ <description>
+ マーカーの位置を数値で返します。
+ マーカーの位置が設定されていなかったり削除されていたりした場合は nil を返します。
+ 
+ 使用例：
+   (marker-point m)
+   =&gt; 62
+ </description>
+ <seealso>set-marker</seealso>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>marker-buffer</title>
+ <type>Function</type>
+ <arguments>marker-buffer MARKER</arguments>
+ <package>editor</package>
+ <description>
+ マーカーが設定されているバッファを返します。
+ 
+ 使用例：
+   (marker-buffer m)
+   =&gt; #<buffer: *scratch*>
+ </description>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-ぎゃあすいません。タイトルを忘れました。 --  &new{2004-08-03 (火) 23:12:22};
+-20041115 での追加を確認しました。 -- [[OHKUBO]] &new{2004-11-27 (土) 09:57:33};
+
+#comment

@@ -1,0 +1,126 @@
+* 複数のテンプレートの切り替えについて [#ue024bb1]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2005-08-31 09:59:27 (水)
+
+** メッセージ [#k56b96f3]
+template-insert.lを使ってテンプレートの挿入を行っています。
+
+一つの拡張子に対して複数のテンプレートがある場合以下のような動きにすることは可能でしょうか。
+
+テンプレートを挿入する y / n
+=>y
+何番目のテンプレート 1 / 2 / 3
+=>選択されたテンプレートが挿入される。
+
+今は以下のようなものを作って無理やり、切り替えを行っています。
+
+ (defun test-tpl()
+   (interactive)
+   (if (not(file-exist-p(get-buffer-file-name)))
+   (if (equal "web.xml" (file-namestring(get-buffer-file-name)))
+ 	  (case (message-box "web.xmlのバージョン" "web.xml" '(:information) :button1 "2.3" :button2 "2.4" :button4 "キャンセル")
+ 		(:button1 (setq *template-insert-alist* (append '(("web\\.xml?" . "web.xml"))*template-insert-alist*)))
+ 		(:button2 (setq *template-insert-alist* (append '(("web\\.xml?" . "web24.xml"))*template-insert-alist*)))
+ 		(:button4 (message "キャンセル"))
+ 		)
+ 	)
+   )
+   )
+ (add-hook '*find-file-hooks* 'test-tpl)
+----
+ちょっと違いますが、こんな感じでどうでしょう。
+
+ ;; (require "template-insert")
+ ;; (use-package 'template-insert)
+ 
+ (defun my-select-template (lst)
+   (completing-read "どのファイル? " lst :default (car lst) :must-match t))
+ 
+ (push `("\\.xml$" . ,#'(lambda ()
+                          (template-insert::insert-template
+                           (my-select-template '("hoge1.xml" "hoge2.xml" "hoge3.xml")))
+                          ""))
+       *template-insert-alist*)
+----
+上のを見て勘で書いてみた。
+ (defvar *xml-template-list* '("web.xml" "web24.xml" "hoge.xml"))
+ (push `("\\.xml$" . ,#'(lambda ()
+                          (template-insert::insert-template
+                           (nth (1- (read-integer "何番目のテンプレート 1 / 2 / 3: ")) *xml-template-list*))
+                          ""))
+       *template-insert-alist*)
+----
+もういろいろ回答が出てますが、一応要望に近いものを。
+こんなの↓を.xyzzyあたりに書いてみるとどうでしょう。
+ディレクトリ*template-insert-directory*に候補が複数ある場合、プロンプトが出ます。
+ (in-package "template-insert")
+ (defun template-insert ()
+   (let* ((buf (selected-buffer))
+          (mode (buffer-local-value buf 'buffer-mode))
+          (fname (get-buffer-file-name buf))
+          pair act tpl)
+     (if (and fname (not (file-exist-p fname)))
+         (if (setq pair (lookup fname mode))
+             (progn
+               (setq act (cdr pair))
+               (if (yn (string (car pair)))
+                   (if (functionp act)
+                       (progn
+                         (insert (funcall act))
+                         (expand-variables))
+                       (progn
+                         (insert-template act)
+                         (expand-variables)))))
+             (if (and (setq tpl
+                            (remove-if-not #'(lambda (x)
+                                               (string= (pathname-type fname) (pathname-type x)))
+                                           (directory *template-insert-directory* :file-only t)))
+                      (yn tpl)
+                      (setf tpl
+                            (if (= (length tpl) 1)
+                                (first tpl)
+                                (completing-read "Choose template file: " tpl :case-fold t :must-match t))))
+                 (progn
+                   (insert-template tpl)
+                   (expand-variables)))))))
+ (in-package "user")
+-ありがとうございます。一個ずつ試してみます。 -- [[質問者]] &new{2005-09-01 09:02:10 (木)};
+---
+
+ (setq *template-special-list* '(web.xml ejb-jar.xml aplication.xml))
+ (defun template-insert ()
+  (let* ((buf (selected-buffer))
+         (mode (buffer-local-value buf 'buffer-mode))
+         (fname (get-buffer-file-name buf))
+         pair act tpl)
+    (if (and fname (not (file-exist-p fname)))
+        (if (setq pair (lookup fname mode))
+            (progn
+              (setq act (cdr pair))
+              (if (yn (string (car pair)))
+                  (if (functionp act)
+                      (progn (insert (funcall act))
+                        (expand-variables))
+                    (progn (insert-template act)
+                      (expand-variables)))))
+          (if (and (setq tpl  (remove-if-not #'(lambda (x)
+           (if (member (file-namestring fname) *template-special-list*)
+          ;(file-namestring fname)の戻り値が""でくくられているので合致しない?
+           (string-matchp (concat "^" (pathname-name fname) "[0-9]*\\." (pathname-type fname)) x)
+            (string= (pathname-type fname) (pathname-type x))))
+            (directory *template-insert-directory* :file-only t)))
+              (yn tpl) (setf tpl (if (= (length tpl) 1) (first tpl)
+             (completing-read "テンプレート選択 : " tpl :case-fold t :must-match t))))
+              (progn  (insert-template tpl)  (expand-variables)))))))
+
+という感じで作ってみたのですが。(member (file-namestring fname) *template-special-list*)　のところの動作がうまくいきません。
+何か代替の方法ってないでしょうか。-- [[質問者]]
+-ぱっと見ですが*template-special-list*の各要素ををダブルクォートでくくらないのには何か理由が？ -- [[佐野]] &new{2005-09-01 19:07:58 (木)};
+-佐野さんのおっしゃるようにダブルクォートでくくった上で、memberのところに:test #'string=を追加すればいいのでは↓--  &new{2005-09-01 21:03:52 (木)};
+ -          (if (member (file-namestring fname) *template-special-list*)
+ +          (if (member (file-namestring fname) *template-special-list* :test #'string=)
+-コメントありがとうございます。希望した動きになりました。 -- [[質問者]] &new{2005-09-02 15:02:51 (金)};
+
+#comment

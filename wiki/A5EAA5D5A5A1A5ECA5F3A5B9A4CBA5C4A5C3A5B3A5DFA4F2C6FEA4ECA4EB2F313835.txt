@@ -1,0 +1,205 @@
+* keymap 関係 [#d138da7a]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-12-27 (火) 00:19:12
+-バージョン: 20050929
+
+** メッセージ [#ya2e452c]
+いくつかのキーマップと、それを関数セルに保持しているシンボルについて書いてみました。 -prefix 系は Function にしていますが、普通の意味での関数ではないので微妙なところです。
+
+ <chapter>
+ <title>ctl-x-6-prefix</title>
+ <type>Function</type>
+ <arguments>ctl-x-6-prefix</arguments>
+ <package>editor</package>
+ <description>
+ C-x 6 プレフィックスです。 [C-x 6]
+ デフォルトではフレーム関係のコマンドが登録されています。
+ 
+ ctl-x-6-prefix の関数セルは普通のコマンドではなく ctl-x-6-map というキ
+ ーマップを保持しています。
+ </description>
+ <seealso>ctl-x-6-map</seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>pframe.l</file>
+ </chapter>
+
+ <chapter>
+ <title>ctl-x-6-map</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ C-x 6 に続くキーシーケンスのバインディングを格納するキーマップです。
+ </description>
+ <seealso>ctl-x-6-prefix</seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>pframe.l</file>
+ </chapter>
+
+ <chapter>
+ <title>ctl-x-4-prefix</title>
+ <type>Function</type>
+ <arguments>ctl-x-4-prefix</arguments>
+ <package>editor</package>
+ <description>
+ C-x 4 プレフィックスです。 [C-x 4]
+ デフォルトでは
+   C-x 4 b      switch-to-buffer-other-window
+   C-x 4 f      find-file-other-window
+ の二つが設定されています。
+ 
+ ctl-x-4-prefix の関数セルは普通のコマンドではなく ctl-x-4-map というキ
+ ーマップを保持しています。
+ </description>
+ <seealso>ctl-x-4-map</seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>keymap.l</file>
+ </chapter>
+
+ <chapter>
+ <title>ctl-x-4-map</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ C-x 4 に続くキーシーケンスのバインディングを格納するキーマップです。
+ </description>
+ <seealso>ctl-x-4-prefix</seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>keymap.l</file>
+ </chapter>
+
+ <chapter>
+ <title>specific-command-prefix</title>
+ <type>Function</type>
+ <arguments>specific-command-prefix</arguments>
+ <package>editor</package>
+ <description>
+ C-c プレフィックスです。 [C-c]
+ 
+ specific-command-prefix の関数セルは普通のコマンドではなく spec-map と
+ いうキーマップを保持しています。
+ </description>
+ <seealso>spec-map</seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>keymap.l</file>
+ </chapter>
+
+ <chapter>
+ <title>spec-map</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ C-c に続くキーシーケンスのバインディングを格納するキーマップです。
+ </description>
+ <seealso>specific-command-prefix</seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>keymap.l</file>
+ </chapter>
+
+ <chapter>
+ <title>meta-prefix</title>
+ <type>Function</type>
+ <arguments>meta-prefix</arguments>
+ <package>editor</package>
+ <description>
+ ESC プレフィックスです。 [ESC]
+ 
+ meta-prefix の関数セルは普通のコマンドではなく esc-map というキーマッ
+ プを保持しています。
+ </description>
+ <seealso>esc-map</seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>keymap.l</file>
+ </chapter>
+
+ <chapter>
+ <title>esc-map</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ ESC に続くキーシーケンスのバインディングを格納するキーマップです。
+ </description>
+ <seealso>meta-prefix</seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>keymap.l</file>
+ </chapter>
+
+ <chapter>
+ <title>ctl-x-prefix</title>
+ <type>Function</type>
+ <arguments>ctl-x-prefix</arguments>
+ <package>editor</package>
+ <description>
+ C-x プレフィックスです。 [C-x]
+ 
+ ctl-x-prefix の関数セルは普通のコマンドではなく ctl-x-map というキーマ
+ ップを保持しています。
+ 
+ 参考:
+   ;;; keymap.l
+   (defvar ctl-x-map (make-keymap))
+   (setf (symbol-function 'ctl-x-prefix) ctl-x-map)
+ </description>
+ <seealso>ctl-x-map</seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>keymap.l</file>
+ </chapter>
+
+ <chapter>
+ <title>ctl-x-map</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ C-x に続くキーシーケンスのバインディングを格納するキーマップです。
+ </description>
+ <seealso>ctl-x-prefix</seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>keymap.l</file>
+ </chapter>
+
+ <chapter>
+ <title>*global-keymap*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ グローバルなキーマップです。モード毎のキーマップに何も割り当てられてい
+ ない場合に使われます。
+ 
+ global-set-key はこのキーマップにバインディングをセットします。
+ </description>
+ <seealso>global-set-key</seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file></file>
+ </chapter>
+
+--------
+- どーもです。*-prefixはひとつくらい作り方を示してもよいかと思ったので足してみました。 -- [[NANRI]] &new{2005-12-27 (火) 22:00:03};
+- 補足ありがとうございます。 *global-keymap* も追加しました。 --  &new{2005-12-27 (火) 23:39:35};
+- 「関数セル」ってなんですか？もっと誰にでも分かるような単語に置き換わりませんか？ --  &new{2005-12-28 (水) 07:00:02};
+- 「関数セル」というのは「シンボルの通常関数定義を保持している領域」といったところです。または、symbol-functionでアクセスする領域です。「関数セル」という表現はlisp用語のような気がするので、別の単語で置き換えるのはどうかなぁという気がします。うまい置き換えはありますか? -- [[NANRI]] &new{2005-12-29 (木) 00:41:09};
+- 用語ですね。説明は聞いたことがありますが置き換えは聞いたことがありません。ところでコマンドという単語が全体でみると外部コンソールアプリケーションの意とcommandp =>tの意と被っていません？ -- [[佐野]] &new{2005-12-29 (木) 01:34:40};
+-- 混同しそうでしたら何とかしないとですね。 -- [[NANRI]] &new{2006-01-09 (月) 18:44:09};
+- 取り込みました。→[[refwiki:*global-keymap*]], [[refwiki:ctl-x-map]], [[refwiki:ctl-x-prefix]], [[refwiki:esc-map]], [[refwiki:meta-prefix]], [[refwiki:spec-map]], [[refwiki:specific-command-prefix]], [[refwiki:ctl-x-4-map]], [[refwiki:ctl-x-6-map]], [[refwiki:ctl-x-4-prefix]], [[refwiki:ctl-x-6-prefix]] -- [[NANRI]] &new{2006-02-13 (月) 23:11:02};
+
+#comment

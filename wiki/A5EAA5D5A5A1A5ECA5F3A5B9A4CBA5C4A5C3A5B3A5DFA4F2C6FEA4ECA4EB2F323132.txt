@@ -1,0 +1,160 @@
+* make-hash-table next-line previous-line forward-line backward-line[#m417be5e]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-05-13 (土) 19:55:16
+-バージョン: 
+
+** メッセージ [#o4311dc0]
+ <chapter>
+ <title>make-hash-table</title>
+ <type>Function</type>
+ <arguments>make-hash-table &amp;key :test :size :rehash-size :rehash-threshold</arguments>
+ <package>lisp</package>
+ <description>
+ ハッシュテーブルを作成して返します。
+ 
+   :test        : ハッシュテーブルのキーの等価関係。デフォルトは eql です。
+                  指定可能な関数は、eq, eql, equal, equalp に限られます。
+   :size        : ハッシュテーブルの初期サイズの目安。
+                  この値よりも大きい素数、または 2, 3, 5, 7 で割れない値
+                  に設定されます。
+   :rehash-size : ハッシュテーブルのテーブルサイズを増加させる量の目安。
+                  デフォルトは 1。現在のサイズ と :rehash-size を参考
+                  に、より大きい素数、または 2, 3, 5, 7 で割れないサイズ
+                  にします。
+   :rehash-threshold
+                : xyzzy では実装されていないようです。 (0.2.2.235 現在)
+                  その代わり、テーブルの使用率が 80% を超えるとテーブル
+                  を伸長します。
+ 
+ とりうる素数は以下の通りです。
+       17, 47, 101, 149, 199, 307, 401, 499, 599, 701, 797, 907, 997,
+       1103, 1499, 1999, 2999, 4001, 4999, 6007, 7001, 8009, 8999,
+       10007, 19997, 29989, 39989, 49999, 59999, 70001, 79999, 90001, 99991
+ 
+ 使用例:
+   (setq hash (make-hash-table :size 3))
+   =&gt; #&lt;hashtable 51122492&gt;
+ 
+   (progn
+     (setf (gethash #\C-0 hash) 0)
+     (setf (gethash #\C-1 hash) 1)
+     (setf (gethash #\C-2 hash) 2))
+   =&gt; 2
+   
+   (gethash #\C-1 hash)
+   =&gt; 1
+       t
+ 
+   (hash-table-size hash)
+   =&gt; 17
+ 
+   (hash-table-rehash-size hash)
+   =&gt; 1
+ 
+   (hash-table-test hash)
+   =&gt; eql
+ </description>
+ <seealso>gethash</seealso>
+ <seealso>hash-table-count</seealso>
+ <seealso>hash-table-p</seealso>
+ <seealso>hash-table-rehash-size</seealso>
+ <seealso>hash-table-size</seealso>
+ <seealso>hash-table-test</seealso>
+ <seealso>remhash</seealso>
+ <seealso>clrhash</seealso>
+ <seealso>maphash</seealso>
+ <seealso>eql</seealso>
+ <section>ハッシュ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>next-line</title>
+ <type>Function</type>
+ <arguments>next-line &amp;optional (N 1)</arguments>
+ <package>editor</package>
+ <description>
+ N行後の物理行に移動します。 
+ 移動の前後で goal-column を保存します。
+ 
+ 戻り値:
+   1行でも移動できたときは t 、それ以外は nil です。
+ </description>
+ <seealso>next-virtual-line</seealso>
+ <seealso>previous-line</seealso>
+ <seealso>forward-line</seealso>
+ <seealso>goal-column</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>cmds.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>previous-line</title>
+ <type>Function</type>
+ <arguments>previous-line &amp;optional (N 1)</arguments>
+ <package>editor</package>
+ <description>
+ N行前に移動します。
+ 移動の前後で goal-column を保存します。
+ (previous-line n) と (next-line (- n)) は同じです。
+ 
+ 使用例:
+   (previous-line)
+ </description>
+ <seealso>forward-line</seealso>
+ <seealso>next-line</seealso>
+ <seealso>previous-virtual-line</seealso>
+ <section>ポジション</section>
+ <file>cmds.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>forward-line</title>
+ <type>Function</type>
+ <arguments>forward-line &amp;optional (N 1)</arguments>
+ <package>editor</package>
+ <description>
+ N行後に物理行に移動します。
+ 移動の前後で goal-column を保存しません。
+ 
+ 戻り値:
+   移動した行数を返します。全く移動できなかったときは nil です。
+ </description>
+ <seealso>previous-line</seealso>
+ <seealso>forward-virtual-line</seealso>
+ <seealso>next-line</seealso>
+ <seealso>*prefix-args*</seealso>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>backward-line</title>
+ <type>Function</type>
+ <arguments>backward-line &amp;optional (N 1)</arguments>
+ <package>editor</package>
+ <description>
+ N 行後方へ移動します。
+ 移動の前後で goal-column を保存しません。
+ 
+ (backward-line n) と (forward-line (- n)) は同じです。
+ </description>
+ <seealso>forward-line</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>cmds.l</file>
+ </chapter>
+
+--------
+- どーもです。ちょっと整形しなおしました。 -- [[NANRI]] &new{2006-05-15 (月) 23:06:58};
+- どうもです。 :rehash-threshold について書き足しました。 -- [[中野]] &new{2006-05-16 (火) 01:08:14};
+- 1 -- [[1]] &new{2015-01-10 (土) 08:34:59};
+
+#comment
+- 1 -- [[1]] &new{2015-01-10 (土) 08:35:57};

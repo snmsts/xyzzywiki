@@ -1,0 +1,27 @@
+* バックアップファイル作成のカスタマイズ [#pb1747f8]
+-ページ: [[質問箱]]
+-投稿者: [[アレッポ]]
+-状態: 完了
+-投稿日: 2006-03-31 (金) 14:07:51
+
+** メッセージ [#feec1e04]
+所定のフォルダのファイルのみバックアップ対象とすることは可能でしょうか？
+
+バックアップファイルの格納先を指定することはできるでしょうか？
+
+
+
+----
+-答えなおし。~
+前者。可能です。サンプルを以下に示します。~
+後者。できます。$XYZZY/lisp/backup.lに説明がありますので、参照してください。 -- [[NANRI]] &new{2006-04-01 (土) 06:04:05};
+ (defvar *make-backup-dirs* '("C:/" "D:/"))
+ (add-hook '*find-file-hooks* #'(lambda ()
+                                 (when (member (directory-namestring (get-buffer-file-name (selected-buffer)))
+                                               *make-backup-dirs*
+                                               :test #'path-equal)
+                                   (make-local-variable 'make-backup-files)
+                                   (setq make-backup-files t))))
+- ありがとうございます！ -- [[アレッポ]] &new{2006-04-03 (月) 18:27:46};
+
+#comment

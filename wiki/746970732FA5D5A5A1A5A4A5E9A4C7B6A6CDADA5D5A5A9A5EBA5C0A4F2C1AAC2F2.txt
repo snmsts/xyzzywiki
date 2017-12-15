@@ -1,0 +1,92 @@
+[[tips]]
+
+ファイラでネットワーク上の共有フォルダを移動するのがイマイチなので、C-\でサーバの一覧を選択できるようにしてみました。
+
+CENTER:&ref(zz010.png,nolink);
+
+CENTER:&ref(zz020.png,nolink);
+
+ (provide "filer-servers")
+ 
+ (in-package "editor")
+ 
+ (defvar *filer-servers-expand* t)
+ (defvar *filer-servers* nil)
+ 
+ (defun filer-up-directory ()
+   (cond ((pathname-name (filer-get-directory))
+          (filer-chdir ".."))
+         ((pathname-device (filer-get-directory))
+          (filer-change-drive))
+         ((pathname-host (filer-get-directory))
+          (filer-change-server-resources))))
+ 
+ (defvar *filer-server-dialog-template*
+   '(dialog 0 0 219 115
+     (:caption "サーバリスト")
+     (:font 9 "MS UI Gothic")
+     (:control
+      (:listbox list nil #x50b10111 7 7 150 100)
+      (:button IDOK "OK" #x50010001 162 7 50 14)
+      (:button IDCANCEL "キャンセル" #x50010000 162 24 50 14))))
+ 
+ (defun filer-change-server ()
+   (multiple-value-bind (result data)
+       (dialog-box *filer-server-dialog-template*
+                   `((list ,@(mapcar #'(lambda (x) (cons x x))
+                                     (append *filer-servers*
+                                             (and *filer-servers-expand*
+                                                  (list-servers))))))
+                   '((list :column (100))))
+     (cond (result
+            (if (null data) (quit))
+            (let* ((host (cddr (assoc 'list data)))
+                   (dir (concat "//" host "/" (car (list-server-resources host)))))
+              (filer-chdir dir)))
+           (t
+            (quit)))
+     ))
+ 
+ (defvar *filer-server-resources-dialog-template*
+   '(dialog 0 0 219 115
+     (:caption "サーバリスト - サーバリソース")
+     (:font 9 "MS UI Gothic")
+     (:control
+      (:listbox list nil #x50b10111 7 7 150 100)
+      (:button IDOK "OK" #x50010001 162 7 50 14)
+      (:button IDCANCEL "キャンセル" #x50010000 162 24 50 14))))
+ 
+ (defun filer-change-server-resources ()
+   (tagbody retry
+     (let ((host (pathname-host (filer-get-directory))))
+       (unless host
+         (filer-change-server)
+         (setq host (pathname-host (filer-get-directory))))
+       (unless host (return-from filer-change-server-resources))
+       (multiple-value-bind (result data)
+           (dialog-box *filer-server-resources-dialog-template*
+                       `((list ("サーバリスト")
+                               ,@(mapcar #'(lambda (x)
+                                             (setq x (concat "//" host "/" x "/"))
+                                             (cons x x))
+                                         (list-server-resources host))))
+                       '((list :column (100))))
+         (when result
+           (let ((dir (cddr (assoc 'list data))))
+             (cond ((and dir (pathname-host dir))
+                    (filer-chdir dir))
+                   (t
+                    (filer-change-server)
+                    (go retry)))))))))
+ 
+ (define-key filer-keymap #\C-\\ 'filer-change-server-resources)
+ 
+ (in-package "user")
+
+***コメント [#m57c007f]
+-手打ちするのが面倒なので作ってみました。filer-jump-directoryから流用しまくり。 -- [[山本]] &new{2004-12-18 (土) 09:31:51};
+-いまさらですが、便利ですね。234にあわせて半角カタカナとフォントを変えておきました。 -- [[NANRI]] &new{2005-06-29 20:59:05 (水)};
+- サーバを選択してない状態でOKボタンを押したりESCキーを押した際にエラーが返ってくるのを修正してみました。 -- [[kosh]] &new{2011-05-29 (日) 02:05:41};
+
+#comment
+- 1 -- [[1]] &new{2014-11-01 (土) 15:24:58};

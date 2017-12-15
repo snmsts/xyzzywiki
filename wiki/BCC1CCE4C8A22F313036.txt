@@ -1,0 +1,30 @@
+* htmlファイルの読み込み　xml-mode と html+-mode [#q6f01ce7]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2005-08-16 14:54:24 (火)
+
+** メッセージ [#q4d047d2]
+こんにちは。
+初めて質問させていただきます。
+
+以前よりhtml+-modeを愛用させています。
+先日、xml-modeを入れたところ、
+拡張子htmlのファイルが全てxml-modeになってしまいます。
+ファイルはxhtmlで書いています。
+拡張子htmlのファイルは強制的に html+-mode にすることは可能
+ですか？
+
+どうぞよろしくお願いします。
+----
+-ちょっと調べてみたところ、xml-modeの仕様でそうなってしまうようですね。で、一番簡単なのは.xyzzyの最後に
+ (push '("\\.html?$" . html+-mode) *auto-mode-alist*)
+と書くことだと思います。もうちょっとまじめにやるなら
+ (setf *auto-mode-alist*
+       (remove "\\.html?$" *auto-mode-alist*
+               :test #'string= :key #'first))
+ (push '("\\.html?$" . html+-mode) *auto-mode-alist*)
+と書けばどうでしょう。 --  &new{2005-08-16 17:20:29 (火)};
+-html+-modeで読み込めました。早々のお答えありがとうございました。 -- [[質問者]] &new{2005-08-16 18:12:34 (火)};
+
+#comment

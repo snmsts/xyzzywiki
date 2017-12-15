@@ -1,0 +1,35 @@
+*find-text-attribute-point [#saa1a271]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-02-24 (火) 17:49:39
+-バージョン: 
+
+**メッセージ [#z5fdac2c]
+ <chapter>
+ <title>find-text-attribute-point</title>
+ <type>Function</type>
+ <arguments>point</arguments>
+ <package>editor</package>
+ <description>
+  point の text-attribute を返す。
+ 
+ 戻り値：
+  from, to, tag, foreground, background, bold, underline, strike-out, prefix, extend
+ 
+ 使用例：
+  (multiple-value-bind (from to tag foreground background bold underline strike-out prefix extend) (find-text-attribute-point (point)))
+ </description>
+ <seealso>find-text-attribute</seealso>
+ <seealso>modify-text-attributes</seealso>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-使用例を追加して取り込みました。ありがとうございます。 -- [[山本]] &new{2004-02-26 (木) 21:58:13};
+
+#comment

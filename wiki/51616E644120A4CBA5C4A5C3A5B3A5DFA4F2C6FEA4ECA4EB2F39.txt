@@ -1,0 +1,28 @@
+*fontの話 [#zc3640c9]
+
+-ページ: [[QandA にツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 追加
+-投稿日: 2005-02-13 23:05:34 (日)
+-バージョン: 
+
+**メッセージ [#i5a872d3]
+2ch で定期的に見かけるような気がするので
+
+ <chapter>
+ <title>プロポーショナルフォントを使いたいのですが……</title>
+ <number></number>
+ <date></date>
+ <description>
+ 無理です。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>表示</section>
+ </chapter>
+----
+-追加しました。 -- [[ひえ]] &new{2005-04-03 00:19:05 (日)};
+
+#comment

@@ -1,0 +1,83 @@
+#freeze
+*QuickTour [#k47d10b5]
+
+xyzzyの初心者向け資料です。~
+自習に布教にご自由にお使いください。~
+初めて読む人は、一応COLOR(red){このページの下にある[[免責>#w36b4872]]をお読みください。}
+
+*目次 [#l8261a98]
+
+**イントロ [#j90df2fc]
+:[[QuickTour/intro]]|xyzzyの特徴について簡単に説明します。
+
+**標準機能俯瞰 [#hd5ad1ae]
+:[[QuickTour/intro2]]|ダウンロードの方法と簡単な使い方についてです。
+
+**設定 [#ddfae824]
+:[[QuickTour/置き場所を決める]]|本格的に使うために、.xyzzyやsiteinit.lのファイルを作成する。環境変数を登録。
+:[[QuickTour/共通設定]]|共通設定ダイアログの各項目を簡単に説明。
+
+**機能詳細 [#f9ddb32a]
+:[[QuickTour/キーバインド]]|Emacsっぽいキーバインドの簡単な説明とか、表記の説明、Windows標準のキー配列にする話など。
+:[[QuickTour/関連付け]]|拡張子の関連付け、Internet Explorerのソース表示をxyzzyにする説明。
+:[[QuickTour/minibuffer]]|ミニバッファって何?とか、その使い道。
+:[[QuickTour/mode]]|モードって何?とか、その使い道。
+:[[QuickTour/session]]|プロジェクトファイルみたいなセッションファイルの紹介。関連付けの説明もあります。
+:[[QuickTour/frame]]|仮想デスクトップみたいな、フレーム機能の紹介。
+:[[QuickTour/grep]]|複数のファイルを一度に検索するGrepの紹介と使い方。オプションの説明。
+:[[QuickTour/gresreg]]|複数のファイルを一度に置換するGresregの紹介と使い方。オプションの説明。
+:[[QuickTour/abbrev]]|入力文字列を補完する機能であるabbrevとdabbrevの簡単な説明。
+:[[QuickTour/キーボードマクロ]]|キーボードマクロに関する（薄っぺらい）説明。
+
+**カスタマイズ [#lbb76095]
+:[[QuickTour/ext/clickable-uri]]|URLやメールアドレスの色づけやダブルクリックで開けるようにする拡張Lispです。一応記述を最新のものに対応させました。
+:[[QuickTour/ext/NetInstaller]]|xyzzyから拡張Lispを導入できるNetInstallerについての説明。
+:[[QuickTour/ext/html+-mode]]|htmlを書くときに便利なHTML+-modeの説明。
+:[[QuickTour/ext/auto-time-stamp]]|セーブする毎にファイル内のタイムスタンプを更新させたりできるauto-time-stampの説明。
+:[[QuickTour/ext/paren]]|対応する括弧を見やすく強調表示するparenの説明。
+:[[QuickTour/ext/shell3]]|M-x shellをより便利に拡張するshell3.lの説明。
+:[[QuickTour/ext/template-insert]]|kiaさん作のテンプレート挿入Lispです。非常に便利。
+:[[QuickTour/ext/key]]|xyzzyのキーバインド変更方法についてまとめました。いまいち上手くまとまっていないような気がしますけれど。
+:[[QuickTour/ext/dmacro]]|キーボードマクロよりもお手軽な感じなdmacroの説明。
+:[[QuickTour/ext/Java-tiny-console]]|[[xyzzyでプログラミング/JavaTinyConsole]]をどうぞ。
+:[[QuickTour/ext/outline-tree]]|
+:[[QuickTour/ext/www-mode]]|
+:[[QuickTour/ext/2ch-mode]]|
+:[[QuickTour/ext/Kamail]]|
+:[[QuickTour/ext/pickup-pattern]]|
+:[[QuickTour/ext/ggrep]]|
+:[[QuickTour/ext/multiple-replace]]|
+:[[QuickTour/ext/calmemo]]|
+:[[QuickTour/ext/KaTeX]]|KaTeXの導入は[[TeXに関連したことを少しだけ:http://www.econ.nagoya-cu.ac.jp/~miyahara/TeX.html]]をどうぞ。また、TeXそのものは[[TeX Wiki:http://oku.edu.mie-u.ac.jp/~okumura/texwiki/]]へ。
+:[[QuickTour/ext/rv-region]]|
+
+**その他 [#j6f06279]
+:[[QuickTour/etc/呼び方]]|xyzzyをどのように読めば良いのかという疑問をさらに深めたり、Xyzzy Wikiでアンケートなど。
+:[[QuickTour/etc/edict]]|xyzzy上で英単語の意味を調べられるedict-modeの導入方法や、使用法について。
+:[[QuickTour/etc/ispell]]|xyzzy上でスペルチェックを行うための必要なファイル群とか、設定方法。
+:[[QuickTour/etc/gomoku]]|
+:[[QuickTour/etc/へなちょこリファレンスの使い方]]|
+
+**既存のWikiページへのリンク [#t29cf7dc]
+:[[用語集]]|xyzzyに関係する用語です。わからない言葉があったらこのページを参照してみてください。
+:[[質問箱]]|わからないことがあれば質問をどうぞ。[[QuickTour]]内のWikiページについての質問は、このページの下のほうにある[[質問箱>QuickTour#c5679774]]を利用してください。
+
+*文章の取り扱い [#vd29b94a]
+
+**加筆修正について [#ec54ef4e]
+ご自由にどうぞ。既存のwikiページの修正だけでなく、新たにwikiページを作成するのももちろんご自由に。リンク名だけをつけておいても良いと思います。たぶん。
+
+// 稲原追加
+明らかなWiki Spamは見つけ次第修正するつもりです。
+
+**免責 [#w36b4872]
+typoや記述ミスが存在します。掲載してある情報の真偽を問わず一切の保障はできません。各自の判断で使用してくださいませ。
+
+**質問など [#c5679774]
+[[QuickTour]]に関係する質問はこちらにどうぞ。読んでわからないところや、typoなどがあったら下のコメント欄に記入してください。
+#pcomment([[QuickTour/コメント/QuickTour質問箱]],15)
+
+**小人さん用ログ [#l841790d]
+加筆・修正をした部分を記録しておきたいときに使用してください。ここに記述せずに修正する場合もあります。
+#pcomment([[QuickTour/コメント/小人さん用ログ]],15)
+#norelated

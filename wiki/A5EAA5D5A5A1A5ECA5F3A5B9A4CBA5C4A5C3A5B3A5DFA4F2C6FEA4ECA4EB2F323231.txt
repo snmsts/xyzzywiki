@@ -1,0 +1,82 @@
+* make-array [#wf86134e]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-06-22 (木) 10:50:25
+-バージョン: 
+
+** メッセージ [#j6b14b45]
+共有配列を作る、displaced-to の説明を加筆しました。
+ <chapter>
+ <title>make-array</title>
+ <type>Function</type>
+ <arguments>make-array DIMENSIONS &amp;rest REST &amp;key (:element-type t) (:initial-element () ies-p) (:initial-contents () ics-p) :fill-pointer :adjustable :displaced-to (:displaced-index-offset 0)</arguments>
+ <package>lisp</package>
+ <description>
+ DIMENSIONS で示される大きさ・次元の配列をつくり、それを値として返します。
+ もし、DIMENSIONS が nil なら、ゼロ次元配列がつくられます。
+ たとえば、変数 hoge をサイズ4の一次元配列(=サイズ4のベクトル)にするためには、
+ 
+   (setf hoge (make-array 4))
+   =&gt; #(nil nil nil nil)
+ 
+ 変数 foo をサイズ2x4の二次元配列とするためには、
+ 
+   (setf foo (make-array '(2 4)))
+   =&gt; #2A((nil nil nil nil) (nil nil nil nil))
+ 
+ とします。
+ :element-type は、新しい配列の各要素の型を規定します。
+ :initial-element が与えられている場合、新しい配列の全要素はすべて
+ :initial-element に初期化されます。これに対して、:initial-contents が与えら
+ れている場合、新しい配列の各要素が :initial-contents で初期化されます。
+ たとえば、
+ 
+   (make-array '(2 4) :initial-element 10); 2x4の配列をつくる。:initial-elementで初期化
+   =&gt; #2A((10 10 10 10) (10 10 10 10))
+   (setq a (make-array '(2 4) 
+   :initial-contents '((0 1 2 3) (3 2 1 0))); 2x4の配列をつくる。:initial-contentsで初期化
+   =&gt; #2A((0 1 2 3) (3 2 1 0))
+ 
+ なお、配列の要素にアクセスするためには、 aref が使われます。
+ 
+ :displaced-to, :displaced-index-offset 指定は、元の配列の一部からなる共有配列
+ を生成するために使われます。 copy-seq による複製とは違い、配列自体を共有しています。
+ 
+   (setq b (make-array '(2 3) :displaced-to a :displaced-index-offset 2))
+   =&gt; #2A((2 3 3) (2 1 0))
+ 
+   (setq c (make-array 5 :displaced-to a :displaced-index-offset 1))
+   =&gt; #(1 2 3 3 2)
+ 
+   (setf (aref b 1 0) 10)
+   a
+   =&gt; #2A((0 1 2 3) (3 10 1 0))
+   b
+   =&gt; #2A((2 3 3) (10 1 0))
+   c
+   =&gt; #(1 2 3 3 10)
+ </description>
+ <seealso>make-sequence</seealso>
+ <seealso>aref</seealso>
+ <seealso>setf</seealso>
+ <seealso>make-vector</seealso>
+ <seealso>length</seealso>
+ <seealso>array-dimensions</seealso>
+ <section>配列</section>
+ <file>array.l</file>
+ </chapter>
+
+--------
+- どーもです。ついでに「次元」の使い方に違和感があったので直しました。普通はこういう言い方ですよね。 -- [[NANRI]] &new{2006-06-23 (金) 00:30:49};
+- もうひとつ、リファレンスには「ベクトル」と「ベクタ」とが現れているみたいなので、どちらかに統一しようと思うのですが、どちらがいいとかありますか？＞誰ともなしに -- [[NANRI]] &new{2006-06-23 (金) 00:36:34};
+- ベクタではないでしょうか。他の人はどうだか知りませんがベクトルというとグラフ上でのイメージが強くて。 -- [[佐野]] &new{2006-06-23 (金) 00:52:27};
+- 言われてみて考えてみたんですけど３次元のベクトルのデータ構造っていうと１次元３要素の配列ですよね。もともとそういう意味なのかも知れません。dimensionsというパラメータの名前もそんな感じですし。なんかしっくりきませんね -- [[佐野]] &new{2006-06-23 (金) 00:54:50};
+- 「ベクタ」で統一するということで、暇なときにやっておきます。 -- [[NANRI]] &new{2006-06-23 (金) 21:11:00};
+- Wikipediaを参照した感じだと上ので大丈夫そうです。([[次元>http://ja.wikipedia.org/wiki/%E6%AC%A1%E5%85%83#.E9.85.8D.E5.88.97]]・[[配列>http://ja.wikipedia.org/wiki/%E9%85%8D%E5%88%97#.E6.A6.82.E8.A6.81]])  三次元のベクトルと言った時の「ベクトル」は配列のことというよりも、もっと具体的な(物理)量を言っているような印象があります。三次元のベクトルを構造体で表現しても違和感が無いというか、そんな感じです。 -- [[NANRI]] &new{2006-06-23 (金) 21:18:59};
+- よくわからないのですが階数という言葉をcltl2で見て納得しました。普通のコンピュータ言語の配列の次元の数え方で問題なさそうです。 -- [[佐野]] &new{2006-06-23 (金) 22:05:12};
+
+#comment

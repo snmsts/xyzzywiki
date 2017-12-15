@@ -1,0 +1,128 @@
+*シーケンス関連 [#hf556361]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-10-23 16:58:49 (日)
+-バージョン: 
+
+**メッセージ [#i4b2fe99]
+
+sequence.lの中でまだ記述がないものをまとめてみました。
+delete-duplicatesみたいな場合、キーワード引数やその初期値を大文字にするか小文字にするかよくわからなかったので修正お願いします。
+
+ <chapter>
+ <title>mismatch</title>
+ <type>Function</type>
+ <arguments>mismatch SEQUENCE1 SEQUENCE2 &amp;key :from-end :test :test-not (:key #'identity) (:start1 0) (:start2 0) :end1 :end2</arguments>
+ <package>lisp</package>
+ <description>
+ SEQUENCE1 と SEQUENCE2 を比較し、一致しない要素のインデックスを返します。
+ 
+   :start1  SEQUENCE1 の比較開始位置
+   :start2  SEQUENCE2 の比較開始位置
+   :end1    SEQUENCE1 の比較終了位置
+   :end2    SEQUENCE2 の比較終了位置
+ 
+ :start1 と :start2 の値が異なる場合、SEQUENCE1 内でのインデックスを返します。
+ 
+ 使用例:
+   (mismatch "abcd" "abxd")
+   =&gt; 2
+ 
+ 備考:
+   :from-end は実装されていないようです。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>シーケンス</section>
+ <file>sequence.l</file>
+ </chapter>
+
+ <chapter>
+ <title>delete-duplicates</title>
+ <type>Function</type>
+ <arguments>delete-duplicates SEQUENCE &amp;key :from-end :test :test-not (:start 0) (:end (length SEQUENCE)) (:key #'identity)</arguments>
+ <package>lisp</package>
+ <description>
+ SEQUENCE の中から重複する要素を削除したシーケンスを返します。
+ delete 同様、元のシーケンスは変更されます。
+ 
+  :from-end  non-nil ならシーケンスの終わりから重複する要素を削除していきます。
+ </description>
+ <seealso>delete</seealso>
+ <seealso>remove-duplicates</seealso>
+ <link></link>
+ <section>シーケンス</section>
+ <file>sequence.l</file>
+ </chapter>
+
+ <chapter>
+ <title>remove-duplicates</title>
+ <type>Function</type>
+ <arguments>remove-duplicates SEQUENCE &amp;key :from-end :test :test-not (:start 0) :end (:key #'identity)</arguments>
+ <package>lisp</package>
+ <description>
+ SEQUENCE の中から重複する要素を削除したシーケンスを返します。
+ remove 同様、元のシーケンスは変更されません。
+ 
+   :from-end  non-nil ならシーケンスの終わりから重複する要素を削除していきます。
+ </description>
+ <seealso>remove</seealso>
+ <seealso>delete-duplicates</seealso>
+ <seealso>remove</seealso>
+ <link></link>
+ <section>シーケンス</section>
+ <file>sequence.l</file>
+ </chapter>
+
+ <chapter>
+ <title>concatenate</title>
+ <type>Function</type>
+ <arguments>concatenate RESULT-TYPE &amp;rest SEQUENCES</arguments>
+ <package>lisp</package>
+ <description>
+ SEQUENCES を結合して RESULT-TYPE のシーケンスを新しく作り、返します。
+ 
+ RESULT-TYPE には make-sequence と同様のものが使用できます。
+ RESULT-TYPE の値によって、大まかには以下の関数と同じ挙動をします。
+   'list   &lt;--&gt; append
+   'string &lt;--&gt; concat
+   'vector &lt;--&gt; vconcat
+ 
+ なお SEQUENCES と RESULT-TYPE の型は必ずしも一致しなくてもかまいません。
+ </description>
+ <seealso>make-sequence</seealso>
+ <seealso>append</seealso>
+ <seealso>concat</seealso>
+ <seealso>vconcat</seealso>
+ <link></link>
+ <section>シーケンス</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>complement</title>
+ <type>Function</type>
+ <arguments>complement FN</arguments>
+ <package>lisp</package>
+ <description>
+ FN と逆の結果（not）を返す関数を作り、その関数を返します。
+ 
+ 使用例:
+   (funcall (complement 'oddp) 4)
+   =&gt; t
+ </description>
+ <seealso>not</seealso>
+ <link></link>
+ <section>シーケンス</section>
+ <file>sequence.l</file>
+ </chapter>
+----
+-どーもです。delete-duplicatesの所はそんな感じが自分の今のイメージで、現在の方針です。先日気付いたのでまだ全部揃えられていませんが。方針はまだ確定ではありませんし。arguments要素に関しては利用時を意識していますので、キーワードパラメータには必ず「:」がつくことになります。無い時は補う感じで。(これも今のところそう思っています、ということです。) -- [[NANRI]] &new{2005-10-23 20:27:04 (日)};
+- concatenateの説明にvconcatを追加しました。SEQUENCEとRESULT-TYPEうんぬんに関しても間違っていたので表現を修正しました（concat、vconcatはconcatenateを使って実装されているので同じことができます）。 --  &new{2005-11-14 (月) 19:04:11};
+- 取り込みました。 -- [[NANRI]] &new{2005-12-12 (月) 02:29:19};
+
+#comment

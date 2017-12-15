@@ -1,0 +1,80 @@
+[[еъе╒ебеьеєе╣]]
+
+**│╡═╫[#abstract]
+-reference.xmlд╬║ю└о╡┌д╙╩╤┤╣д╦д─ддд╞┐▐╝ид╖д╞ддд▐д╣бг
+***reference.xml╩╤┤╣│╡═╫[#convert]
+                                     иоимимимимимимимип
+                                     инreference.xml ин
+                                     и▒имимими╕имимими░
+         игибибибибибибибибииибибибибибибибибилибибибибибибибибииибибибибибибибибииибибибибибибибибииибибибибибибибибид
+         вн                вн                вн                вн                вн                ив                ив
+ игибибибикибибибидигибибибикибибибидигибибибикибибибидигибибибикибибибидигибибибикибибибид        ив        игибибибикибибибид
+ ивref2hh.l      ививxml2html.pl   ививxml2txt.pl    ививxml2texi.pl   ививxml2kwd.pl    ив        ив        ивref2doc.l     ив
+ ижибибибииибибибиеижибибибииибибибиеижибибибииибибибиеижибибибииибибибиеижибибибииибибибие        ив        ижибибибииибибибие
+         ив                ив                ив                вн                ив                ив                ив
+         ив                ив                ив        иоимимими║имимимип        ив                ив                ив
+         ив                ив                ив        инreference.texiин        ив                ив                ив
+         ив                ив                ив        и▒имимими╕имимими░        ив                ив                ив
+         ив                ив                ив                вн                ив                ив                ив
+         ив                ив                ив        игибибибикибибибид        ив                ив                ив
+         ив                ив                ив        ивtextinfotools ив        ив                ив                ив
+         ив                ив                ив        ижибибибииибибибие        ив                ив                ив
+         вн                вн                вн                вн                вн                ив                ив
+ $XYZZY/etc/ имимипиоимимими║имимимип$XYZZY/etc/ имимип$XYZZY/info/имимип$XYZZY/etc/ имимип        ив                ив
+ инreference.chm ининxxx.html      ининreference.txt ининreference.infoининLISP          ин        ив                ив
+ и▒имимими╕имимими░и▒имимими╕имимими░и▒имимими╕имимими░и▒имимими╕имимими░и▒имимими╕имимими░        ив                ив
+         ив                вн                вн                вн                ив                ив                ив
+         ив        игибибибикибибибидигибибибикибибибидигибибибикибибибид        ив        игибибибикибибибидигибибибикибибибид  
+         ив        ивreference.l   ививinfo-modoki.l ививinfo.l        ив        ив        ивrefer-for.l   ививdescribe-xxx  ив  
+         ив        ижибибибииибибибиеижибибибииибибибиеижибибибииибибибие        ив        ижибибибииибибибиеижибибибииибибибие  
+         вн                вн                вн                вн                вн                вн                вн
+        ╗▓╛╚              ╗▓╛╚              ╗▓╛╚              ╗▓╛╚       енб╝еяб╝е╔дЄ┐зд┼д▒       ╗▓╛╚              ╗▓╛╚
+
+***reference.xml║ю└о│╡═╫[#add]
+
+  игибибибибибибибид  иоимимимимимимимип            иоимимимимимимимип
+  ивaddref.l      извкинaddref.xml    и╖╝ъ╞░д╟╩г╝╠вки┤reference.xml ин
+  ижибибибибибибибие  и▒имимимимимимими░            и▒имимимимимимими░
+  
+
+**DOCTYPE[#doctype]
+
+reference.xmlд╬DOCTYPEд╟д╣бгreference.xmlд╬└ш╞мд╟─ъ╡┴д╡дьд╞ддд▐д╣бг
+
+ <!DOCTYPE book [
+ <!ELEMENT book (chapter*)>
+ <!ELEMENT chapter (title,type,arguments?,package?,description,seealso*,link*,section,file?)>
+ <!ELEMENT title (#PCDATA)>
+ <!ELEMENT type (#PCDATA)>
+ <!ELEMENT arguments (#PCDATA)>
+ <!ELEMENT package (#PCDATA)>
+ <!ELEMENT description (#PCDATA)>
+ <!ELEMENT seealso (#PCDATA)>
+ <!ELEMENT link (#PCDATA)>
+ <!ELEMENT section (#PCDATA)>
+ <!ELEMENT file (#PCDATA)>
+ ]>
+
+**╣р╠▄д╬╡н╜╥╬у[#example]
+
+logandд╬╛ь╣чд╬╡н╜╥╬уд╟д╣бг
+reference.xmlд╧бвд│д╬дшджд╩╡н╜╥д╬╖лдъ╩╓д╖длдщ└одъ╬йд├д╞ддд▐д╣бг
+
+ <chapter>
+ <title>logand</title>
+ <type>Function</type>
+ <arguments>&amp;rest ARGS</arguments>
+ <package>lisp</package>
+ <description>
+ е╙е├е╚╦шд╬ANDдЄ╝шдъд▐д╣бгC╕└╕ьд╟дддж&amp;д╟д╣бг
+ 
+ ╗╚═╤╬убз
+   ;;; 2┐╩┐Їд╟#b11110000д╚#b00110011д╬е╙е├е╚д╬└╤дЄ╝шдыбг
+   (format nil "~8,'0b" (logand #b11110000 #b00110011))
+   =&gt; "00110000"
+// (logand x #xf)
+ </description>
+ <seealso>logior</seealso>
+ <section>╩╤┐Їд╚─ъ┐Ї</section>
+ <file>number.l</file>
+ </chapter>

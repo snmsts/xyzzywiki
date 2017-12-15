@@ -1,0 +1,57 @@
+* hateda-mode ではてなグループ対応 [#oa178b0d]
+
+-ページ: [[patch]]
+-投稿者: [[miyamuko]]
+-優先順位: 普通
+-状態: 提案
+-カテゴリー: 機能追加
+-投稿日: 2006-06-16 (金) 16:00:34
+-バージョン: 0.2.1
+
+** メッセージ [#n5bf89d8]
+以下のように *hatedara-multi-accounts* に g:グループ名:ユーザ名 と書くとグループに投稿するようにしてみました。 [#xbf12243]
+
+ (setf *hatedara-multi-accounts*
+       '(("userA" nil "~/hatena/userA" "-t")
+         ("g:groupA:userA" nil "~/hatena/groupA" "-t")))
+ 
+
+ --- hateda-mode.l.org	Fri Jun 16 15:50:45 2006
+ +++ hateda-mode.l	Fri Jun 16 15:55:25 2006
+ @@ -368,12 +368,16 @@
+      (and (listp lst) (>= (length lst) 3)
+           (stringp (first lst)) (stringp (second lst)) (file-exist-p (third lst)) lst)))
+  
+ -(defun call-hatedara (dir user pass arg)
+ +(defun call-hatedara (dir account pass arg)
+    (run-hooks *hatedara-submit-hook*)
+ -  (execute-subprocess
+ +
+ +  (multiple-value-bind (group user)
+ +      (hatedara-parse-account account)
+ +    (execute-subprocess
+       (concat
+ -        "perl " (merge-pathnames "hw.pl" dir)
+ -        " -u " user " -p " pass " " arg))
+ +      "perl" " " (merge-pathnames "hw.pl" dir)
+ +      (if group (concat "-g " group) "")
+ +      " -u " user " -p " pass " " arg)))
+    (run-hooks *hatedara-after-submit-hook*))
+  
+  (defun hatedara-get-account-by-dir (dir)
+ @@ -384,7 +388,10 @@
+    (setf pt (cdr pt)) nil)
+    ))
+  
+ -
+ +(defun hatedara-parse-account (account)
+ +  (if (string-matchp "g:\\([a-zA-Z0-9_]+\\):\\([a-zA-Z0-9_]+\\)" account)
+ +      (values (match-string 1) (match-string 2))
+ +    (values nil account)))
+  
+  ;; NYSL Version 0.9982
+  ;;
+
+--------
+
+#comment

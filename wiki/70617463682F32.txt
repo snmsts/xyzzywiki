@@ -1,0 +1,43 @@
+*info-modoki-modeからのタグジャンプ [#g199b59a]
+
+-ページ: [[patch]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 機能追加
+-投稿日: 2005-06-10 23:10:50 (金)
+-バージョン: 2.01
+
+**メッセージ [#ab7dc0fe]
+lispでXTAGSを作っておくとF4で現在引いている関数の定義に飛べるようになります。
+ ;;現在地点と関連する関数名の切り出し
+ (defun imm-tags-find-target ()
+   (let* ((opoint (point))
+          (name (progn
+                  (goto-char (point-min))
+                  (scan-buffer "■\\(.+\\)$" :regexp t)
+                  (match-string 1)
+                  ))
+          (functionp (progn
+                       (scan-buffer "\\[Type       \\]: \\(.+\\)$" :regexp t)
+                       (when (member (match-string 1)
+                                     '("Special Form" "Accessor" "Macro" "Function")
+                                     :test 'equal) t))
+                       ))
+     (goto-char opoint)
+     (values nil name functionp)))
+ 
+ (add-hook '*info-modoki-mode-hook*
+           #'(lambda () (interactive)
+               (set-default-directory (merge-pathnames "lisp" (si:system-root)))
+               (make-local-variable 'tags-find-target)
+               (setq tags-find-target #'imm-tags-find-target)
+               (make-local-variable 'tags-find-point)
+               (setq tags-find-point #'ed::lisp-tags-find-point)))
+
+----
+-ありがとうございます。頂きました。 -- [[ひえ]] &new{2005-06-11 22:41:26 (土)};
+-取り込みありがとうございます。気が付いてしまったのですが、(goto-char (point-min))は場合によってはまずいかもしれません。（私の使う範囲では困らないのですけど） (scan-buffer hoge :regexp t :reverse t)の方がいいですかね？ -- [[佐野]] &new{2005-06-12 00:48:33 (日)};
+-そんな感じがよさそうですね。（セパレータ上でF4しちゃった方には、目をつむっていただくということで。） -- [[ひえ]] &new{2005-06-13 00:31:49 (月)};
+
+#comment

@@ -1,0 +1,45 @@
+[[trash]]
+
+*SkyDriveからダウンロードしたファイルの名前を元に戻す [#vb8cae13]
+
+SkyDriveで複数のファイルをダウンロードする際には1つのZIPファイルに纏められますが、名前に日本語が含まれるファイルが有った場合、「File1.ext」「File2.ext」…といった具合にリネームされてしまひます。(2013年9月〜11月現在)
+
+そこで、ZIPに含まれる「Encoding Errors.txt」に基づいて、元のファイル名に戻すLispを書きました。
+
+※フォルダにも対応しましたが、手抜き実装なので、ディレクトリを削除しません。リネーム後に残る空のディレクトリは、手動で削除してください。
+
+次のコードを.xyzzyにコピー&ペーストして、xyzzyを再起動し、「Encoding Errors.txt」を開くと実行されます。
+
+ (defun skydrive-rename-downloaded-file (&optional (rule (format nil "^\\(\\(.*/\\)*.*?\\) -> \\(\\(.*/\\)*.*\\)~A$" (code-char #xd))))
+   "Rename downloaded files from skydrive, based on `Encoding Errors.txt'."
+   (interactive)
+   (with-input-from-selected-buffer
+    (let (line original-file-name new-file-name original-directory new-directory (i 0))
+      (while (setq line (read-line *standard-input* nil))
+        (string-match rule line)
+ ;       (msgbox "1: ~A~%2: ~A~%3: ~A~%4: ~A~%" (match-string 1) (match-string 2) (match-string 3) (match-string 4))
+        (when (and (setq original-file-name (match-string 1))
+                   (setq new-file-name      (match-string 3)))
+ ;         (msgbox "original-file-name: ~A~%new-file-name: ~A~%" original-file-name new-file-name)
+          (when (and (setq original-directory (match-string 2))
+                     (setq new-directory      (match-string 4)))
+ ;           (msgbox "original-directory: ~A~%new-directory: ~A~%" original-directory new-directory)
+            (create-directory original-directory :if-exists :skip))
+          (when (file-exist-p new-file-name)
+            (message "~A -> ~A" new-file-name original-file-name)
+            (when (rename-file new-file-name original-file-name :if-exists :skip :if-access-denied :skip)
+              (incf i)))))
+      (message "Renamed ~D file~:P. (skydrive-rename-downloaded-file)" i))))
+ (pushnew '("Encoding Errors.txt" . skydrive-rename-downloaded-file) *auto-mode-alist* :test 'equal)
+
+「Encoding Errors.txt」の行末は何故か#xdが重複してゐますので、リネーム規則(正規表現)を表す変数ruleの引数も、それを除外する様にしてあります。
+
+ライセンスはCC0としますので、修正・転載など御自由にどうぞ。
+
+- 始めまして。大いに利用させていただいております。どうもありがとうございます。複数フォルダを同時にダウンロードした場合、エラーとなってしまうようです。改善よろしくおねがいいたします。 -- [[いとう]] &new{2013-09-24 (火) 16:06:06};
+- 今更すぎてすみませんが、フォルダにも何とか対応しました。但し手抜き実装なので、冒頭に追記した様に、リネーム後の不要なフォルダは手動で削除してください。＞いとうさん -- [[Kongmu]] &new{2013-11-23 (土) 00:37:49};
+- 神です。本当に助かりました。ありがとうございます。 -- [[あたし]] &new{2014-06-04 (水) 21:42:36};
+- 助かりました。「QuickTour/置き場所を決める」を読んでから実行すれば良いということniすら気づいていませんでしたが、お陰様で何とかなりました。 -- [[うなぎ]] &new{2014-06-09 (月) 09:47:59};
+- 助かりました。「QuickTour/置き場所を決める」を読んでから実行すれば良いということにすら気づいていませんでしたが、お陰様で何とかなりました。 -- [[うなぎ]] &new{2014-06-09 (月) 09:48:28};
+
+#comment

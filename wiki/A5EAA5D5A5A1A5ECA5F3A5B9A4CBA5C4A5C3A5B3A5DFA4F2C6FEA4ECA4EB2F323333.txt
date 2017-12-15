@@ -1,0 +1,245 @@
+* interactive [#k95694a3]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[砂]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-09-13 (水) 07:59:43
+-バージョン: 
+
+** メッセージ [#b29848e5]
+interactive指定子として以下の2つの記述がありません。追加してはどうでしょうか。
+  z   文字エンコーディング
+  Z   自動判定を含む文字エンコーディング
+--------
+- どーもです。interactiveはちょうど書き直し中です。今日にでも仕上げます。zとZの違いはよく分かってませんでした。情報ありがとうございます。 -- [[NANRI]] &new{2006-09-13 (水) 20:53:53};
+
+(snip)
+// <chapter>
+// <title>interactive</title>
+// <type>Special Form</type>
+// <arguments>interactive {INTERACTIVE-STRING {PARAMETER}*|LIST}</arguments>
+// <package>editor</package>
+// <description>
+// 関数が対話的に実行可能であること、すなわちコマンドであることを宣言します。
+// このフォームを定義に含む関数は対話的に実行できます。
+// 対話的に実行とは具体的には
+// ・キーバインドでの実行
+// ・M-x (execute-extended-command) での実行
+// ・ツールバーでの実行
+// などです。
+// 
+// INTERACTIVE-STRINGの内容によって対話的に実行したときに
+// 関数に渡す引数の値やその与え方を制御します。
+// INTERACTIVE-STRINGの構成は以下のようになります。
+//   *             任意。書込み禁止バッファでの実行を禁止します。
+//   0             任意。プロンプトに数引数がつきます。
+//   指示子        引数に与えるデータとその与え方の指定になります。
+//   任意の文字列  ミニバッファで引数を与えるときのプロンプトになります。
+//   \n            区切り文字です。続けて次の引数についての記述ができます。
+// 
+// PARAMETERでは指示子に対する設定を記述できます。
+//  :defaultN      初期表示
+//  :historyN      履歴情報
+//  :titleN        ダイアログのタイトル
+// Nの部分には何番目の指示子に対する設定かという数値が入ります。
+// 例えば最初の指示子に対する初期表示の指定は:default0で行います。
+// :defaultNと:titleNで指定するのは文字列、
+// :historyNで指定するのはminibuffer-history-variable属性を持つシンボルです。
+// 履歴のデータはその属性値が使用されます。minibuf.l参照。
+// 
+// 以下、指示子とその動作です。
+// 
+//   {属性}
+//    P: Prompt       ミニバッファでユーザー入力
+//    M: Must Match   正しく入力されるまで繰り返す
+//    C: Completion   入力候補表示・補完あり
+//    D: Default      :defaultN使用可能
+//    H: History      :historyN使用可能
+//    T: Title        :titleN使用可能
+// 
+//   [最終変換値]
+//   {xx}    - 関数には xxx 型の値がくる
+//   {xx/yy} - 入力値が省略又は未定義値だと、yy型がくる
+//   {xx|yy} - 入力値が多重値だと、yy の型でくる
+//   {*****} - なんでもあり
+// 
+//         {PMCDHT}
+//   a     {PMCDH }[symbol]        関数名
+//   B     {P CDH }[buffer/string] バッファ名
+//   b     {PMCDH }[buffer]        既存のバッファ名
+//   c     {P     }[character]     文字
+//   C     {PMCDH }[symbol]        コマンド名
+//   d     {      }[integer]       ポイント位置
+//   D     {PMCDHT}[string]        ディレクトリ名
+//   e     {P CDH }[string]        実行ファイル
+//   F     {P CDHT}[string]        ファイル名
+//   f     {PMCDHT}[string]        既存のファイル名
+//   l     {P CDHT}[string|cons]   ファイル名(複数可)
+//   M     {      }[integer]       セレクション開始位置
+//   m     {      }[integer]       マーク位置
+//   n     {PM    }[integer]       整数
+//   N     {PM    }[integer]       整数(前置引数を優先)
+//   p     {      }[integer]       前置引数の値
+//   P     {      }[symbol/nil]    生の前置引数
+//   R     {      }[integer]       セレクション範囲(一つ目がセレクションの始点、二つ目がセレクションの終点)
+//   r     {      }[integer]       リージョン(一つ目がマーク位置、二つ目がポイント位置)
+//   s     {P  DH }[string]        文字列
+//   S     {PMCDH }[symbol]        シンボル
+//   v     {PMCDH }[symbol]        変数名
+//   X     {P     }[*****]         S式(引数には評価した値が渡される)
+//   x     {P     }[*****]         S式そのもの
+//   z     {PMC H }[encoding]      文字エンコーディング
+//   Z     {PMC H }[encoding]      文字エンコーディング(自動判定を除く)
+//  
+// 新たに任意の指示子を作成することもできます。
+// *interactive-specifier-alist*に指示子にあたる文字と処理の関数シンボルを
+// 登録します。keymap.lを参照。
+// 
+// また、LISTにて指示子に依らない任意の動作をさせることもできます。
+// cmds.lのrepeat-complex-commandの定義などを参照。
+// 
+// 備考:
+// ・0zと0Zという指定は特別に、前置引数が与えられたときのみミニバッファで入
+//   力待ちになるという動作になります。
+// ・PARAMETERで:emacsにnon-nilを指定するとemacsとの互換性を考慮した動作に
+//   なります。
+// </description>
+// <seealso>commandp</seealso>
+// <seealso>buffer-modified-p</seealso>
+// <seealso>long-operation</seealso>
+// <seealso>*prefix-args*</seealso>
+// <link></link>
+// <section>関数</section>
+// <file>builtin.l</file>
+// </chapter>
+- チェックよろしくです。 -- [[NANRI]] &new{2006-09-13 (水) 22:12:32};
+- 「文字エンコーディング(自動判定を除く)」の部分は「含む」ではないのですか？ いまいち「自動判定」が何を意味するのかまだわかっていません。 -- [[砂]] &new{2006-09-14 (木) 05:34:58};
+- 「自動判定」は*encoding-auto*のことです。Zのときにautoが候補に現れないことで、自動判定が除外されていることが確認できます。候補の一覧は*char-encoding-list*で、これに*encoding-auto*が含まれていない場合はzとZの動作は同じになります。 -- [[NANRI]] &new{2006-09-14 (木) 20:44:12};
+
+重複要素が消えて大分読み易くなりましたね。例が…~
+まずそうだと思ったことを幾つか。(見通しが良くなったので思いついた揚げ足取りっぽいところも含みますが)
+-対話的実行=全てのコマンドが引数を取りそうな雰囲気
+--どちらかというとexecute-extended-commandの入力支援の説明はサブにして
+--キーバインド等には必要というほうがメイン(そこまでで説明を読み止められる)とすると良いと思いました。
+-interactive宣言はclosureの行頭にある必要がある
+--思いついたけれどもどーでもよいです
+-指定子？指示子？
+
+ interactive宣言を含む関数はコマンドとなります
+ ・キーバインドでの実行
+ ・M-x (execute-extended-command) での実行
+ ・ツールバーでの実行
+ 
+ これらの用途に使うための関数(closure?)はinteractive宣言を含まなければなりません
+ 引数を必要とする関数をM-x(もしくはcall-interactivelyなど)から
+ 呼ぶ場合interactiveの引数によって補うことができます。
+- 解説ありがとうございました。良くわかりました。 >NANRI さん -- [[砂]] &new{2006-09-15 (金) 06:43:09};
+- 対話的実行の件＞対話的実行にそういう意図は無かったのですが。自分が意図した意味は「キーを押すとかマウスをクリックするといったユーザーの入力に対して、関数を実行するという応答を返す」といった意味合いです。入力→応答というところを「対話的」と称しています。emacsの方は「対話的呼び出し」という表現を使っているみたいですね。誤解を招くということでしたら、ご提案どおりコマンドと呼ぶにとどめます。~
+位置の件＞真に先頭ならそう書きますが、DOC-STRINGが入ったりdeclareフォームが入ったりできるので省略しました。特にdeclareフォームにはあまり絡めたくないので。~
+指定子？指示子？の件＞specifierの訳で「指示子」にしましたが、指定子がいいという事でしたらそちらにします。表現がそろっていればどちらでも構いません。 -- [[NANRI]] &new{2006-09-15 (金) 20:20:38};
+- あ、記名忘れてた。あと過不足ない事も気がつきました。いつもの通り勘違いとしてください。すみません。根本的な読み違いは他の項目だとcl流ではないarguments繰り返しや省略可能などの記法を意識せず日本語だけで読み下せ、この項目はそれができないことに拠ったものでした。interactive-stringの説明にすぐ入っちゃうけど省略可能だったよね？言及されてないよね？といった感じでした。 -- [[佐野]] &new{2006-09-15 (金) 23:15:29};
+- INTERACTIVE-STRINGが省略可能な件を含めて後日修正版出します。 -- [[NANRI]] &new{2006-09-20 (水) 02:25:19};
+ <chapter>
+ <title>interactive</title>
+ <type>Special Form</type>
+ <arguments>interactive {INTERACTIVE-STRING {PARAMETER}*|LIST}</arguments>
+ <package>editor</package>
+ <description>
+ 関数が対話的に実行可能であること、すなわちコマンドであることを宣言します。
+ このフォームを定義に含む関数は対話的に実行できます。
+ 対話的に実行とは具体的には
+ ・キーバインドでの実行
+ ・M-x (execute-extended-command) での実行
+ ・ツールバーでの実行
+ などです。
+ 
+ 実行に引数が必要でない関数では必要ありませんが、引数を与えなければならな
+ い関数の場合は、INTERACTIVE-STRINGによって対話的に実行したときに関数に渡
+ す引数の値やその与え方を制御する必要があります。
+ INTERACTIVE-STRINGの構成は以下のようになります。
+   *             任意。書込み禁止バッファでの実行を禁止します。
+   0             任意。プロンプトに数引数がつきます。
+   指定子        引数に与えるデータとその与え方の指定になります。
+   任意の文字列  ミニバッファで引数を与えるときのプロンプトになります。
+   \n            区切り文字です。続けて次の引数についての記述ができます。
+ 
+ PARAMETERでは指定子に対する設定を記述できます。
+  :defaultN      初期表示
+  :historyN      履歴情報
+  :titleN        ダイアログのタイトル
+ Nの部分には何番目の指定子に対する設定かという数値が入ります。
+ 例えば最初の指定子に対する初期表示の指定は:default0で行います。
+ :defaultNと:titleNで指定するのは文字列、
+ :historyNで指定するのはminibuffer-history-variableプロパティを持つシンボルです。
+ 履歴のデータはそのプロパティ値が使用されます。minibuf.l参照。
+ 
+ 以下、指定子とその動作です。
+ 
+   {属性}
+    P: Prompt       ミニバッファでユーザー入力
+    M: Must Match   正しく入力されるまで繰り返す
+    C: Completion   入力候補表示・補完あり
+    D: Default      :defaultN使用可能
+    H: History      :historyN使用可能
+    T: Title        :titleN使用可能
+ 
+   [最終変換値]
+   {xx}    - 関数には xxx 型の値がくる
+   {xx/yy} - 入力値が省略又は未定義値だと、yy型がくる
+   {xx|yy} - 入力値が多重値だと、yy の型でくる
+   {*****} - なんでもあり
+ 
+         {PMCDHT}
+   a     {PMCDH }[symbol]        関数名
+   B     {P CDH }[buffer/string] バッファ名
+   b     {PMCDH }[buffer]        既存のバッファ名
+   c     {P     }[character]     文字
+   C     {PMCDH }[symbol]        コマンド名
+   d     {      }[integer]       ポイント位置
+   D     {PMCDHT}[string]        ディレクトリ名
+   e     {P CDH }[string]        実行ファイル
+   F     {P CDHT}[string]        ファイル名
+   f     {PMCDHT}[string]        既存のファイル名
+   l     {P CDHT}[string|cons]   ファイル名(複数可)
+   M     {      }[integer]       セレクション開始位置
+   m     {      }[integer]       マーク位置
+   n     {PM    }[integer]       整数
+   N     {PM    }[integer]       整数(前置引数を優先)
+   p     {      }[integer]       前置引数の値
+   P     {      }[symbol/nil]    生の前置引数
+   R     {      }[integer]       セレクション範囲(一つ目がセレクションの始点、二つ目がセレクションの終点)
+   r     {      }[integer]       リージョン(一つ目がマーク位置、二つ目がポイント位置)
+   s     {P  DH }[string]        文字列
+   S     {PMCDH }[symbol]        シンボル
+   v     {PMCDH }[symbol]        変数名
+   X     {P     }[*****]         S式(引数には評価した値が渡される)
+   x     {P     }[*****]         S式そのもの
+   z     {PMC H }[encoding]      文字エンコーディング
+   Z     {PMC H }[encoding]      文字エンコーディング(自動判定を除く)
+  
+ 新たに任意の指定子を作成することもできます。
+ *interactive-specifier-alist*に指定子にあたる文字と処理の関数シンボルを
+ 登録します。keymap.lを参照。
+ 
+ また、LISTにて指定子に依らない任意の動作をさせることもできます。
+ cmds.lのrepeat-complex-commandの定義などを参照。
+ 
+ 備考:
+ ・0zと0Zという指定は特別に、前置引数が与えられたときのみミニバッファで入
+   力待ちになるという動作になります。
+ ・PARAMETERで:emacsにnon-nilを指定するとemacsとの互換性を考慮した動作に
+   なります。
+ </description>
+ <seealso>commandp</seealso>
+ <seealso>buffer-modified-p</seealso>
+ <seealso>long-operation</seealso>
+ <seealso>*prefix-args*</seealso>
+ <link></link>
+ <section>関数</section>
+ <file>builtin.l</file>
+ </chapter>
+- で、微妙に修正。多少例を示した方がいいかも。 -- [[NANRI]] &new{2006-10-14 (土) 00:19:33};
+
+#comment

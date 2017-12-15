@@ -1,0 +1,20 @@
+[[L10N/english]]
+
+ cmds.l:523:       (plain-error "交換できません"))
+-Not be able to transpose.
+-transとposeが合わさった言葉だから"置き換えることができない"のでは？ -- [[gosia]] &new{2005-08-18 08:28:41 (木)};
+-- 関数名が「transpose-region-1」だから transpose をあててあるのだと思います。より良い言い回しがあればそちらがいいのでしょうが、俺にはよく分かりませんので提案できません。 --  &new{2005-08-18 13:10:53 (木)};
+
+#comment
+ cmds.l:780:		     (error "U+~4,'0xは範囲外です" code))
+-U+~4,'0x is outside the supported range.
+-outsedeはoutsideでは？”サポートされている範囲外”だから範囲外だと思います。 -- [[gosia]] &new{2005-08-18 08:31:01 (木)};
+--よく分かりませんが typo でしょう。直しておきました。 --  &new{2005-08-18 12:59:55 (木)};
+-U+~4,'0x is out of the supported range. --  &new{2005-09-03 10:56:13 (土)};
+
+#comment
+ cmds.l:810:	(error "~xは範囲外です" code))))
+-~x is outside the supported range.
+-x is out of the supported range. --  &new{2005-09-03 10:56:39 (土)};
+
+#comment

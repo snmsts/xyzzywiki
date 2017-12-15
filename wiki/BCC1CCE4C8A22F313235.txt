@@ -1,0 +1,37 @@
+#freeze
+* kyotex-mode で SumatraPDF の forward search が実行できない [#x3df3560]
+-ページ: [[質問箱]]
+-投稿者: [[modera]]
+-状態: 完了
+-投稿日: 2014-08-08 21:51:13 (金)
+
+** メッセージ [#d1d9d180]
+kyotex-mode で SumatraPDF を用いて forward search を実行したいと思い、
+ (defun sumatrapdf-forward-search ()
+   (interactive)
+   (let* ((tex-file (get-buffer-file-name))
+          (pdf-file (if (string-equal *kyotex-dvipdfm-recent-output* "")
+                        (concat (car (split-string (get-buffer-file-name) "\\.")) ".pdf")
+                      *kyotex-dvipdfm-recent-output*))
+          (line (format nil "~D" (current-line-number)))
+          (cmd "rundll32 shell32,ShellExec_RunDLL SumatraPDF")
+          (args))
+     (setq args (concat "-reuse-instance \"" pdf-file "\" -forward-search \"" tex-file "\" " line))
+     (message (concat cmd " " args))
+     (call-process (concat cmd " " args)
+                   :exec-directory (directory-namestring tex-file))))
+ 
+ (add-hook '*kyotex-mode-hook*
+           #'(lambda ()
+               (define-key *kyotex-mode-map* '(#\C-c #\s) 'sumatrapdf-forward-search)))
+
+を設定しました。~
+「C-c s」を入力したところ、SumatraPDF が起動して PDF ファイルが表示されました。~
+ここまではいいのですが、PDF ファイルが表示されたあと forward search が実行されません。~
+何がいけないのでしょうか？~
+----
+-メニューの [kyotex(Y)]-[基本設定]-[コンパイラの設定(D)] で TeX(T) の項目を uplatex -kanji=utf8 -no-guess-input-enc -synctex=1 に設定しておくと上手くいくかもしれません。 -- &new{2014-08-09 10:25:21 (土)};
+-(setq *kyotex-default-tex-compiler* "uplatex -kanji=utf8 -no-guess-input-enc -synctex=1") を設定してみてください。 -- [[fen]] &new{2014-08-09 10:38:53 (土)};
+- synctex=1 オプションを追加すると forward search できるようになりました。 --  &new{2014-08-09 (土) 13:57:55};
+
+#comment

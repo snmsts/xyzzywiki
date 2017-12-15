@@ -1,0 +1,95 @@
+*set-buffer-fold-type-*-update [#qdee3927]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2003-11-18 (火) 13:09:52
+-バージョン: 
+
+**メッセージ [#ha0baee0]
+三項目同時に…。
+ <chapter>
+ <title>set-buffer-fold-type-window-update</title>
+ <type>Function</type>
+ <arguments>set-buffer-fold-type-window-update</arguments>
+ <package>editor</package>
+ <description>
+ カレントバッファがウィンドウ幅で折り返しになっているかどうかを返します
+ 
+ 返り値は以下のとおりです。
+   :check なっている
+   nil なっていない 
+ </description>
+ <seealso>set-buffer-fold-type-window</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>window.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>set-buffer-fold-type-column-update</title>
+ <type>Function</type>
+ <arguments>set-buffer-fold-type-column-update</arguments>
+ <package>editor</package>
+ <description>
+ カレントバッファが指定位置で折り返しになっているかどうかを返します
+ 
+ 返り値は以下のとおりです。
+   :check なっている
+   nil なっていない
+ </description>
+ <seealso>set-buffer-fold-type-column</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>window.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>set-buffer-fold-type-none-update</title>
+ <type>Function</type>
+ <arguments>set-buffer-fold-type-none-update</arguments>
+ <package>editor</package>
+ <description>
+ カレントバッファが折り返し無しになっているかどうかを返します
+ 
+ 返り値は以下のとおりです。
+   :check なっている
+   nil なっていない
+ </description>
+ <seealso>set-buffer-fold-type-none</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>window.l</file>
+ </chapter>
+
+----
+-しまった。これはbuffer-fold-widthのラッパだった。あとでそっちを調べて書きます。 -- [[佐野]] &new{2003-11-18 (火) 13:44:06};
+ <chapter>
+ <title>buffer-fold-width</title>
+ <type>Function</type>
+ <arguments>buffer-fold-width &optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ 折り返しの状態を返します。
+ 
+   BUFFER : 状態を取得するバッファ
+ 
+ 返り値は以下のとおりです。
+ 
+   t    ウィンドウ幅で折り返す
+   nil  折り返しをしない
+   数値 その幅で折り返しをします。
+ 
+ 多値で帰ってきているtの意味は不明です。
+ </description>
+ <seealso>set-buffer-fold-width</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+-set-buffer-fold-type-window-updateだけ、descriptionの中身がずれていたので、それを修正して取り込みました。 -- [[山本]] &new{2003-12-06 (土) 19:15:09};
+-佐野さんはご存知だと思いますが、そうでない方のためにちょっと補足すると、set-buffer-fold-type-***-update系の用途はツールバーのボタンの凹みを実現するためのものです。ツールバーを描画する際には、ボタンに割り付けられた関数を呼び出して:checkかnilかで凹ませたり、平らにできます。lambda式とか設定出来なさそうなので、ボタン一つ事に専用の関数を作る必要があります。 -- [[山本]] &new{2003-12-06 (土) 19:21:26};
+
+#comment

@@ -1,0 +1,100 @@
+*get-internal-real-time 内部時間って？ [#fc185248]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[crayonzen]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-02-25 00:34:53 (金)
+-バージョン: 20041115
+
+**メッセージ [#yf6cff8c]
+ ■get-internal-real-time
+ [Type       ]: Function
+ [File       ]: builtin.l
+ [Section    ]: 日付・時間
+ [Description]: 
+ PC内部時間を返します。PCを起動してからの経過時間です。
+ PC内部時間の返り値(tick)は機種に依存します。たぶん。。。
+ 秒未満を 1/60秒 単位で刻んでいるPCの場合、返り値 60 => 1秒 となります。
+ 秒未満を 1/1000秒 単位で刻んでいるPCの場合、返り値 1000 => 1秒 となります。
+ ストップウォッチやタイマーなどのミリ単位の時間計測が必要なときなど。
+ 
+ 使用例：  
+   (get-internal-real-time)
+   => 35885380
+   ;;;（返り値のそのままの値）
+ 
+ 使用例:
+   ;;;1/1000秒で刻む返り値を時間に直す計算例。
+   (let (tick)
+     (setq tick (get-internal-real-time))
+     (multiple-value-setq (d tick1)
+       (multiple-value-bind (q r)
+ 	  (truncate tick (* 24 60 60 1000))
+ 	(values q r)))
+     (multiple-value-setq (h tick2)
+       (multiple-value-bind (q r)
+ 	  (truncate tick1 (* 60 60 1000))
+ 	(values q r)))
+     (multiple-value-setq (m tick3)
+       (multiple-value-bind (q r)
+ 	  (truncate tick2 (* 60 1000))
+ 	(values q r)))
+     (multiple-value-setq (s ms)
+       (multiple-value-bind (q r)
+ 	  (truncate tick3 1000)
+ 	(values q r)))
+     (format nil "PC起動経過時間 day ~S time ~2,'0D:~2,'0D:~2,'0D.~3,'0D" d h m s ms)
+     )
+   => "PC起動経過時間 day 1 time 10:10:32.747"
+   ;;;（ＰＣ起動から１日と１０時間１０分３２秒７４７経過）
+
+少し調べました。佐野~
+
+ <chapter>
+ <title>get-internal-real-time</title>
+ <type>Function</type>
+ <arguments>get-internal-real-time</arguments>
+ <package>lisp</package>
+ <description>
+ 内部的にGetTickCountを呼び出しています。GetTickCountはMSDNによると
+ システムを起動した後の経過時間を、ミリ秒（ms）単位で取得します。
+ この時間は、システムタイマの分解能による制限を受けます。
+ システムを 49.7 日間連続して動作させると、経過時間は 0 に戻ります。
+ 
+ だそうです。
+ 
+ 使用例：  
+   ;;普通に呼び出す。整数が帰ってくる
+   (get-internal-real-time)
+   =&gt;984001406
+ 
+   ;;書式付で起動時間を表示
+   (let ((tick (get-internal-real-time))
+         d h m s ms)
+     (multiple-value-setq (tick ms)
+         (truncate tick 1000))
+     (multiple-value-setq (tick s)
+         (truncate tick 60))
+     (multiple-value-setq (tick m)
+         (truncate tick 60))
+     (multiple-value-setq (d h)
+         (truncate tick 24))
+     (format nil "PC起動経過時間 day ~D time ~2,'0D:~2,'0D:~2,'0D.~3,'0D" d h m s ms))
+   =&gt;"PC起動経過時間 day 11 time 09:20:04.578"
+ 
+ </description>
+ <seealso>si:performance-counter</seealso>
+ <link></link>
+ <section>日付・時間</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-佐野さん　ありがとうございました。 -- [[crayonzen]] &new{2005-03-14 07:26:13 (月)};
+-letに変数とmultiple-value-setqだけの方がすっきりしてます。リファレンスにいれるなら佐野さんの修正の方で -- [[crayonzen]] &new{2005-03-14 07:29:04 (月)};
+-ありがとうございました…。こちらこそ記述自体のアイデアはそのまんま貰ってきただけなので。もし他の項目で少しでもわかりにくいという部分があったら疑問を投げかけるだけでしてもらえるととてもありがたいです。今後ともよろしくお願いします。 -- [[佐野]] &new{2005-03-14 08:58:20 (月)};
+-取り込みます。＞[[refwiki:get-internal-real-time]] -- [[NANRI]] &new{2005-03-14 11:01:29 (月)};
+
+#comment

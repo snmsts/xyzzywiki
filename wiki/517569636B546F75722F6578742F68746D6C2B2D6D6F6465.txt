@@ -1,0 +1,419 @@
+#freeze
+#contents
+
+*HTML+-modeを導入しよう [#e3bbf561]
+
+**前口上 [#m5ca9e95]
+
+今回はhtmlの編集を支援するHTML+-modeです。HTML+-modeは以下の人に便利だと思います。
+
+- htmlを編集する機会が多い人
+- Webページを課題（とか）で書かないといけない人
+- なぜかわからないけどhtmlを書きたい人
+
+あらかじめxyzzyに同梱されているhtml-modeよりも、大幅に編集を楽にする機能が盛りだくさんなので、楽をしたい人は入れましょう。
+
+**HTML+-modeとは？ [#k8f9447b]
+
+まぁ、説明するまでも無いような気がしますけど、HTML+-modeはHTMLファイルを編集するためのモードです。作者のYAMAMOTO Taizoさんが暫定的かもしれませんが、[[tsoft / taizodのソフトウェア>http://dl.dropbox.com/u/9124140/tsoft/index.html]]で公開しています。かつてhttp://www1.odn.ne.jp/ymtz/html_plus-mode.html にあったYAMAMOTOさんによる説明は以下のとおりです。
+
+ xyzzy用のhtml編集用モードです。
+ 
+ （途中略）
+ 
+ 特徴は以下のとおり／対応するキーバインドは下記を参照。
+ 
+ ・独自のインデント付け
+ ・入力時に閉じタグ／属性を半自動的に補完
+ ・タグの対応チェック機能
+ ・パスの入力
+   手打ちでパスを入力すると大変なので、ダイアログから選択する感じで使用します。
+   一応、同じドライブなら相対パスで入力します。
+ ・直前／直後のタグの削除
+ ・ブレークタグの挿入
+ ・イメージタグの挿入
+   <img src="image/rightarrow.gif" width="12" height="12" alt="">
+   ソースと同じドライブを選択すると相対パスで挿入されます。ネットワークドライブはどうな るか知りません。
+   GIF/JPEG/PNGに対応してます。
+ ・インターネットショートカットからアンカータグの挿入
+   <a href="http://www.yahoo.co.jp/">YAHOO Japan</a>
+   インターネットショートカット（拡張子がurlのファイル）から、アンカータグを挿入します。
+ ・状況に依存したそれっぽいタグの挿入
+ ・同じ構造をしたところから候補を選び出して複写
+ ・リンク先のファイルをダイアログで選択／表示
+
+という感じです。とりわけ素敵なのは、imgタグの時に、該当する画像ファイルを指定するだけでwidthやheightのサイズを自動的に入れてくれたり、C-,や、C-M-,などでタグの補完入力やタグを閉じることができる点です。
+
+なおXMLを書きたい人はXML-modeが存在しますので、そっちを使った方が良いでしょう。
+
+**ダウンロードする [#f14964b9]
+
+COLOR(red){2011年3月20日現在、netinstallerによるHTML+-modeの導入はできないようなので、圧縮ファイルをダウンロードする方法でのみインストールが可能です。}
+
+します。前回netinstallerを導入したので、そっち経由で導入しても良いし、普通にHTML+-modeの圧縮ファイルをダウンロードしてきてもどっちでもオッケーです。一応二つ書いておきます。
+
+***netinstallerを使用する [#d66f5a63]
+
+COLOR(red){2011年3月20日現在、netinstallerによるHTML+-modeの導入はできないようなので、圧縮ファイルをダウンロードする方法でのみインストールが可能です。従いまして、この項を飛ばしてください。}
+
+M-x netinstallerで起動させた後、aを押して、
+
+ http://www1.odn.ne.jp/ymtz/archive/packages.l
+
+と入力してください。新しく66MHz.comができるので、SPACE → HTML+-modeを選択（i）するだけです。
+
+#br
+#br
+
+CENTER:''ni経由''
+CENTER:#ref(01.png,center,100%)
+CENTER:#img(,clear)
+CENTER:&size(10){わかると思いますが。};
+
+#br
+#br
+
+そしたら、ダンプファイルを新しく作成しなおしましょう。
+
+***圧縮ファイルから手動でインストールする [#vd82a49a]
+
+http://dl.dropbox.com/u/9124140/tsoft/index.htmlから、html_plus-mode20030430-1.lzhをダウンロードして解凍したフォルダにあるHTML+-mode.lをsite-lispに入れます。そしたら、HTML+-mode.lの冒頭に書かれている通り、.xyzzyやsiteinit.lに
+
+ (export 'ed::html+-mode "ed")
+ (autoload 'html+-mode "html+-mode" t)
+ (pushnew '("\\.s?html?$" . html+-mode) *auto-mode-alist* :test 'equal)
+
+を記述します。siteinit.lに記述した時には、バイトコンパイル等を忘れずに行ってください。これで導入は終了です。
+
+**HTML+-modeでhtmlを書いてみる [#q529340e]
+
+と言うわけで後は使ってみるだけです。色々機能がありますが、順に説明していきます。
+
+***HTMLファイルってこんな感じか？ [#r503d562]
+
+むっちゃ簡単に言うと、HTMLファイルはまぁこんな感じではないでしょうか？ （いろいろ書こうと思えば書けますが）
+
+ <html>
+    <head>
+      <title>
+      </title>
+    </head>
+   <body>
+ 
+ 
+   </body>
+  </html>
+
+以上のようなものを用意して、<body>と</body>の間にウィンドウに表示させたい文字列などを書いていきます。
+
+では実際にHTML+-modeを使って上ように書いてみましょう。
+
+***半自動的にタグを開く [#me3028b5]
+
+いつも通りにC-x C-fでファイルを用意します。HTMLファイルなので必ず拡張子はhtmやhtmlにしましょう。（拡張子は大文字でも小文字でも構いません）
+
+
+#br
+#br
+
+CENTER:''ファイルを用意する''
+CENTER:#ref(02.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){まぁ普通に。};
+
+#br
+#br
+
+用意したら、モード行のモードの所を見てください。(HTML+)となっていると思います。それならOKです。((もし(HTML)と表示されていたら、xyzzyに入っているhtml-modeのままになっています。多分どこか設定が変になっていると思うんで、設定ファイルを確認してください。))
+
+#br
+#br
+
+CENTER:''モード行をチェック''
+CENTER:#ref(03.png,center,100%)
+CENTER:#img(,clear)
+CENTER:&size(10){(HTML+)となっていることを確認};
+
+#br
+#br
+
+新しいファイルを作成したら、とりあえず''C-,''を打ってみて下さい。.（ピリオド）ではなく、'',（カンマ）''なので注意。すると、ファイルの先頭に<html>と入力されますよね？こんな風にC-,で半自動的にタグを挿入できます。
+
+#br
+#br
+
+CENTER:''C-,を一度押すと……''
+CENTER:#ref(04.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){<html>と勝手に入ってくれます。};
+
+#br
+#br
+
+C-mで改行してみます。するとインデントされます。（これが「独自のインデント付け」ってやつだと思います）そしてもう一度、C-,を打ち込んでみて下さい。((実際にはCtrlをずっと押した状態で、 m → ,と続けて入力すると楽かと。))今度は<html>ではなく<head>と入力されます。
+
+#br
+#br
+
+CENTER:''<head>を入力''
+CENTER:#ref(05.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){二回打てば <head>と入ってくれるはずです。};
+
+#br
+#br
+
+こんな風にタグの状況を見てそれっぽいのを入れてくれるので、非常に便利です。もう一度同じように C-m C-,すると、今度は<title>が挿入されます。そしたら適当にタイトルを入力します。（しなくても良いけど）
+
+#br
+#br
+
+CENTER:''タイトルを入れてみる''
+CENTER:#ref(06.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){タイトルに意味はありません :) };
+
+#br
+#br
+
+***半自動的にタグを閉じる [#a7dab2a5]
+
+今度はタグを閉じていきましょう。実際にテキストエディタでhtmlを書いた事のある人はわかるとおり、この作業って結構めんどくさいですよね。HTML+-modeを使えばそれも半自動的にできます。
+
+閉じるタグは ''C-.''です。今度は''.（ピリオド）''です。これで勝手に閉じてくれます。そしたら</title>が新たに入力されます。((タグを手入力した事のある人はここでステキ！！って思うはず))その後、同様に、C-m C-.を押して</head>を入力します。
+
+#br
+#br
+
+CENTER:''C-M-,でタグを閉じる''
+CENTER:#ref(07.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){<title>を閉じてみた所};
+
+#br
+#br
+
+***<body>を書いていく [#t701e883]
+
+そしたら、また最初と同様にC-,で<body>を出します。C-,を一回押しただけでは<head>になりますが、 続けてC-,をもう一度押せば<body>が入力されるはずです。こんな風に思ったタグが出てこない時にはC-,を何度か押してみると良いです。
+
+<body>内で同様にC-,を押すと今度は色々出てくると思います。（<quote>とか<p>とか<div>とか<table>とかたくさん）
+この辺りのタグの出方は（もちろん）カスタマイズできます。素敵ですね。
+
+#br
+#br
+
+CENTER:''C-,を二回押して<body>を出す''
+CENTER:#ref(08.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){一回目は<head>でしたが、二回押すと<body>となります。};
+
+#br
+#br
+
+あとはジャンジャン書いていってください。同様に、 C-,を使ってタグを出していけばオッケーです。連打すれば下のように色々タグが出てきます。
+
+#br
+#br
+
+CENTER:''C-,を一回押してみると……（<body>の中で）''
+CENTER:#ref(09.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){一回目は<blockquote>みたい（あんまし好きなタグではない(^^;;）};
+
+#br
+#br
+
+CENTER:''C-,を二回押してみると……（<body>の中で）''
+CENTER:#ref(10.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){<p>に変化した。};
+
+#br
+#br
+
+CENTER:''C-,を三回押してみると……（<body>の中で）''
+CENTER:#ref(11.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){<div>だった。くどいな……。};
+
+#br
+#br
+
+こんな感じでちょこちょこタグを出して、''C-.''で閉じていけば楽にHTMLが書けると思います。
+
+***前書いたタグを取ってくる [#i44094d0]
+
+ここからはちょっと中級編です。自分でclassやstyle等を指定している場合、単純に<p>とかだけでなくて、
+
+ <p class="なんたら">
+
+とかすると思います。こんな時にはC-,だけではclassの所が補完されないので悲しい思いをします。
+そんな時には、''C-M-,''を押してみてください。前に書いたタグを取ってきてくれます。押した数だけ前のタグへとさかのぼるので、登録させるほどの物ではない時にはこれが便利です。自分は<pre>とか<span>（とか他沢山）でclassの指定をしているので、そんな時にこのキーバインドを使って補完させています。
+
+#br
+#br
+
+CENTER:''C-M-,を押すとこうなる''
+CENTER:#ref(12.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){前に書いたタグを取ってきてくれます。};
+
+#br
+#br
+
+こんな感じでちょこちょこタグを出して、''C-.''で閉じていけば楽にHTMLが書けます。さかのぼるタグの数はデフォルトでは20ですが、もちろん変更できます。
+
+***タグのチェックをする [#de1ee946]
+
+うまくC-.でタグを閉じてくれない時には ''どこかのタグが閉じきっていない可能性''があります。そんな時には''C-:''でタグの整合性のチェックが行えます。
+
+本当は<p>とか<li>とかは閉じなくても良いんだけど、前のタグを取ってきてくれるC-M-,が上手く行かない（事がある）ので C-:でチェックをしながら書いていくとよろしいような感じです。((これも変更可能です。))
+
+**今までのまとめ [#se79e4d1]
+
+今までのをまとめるとこんな感じでしょうか。一応コマンド名も書いておきますけど、あんまし気になくても良さげです。
+
+|コマンド					|説明|h
+|html+-guess-tag（C-,）（カンマ）		|場所に応じて、適切なタグを推測して入れてくれる。（違っていたらもう一度押せば別のタグを推測して入れてくれる）|
+|html+-close-match-tag（C-.）（ピリオド）	|開いたタグを自動的に閉じる。タグの関係がよろしくないとうまく閉じてくれないので注意。（ちゃんと書こう :) ）|
+|html+-copy-tag（ESC C-,もしくはC-M-,）		|前にあるタグを取ってきてくれる。デフォルトで20。|
+|html+-check-match-tag（C-:）			|タグの整合性をチェックする。開いたタグがどこにあるのかを調べてくれる。|
+
+**まぁこんな感じで [#ad3a13db]
+
+まぁこんな感じで書いていけば良いんじゃないでしょうか。実際にはHTMLを書くときには雛形を用意しておいて、それを元に書いていくことになると思うので、C-m、C-,、C-.を使えば大抵OKだと思います。（ちなみに、</と、閉じるタグの最初の方をじかで入力した場合にも、半自動的に補完されます）
+
+**その他いろいろ [#y123659c]
+
+これ以外にもいろいろあります。なんか全部書いていたらとんでもない事になりそうなので :) 、自分が使っている物を幾つか紹介します。詳しくはヘルプ（？）→キー割り当て一覧（K）（あるいはM-x describe-bindings）を見て色々やってみて下さい。これ以降は、（いろいろありすぎるんで）慣れてきたら、って感じでよろしいんじゃないでしょうか。
+
+***imgタグの挿入 [#k5126152]
+
+C-x TAB （= C-x C-i）を入力すると、ミニバッファから画像ファイルの指定が行えます。widthやheightの数値が自動的に入力されるので便利です。
+
+***タグの予測をする [#o6f92e59]
+
+タグの最初の方を自分で入力した後、TABを押すと予測（や補完）ができます。例えば、<code>を入力しようとして、<cまで入力した状態でTABを押せばcで始まるタグを表示してくれます。C-,で出てこないタグを入力する時に便利です。
+
+
+#br
+#br
+
+CENTER:''予測させてみると''
+CENTER:#ref(13.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){ウィンドウが二つに分かれて候補を表示します。};
+
+#br
+#br
+
+***まぁほかにもいろいろあるのですが [#j6e41185]
+
+このあたりで一応終わりにしておきます。追加したい人はご自由にどうぞ。:)
+
+**カスタマイズできる変数など [#hccc9a82]
+
+カスタマイズする変数もいろいろあります。詳しくはHTML+-mode.lに書かれていますが、大体以下の辺りを変更すると良いと思います。
+
+- *html+-indent-column*
+- *html+-show-no-jump*
+- *html+-show-split-window*
+- *html+-show-split-window-lines*
+- *html+-count-limit-copy-tag*
+- *html+-tag-highlight*
+- *html+-tag-attribute*
+- *html+-tag-invalid-attribute*
+- *html+-tags-list-no-indent*
+- *html+-guess-list*
+
+あたりでしょうか。まだまだ沢山ありますけれど。HTML+-modeはeditorパッケージに入っているので、カスタマイズする時、先頭に ed::（あるいはeditor::でも可）と書きましょう。おそらく、そうしないとエラーが出ます。例えば、インデントの桁数を変更したいなら、
+
+ (setq ed::*html+-indent-column* 1)
+
+のようにします。上記を書くと、インデントの桁数が1になります。（デフォルトは2でした）
+
+最後の*html+-guess-list*を自分の好きなように変更すると、C-,で出るタグを変更する事ができます。HTML+-model.lのものを直接書き換えるのではなく、siteinit.lや.xyzzyに書く方が良いでしょう。
+
+**さらにいろいろ [#dfff7458]
+
+HTML+-modeはまだまだ色々書きたい事がありますが、一応この辺りで終了です。ここではHTML+-modeと一緒に使うと便利かも知れないものを紹介します。((沢山あるんでてきとーに読み流してください。))
+
+***htmllintでチェック [#xed261c3]
+
+OHKUBOさんのxyzzy関連の所に色々ありますが、自分は下のだけ使ってます。htmlファイルのパスによっては文字化けして訳わかんない事もあるような気がしますが、気にしてません（っておいおい）
+
+ローカルでhtmllintでチェックを行います。ActivePerlとAnother HTML-lintが必要です。
+
+ ;HTML LINTでHTMLチェック
+ (defvar *htmllint-file* "D:/httpd142h/public/htmllint/htmllint")
+ (defun htmllint-exec ()
+   (interactive)
+   (let ((file (get-buffer-file-name)))
+     (when file
+       (pipe-command
+        (format nil "perl \"~A\" \"~A\""
+                (map-slash-to-backslash *htmllint-file*)
+                (map-slash-to-backslash file))))))
+ (global-set-key '(#\C-c #\l) 'htmllint-exec)
+
+上記のコードをsiteinit.lや.xyzzyに書きます。siteinit.lに書いた場合には再ダンプするのを忘れずに。lintでチェックしてみるとこんな感じです。
+
+#br
+#br
+
+CENTER:''html-lint経由でhtmlのチェック''
+CENTER:#ref(14.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){むろん100点だった時を狙って撮ったんですけどね。};
+
+#br
+#br
+
+***バッファバーにフォルダ部分を表示する [#d37f1e21]
+
+index.htmlとか、良くあるファイル名をxyzzyで開いた時、自動的にファイル名の後ろに<1>や<2>と割り振られます。でもこれってわかりにくいですよね。と言う事なので、そのファイルのあるフォルダを表示してくれます。説明するよりも図で見たほうが早いと思いますんで下のを見て下さい。
+
+#br
+#br
+
+CENTER:''<1>とか<2>とか分かりづらいなぁ''
+CENTER:#ref(15.png,center,100%)
+CENTER:#img(,clear)
+CENTER:&size(10){相変わらず露骨な例だなぁ。};
+
+#br
+#br
+
+CENTER:''こっちの方がステキ！''
+CENTER:#ref(16.png,center,100%)
+CENTER:#img(,clear)
+CENTER:&size(10){そこそこ見やすくなるはずです。};
+
+#br
+#br
+
+こんな感じのを.xyzzyやsiteinit.lに書いておきます。
+
+ ;;ファイル名の頭にフォルダ名をつける
+ (defun add-parent-directory-name-to-buffer-name ()
+   (let ((file-name (split-string (get-buffer-file-name (selected-buffer)) "/")))
+     (setq file-name (nthcdr (- (list-length file-name) 2) file-name))
+     (rename-buffer (concat (cond ((equal buffer-mode 'css-mode) "# ") (t ""))
+                            (car file-name) "/" (cadr file-name)))))
+ 
+ ;;えっと、htmlとcssとtextとlisp言うことで。
+ (add-hook 'ed::*HTML+-mode-hook* 'add-parent-directory-name-to-buffer-name)
+ (add-hook 'ed::*css-mode-hook* 'add-parent-directory-name-to-buffer-name)
+ (add-hook 'ed::*text-mode-hook* 'add-parent-directory-name-to-buffer-name)
+ (add-hook '*lisp-mode-hook* 'add-parent-directory-name-to-buffer-name)
+
+最後の(add-hook ...)という部分を変更して下さい。この例では、txtとcssとhtmlとlispのファイルをそれぞれ開いた時にフォルダ部分も表示するようにしています。沢山ファイルを開いて編集する人向けかもしません。
+
+**もっといろいろあるかもしれないけど [#r4301d09]
+
+作者のYAMAMOTOさんのところから辿れるものもまだまだありますけれど、全部言及できる気がしないので、この辺りで終了です。[[oowadaさんのbrower.dll:http://oowada.pobox.ne.jp/xyzzy/xyzzy.html]]や[[Ohkuboさん:http://ohkubo.s53.xrea.com/]]の[[browserex.l:http://ohkubo.s53.xrea.com/xyzzy/index.html]]も入れると便利かもしれません。
+
+[[黒い羽根さん:http://www.uranus.dti.ne.jp/~shiro-/]]の所にも[[HTML+-modeについての詳しい説明:http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/html+.html]]があるので、もっともっといろんな機能が知りたい人はそちらも参照して見て下さい。
+
+と言うわけで今回はこの辺りで終わりです。

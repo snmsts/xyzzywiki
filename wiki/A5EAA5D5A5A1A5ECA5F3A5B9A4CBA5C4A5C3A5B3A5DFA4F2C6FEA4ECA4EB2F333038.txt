@@ -1,0 +1,28 @@
+* looking-at-backward [#zfa30d73]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[中野]]
+-優先順位:   低
+-状態:       着手
+-カテゴリー: ツッコミをいれる
+-投稿日:     2010-06-23 (水) 13:31:09
+-バージョン: 
+
+** メッセージ [#ee7059d7]
+参考情報の looking-at-backward について、
+(looking-at-backward "xyz\\|abc")
+としたときに、直前に xyz か abc がある場合のみにマッチする
+のが正しいと思います。
+
+その場合、次のように直します。
+
+ (defun looking-at-backward (regexp &optional case-fold)
+  (save-excursion
+    (save-restriction
+      (narrow-to-region (point-min) (point))
+      (goto-char (point-min))
+      (scan-buffer (format nil "\\(?:~A\\)\\'" regexp)
+                   :regexp t :case-fold case-fold))))
+----
+- どーもです。取り込みました。 -- [[NANRI]] &new{2011-02-26 (土) 21:55:05};
+
+#comment

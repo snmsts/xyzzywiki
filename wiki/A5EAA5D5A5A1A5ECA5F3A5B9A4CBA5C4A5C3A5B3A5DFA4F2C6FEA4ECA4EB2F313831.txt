@@ -1,0 +1,38 @@
+* user-config-path [#k2e510de]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-11-28 (月) 20:44:08
+-バージョン: 
+
+** メッセージ [#n29a28d0]
+オプションや，環境変数についての説明を加えました．
+ <chapter>
+ <title>user-config-path</title>
+ <type>Function</type>
+ <arguments>user-config-path</arguments>
+ <package>editor</package>
+ <description>
+ ユーザ設定を格納しているディレクトリを返します。
+ ダイアログでの規定値等が格納されるディレクトリです。
+ 
+ 起動時オプション -config で指定したり，XYZZYCONFIGPATH
+ で指定可能です。両方指定された場合，起動時オプションが
+ 優先されます。
+ 
+ 使用例：
+   (user-config-path)
+   =&gt;"H:/xyzzy/usr/Administrator/w2k/"
+ </description>
+ <seealso>user-homedir-pathname</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>builtin.l</file>
+ </chapter>
+--------
+- 取り込みました。 -- [[NANRI]] &new{2005-12-12 (月) 02:35:50};
+
+#comment

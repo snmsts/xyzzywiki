@@ -1,0 +1,80 @@
+*si:www-url-decode,si:www-url-encode [#b400780b]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-02-15 23:37:24 (火)
+-バージョン: 20041115
+
+**メッセージ [#b005a537]
+ <chapter>
+ <title>si:www-url-encode</title>
+ <type>Function</type>
+ <arguments>www-url-encode INPUT-STRING-OR-STREAM &amp;optional OUTPUT-STREAM LITERAL-CHARS</arguments>
+ <package>system</package>
+ <description>
+ RFC1738 に基づき文字列の URL エンコードを行います。
+   
+   INPUT-STRING-OR-STREAM : 入力の文字列または入力ストリームを指定します。
+   OUTPUT-STREAM          : 出力ストリームです。省略すると文字列が戻ります。
+                            t を指定した場合は標準出力へ
+                            nil を指定した場合は文字列として出力します。
+   LITERAL-CHARS          : エンコードしない文字群を指定します。
+ 
+   使用例:
+     ; 標準では Shift_JIS としてエンコード
+     (si:www-url-encode "かめ")
+     =&gt;"%82%A9%82%DF"
+     
+     ; EUC-JP としてエンコード
+     (si:www-url-encode (map-internal-to-euc "かめ"))
+     =&gt;"%A4%AB%A4%E1"
+     
+     ; 変換しない文字群を明示する
+     (si:www-url-encode "www-url-encode" nil "0-9A-Za-z")
+     =&gt;"www%2Durl%2Dencode"
+ 
+   補足:
+   xyzzy 0.2.2.233 では builtin.l 中の引数の記述が間違っています。
+ 
+   RFC1738は現在RFC3986によって更新されています。
+   RFC3986で定義されている unreserved な文字の種類は "0-9A-Za-z---._~" です。
+ </description>
+ <seealso>si:www-url-decode</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>si:www-url-decode</title>
+ <type>Function</type>
+ <arguments>www-url-decode INPUT-STRING-OR-STREAM &amp;optional OUTPUT-STREAM</arguments>
+ <package>system</package>
+ <description>
+ URL デコードを行います。
+   
+   INPUT-STRING-OR-STREAM : 入力の文字列または入力ストリームを指定します。
+   OUTPUT-STREAM          : 出力ストリームです。省略すると文字列が戻ります。
+                            t を指定した場合は標準出力へ
+                            nil を指定した場合は文字列として出力します。
+   
+   使用例:
+     (si:www-url-decode "%82%D9%82%B0%82%D9%82%B0" nil)
+     =&gt;"ほげほげ"
+ 
+   補足:
+   xyzzy 0.2.2.233 では builtin.l 中の引数の記述が間違っています。
+ </description>
+ <seealso>si:www-url-encode</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>builtin.l</file>
+ </chapter>
+----
+-同じところを調べていたのでマージしました。 -- [[NANRI]] &new{2005-02-16 01:20:27 (水)};
+-取り込みます。＞[[refwiki:si:www-url-decode]], [[refwiki:si:www-url-encode]] -- [[NANRI]] &new{2005-03-14 10:57:51 (月)};
+
+#comment

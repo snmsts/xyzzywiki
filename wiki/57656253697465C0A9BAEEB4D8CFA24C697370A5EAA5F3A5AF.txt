@@ -1,0 +1,165 @@
+#freeze
+ほーむぺーじのあれこれをやるときに便利に使えるものを集めたリンク集です
+
+* html+-modeでHTMLの記述をちょっと楽したい。 [#obb24813]
+
+なにはなくともまずはhtml+-modeをインストール。標準でもhtml-modeは一応入っているが段違い（だと思う）。
+
+:html+-mode（山本さん, 66MHz.com）|
+http://www1.odn.ne.jp/ymtz/html_plus-mode.html
+
+インストールについては[[QuickTour]]にある。NetInstallerからでもいれられる。
+
+:[[QuickTour]]のHTML+-modeを導入しよう|
+[[QuickTour/ext/html+-mode]]
+:キーバインドについての詳しい説明（shiroさん, 黒い羽根）|
+http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/html+.html#key
+
+HTML作成・編集関連Lisp、Tipsは[[HTML関連Tips]]にまとめてあります。
+
+* xyzzy標準のCSS-modeだとインデントが物足りない [#j5a406a7]
+
+Hieさんのところに拡張があります。
+
+:css-modeの設定（Hieさん, xyzzyの音）|
+http://hie.s64.xrea.com/xyzzy/note/major_mode.html#css-mode
+
+css+-mode というのもあるようです。
+
+:css+-mode（Osamu Raiさん, xyzzy備忘録）|http://www.osamurai.flnet.org/memo/xyzzy/lisp#sec.1.2
+
+** カスタマイズ [#ne57c04e]
+
+:CSS-modeで保存すると browserex で今開いているファイルを更新|
+http://pc5.2ch.net/test/read.cgi/hp/1005046309/n348
+
+* JavaScript は編集できないの？ [#u009d991]
+
+:jscript-mode（kiaさん, kia's website - xyzzy関連）|
+http://www.geocities.jp/kiaswebsite/xyzzy/jscript-mode.html
+
+* HTMLファイルの中にCSSとかJavaScriptとか書くよね [#nf43e08a]
+
+multi-modeをいれると、HTML+-mode のときに <Script> </Script> 間は Jscript-mode とかいうことが簡単にできる。
+
+:multi-mode(しょぼしょぼすくりぷと xyzzy)|
+http://www.afis.to/~start/xyzzy/mode/multiMode.html
+
+
+* CGIとかPHPとかJSPも使うんだけど [#a14d50d0]
+
+**Perl [#p20604c7]
+
+標準でperl-modeが入っている。
+
+**Ruby [#rcca0dc4]
+
+:配布元:Junk Script|
+http://www7a.biglobe.ne.jp/~hat/
+:ruby-mode改変版（雪見酒さん, 雪見酒のホームページ）|
+http://homepage3.nifty.com/Yukimi_Sake/
+
+**PHP [#n51a5430]
+
+php-modeがある。
+
+:配布元:Junk Script|
+http://www7a.biglobe.ne.jp/~hat/
+//:10/28現在入手できるところ|
+//http://cvs.sourceforge.net/viewcvs.py/kamail/php-mode/
+:カスタマイズ:xyzzy の音 - php-mode（Hieさん, xyzzyの音）|
+http://hie.s64.xrea.com/xyzzy/note/php-mode.html
+
+:インストールファイルの展開|
+http://hie.s64.xrea.com/xyzzy/note/php-mode.html#expansion
+:インストール：初期化ファイルの設定|
+http://hie.s64.xrea.com/xyzzy/note/php-mode.html#init
+
+*** カスタマイズなど [#g181e15c]
+
+:キーバインド（Hieさん, xyzzyの音）|
+http://hie.s64.xrea.com/xyzzy/note/php-mode.html#keybind
+:キーワードファイルの作成（Hieさん, xyzzyの音）|
+http://hie.s64.xrea.com/xyzzy/note/php-mode.html#keyword
+:PHP Manual を browser.dll で開く（Hieさん, xyzzyの音）|
+http://hie.s64.xrea.com/xyzzy/note/php-mode.html#manual-browser
+:HTML Help を使う（Hieさん, xyzzyの音）|
+http://hie.s64.xrea.com/xyzzy/note/php-mode.html#html-help
+:まとめてコメントにする＆コメントでなくする（Hieさん, xyzzyの音）|
+http://hie.s64.xrea.com/xyzzy/note/php-mode.html#comment
+
+**JspとかJavaサーブレット [#d9010add]
+
+java-modeは標準で入っている。
+
+Jsp-modeというのは存在しないので、html+-modeとjava-modeとmulti-mode と組み合わせて使うとぐー。
+
+:html+-mode（山本さん, 66MHz.com）|
+http://www1.odn.ne.jp/ymtz/html_plus-mode.html
+:multi-mode(しょぼしょぼすくりぷと xyzzy)|
+http://www.afis.to/~start/xyzzy/mode/multiMode.html
+:Java用のキーワードファイル(しょぼしょぼすくりぷと xyzzy for programer)|
+http://www.afis.to/~start/xyzzy/programing/keyword.html
+:JSPファイルをhtml-modeに関連付ける（Amateras Free Wiki Area）|
+http://amateras.sourceforge.jp/cgi-bin/fswiki/wiki.cgi/free?page=xyzzy
+
+
+* わざわざFTPクライアントを立ち上げるのってめんどくさいよね。 [#h53f1d5e]
+
+** ftpupdate [#c09ea4e0]
+
+今編集しているページをボタン一発でアップロードすることが可能。
+
+:配布元:Junk Script|http://www7a.biglobe.ne.jp/~hat/
+
+** cFTP [#b99c6332]
+
+cFTP風のFTPクライアント。
+
+:配布元:Junk Script|
+http://www7a.biglobe.ne.jp/~hat/
+//:10/28現在入手できるところ|
+//http://cvs.sourceforge.net/viewcvs.py/kamail/cftp/
+
+* Telnet とか使うときもある。 [#ed4aa955]
+
+tterm という Telnetクライアントがあるが、ドキュメントがあまりないので中級者向け。
+
+:tterm.l|
+http://www1.neweb.ne.jp/wa/sinj/xyzzy/tterm.html
+
+
+* ブログとかWikiとか日記とか流行ってるし [#da411ff1]
+
+** blog-mode [#c4108548]
+
+:blog-mode (Masashi Hattoriさん, JuncScript)|http://www7a.biglobe.ne.jp/~hat/xyzzy/dl.html
+
+** Movable Type [#s4b7a83d]
+
+:mapae for xyzzy（sugiさん, chez sugi）|
+http://chez-sugi.net/movabletype/000970.html
+
+** tDiary [#g599384e]
+
+:tDiary-mode|
+http://www20.big.or.jp/~rin_ne/soft/tdiary-mode/
+
+** はてなダイアリー [#x0a6d58e]
+
+:hatena-diary-mode|
+http://www20.big.or.jp/~rin_ne/soft/xyzzy/hatena-diary-mode.htm
+
+** nDiary [#ue6c357f]
+
+ndiary-modeがnDiary のアーカイブに同梱されている。
+
+:ndiary-mode（notさん, not's fragments）|
+http://www14.cds.ne.jp/~not/
+
+** PukiWiki [#yf580c27]
+
+PukiWiki1.4.2専用 wiki-mode
+
+:wiki-mode|
+http://www5d.biglobe.ne.jp/~lostland/xyzzy/wiki-mode.l

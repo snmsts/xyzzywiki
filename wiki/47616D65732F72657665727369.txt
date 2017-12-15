@@ -1,0 +1,48 @@
+[[Games]]
+*ファイル [#i387c10b]
+#ref(reversi4.l)
+
+*更新履歴 [#mae3e0c6]
+2006/02/27 10:33:26
+ ダブルクリック対応
+
+2006/02/22 15:17:45 
+ 表示記号を修正
+ コンピュータの動作修正
+
+2006/02/21 19:19:38
+ 表示記号を修正
+
+*設定 [#fcce969d]
+
+-reversi4.l をsite-lisp に置いてください。
+-M-x byte-compile-fileで reversi4.lをバイトコンパイルしてください
+-.xyzzy に (require "reversi4") を追加してください。
+- M-x reversi で起動します。
+
+*コメント [#ac74220a]
+- 自由に改造してください --  &new{2006-02-16 (木) 14:31:49};
+- ゲームが増えるのはうれしい。 --  &new{2006-02-17 (金) 21:49:50};
+- □○●の方が見やすいかもです。 --  &new{2006-02-19 (日) 23:26:15};
+- □○●の方が見やすいかもです。 --  &new{2006-02-19 (日) 23:33:41};
+- どうもです。修正しました。 --  &new{2006-02-21 (火) 19:52:49};
+- ・([全]中点)●○の方がよいと思うのですが？ --  &new{2006-02-21 (火) 23:34:50};
+ ;; 黒い羽根さんところのtipsより(xyzzy thread No.7 - 775)
+ (defun reversi-mouse-left-press ()
+   (interactive)
+   (let ((click (mod *last-mouse-click-count* 6)))
+   (if (= click 2)
+   (reversi-human-mouse-plays)
+   (mouse-left-press))))
+ ;; gomoku.l から
+ (defun reversi-human-mouse-plays ()
+   (interactive)
+   (goto-last-mouse-point)
+   (reversi-human-plays))
+ 
+ (unless reversi-mode-map
+   (setq reversi-mode-map (make-sparse-keymap))
+   (define-key reversi-mode-map #\LBtnDown 'reversi-mouse-left-press) ;;ここを追加
+   (define-key reversi-mode-map #\C-m 'reversi-human-plays))
+- これでダブルクリックでこまが置けるように＾＾ --  &new{2006-02-26 (日) 00:10:30};
+- かなり遊びやすくなりましたね。ありがとうです --  &new{2006-02-27 (月) 10:37:00};

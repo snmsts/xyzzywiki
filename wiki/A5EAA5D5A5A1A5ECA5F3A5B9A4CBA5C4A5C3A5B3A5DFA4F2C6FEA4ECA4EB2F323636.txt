@@ -1,0 +1,82 @@
+* command-keys, key-to-string, lookup-keymap [#q2b236ad]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[anonymous]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: 新規項目
+-投稿日:     2007-02-23 (金) 09:17:11
+-バージョン: 
+
+** メッセージ [#gb3ac1ec]
+ <chapter>
+ <title>command-keys</title>
+ <type>Function</type>
+ <arguments>command-keys COMMAND GLOBAL-KEYMAP LOCAL-KEYMAP &amp;optional MINOR-MODE-KEYMAPS</arguments>
+ <package>editor</package>
+ <description>
+ 指定した関数にバインドされたキーのリストを返します。
+ MINOR-MODE-KEYMAPS LOCAL-KEYMAP GLOBAL-KEYMAPの順に優先されます。
+ 
+ 使用例:
+   (command-keys 'undo *global-keymap* (local-keymap) (minor-mode-map))
+   =&gt; (#\C-\\ #\End)
+ </description>
+ <seealso>lookup-keymap</seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>key-to-string</title>
+ <type>Function</type>
+ <arguments>key-to-string KEY &amp;optional ESC-TO-META</arguments>
+ <package>editor</package>
+ <description>
+ キーを読みやすいように文字列に変換します。
+ 
+   ESC-TO-META : non-nilならESCをM-に変換します
+ 
+ 使用例:
+   (key-to-string '(#\ESC #\C-a))    =&gt; "ESC C-a"
+   (key-to-string '(#\ESC #\C-a) t)  =&gt; "M-C-a"
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>help.l</file>
+ </chapter>
+
+ <chapter>
+ <title>lookup-keymap</title>
+ <type>Function</type>
+ <arguments>lookup-keymap KEYMAP KEY &amp;optional IGNORE-CASE SYMBOL-ONLY</arguments>
+ <package>editor</package>
+ <description>
+ 指定したキーマップの中で指定したキーにバインドされた関数を返します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>lookup-key-command</title>
+ <type>Function</type>
+ <arguments>lookup-key-command KEY</arguments>
+ <package>editor</package>
+ <description>
+ 指定したキーに設定された関数を返します。
+ lookup-keymapを使って実装されています。
+ </description>
+ <seealso>lookup-keymap</seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>help.l</file>
+ </chapter>
+
+----
+- どーもです。実体参照へ修正しました。 -- [[NANRI]] &new{2007-02-24 (土) 02:09:55};
+
+#comment

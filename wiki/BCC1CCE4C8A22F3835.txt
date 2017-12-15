@@ -1,0 +1,59 @@
+* grepで無視するディレクトリパターンを指定したい。 [#a76e22d6]
+-ページ: [[質問箱]]
+-投稿者: [[cnaos]]
+-状態: 完了
+-投稿日: 2005-05-15 13:35:28 (日)
+
+** メッセージ [#e4a4fe5b]
+SubVersionのレポジトリからソースコードをチェックアウトして、
+編集しているんですが、
+grepダイアログで検索するとSubVersionの管理ディレクトリ(.svn)も検索対象となってしまい、検索結果が見にくくなってしまいます。
+
+除外するディレクトリパターンを指定して、
+grep検索の対象から外す方法はないでしょうか？
+----
+ (defun xgrep-remove (pattern dir files remove)
+   (interactive "sgrep: \nDdirectory: \nsfiles: \nsremove dir: " :history0 'search)
+   (require "grepd")
+   (let ((ed::*grep-case-fold-search* nil)
+         (ed::*grep-regexp-search* t)
+         (ed::*grep-subdir* nil)
+         (ed::*grep-name-only* nil))
+     (ed::scan-files pattern (split-string files #\; t " ")
+                     (delete remove (directory dir :directory-only t :recursive t) :test #'string-matchp))))
+-こんな感じですか？ ダイアログバージョンは面倒なのでパス。 -- [[NANRI]] &new{2005-05-15 19:02:08 (日)};
+-どうもありがとうございます。ダイアログの方は自分で挑戦してみます。 -- [[cnaos]] &new{2005-05-16 20:52:44 (月)};
+-とりあえず、.svnだけ固定的に無視するのができました。まだバグがあるかも知れませんが。--[[cnaos]]
+ --- grepd.l.org	Wed Oct 25 22:57:50 2000
+ +++ grepd.l	Tue May 17 22:03:48 2005
+ @@ -79,16 +79,18 @@
+  		       :file-only t :wild file
+  		       :callback
+  		       #'(lambda (f)
+ -			   (when (scan-files-1 f pattern temp scanner)
+ -			     (setq found t))
+ -			   (when found
+ -			     (setq tick (get-internal-real-time))
+ -			     (when (> (- tick last-tick) 500)
+ -			       (setq last-tick tick)
+ -			       (set-buffer buffer)
+ -			       (goto-char (buffer-stream-point *standard-output*))
+ -			       (refresh-screen)
+ -			       (setq found nil)))
+ +				   (unless (string-match "\/\.svn\/" f)
+ +					 (when (scan-files-1 f pattern temp scanner)
+ +					   (setq found t))
+ +					 (when found
+ +					   (setq tick (get-internal-real-time))
+ +					   (when (> (- tick last-tick) 500)
+ +						 (setq last-tick tick)
+ +						 (set-buffer buffer)
+ +						 (goto-char (buffer-stream-point *standard-output*))
+ +						 (refresh-screen)
+ +						 (setq found nil)))
+ +					 )
+  			   (do-events))))))
+      (delete-buffer temp)
+      (set-buffer buffer) 
+
+#comment

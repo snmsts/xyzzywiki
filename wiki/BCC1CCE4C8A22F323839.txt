@@ -1,0 +1,26 @@
+* 環境によってバックスラッシュの動作がおかしい [#a57c64df]
+-ページ: [[質問箱]]
+-投稿者: [[七篠]]
+-状態: 完了
+-投稿日: 2011-02-03 (木) 13:07:22
+
+** メッセージ [#ya9fbdb3]
+以下のソース、会社では Winmerge が起動するのですが自宅だと「指定されたファイルが見つかりません」とのダイアログが出てしまいます。　ダイアログを見ると「tmp-file-name」の前後のダブルクォーテーションをエスケープしているバックスラッシュが見えています。　launch-application で渡している format の返り値を msgbox で表示すると見えないのですが。
+
+会社と自宅で違うことといって思い浮かぶのは、xyzzy の場所が違うということ位です（会社は C ドライブの Program Files で自宅は E ドライブの Program_Files）。
+
+対処法をご存知の方がいらっしゃいましたらアドバイスをいただけると幸いです。
+
+
+	  (setf tmp-file-name0 (merge-pathnames "diff0.txt" (si:system-root)))
+	  (setf tmp-file-name1 (merge-pathnames "diff1.txt" (si:system-root)))
+	  (setf tmp-file-name0 (format nil "\"~a\"" tmp-file-name0))
+	  (setf tmp-file-name1 (format nil "\"~a\"" tmp-file-name1))
+	  (launch-application
+	   (format nil "C:\\Program Files\\WinMerge\\WinMerge.exe ~a ~a" tmp-file-name0 tmp-file-name1)
+	   )
+----
+- WinMergeU.exe ? --  &new{2011-02-03 (木) 22:29:30};
+- あ・・・；　ありがとうございます！　バージョンの新旧で実行ファイル名が違ったんですね。 -- [[七篠]] &new{2011-02-03 (木) 23:24:09};
+
+#comment

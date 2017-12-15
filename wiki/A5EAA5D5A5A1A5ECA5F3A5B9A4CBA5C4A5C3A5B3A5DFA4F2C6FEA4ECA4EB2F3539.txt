@@ -1,0 +1,41 @@
+*substitute [#xc8cbbbf]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[nakano]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-07-25 (日) 22:20:39
+-バージョン: 
+
+**メッセージ [#m6587134]
+ <chapter>
+ <title>substitute</title>
+ <type>Function</type>
+ <arguments>substitute NEWITEM OLDITEM SEQUENCE &amp;key :FROM-END :TEST :TEST-NOT :START :END :COUNT :KEY</arguments>
+ <package>lisp</package>
+ <description>
+   SEQUENCEに対してOLDITEMとのTESTを満足する要素をNEWITEMに置き換えた列を返す．
+   元のSEQUENCEは変更されないが，返り値と一部を共有するかもしれない．
+ 
+   TEST     : テストを行う2項演算子
+   START    : 開始位置．デフォルトは0で非負の整数
+   END      : 終了位置．デフォルトはnilで，nilの場合は列の長さを指定した場合と等しい動作．
+   COUNT    : 置き換える最大の回数．
+   FROM-END : nilならば先頭から，non-nil で末尾から置換を行う．COUNTが与えられた時のみ意味を持つ．
+ 
+ </description>
+ <seealso>substitute-if</seealso>
+ <seealso>substitute-if-not</seealso>
+ <seealso>nsubstitute</seealso>
+ <seealso>subst</seealso>
+ <seealso>substitute-string</seealso>
+ <seealso>sublis</seealso>
+ <link></link>
+ <section>シーケンス</section>
+ <file>sequence.l</file>
+ </chapter>
+
+----
+
+#comment

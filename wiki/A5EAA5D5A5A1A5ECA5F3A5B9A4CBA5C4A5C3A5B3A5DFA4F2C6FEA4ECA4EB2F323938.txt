@@ -1,0 +1,29 @@
+* goto-matched-parenthesis [#e62a7d1a]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[lambda]]
+-優先順位:   低
+-状態:       着手
+-カテゴリー: ツッコミをいれる
+-投稿日:     2008-03-02 (日) 23:27:47
+-バージョン: 
+
+** メッセージ [#s47d067b]
+ <chapter>
+ <title>goto-matched-parenthesis</title>
+ <type>Function</type>
+ <arguments>goto-matched-parenthesis &amp;optional ARG</arguments>
+ <package>editor</package>
+ <description>
+ ポイントに存在するキャラクタが、syntax-open-p・syntax-close-p・syntax-open-tag-p
+ ・syntax-close-tag-pを満たす場合に、対応するキャラクタに移動します。対応する各種
+ 括弧に移動するのに使われます。[ESC ]]
+ </description>
+ <seealso>forward-sexp</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+----
+- どーもです。 -- [[NANRI]] &new{2010-04-29 (木) 04:09:02};
+
+#comment

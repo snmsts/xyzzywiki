@@ -1,0 +1,375 @@
+*ミニバッファから読み込む read-* 系 [#s8313fd0]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-06-14 20:16:26 (火)
+-バージョン: 
+
+**メッセージ [#re046ea2]
+- :HISTORY の説明は read-string を参照して一応書いてありますが、使い方がよく分かってません。
+- *char-encoding-list* のセクションは悩み中
+ <chapter>
+ <title>read-exact-char-encoding</title>
+ <type>Function</type>
+ <arguments>read-exact-char-encoding PROMPT &amp;key :HISTORY</arguments>
+ <package>editor</package>
+ <description>
+ read-char-encoding との違いは無し？？？
+ (詳細不明)
+ (interactive "Z") に相当します。
+ </description>
+ <seealso>read-char-encoding</seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*char-encoding-list*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ 文字エンコーディングのリストです。ミニバッファからの入力補完候補のリスト
+ や file-name-dialog のエンコーディングのリストとして使われたりするみたい
+ です。
+ 文字エンコーディングはクオートしてはいけないみたいですので、定義しなおす
+ 時は注意してください。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>encoding.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-char-encoding</title>
+ <type>Function</type>
+ <arguments>read-char-encoding PROMPT &amp;key :HISTORY</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーが文字エンコーディングを入力す
+ るのを待ちます。ユーザーの入力した文字エンコーディングを返します。補完の
+ リストは *char-encoding-list* を参照しているようです。
+ (interactive "z") に相当します。
+ 
+   PROMPT     : プロンプト
+   :HISTORY   : ヒストリのリスト
+ 
+ 使用例:
+   ;;; ミニバッファから文字エンコーディングを読み込む
+   (read-char-encoding "Encoding: ") ; ←utf8n と入力
+   =&gt;#.(make-utf8-encoding "utf8n" "Unicode (UTF-8N)" :signature nil :windows t :byte-order nil :cjk :jp)
+ </description>
+ <seealso>*char-encoding-list*</seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-exist-buffer-name</title>
+ <type>Function</type>
+ <arguments>read-exist-buffer-name PROMPT &amp;key :DEFAULT :HISTORY</arguments>
+ <package>editor</package>
+ <description>
+ read-buffer-name とほとんど同じですが、 read-exist-buffer-name はすでに
+ 存在するバッファ名しか指定できません。
+ (interactive "b") に相当します。
+ 
+   PROMPT     : プロンプト
+   :DEFAULT   : 初期値とする文字列
+   :HISTORY   : ヒストリのリスト
+ </description>
+ <seealso>read-buffer-name</seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-buffer-name</title>
+ <type>Function</type>
+ <arguments>read-buffer-name PROMPT &amp;key :DEFAULT :HISTORY</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーがバッファ名を入力するのを待ち
+ ます。ユーザーの入力したバッファを返します。入力したバッファが存在しない
+ 場合は、文字列をそのまま返します。
+ (interactive "B") に相当します。
+ 
+   PROMPT     : プロンプト
+   :DEFAULT   : 初期値とする文字列
+   :HISTORY   : ヒストリのリスト
+ 
+ 使用例:
+   ;;; ミニバッファからバッファ名を読み込む
+   (read-buffer-name "Buffer: ")   ; ←*scratch* と入力
+   =&gt;#&lt;buffer: *scratch*&gt;
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-exist-file-name</title>
+ <type>Function</type>
+ <arguments>read-exist-file-name PROMPT &amp;key :DEFAULT :TITLE :HISTORY</arguments>
+ <package>editor</package>
+ <description>
+ read-file-name とほとんど同じですが、 read-exist-file-name はすでに存在
+ しているファイルしか指定できません。
+ (interactive "f") に相当します。
+ 
+   PROMPT     : プロンプト
+   :DEFAULT   : 初期値とする文字列
+   :TITLE     : 一画面ファイラのタイトル
+   :HISTORY   : ヒストリのリスト
+ </description>
+ <seealso>read-file-name</seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-file-name-list</title>
+ <type>Function</type>
+ <arguments>read-file-name-list PROMPT &amp;key :DEFAULT :TITLE :HISTORY</arguments>
+ <package>editor</package>
+ <description>
+ read-file-name とほとんど同じですが、 read-file-name-list は複数のファイ
+ ルを指定できます。複数のファイルを指定した場合は、そのリストを返します。
+ (interactive "l") に相当します。
+ 
+   PROMPT     : プロンプト
+   :DEFAULT   : 初期値とする文字列
+   :TITLE     : 一画面ファイラのタイトル
+   :HISTORY   : ヒストリのリスト
+ </description>
+ <seealso>read-file-name</seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-variable-name</title>
+ <type>Function</type>
+ <arguments>read-variable-name PROMPT &amp;key :DEFAULT :HISTORY</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーが変数を入力するのを待ちます。
+ ユーザーの入力した変数のシンボルを返します。
+ (interactive "v") に相当します。
+ <!-- 多値で返ってくるけど二つめは説明する自信が無いので省略 -->
+ 
+   PROMPT     : プロンプト
+   :DEFAULT   : 初期値とする文字列
+   :HISTORY   : ヒストリのリスト
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-symbol-name</title>
+ <type>Function</type>
+ <arguments>read-symbol-name PROMPT &amp;key :DEFAULT :HISTORY</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーがシンボルを入力するのを待ちます。
+ ユーザーの入力したシンボルを返します。
+ (interactive "S") に相当します。
+ <!-- 多値で返ってくるけど二つめは説明する自信が無いので省略 -->
+ 
+   PROMPT     : プロンプト
+   :DEFAULT   : 初期値とする文字列
+   :HISTORY   : ヒストリのリスト
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-command-name</title>
+ <type>Function</type>
+ <arguments>read-command-name PROMPT &amp;key :DEFAULT :HISTORY</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーがコマンドを入力するのを待ちま
+ す。ユーザーの入力したコマンドのシンボルを返します。
+ (「コマンド」は「interactive宣言された関数」の意味で使ってます)
+ (interactive "C") に相当します。
+ <!-- 多値で返ってくるけど二つめは説明する自信が無いので省略 -->
+ 
+   PROMPT     : プロンプト
+   :DEFAULT   : 初期値とする文字列
+   :HISTORY   : ヒストリのリスト
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-function-name</title>
+ <type>Function</type>
+ <arguments>read-function-name PROMPT &amp;key :DEFAULT :HISTORY</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーが関数名を入力するのを待ちます。
+ ユーザーの入力した関数のシンボルを返します。
+ (interactive "a") に相当します。
+ <!-- 多値で返ってくるけど二つめは説明する自信が無いので省略 -->
+ 
+   PROMPT     : プロンプト
+   :DEFAULT   : 初期値とする文字列
+   :HISTORY   : ヒストリのリスト
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+----
+ <chapter>
+ <title>read-sexp</title>
+ <type>Function</type>
+ <arguments>read-sexp PROMPT</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーがS式を入力するのを待ちます。
+ ユーザーの入力したS式と文字数を多値で返します。
+ (interactive "x") に相当します。
+ 
+   PROMPT     : プロンプト
+ 
+ 使用例：
+   ;;; ミニバッファからS式を入力する。
+   (read-sexp "sexp: ")
+   =&gt; (+ 3 3)
+   =&gt; 7
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-integer</title>
+ <type>Function</type>
+ <arguments>read-integer PROMPT</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーが整数を入力するを待ちます。
+ ユーザーの入力した整数を返します。
+ (interactive "n") に相当します。
+ 
+   PROMPT     : プロンプト
+ 
+ 使用例：
+   ;;; ミニバッファから数値を読み取る。
+   (read-integer "num: ")
+   =&gt; 123
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-directory-name</title>
+ <type>Function</type>
+ <arguments>read-directory-name PROMPT &amp;key :DEFAULT :TITLE :HISTORY</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーがディレクトリ名を入力するのを
+ 待ちます。入力中は TAB キーでディレクトリ名を補完できます。 "~" はユーザ
+ ーのホームディレクトリに、 ".." は親ディレクトリに変換されます。ユーザー
+ の入力したディレクトリ名を返します。
+ (interactive "D") に相当します。
+ 
+   PROMPT     : プロンプト
+   :DEFAULT   : 初期表示するディレクトリ名
+   :HISTORY   : ヒストリのリスト
+ 
+ 使用例：
+   ;;; ミニバッファからディレクトリ名を読み取る。
+   (read-directory-name "directory: ")
+   =&gt; "C:/applications/xyzzy/etc"
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-file-name</title>
+ <type>Function</type>
+ <arguments>read-file-name PROMPT &amp;key :DEFAULT :TITLE :HISTORY</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーがファイル名を入力するのを待ち
+ ます。入力中は TAB キーでファイル名を補完できます。 "~" はユーザーのホー
+ ムディレクトリに、 ".." は親ディレクトリに変換されます。ユーザーの入力し
+ たファイル名を返します。
+ (interactive "F") に相当します。
+ 
+   PROMPT     : プロンプト
+   :DEFAULT   : 初期表示するファイル名
+   :TITLE     : 一画面ファイラのタイトル
+   :HISTORY   : ヒストリのリスト
+ 
+ 使用例：
+   ;;; ミニバッファからファイル名を読み取る。
+   (read-file-name "filename: ")
+   =&gt; "C:/applications/xyzzy/xyzzy.exe"
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-string</title>
+ <type>Function</type>
+ <arguments>read-string PROMPT &amp;key :DEFAULT :HISTORY</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーが文字列を入力するのを待ちます。
+ ユーザーの入力した文字列を返します。
+ (interactive "s") に相当します。
+ 
+   PROMPT     : プロンプト
+   :DEFAULT   : 初期値とする文字列
+   :HISTORY   : ヒストリのリスト
+ 
+ 使用例：
+   ;;; ミニバッファからURLを入力する。
+   (read-string "URL: ")
+   =&gt; "http://www.yahoo.co.jp"
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+-追記しました。 -- [[NANRI]] &new{2005-06-15 20:16:20 (水)};
+-取り込みました→[[refwiki:read-buffer-name]], [[refwiki:read-char-encoding]], [[refwiki:read-command-name]], [[refwiki:read-directory-name]], [[refwiki:read-exact-char-encoding]], [[refwiki:read-exist-buffer-name]], [[refwiki:read-exist-file-name]], [[refwiki:read-file-name-list]], [[refwiki:read-file-name]], [[refwiki:read-function-name]], [[refwiki:read-integer]], [[refwiki:read-sexp]], [[refwiki:read-string]], [[refwiki:read-symbol-name]], [[refwiki:read-variable-name]], [[refwiki:*char-encoding-list*]] -- [[NANRI]] &new{2005-07-23 21:57:38 (土)};
+
+#comment

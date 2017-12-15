@@ -1,0 +1,66 @@
+[[tips]]
+
+VisualStudio.NETのリソースエディタで作ったリソースファイルがgentempl.lに受け付けてもらえなかったので、修正してみました。
+
+ 29a30
+ >     (DIALOGEX :dialog)
+ 63a65
+ >     (DS_FIXEDSYS . 0)			; サポートされていないスタイルらしい
+ 205c207
+ <   (error (concatenate 'string
+ ---
+ >   (let ((msg (concatenate 'string
+ 208c210,212
+ < 		      ".")))
+ ---
+ > 			  ".")))
+ >     (print msg)
+ >     (error msg)))
+ 300,302c304,308
+ < 	(if (string-match "^[0-9-]" string)
+ < 	    (parse-integer string)
+ < 	  (intern string)))))
+ ---
+ > 	(if (string-match "^0[xX]" string)
+ > 	    (parse-integer (substring string 2) :radix 16)
+ > 	  (if (string-match "^[0-9-]" string)
+ > 	      (parse-integer string)
+ > 	    (intern string))))))
+ 373c379,380
+ <   (let ((dialog-id (read-token)))
+ ---
+ >   (let ((dialog-id (read-token))
+ > 	dialog-type)
+ 376c383,385
+ <     (unless (eq (car (expect-keyword)) 'DIALOG)
+ ---
+ >     (unless (progn
+ > 	      (setq dialog-type (car (expect-keyword)))
+ > 	      (or (eq dialog-type 'DIALOG) (eq dialog-type 'DIALOGEX)))
+ 407c416,420
+ < 		 (setq font (expect-string)))
+ ---
+ > 		 (setq font (expect-string))
+ > 		 (when (eq dialog-type 'DIALOGEX)
+ > 		   (expect-integer)
+ > 		   (expect-integer)
+ > 		   (expect-integer)))
+
+変更点は以下の通りです。
+-DIALOGEXに対応
+-16進数の数値に対応
+-エラーがあったとき、出力バッファにもエラーメッセージを出力
+
+私のところでとりあえず使えているレベルなので、あまり自信はありません。
+
+パッチをあてるには、
++[[このへん:http://www.fsci.fuk.kindai.ac.jp/kakuto/soft.html]]からdiffをとってくる
++上の内容を適当なテキストに保存する(patch.txtとか)
++diffの展開した中身とgentemp.lとさっき保存したテキストを同じディレクトリに入れる
++コマンドプロンプトで「patch gentemp.l patch.txt」とやる
+
+ってやるとできたような気がします。
+----
+-このパッチはどうやってあてたらいいんですか？ --  &new{2004-07-15 (木) 14:18:30};
+
+#comment

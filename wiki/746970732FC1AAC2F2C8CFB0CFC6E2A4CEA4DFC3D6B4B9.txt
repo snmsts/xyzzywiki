@@ -1,0 +1,76 @@
+#freeze
+２ちゃんねるで要望があったので書いてみました。選択範囲がある場合、その範囲内だけで置換を行います。もともとのreplace-dialog関数を書き換えてしまっているのですが、もっとうまい方法などありましたらよろしくお願いします。
+
+----
+
+ ;; .xyzzy やsiteinit.l に以下のように記述してください。
+ 
+ (load-file "~/lisp/dialogs.l")
+ (in-package "editor")
+ (defun replace-dialog ()
+   (interactive)
+   (multiple-value-bind (result data)
+       (let ((search (or ;(selection-start-end (start end)
+                         ;  (buffer-substring start end))
+                         (if *regexp-search*
+                             *last-search-regexp*
+                           *last-search-string*)))
+             (replace (if *regexp-search*
+                          *last-replace-regexp*
+                        *last-replace-string*)))
+         (dialog-box *replace-dialog-template*
+                     (list (cons 'search *minibuffer-search-string-history*)
+                           (cons 'replace *minibuffer-search-string-history*)
+                           (cons 'case-fold (cfs2dialog *case-fold-search*))
+                           (cons 'word *word-search*)
+                           (cons 'regexp *regexp-search*)
+                           (cons 'whole *replace-whole-buffer*)
+                           (cons 'search
+                                 (if (eq (cdr *last-search-string-pair*)
+                                         search)
+                                     (car *last-search-string-pair*)
+                                   search))
+                           (cons 'replace
+                                 (if (eq (cdr *last-replace-string-pair*)
+                                         replace)
+                                     (car *last-replace-string-pair*)
+                                   replace))
+                           (cons 'escseq *understand-escape-sequences*))
+                     '((word :disable (regexp))
+                      (search :non-null "検索文字列を入力して" :enable (query all)))))
+     (when result
+       (let ((search (cdr (assoc 'search data)))
+             (replace (cdr (assoc 'replace data))))
+         (when search
+           (add-history search '*minibuffer-search-string-history*)
+           (add-history replace '*minibuffer-search-string-history*)
+           (setq *case-fold-search* (dialog2cfs (cdr (assoc 'case-fold data))))
+           (setq *word-search* (cdr (assoc 'word data)))
+           (setq *regexp-search* (cdr (assoc 'regexp data)))
+           (setq *understand-escape-sequences* (cdr (assoc 'escseq data)))
+           (if *understand-escape-sequences*
+               (progn
+                 (setq *last-search-string-pair*
+                       (cons search
+                             (setq search (decode-escape-sequence
+                                           search *regexp-search*))))
+                 (setq *last-replace-string-pair*
+                       (cons replace
+                             (setq replace (decode-escape-sequence
+                                            replace *regexp-search*)))))
+             (progn
+               (setq *last-search-string-pair* nil)
+               (setq *last-replace-string-pair* nil)))
+           (setq *replace-whole-buffer* (cdr (assoc 'whole data)))
+           (save-restriction
+             (if (pre-selection-p)
+                 (progn
+                   (narrow-to-region (selection-point) (selection-mark))
+                   (goto-char (point-min)))
+               (when *replace-whole-buffer*
+                 (goto-char (point-min))))
+             (perform-replace search replace (eq result 'query)
+                              (and (null *word-search*) *regexp-search*)
+                              t nil)))))))
+ (in-package "user")
+//#comment

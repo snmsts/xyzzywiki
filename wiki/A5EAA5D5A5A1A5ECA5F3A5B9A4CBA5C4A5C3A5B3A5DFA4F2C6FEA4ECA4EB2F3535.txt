@@ -1,0 +1,38 @@
+*reduce [#o3930e42]
+
+-ページ: [[新規]]
+-投稿者: [[nakano]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-05-25 (火) 19:00:08
+-バージョン: 
+
+**メッセージ [#h4f121ad]
+ <chapter>
+ <title>reduce</title>
+ <type>Function</type>
+ <arguments>reduce FUNCTION SEQUENCE &amp;key :FROM-END :START :END :INITIAL-VALUE</arguments>
+ <package>lisp</package>
+ <description>
+ 2項演算子であるFUNCTIONで，SEQUENCEに対して畳み込みを行います．
+   
+   FUNCTION : 2項演算子．
+   FROM-END : nil なら先頭から，non-nil なら最後の要素から畳み込みを行います．
+   START    : 畳み込みを行うSEQUENCEの開始インデックスです．デフォルトは 0 です． FROM-ENDがnon-nilなら終了インデックスになります．
+   END      : 畳み込みを行うSEQUENCEの終了インデックスです．デフォルトは nil です．FROM-ENDがnon-nilなら開始インデックスになります．
+   INITIAL-VALUE : non-nilならばこの値を初期値として使用します．
+ 
+ 
+  (reduce #'- '(1 2 3)) = (- (- 1 2) 3)
+  (reduce #'- '(1 2 3) :initial-value 10) = (- (- (- 10 1) 2) 3)
+  (reduce #'- '(1 2 3) :from-end t :initial-value 10) = (- 1 (- 2 (- 3 10)))
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>シーケンス</section>
+ <file>sequence.l</file>
+ </chapter>
+----
+
+#comment

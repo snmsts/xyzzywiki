@@ -1,0 +1,17 @@
+* ssh通信で他のPCのファイルを編集したい [#recd0050]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2008-02-15 (金) 17:49:40
+
+** メッセージ [#bb85a253]
+linux上、unix上のファイルに対してxyzzyからssh通信でアクセスし、そのままファイルを編集できますか？
+わざわざteratermでアクセスしたり、WinSCPでダウンロードするのは面倒なので直接編集したいです。
+----
+- virtual-file-pscpとかですかね -- [[佐野]] &new{2008-02-15 (金) 19:31:53};
+- 使ってみましたが、virtual-file-pscp error: The server's host key is not cached in the registry.You have no guarantee that the server is the computer you think it is.というエラーが出てしまいます……。 --  &new{2008-02-18 (月) 20:34:47};
+- 正常に思えます。エラーメッセージでググル程度の事はまず試してください。 --  &new{2008-02-19 (火) 00:21:47};
+- 結局鍵を別に生成しなければならないようなので諦めました。 --  &new{2008-02-19 (火) 09:55:21};
+- 中身はpscp.exeを使ってるだけだから，同じ鍵が使えると思うけど，使ってないから自信ない． --  &new{2008-02-20 (水) 17:41:23};
+
+#comment

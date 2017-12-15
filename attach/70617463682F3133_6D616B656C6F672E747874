@@ -1,0 +1,592 @@
+Microsoft(R) Program Maintenance Utility Version 8.00.50727.42
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Fedpp.exe -Tpdpp.cc
+dpp.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Fegen-syms.exe -Tpgen-syms.cc
+gen-syms.cc
+gen-syms.cc(2736) : warning C4996: 'strdup' が古い形式として宣言されました。
+        C:\Program Files\Microsoft Visual Studio 8\VC\INCLUDE\string.h(205) : 'strdup' の宣言を確認してください。
+        メッセージ: 'The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strdup. See online help for details.'
+	.\gen-syms -vars > tmpfile.$$
+	move tmpfile.$$ vars-decl.h > nul
+	.\gen-syms -proto > tmpfile.$$
+	move tmpfile.$$ fns-decl.h > nul
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Fegen-ctab.exe -Tpgen-ctab.cc
+gen-ctab.cc
+	.\gen-ctab > tmpfile.$$
+	move tmpfile.$$ chtab.cc > nul
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -MT -Fegen-msg.exe -Tpgen-msg.cc
+gen-msg.cc
+	.\gen-msg -enum > tmpfile.$$
+	move tmpfile.$$ msgcode.h > nul
+	rc -r xyzzyenv.rc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -O2 -Tpxyzzyenv.cc xyzzyenv.res kernel32.lib user32.lib  -link -fixed -subsystem:console -entry:process_startup
+xyzzyenv.cc
+LIBCMT.lib(mathfcns.obj) : warning LNK4210: .CRT セクションが存在します。静的初期化子、または終末記号がハンドルされていない可能性があります。
+LIBCMT.lib(cpu_disp.obj) : warning LNK4210: .CRT セクションが存在します。静的初期化子、または終末記号がハンドルされていない可能性があります。
+	copy xyzzyenv.exe .. > nul
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -TpBuffer.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+Buffer.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -TpChooseFont.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+ChooseFont.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -TpColorDialog.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+ColorDialog.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -TpDnD.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+DnD.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -TpStrBuf.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+StrBuf.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -TpWindow.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+Window.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpalloc.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+alloc.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tparc-if.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+arc-if.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tparchiver.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+archiver.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tparray.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+array.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpassert.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+assert.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpbackq.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+backq.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpbignum.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+bignum.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpbinfo.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+binfo.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpbuffer-bar.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+buffer-bar.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpbyte-stream.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+byte-stream.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpbytecode.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+bytecode.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpces.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+ces.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpchar.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+char.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpchname.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+chname.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpchtab.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+chtab.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpcom.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+com.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpconf.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+conf.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpcolors.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+colors.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpctl3d.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+ctl3d.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpchunk.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+chunk.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpdata.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+data.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpdde.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+dde.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpdialogs.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+dialogs.cc
+dialogs.cc(279) : warning C4996: 'memicmp' が古い形式として宣言されました。
+        C:\Program Files\Microsoft Visual Studio 8\VC\INCLUDE\string.h(62) : 'memicmp' の宣言を確認してください。
+        メッセージ: 'The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _memicmp. See online help for details.'
+dialogs.cc(825) : warning C4996: 'memicmp' が古い形式として宣言されました。
+        C:\Program Files\Microsoft Visual Studio 8\VC\INCLUDE\string.h(62) : 'memicmp' の宣言を確認してください。
+        メッセージ: 'The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _memicmp. See online help for details.'
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Fegen-jisx0212-hash.exe -Tpgen-jisx0212-hash.cc
+gen-jisx0212-hash.cc
+	.\gen-jisx0212-hash > tmpfile.$$
+	move tmpfile.$$ jisx0212-hash.h > nul
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpdisp.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+disp.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpdll.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+dll.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpdoc.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+doc.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpdockbar.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+dockbar.cc
+dockbar.cc(2498) : warning C4996: 'strdup' が古い形式として宣言されました。
+        C:\Program Files\Microsoft Visual Studio 8\VC\INCLUDE\string.h(205) : 'strdup' の宣言を確認してください。
+        メッセージ: 'The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _strdup. See online help for details.'
+	.\gen-syms -version > tmpfile.$$
+	move tmpfile.$$ dumpver.cc > nul
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpdumpver.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+dumpver.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpedict.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+edict.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpencdec.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+encdec.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Fegen-ibmext.exe -Tpgen-ibmext.cc
+gen-ibmext.cc
+	.\gen-ibmext > tmpfile.$$
+	move tmpfile.$$ ibmext.h > nul
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Fegen-utf2sjis.exe -Tpgen-utf2sjis.cc
+gen-utf2sjis.cc
+	.\gen-utf2sjis > tmpfile.$$
+	move tmpfile.$$ utf2sjis.h > nul
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpencoding.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+encoding.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpenviron.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+environ.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpeval.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+eval.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpexcept.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+except.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpfileio.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+fileio.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpfiler.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+filer.cc
+filer.cc(266) : warning C4996: 'memicmp' が古い形式として宣言されました。
+        C:\Program Files\Microsoft Visual Studio 8\VC\INCLUDE\string.h(62) : 'memicmp' の宣言を確認してください。
+        メッセージ: 'The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _memicmp. See online help for details.'
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpfnkey.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+fnkey.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpfont.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+font.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpgime.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+gime.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpglob.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+glob.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpguid.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+guid.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpgzip.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+gzip.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tphash.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+hash.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tphashpjw.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+hashpjw.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpinit.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+init.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpinsdel.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+insdel.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpipc.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+ipc.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Fegen-ktab.exe -Tpgen-ktab.cc
+gen-ktab.cc
+	.\gen-ktab > tmpfile.$$
+	move tmpfile.$$ kanjitab.h > nul
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Fegen-iso2022state.exe -Tpgen-iso2022state.cc
+gen-iso2022state.cc
+	.\gen-iso2022state > tmpfile.$$
+	move tmpfile.$$ iso2022state.h > nul
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpkanji.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+kanji.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpkbd.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+kbd.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpkeymap.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+keymap.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tplargeint.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+largeint.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpldialog.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+ldialog.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tplex.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+lex.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tplist.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+list.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tplisten.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+listen.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tplprint.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+lprint.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tplread.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+lread.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpmd5c.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+md5c.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpmenu.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+menu.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpminibuf.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+minibuf.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpmman.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+mman.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpmouse.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+mouse.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpmove.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+move.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpmsgbox.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+msgbox.cc
+	.\gen-msg -c > tmpfile.$$
+	move tmpfile.$$ msgdef.cc > nul
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpmsgdef.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+msgdef.cc
+	dpp num-arith.d num-arith.h
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpnumber.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+number.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpoledata.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+oledata.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tppackage.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+package.cc
+package.cc(141) : warning C4237: 'export' キーワードはサポートされていませんが、将来の拡張のために予約されています
+package.cc(538) : warning C4237: 'export' キーワードはサポートされていませんが、将来の拡張のために予約されています
+package.cc(541) : warning C4237: 'export' キーワードはサポートされていませんが、将来の拡張のために予約されています
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tppane.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+pane.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tppathname.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+pathname.cc
+pathname.cc(256) : warning C4996: 'memicmp' が古い形式として宣言されました。
+        C:\Program Files\Microsoft Visual Studio 8\VC\INCLUDE\string.h(62) : 'memicmp' の宣言を確認してください。
+        メッセージ: 'The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _memicmp. See online help for details.'
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tppopup.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+popup.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tppopupl.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+popupl.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tppred.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+pred.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tppreview.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+preview.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpprint.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+print.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpprintdlg.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+printdlg.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpprocess.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+process.cc
+process.cc(16) : warning C4996: 'stricmp' が古い形式として宣言されました。
+        C:\Program Files\Microsoft Visual Studio 8\VC\INCLUDE\string.h(213) : 'stricmp' の宣言を確認してください。
+        メッセージ: 'The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _stricmp. See online help for details.'
+process.cc(39) : warning C4996: 'memicmp' が古い形式として宣言されました。
+        C:\Program Files\Microsoft Visual Studio 8\VC\INCLUDE\string.h(62) : 'memicmp' の宣言を確認してください。
+        メッセージ: 'The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _memicmp. See online help for details.'
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tprandom.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+random.cc
+random.cc(140) : warning C4244: '引数' : 'time_t' から 'long' への変換です。データが失われる可能性があります。
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpregex.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+regex.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpresolver.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+resolver.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpsearch.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+search.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpsequence.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+sequence.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpsha1.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+sha1.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpsignal.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+signal.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpsock.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+sock.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpsockinet.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+sockinet.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpstatarea.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+statarea.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpstdctl.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+stdctl.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpstream.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+stream.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpstring.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+string.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpstructure.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+structure.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpsymbol.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+symbol.cc
+	.\gen-syms -symtable > tmpfile.$$
+	move tmpfile.$$ symtable.cc > nul
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpsymtable.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+symtable.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpsyntax.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+syntax.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpsysdep.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+sysdep.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpthread.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+thread.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tptoplev.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+toplev.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Fegen-char-width.exe -Tpgen-char-width.cc
+gen-char-width.cc
+	.\gen-char-width > tmpfile.$$
+	move tmpfile.$$ char-width.h > nul
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpucs2.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+ucs2.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpundo.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+undo.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpusertab.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+usertab.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpusertool.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+usertool.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tputils.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+utils.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tputimer.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+utimer.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpvector.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+vector.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpversion.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+version.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpvfs.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+vfs.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpwheel.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+wheel.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpwinhelp.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+winhelp.cc
+winhelp.cc(147) : warning C4996: 'memicmp' が古い形式として宣言されました。
+        C:\Program Files\Microsoft Visual Studio 8\VC\INCLUDE\string.h(62) : 'memicmp' の宣言を確認してください。
+        メッセージ: 'The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _memicmp. See online help for details.'
+winhelp.cc(155) : warning C4996: 'memicmp' が古い形式として宣言されました。
+        C:\Program Files\Microsoft Visual Studio 8\VC\INCLUDE\string.h(62) : 'memicmp' の宣言を確認してください。
+        メッセージ: 'The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _memicmp. See online help for details.'
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpwstream.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+wstream.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpxdde.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+xdde.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tpxlist.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+xlist.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tp../privctrl/\privctrl.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+privctrl.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tp../privctrl/\listviewex.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+listviewex.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Ob1 -Og -Oi -Ot -Oy -G5 -Gs -Gy -Gz -GF -EHa -W3 -MT -vmb -I../privctrl -DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC -For/ -c -Tp../privctrl/\url.cc
+cl : コマンド ライン warning D9035 : オプション 'Og' の使用は現在推奨されていません。今後のバージョンからは削除されます。
+cl : コマンド ライン warning D9002 : 不明なオプション '-G5' を無視します
+url.cc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -Fegen-vinf.exe -Tpgen-vinf.cc
+gen-vinf.cc
+	.\gen-vinf > tmpfile.$$
+	move tmpfile.$$ verinfo.h > nul
+	type xyzzy.rc > r\xyzzy.rc
+	type verinfo.h >> r\xyzzy.rc
+	rc -r -for/xyzzy.res  r/xyzzy.rc
+	link -nologo @C:\DOCUME~1\username\LOCALS~1\Temp\nm84.tmp
+	copy r\xyzzy.exe .. > nul
+	copy r\xyzzy.map .. > nul
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -O2 -W3 -c -DSTRICT -Tpxyzzycli.cc
+xyzzycli.cc
+	rc -r xyzzycli.rc
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE xyzzycli.obj kernel32.lib user32.lib xyzzycli.res  -link -fixed -subsystem:windows -entry:process_startup
+LIBCMT.lib(mathfcns.obj) : warning LNK4210: .CRT セクションが存在します。静的初期化子、または終末記号がハンドルされていない可能性があります。
+LIBCMT.lib(cpu_disp.obj) : warning LNK4210: .CRT セクションが存在します。静的初期化子、または終末記号がハンドルされていない可能性があります。
+	copy xyzzycli.exe .. > nul
+	cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE -O2 -Zl -W3 -c -Tpxpi.cc
+xpi.cc
+	lib -out:libxpi.lib xpi.obj
+Microsoft (R) Library Manager Version 8.00.50727.42
+Copyright (C) Microsoft Corporation.  All rights reserved.

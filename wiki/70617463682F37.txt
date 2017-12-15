@@ -1,0 +1,24 @@
+*本体/files.l [#teedc244]
+
+-ページ: [[patch]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 提案
+-カテゴリー: 訂正
+-投稿日: 2005-08-08 15:48:04 (月)
+-バージョン: 
+
+**メッセージ [#y369ea64]
+find-file-process-paramsを見ると複数のminor-modeが指定できなくなっているように見えます。(233ではできる。)
+
+とりあえずfiles.lの155行目近辺をこんな風にしています。
+ 		(when f
+ 		  ;(unless (and auto-mode (get f 'find-file-auto-mode))
+ 		    (when (and (funcall f (cdr x))
+ 			       (get f 'find-file-auto-mode))
+ 		      (setq auto-mode t)))))
+パッチを適用するにはバイトコンパイルとダンプが必要です。
+
+----
+
+#comment

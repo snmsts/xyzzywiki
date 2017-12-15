@@ -1,0 +1,222 @@
+*delete-hook, ...(略) [#n6e8cf06]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-06-12 00:22:48 (日)
+-バージョン: 
+
+**メッセージ [#i5ac2867]
+ <chapter>
+ <title>delete-hook</title>
+ <type>Function</type>
+ <arguments>delete-hook HOOK FN</arguments>
+ <package>editor</package>
+ <description>
+ フック変数から関数を削除します。
+ 
+   HOOK : フック変数のシンボルを指定します。
+   FN   : 関数のシンボルを指定します。
+ </description>
+ <seealso>add-hook</seealso>
+ <link></link>
+ <section>モード</section>
+ <file>misc.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>with-input-from-string</title>
+ <type>Macro</type>
+ <arguments>with-input-from-string (VAR STRING &amp;key INDEX START END) &amp;body BODY</arguments>
+ <package>lisp</package>
+ <description>
+ 文字列を標準入力にして読み込みます。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>stream.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ed::*last-search-regexp*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ 前回の正規表現検索パターンが保存されています。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>検索・正規表現</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>re-search-backward-again</title>
+ <type>Function</type>
+ <arguments>re-search-backward-again</arguments>
+ <package>editor</package>
+ <description>
+ 前回の正規表現検索パターンで後方検索します。
+ </description>
+ <seealso>ed::*last-search-regexp*</seealso>
+ <seealso>re-search-forward-again</seealso>
+ <link></link>
+ <section>検索・正規表現</section>
+ <file>search.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>re-search-forward-again</title>
+ <type>Function</type>
+ <arguments>re-search-forward-again</arguments>
+ <package>editor</package>
+ <description>
+ 前回の正規表現検索パターンで前方検索します。
+ </description>
+ <seealso>ed::*last-search-regexp*</seealso>
+ <seealso>re-search-backward-again</seealso>
+ <link></link>
+ <section>検索・正規表現</section>
+ <file>search.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ed::*last-search-string*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ 前回の検索語が保存されています。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>検索・正規表現</section>
+ <file>search.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>search-backward-again</title>
+ <type>Function</type>
+ <arguments>search-backward-again</arguments>
+ <package>editor</package>
+ <description>
+ 前回の検索語で後方検索します。
+ </description>
+ <seealso>ed::*last-search-string*</seealso>
+ <seealso>search-forward-again</seealso>
+ <link></link>
+ <section>検索・正規表現</section>
+ <file>search.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>search-forward-again</title>
+ <type>Function</type>
+ <arguments>search-forward-again</arguments>
+ <package>editor</package>
+ <description>
+ 前回の検索語で前方検索します。
+ </description>
+ <seealso>ed::*last-search-string*</seealso>
+ <seealso>search-backward-again</seealso>
+ <link></link>
+ <section>検索・正規表現</section>
+ <file>search.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>display-rest-tab-char</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ タブの表示に使用する文字を設定します。
+ 詳しくは display-first-tab-char を参照してください。
+ </description>
+ <seealso>display-first-tab-char</seealso>
+ <link></link>
+ <section>文字</section>
+ <file>defs.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>delete-command-bar</title>
+ <type>Function</type>
+ <arguments>delete-command-bar SYM</arguments>
+ <package>editor</package>
+ <description>
+ ツールバーを削除します。
+ </description>
+ <seealso>define-command-bar</seealso>
+ <link></link>
+ <section>メニュー</section>
+ <file>cmdbar.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>tail-f</title>
+ <type>Function</type>
+ <arguments>tail-f FILENAME</arguments>
+ <package>editor</package>
+ <description>
+ tail コマンドの -f オプションのように、更新され続けるようなファイルを終
+ 端まで読み込み続けようとします。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>tail-f.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>eval-buffer</title>
+ <type>Function</type>
+ <arguments>eval-buffer BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ バッファ全体を評価します。
+ eval-region を使って実装されています。
+ </description>
+ <seealso>eval-region</seealso>
+ <link></link>
+ <section>評価</section>
+ <file>lispmode.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*keyboard*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ キーボードからの入力を表すストリームです。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>入出力</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>*standard-input*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>lisp</package>
+ <description>
+ 標準入力を表すストリームです。
+ 普段はキーボードからの入力になっています。
+ </description>
+ <seealso>*standard-output*</seealso>
+ <seealso>*keyboard*</seealso>
+ <link></link>
+ <section>入出力</section>
+ <file></file>
+ </chapter>
+----
+-取り込みました→[[refwiki:*keyboard*]], [[refwiki:*standard-input*]], [[refwiki:delete-command-bar]], [[refwiki:delete-hook]], [[refwiki:display-rest-tab-char]], [[refwiki:ed::*last-search-regexp*]], [[refwiki:ed::*last-search-string*]], [[refwiki:eval-buffer]], [[refwiki:re-search-backward-again]], [[refwiki:re-search-forward-again]], [[refwiki:search-backward-again]], [[refwiki:search-forward-again]], [[refwiki:tail-f]], [[refwiki:with-input-from-string]] -- [[NANRI]] &new{2005-07-23 21:56:13 (土)};
+
+#comment

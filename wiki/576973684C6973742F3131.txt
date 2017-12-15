@@ -1,0 +1,31 @@
+* HOWM (Hitori Otegaru Wiki Modoki) [#w3dbbde2]
+-ページ: [[WishList]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2003-10-16 (木) 00:44:27
+
+** メッセージ [#tc0b5877]
+私、メモマニアなんです。
+
+「見ようとしないと見えないんじゃ見ない」は名言。
+
+http://www.me.ics.saitama-u.ac.jp/~hira/emacs/howm/
+
+HOWMっぽいものは公開されてます。
+
+http://koten.hypermart.net/wikilog_rc01.l
+
+[[Extended xyzzy lisp library:http://hie.s64.xrea.com/xyzzy/extlib/]]には捕捉されてない模様
+
+-Release Candidate だったので正式リリースを待ってたのですが，このまま追加したほうが良いのかな。
+-なるほど、そうだったんですか。作者さんのところにはメールアドレスがないので、某掲示板で聞いてみるしかないのかな？まだ見ているかわからないけど。
+-ライブラリのコメント文にありましたよ。
+-ほんとだ。気づかなかった
+-「HOWMっぽいもの」で公開するんでしょうか? 「HOWM互換」ってのはやっぱり難しいんですか?
+
+----
+-完了しましたよね？良くわかんないけど。 -- [[佐野]] SIZE(10){2003-10-16 (木) 20:27:53}
+-xyzzy で howm を使ってみよう。http://homepage3.nifty.com/~ko-ji/archive/howm-wrap/howm-wrap_031018.zip --  SIZE(10){2003-10-22 (水) 01:18:27}
+- howm風になってきたので、よろしかったらどうぞ　http://ajdam.web.fc2.com/tw-mode.html -- [[amefura]] &new{2006-08-07 (月) 18:53:57};
+
+#comment

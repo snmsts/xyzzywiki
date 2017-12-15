@@ -1,0 +1,37 @@
+;;; -*- Mode: Lisp; Package: EDITOR -*-
+
+(require "lispfns")
+
+(in-package "editor")
+
+(defun lisp-maketags (file count)
+  "builtin function ‚à XTAGS ‚ÉŠÜ‚ß‚é"
+  (let (package)
+    (unwind-protect
+	(progn
+	  (do ((i 0 (+ i 1)))
+	      ((let ((name (format nil "MAKETAGS-~D" i)))
+		 (unless (find-package name)
+		   (setq package (make-package name :external-size 0))))))
+	  (with-input-from-buffer ((selected-buffer) (point-min))
+	    (let ((*package* package))
+	      (handler-case
+		  (do ((form (read nil nil '#1=#:eof) (read nil nil '#1#)))
+		      ((eq form '#1#))
+		    (do-events)
+		    (cond ((or (atom form)
+			       (atom (cdr form))
+			       (not (symbolp (cadr form)))))
+			  ((member (car form) '(defun defmacro si::defun-builtin) :test #'eq)
+			   (format t "~A~A~D" (symbol-name (cadr form)) file
+				   (buffer-stream-point *standard-input*))
+			   (incf count))
+			  ((member (car form) '(defvar defparameter defconstant) :test #'eq)
+			   (format t "~A~A~D" (symbol-name (cadr form)) file
+				   (buffer-stream-point *standard-input*))
+			   (incf count))))
+		(package-error () nil)
+		(reader-error () nil)))))
+      (when package
+	(delete-package package))))
+  count)

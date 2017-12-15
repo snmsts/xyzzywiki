@@ -1,0 +1,321 @@
+[[Memo]]
+
+[[KaMail:http://www7a.biglobe.ne.jp/~hat/xyzzy/kamail.html]]¤Ï HATTORI Masashi ¤µ¤óºîÀ®¤Îxyzzy¾å¤ÇÆ°¤¯¥á¡¼¥ë¡õ¥Ë¥å¡¼¥¹´Ä¶­¤Ç¤¹¡£
+
+KaMail¤ÎÀßÄêÎã¡¢ÉÔ¶ñ¹ç½¤Àµ¡¢µ¡Ç½ÄÉ²Ã¤Ê¤É¤ò¤Þ¤È¤á¤ë¤³¤È¤òÌÜÅª¤È¤·¤Æ¤³¤Î¥Ú¡¼¥¸¤òºîÀ®¤·¤Þ¤·¤¿¡£
+
+¥ê¥ó¥¯Àè¤äÀßÄêÎãÅù¤ÎÄÉ²Ã¡¢¥³¡¼¥É¤ò½ñ¤¤¤Æ¤ä¤í¤¦¤Ã¤Æ¤¤¤¦´ñÆÃ¤ÊÊý¤¬¤ª¤é¤ì¤¿¤éÅ¬Åö¤ËUP¤ª´ê¤¤¤·¤Þ¤¹¡Ê²èÌÌ¾å²¼¤ÎÊÔ½¸¤ò¥¯¥ê¥Ã¥¯¤¹¤ì¤Ð¥Ú¡¼¥¸¤òÊÔ½¸¤Ç¤­¤Þ¤¹¡£½ñ¼°¤Ï[[¥Æ¥­¥¹¥ÈÀ°·Á¤Î¥ë¡¼¥ë>À°·Á¥ë¡¼¥ë]]¤ò»²¹Í¤Ë¡Ë¡£
+
+¢¨ÀßÄêÊÑ¹¹¡¢µ¡Ç½ÄÉ²Ã¤Ê¤É¤Î¥³¡¼¥É¤Ï .kamail ¤Ë½ñ¤¯¤Î¤¬´ðËÜ¤Ç¤¹¡£
+
+*¥ê¥ó¥¯ [#h265f537]
+-[[KaMail:http://www7a.biglobe.ne.jp/~hat/xyzzy/kamail.html]]
+-[[xyzzy ¤Î²» - KaMail:http://hie.s64.xrea.com/xyzzy/note/kamail.html]]
+-[[KaMail - xyzzy Note2:http://hie.s64.xrea.com/xyzzy/note2/wiki.cgi?page=KaMail]]
+-[[Becky!¤«¤éKamail¤Ø¥Ç¡¼¥¿¤Î¥³¥ó¥Ð¡¼¥È:http://scrlab.g-7.ne.jp/memo/xyzzy/mail_convert.php]]
+-[[flex-fill2¤òKaMail¤Ç»È¤¦>tips/²þ¹Ô¤Ç¤âfill¤¹¤ëflex-fill]]
+-[[IE ¤Î mailto:foo@bar.ac.jp ¤È¤«¤Ç KaMail ¤ò¸Æ¤Ó¤¿¤¤¤Î¤Ç¤¹¤¬¡Ä¡£>qanda:IE ¤Î mailto:foo@bar.ac.jp ¤È¤«¤Ç KaMail ¤ò¸Æ¤Ó¤¿¤¤¤Î¤Ç¤¹¤¬¡Ä¡£]]
+-[[kamail-header-next-message-or-scroll:http://www.page.sannet.ne.jp/southly/customize.html#i5]]
+-[[KaMail ¿¶¤êÊ¬¤±¾ò·ï¤Îµ­½Ò¤Ç and ¤ò¤È¤ê¤¿¤¤¡£:http://ohkubo.s53.xrea.com/xyzzy/scratch.html]]
+-[[Memo/KaMail ¤ÇÊÑ¤Ê¥Ç¥£¥ì¥¯¥È¥ê¤òºî¤Ã¤¿¾ì¹ç¤ÎÂÐ½è]]
+-[[tips/KaMail¤ÇHTML¥á¡¼¥ëÉ½¼¨]]
+-[[tips/kamail¤Ç¤è¤¯ÅºÉÕ¤¹¤ë¤Î¤òËº¤ì¤Æ¤·¤Þ¤¦¿ÍÍÑ]]
+-[[¼ÁÌäÈ¢/56 ¤«¤á¡Á¤ë¤ÎÁ÷¿®>¼ÁÌäÈ¢/56]]
+-[[Â¾¥á¡¼¥é¡¼¤«¤é¤Ê¤ó¤À¤«¤ó¤À¤È¥¤¥ó¥Ý¡¼¥È¤¹¤ë¤È¤«:http://web.archive.org/web/20040124150934/http://www1.mirai.ne.jp/~gyo/xyzzy/kamail/misc/import.l]]
+-[[¿¶Ê¬¤±¥Õ¥£¡¼¥ë¥É¤ÎÄÉ²Ã¡ÊKaMail¡Ë:http://www.dab.hi-ho.ne.jp/sasa/biboroku/xyzzy/rules.html]]
+
+*ÀßÄêÎã [#n134bfc3]
+-KaMail¤Î¥Ð¡¼¥¸¥ç¥ó¾ðÊó¤ò½ñ¤­´¹¤¨¤ë¤Ë¤Ï
+ (setq *kamail-version-full*
+       (format nil "~A on xyzzy-~A"
+ 	      *kamail-version*
+ 	      (software-version)))
+¤Î¤è¤¦¤Ë *kamail-version-full* ¤ÎÃÍ¤òÊÑ¹¹¤¹¤ë¡£
+
+-É½¼¨¤¹¤ë¥á¡¼¥ë¤ÎÈÏ°Ï¤òÌä¤¤¹ç¤ï¤»¤é¤ì¤Ê¤¤¤è¤¦¤Ë¤¹¤ë¤Ë¤Ï¡¢
+ (setq *kamail-default-read-number* 9999)
+¤Î¤è¤¦¤Ë *kamail-default-read-number* ¤ËÂç¤­¤¤¿ôÃÍ¤òÀßÄê¤¹¤ë¡£
+
+-¥á¡¼¥ë°ìÍ÷¤ÎÉ½¼¨¤òÂ®¤¯¤¹¤ë¤Ë¤Ï¡¢
+ (setq *kamail-local-use-cache* t)
+¤È¤·¤Æ¥­¥ã¥Ã¥·¥å¤¬ºîÀ®¤µ¤ì¤ë¤è¤¦¤Ë¤¹¤ë¡£
+
+-Ì¤ÆÉ¡¢´ûÆÉ¤Ê¤É¤¬¤¦¤Þ¤¯È¿±Ç¤µ¤ì¤Ê¤¤¾ì¹ç¤Ë¤Ï¡¢
+ M-x km::kamail-folder-cache-update-all
+¤È¤·¤Æ¡¢¥­¥ã¥Ã¥·¥å¤ò¹¹¿·¤¹¤ë¤È¤¦¤Þ¤¯¤¤¤¯¤«¤â¡£
+
+#comment
+
+*ÉÔ¶ñ¹ç½¤Àµ [#c0a81f29]
+-*KaMail: Draft* ¤Î¥¦¥£¥ó¥É¥¦¤òºï½ü¤¹¤ë¤ÈKaMail¤äxyzzy¤ò½ªÎ»¤Ç¤­¤Ê¤¯¤Ê¤Ã¤Æ¤·¤Þ¤¦¤è¤¦¤Ê¤Î¤Ç kamail-misc.l 128¹Ô¤Î kamail-select-view ¤ò°Ê²¼¤ËÊÑ¹¹¡Ê.kamail ¤Ê¤É¤Ë½ñ¤¤¤¿Êý¤¬¤¤¤¤¤È»×¤¤¤Þ¤¹¡Ë
+
+ (defun kamail-select-view ()
+   (interactive)
+   (ignore-errors
+    (set-window *kamail-window-view*)))
+
+-Subject¤äÅºÉÕ¥Õ¥¡¥¤¥ëÌ¾¤ËÁ´³Ñ¡¦È¾³ÑÊ¸»ú¤¬º®ºß¤¹¤ë¤È¡¢Á÷¿®»þÍ¾·×¤Ê¤È¤³¤í¤ËÈ¾³Ñ¥¹¥Ú¡¼¥¹¤¬ÁÞÆþ¤µ¤ì¤ë¤³¤È¤¬¤¢¤ë¤è¤¦¤Ç¤¹¡£½¤Àµ¤Ï²ÄÇ½¤Ç¤·¤ç¤¦¤«¡© --  &new{2005-08-10 09:58:02 (¿å)};
+-- ¤Á¤ÈÄ´¤Ù¤Æ¤ß¤Þ¤·¤¿¤¬¡¢¸¶°ø¤Ï RFC2047 ¤ÎÄê¤á¤Æ¤¤¤ë»ÅÍÍ¤¬Éå¤Ã¤Æ¤¤¤ë¤È¤¤¤¦¤³¤È¤Î¤è¤¦¤Ç¤¹¡£¾ìÅö¤¿¤êÅª¤ÊÂÐ½èË¡¤â¤¢¤ë¤Ë¤Ï¤¢¤ë¤ß¤¿¤¤¤Ç¤¹¤±¤É¡£ -- [[NANRI]] &new{2005-08-11 21:05:45 (ÌÚ)};
+--NANRI¤µ¤ó¤¢¤ê¤¬¤È¤¦¤´¤¶¤¤¤Þ¤·¤¿¡£¤È¤¤¤¦¤³¤È¤Ç¤¹¤È¡¢¡ÊÈ¾³Ñ¥¹¥Ú¡¼¥¹¤ÎÆþ¤é¤Ê¤¤¡ËÂ¾¤ÎMUA¤Ï¤¹¤Ù¤Æ¾ìÅö¤¿¤êÅªÂÐ½è¤ò¤·¤Æ¤ë¤È¹Í¤¨¤¿Êý¤¬¤è¤µ¤½¤¦¤È¤¤¤¦¤³¤È¤Ç¤¹¤Í¡£Ä´¤Ù¤Æ¤¤¤¿¤À¤­¤Þ¤·¤Æ¤¢¤ê¤¬¤È¤¦¤´¤¶¤¤¤Þ¤·¤¿¡£ --  &new{2005-08-12 10:45:26 (¶â)};
+--»ä¤È¤·¤Æ¤Ï¡¢¤½¤Î¾ìÅö¤¿¤êÅª¤ÊÂÐ½èË¡¤ò¶µ¤¨¤Æ¤¤¤¿¤À¤±¤ë¤È´ò¤·¤¤¤Ç¤¹¡Ê°ÊÁ°½¤Àµ¤·¤è¤¦¤È¤·¤Æ¤¦¤Þ¤¯¤¤¤«¤Ê¤«¤Ã¤¿¤Î¤Ç^^;¡Ë¡£ --  &new{2005-08-12 21:08:38 (¶â)};
+--²¿¤È¤Ê¤¯µ¤¤Ë¤Ê¤Ã¤¿¤Î¤Ç¤â¤¦°ìÅÙÄ´¤Ù¤Æ¤ß¤¿¤È¤³¤í¡¢~/lisp/encdec.l ¤Î 160¹Ô¤Î " " ¤ò "" ¤ËÊÑ¹¹¤¹¤ì¤ÐÈ¾³Ñ¥¹¥Ú¡¼¥¹¤¬ÁÞÆþ¤µ¤ì¤Ê¤¯¤Ê¤ë¤è¤¦¤Êµ¤¤¬¤·¤Þ¤¹¡Ê½¤Àµ­¡¡Ë¡Ê¢¨²¼¤Î½¤Àµ­£¤òÅ¬ÍÑ¤¹¤ë¾ì¹ç¤Ë¤Ï½¤Àµ­¡¤ÏÉÔÍ×¤Ç¤¹¡Ë¡£ --  &new{2005-08-14 20:26:55 (Æü)};
+-¤Ä¤¤¤Ç¤Ë¡¢~/lisp/encdec.l ¤Î (defun decode-mime-field ¤ò°Ê²¼¤Ëº¹¤·ÂØ¤¨¤ë¤È¡¢º¹½Ð¿Í¤ä°¸Ì¾¤ËÁ´³Ñ+È¾³Ñ¥¹¥Ú¡¼¥¹+Á´³Ñ¤Î¤è¤¦¤ÊÌ¾Á°¤òÆþ¤ì¤¿¾ì¹ç¤Ë¡¢È¾³Ñ¥¹¥Ú¡¼¥¹¤¬ºï½ü¤µ¤ì¤Æ¤·¤Þ¤¦ÌäÂê¡ÊÌäÂêÅÀ­¢¡Ë¤âÄ¾¤ë¤«¤â¤·¤ì¤Þ¤»¤ó¡Ê½¤Àµ­¢¡Ë¡£½¤Àµ­¡¤ÈÆ±ÍÍ¡¢¤«¤Ê¤ê´í¸±¤Ê¤Î¤Ç²¿¤âÊÝ¾ã¤Ç¤­¤Þ¤»¤ó¤¬^^; -- &new{2005-08-14 22:17:12 (Æü)};
+--½¤Àµ­¢¤Ï¤¦¤Þ¤¯Æ°¤«¤Ê¤«¤Ã¤¿¤Î¤Çºï½ü¤·¤Þ¤·¤¿¡£ÌäÂêÅÀ­¢¤ò²ò·è¤¹¤ë¤Ë¤Ï¡¢¥¨¥ó¥³¡¼¥É¤ÎÊý¤òÄ¾¤¹É¬Í×¤¬¤¢¤ë¤è¤¦¤Êµ¤¤¬¤·¤Þ¤¹¡£ --  &new{2005-08-14 22:46:44 (Æü)};
+--Ä´¤Ù¤Æ¤ß¤¿·ë²Ì¡¢È¾³Ñ¥¹¥Ú¡¼¥¹¤¬ºï½ü¤µ¤ì¤ë¸¶°ø¤Ï ~/lisp/encdec.l ¤Î 146,150¹Ô¤À¤È¤¤¤¦¤³¤È¤¬È½ÌÀ¡£¤·¤«¤·¡¢¤³¤Î2¹Ô¤ò¥³¥á¥ó¥È¤Ë¤·¤Æ¤·¤Þ¤¦¤È¡¢º£ÅÙ¤ÏÍ¾Ê¬¤Ê¤È¤³¤í¤ËÈ¾³Ñ¥¹¥Ú¡¼¥¹¤¬ÁÞÆþ¤µ¤ì¤Æ¤·¤Þ¤¦(¥¨¥ó¥³¡¼¥É¤¹¤ë¤È¤­¤Ë°ìÄê¤ÎÊ¸»ú¿ô¤Ç¥¹¥Ú¡¼¥¹¤È²þ¹Ô¤òÁÞÆþ¤·¤Æ¤¤¤ë¤¿¤á¤È»×¤ï¤ì¤ë)¡£¤½¤³¤Ç¡¢~/site-lisp/kamail/mime-encode.l ¤Î33¹Ô°Ê²¼¤Î (defun encode-mime-output-b-ecoding ¤òÍ¾Ê¬¤Ê¤È¤³¤í¤Ë¥¹¥Ú¡¼¥¹¤òÆþ¤ì¤Ê¤¤¤è¤¦¤ËÄ¾¤»¤Ð¤¤¤¤¤Î¤Ç¤Ï¤Ê¤¤¤«¡£¤È¡¢¤½¤³¤Þ¤ÇÄ´¤Ù¤ÆÎÏ¿Ô¤­¤Þ¤·¤¿¡£Ã¯¤«µ¤¤¬¸þ¤¤¤¿¤éÂ³¤­¤ª´ê¤¤¤·¤Þ¤¹¡£ --  &new{2005-08-15 11:13:45 (·î)};
+-¤Á¤ã¤ó¤È»ÅÍÍ¤òÆÉ¤ó¤À¤ï¤±¤Ç¤Ï¤Ê¤¤¤Î¤Ç¡¢¤¢¤ì¤Ê¤ó¤Ç¤¹¤¬¡Ä¡Ä¡£¸½ºß¤ÎKaMail¤ÎMIME¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°¤Ç¤Ï¥¨¥ó¥³¡¼¥É¤¬É¬Í×¤ÊÉôÊ¬¤ÈÉÔÍ×¤ÊÉôÊ¬¤È¤ËÊ¬¤±¤Æ¤«¤éÉ¬Í×¤ÊÉôÊ¬¤Î¤ß¤ò¥¨¥ó¥³¡¼¥É¤·¤Æ¤¤¤ë¤è¤¦¤Ç¤¹¡£¤³¤ì¤òÊ¬¤±¤º¤Ë¤Þ¤ë¤´¤È¥¨¥ó¥³¡¼¥É¤¹¤ë¤ÈÍ¾·×¤Ê¶õÇò¤¬Æþ¤é¤Ê¤¤¤é¤·¤¤¤Ç¤¹¡£Â¾¤Î¥á¡¼¥é¡¼¤¬¤³¤ÎÊýË¡¤òºÎÍÑ¤·¤Æ¤¤¤ë¤Î¤«¤È¤«¡¢¤³¤ÎÊýË¡¤ÇÌäÂê¤¬È¯À¸¤¹¤ë¤³¤È¤Ï¤Ê¤¤¤Î¤«¤È¤«¡¢²Ì¤¿¤·¤Æ¤³¤ÎÊýË¡¤¬»ÅÍÍÅª¤ËÀµÅö¤Ê¤Î¤«¤Ê¤É¤ÏÄ´¤Ù¤Æ¤¤¤Þ¤»¤ó¤Î¤ÇÉÔÌÀ¤Ç¤¹¡£(¤Û¤È¤ó¤Éhttp://suika.fam.cx/~wakaba/-temp/wiki/wiki?encoded-word¤ÇÆÀ¤¿ÃÎ¼±¤Ç¤¹(^^; ) -- [[NANRI@ËßµÙ¤ßÌÀ¤±>NANRI]] &new{2005-08-18 21:30:36 (ÌÚ)};
+-»þ´Ö¤¬¤Ê¤¤¤Î¤Ç¼«Ê¬¤Ç»È¤¦ÉôÊ¬¤À¤±Ä¾¤·¤¿¤Ä¤â¤ê¤Ç¤¹¡Ê½¤Àµ­£¡Ë¡£ --  &new{2005-08-28 11:06:21 (Æü)};
+ ;; ¥¹¥Ú¡¼¥¹¤¬¾¡¼ê¤ËÁÞÆþ¡¦ºï½ü¤µ¤ì¤Ê¤¤¤è¤¦¤Ë¤¹¤ë
+ (defun encode-mime-output-1 (string &optional type no-folding)
+   (cond ((string-match "[^\000-\177]" string)
+ 	 (let (addr)
+ 	   (and (string= type "addr") (string-match "\\(<.+>\\)" string)
+ 		(setq addr (match-string 0)
+ 		      string (subseq string 0 (match-beginning 0)))
+ 		)
+ 	   (let* ((encoding (gethash *encode-mime-charset-name* *mime-charset-name-hash-table*))
+ 		  (x (convert-encoding-from-internal
+ 		      (or encoding *encoding-jis*) (string-trim " \t\r\n" string))))
+ 	     (if (string= type "comment") (princ " ("))
+ 	     (format t "=?~A?B?" *encode-mime-charset-name*)
+ 	     (si:base64-encode x *standard-output* t)
+ 	     (princ "?=")
+ 	     (cond (addr
+ 		    (format t "~A" addr))
+ 		   ((string= type "comment")
+ 		    (princ ")")))
+ 	     (setq *encode-mime-preceding-white* nil)
+ 	     )))
+ 	(t
+ 	 (let ((prefix (if (string= type "comment") "("))
+ 	       (postfix (if (string= type "comment") ")")))
+ 	   (encode-mime-output-ascii string 0 (length string) prefix postfix no-folding)))))
+ 
+ (defun encode-mime-address (string)
+   (let ((addrs (encode-mime-split-address string))
+ 	(comma nil))
+     (mapc #'(lambda (addr)
+ 	      (when addr
+ 		(if comma
+ 		    (princ ",\n")
+ 		  (setq comma t))
+ 		(let ((*encode-mime-preceding-white* t)
+ 		      (no-folding
+ 		       (dolist (x addr t)
+ 			 (when (string-match "[^\000-\177]" (if (consp x) (cdr x) x))
+ 			   (return nil))))
+ 		      (last nil))
+ 		  (mapc #'(lambda (x)
+ 			    (cond ((stringp x)
+ 				   (setq *encode-mime-preceding-white*
+ 					 (cond ((null last) t)
+ 					       ((or (eq last 'qtext)
+ 						    (eq last 'comment))
+ 						(not (string-looking-at "[>@;:.]" x)))
+ 					       ((stringp last)
+ 						(not (string-match ":$" last)))
+ 					       (t nil)))
+ 				   (if (string-match ":;?$" x)
+ 				       (let ((y (subseq x 0 (match-beginning 0))))
+ 					 (encode-mime-output y 0 (length y) nil
+ 							     (subseq x (match-beginning 0))
+ 							     no-folding))
+ 				     (encode-mime-output-1 x "addr" no-folding)) ;!
+ 				   (setq last x))
+ 				  ((eq (car x) 'qtext)
+ 				   (setq *encode-mime-preceding-white*
+ 					 (cond ((null last) t)
+ 					       ((or (eq last 'qtext)
+ 						    (eq last 'comment))
+ 						t)
+ 					       ((stringp last)
+ 						(not (string-match "[<@.]$" last)))
+ 					       (t t)))
+ 				   (encode-mime-output-qtext (cdr x) 0 (length (cdr x))
+ 							     no-folding)
+ 				   (setq last 'qtext))
+ 				  ((eq (car x) 'dtext)
+ 				   (encode-mime-output (cdr x) 0 (length (cdr x))
+ 						       "[" "]" no-folding)
+ 				   (setq last 'dtext))
+ 				  (t
+ 				   (setq *encode-mime-preceding-white* t)
+ 				   (encode-mime-output-1 (cdr x) "comment" no-folding) ;!
+ 				   (setq last 'comment))))
+ 			addr))))
+ 	  addrs)))
+ 
+ (defun encode-mime-field-body (string)
+   (let ((*encode-mime-preceding-white* t))
+     (encode-mime-output-1 string)))
+#comment
+
+*µ¡Ç½ÄÉ²Ã [#e87912b6]
+-È¾³Ñ¥«¥¿¥«¥Ê¤Ê¤É¤ò´Þ¤à¥á¡¼¥ë¤òÁ÷¿®¤Ç¤­¤ë¤è¤¦¤Ë¤¹¤ë¤Ë¤Ï¡¢kamail-send.l 323¹Ô¤Î error ¤ò msgbox ¤ËÊÑ¹¹¤¹¤ë¡£  --  &new{2005-08-06 21:37:25 (ÅÚ)};
+
+#comment
+
+*µ¡Ç½ÄÉ²Ã [#v2d53323]
+-¥á¡¼¥ëÅ¾Á÷¤¹¤ë¤È¤­¤Ë¡¢ÅºÉÕ¥Õ¥¡¥¤¥ë¤â°ì½ï¤ËÅ¾Á÷¤¹¤ë¡£ -- [[chen]] 2010-01-02 (ÅÚ) 11:50:51
+½¤Àµ²Õ½ê¤Ï²¼µ­¤ÎÄÌ¤ê¡§~
+
+1.kamai-view.l ;
+
+ (define-key *kamail-view-map* '(#\C-c #\f) 'kamail-prepare-forward-with-attachment)
+
+2.kamail-multipart.l ;
+
+ (defun kamail-save-attach-all ()
+ ;  (interactive)
+  (progn                     ;;;;;save-excursion
+    (setq attachments nil)
+    (goto-char (point-min))
+    (while (kamail-multipart-next-part nil)
+      (refresh-screen)
+      (kamail-save-attach-this-part))
+    (kamail-attach-files attachments)))
+ (defun kamail-save-attach-this-part ()
+    (let ((part (kamail-multipart-this)))
+      (when part
+	(let ((header (kamail-multipart-header part))
+	      (start (kamail-multipart-start part))
+	      (stop (kamail-multipart-stop part))
+	      type
+	      enc
+	      charset
+	      disp
+	      file
+	      savename
+	      ;;;attach
+	      )
+	  (multiple-value-setq (type enc charset disp file)
+	    (kamail-get-part-header header))
+	  (when file
+	    ;(return nil))
+	  (setq savename (concat *kamail-attach-save-directory* file))
+	  (when savename
+	    (setq *kamail-attach-save-directory*
+		  (directory-namestring savename))
+	    (setq enc (or enc ""))
+	    (save-excursion
+	      (set-buffer *kamail-buffer-view*)
+	      (cond ((string-matchp "base64" enc)
+		     (and
+		      (base64-decode-region-to-file savename start stop)
+		      (message "Saved: ~A" savename)
+		      )
+		     )
+		    ((string-matchp "uuencode" enc)
+		     (let (begin endin)
+		       (goto-char start)
+		       (when (scan-buffer "^begin" :regexp t :tail nil)
+			 (forward-line 1)
+			 (setq begin (point))
+			 (when (and (scan-buffer "^end" :regexp t :tail nil)
+				    (<= (point) stop))
+			   (setq endin (point)))
+			 )
+		       (if (and begin endin)
+			   (and
+			    (uudecode-region-to-file savename begin endin)
+			    (message "Saved: ~A" savename)
+			    )
+			 (message-box "Could not find \"begin\" or \"end\" for uudecode")
+			 )
+		       ))
+		    ((string-matchp "quoted-printable" enc)
+		     (and
+		      (quoted-printable-decode-region-to-file savename start stop)
+		      (message "Saved: ~A" savename)
+		      )
+		     )
+		    ((or (string-matchp "binhex" type)
+			 (string-matchp "binhex" enc))
+		     (let (begin)
+		       (goto-char start)
+		       (when (scan-buffer "^:" :regexp t :tail nil)
+			 (setq begin (point))
+			 (when (scan-buffer ":$" :regexp t :tail t)
+			   (binhex-decode-region-to-file savename begin (point))
+			   (message "Saved: ~A" savename))
+			 )))
+		    (t
+		     (and
+		      (kamail-write-selected-buffer savename start stop)
+		      (message "Saved: ~A" savename)
+		      )
+		     )
+		    );cond
+	      )
+	    )
+	    (push savename attachments))))))
+	;  (kamail-attach-file savename)
+	 ; ))))
+
+
+3.kamai-draft.l ;
+
+ (defun kamail-prepare-forward-with-attachment ()
+  (interactive)
+  (let ((buffer (selected-buffer))
+	(hash (header-to-alist))
+	(boundary (kamail-boundary-string))
+	(number kamail-number)
+	start
+	ref id to to-name osubject subject date from ng group cc oto occ)
+    (and (kamail-mail-status-forwarded)
+	 (kamail-summary-status-forwarded))
+    (kamail-create-draft-buffer)
+    (switch-to-buffer *kamail-buffer-draft*)
+    (setq kamail-draft-reply-header hash)
+    (multiple-value-setq (osubject id from oto occ date ref ng)
+      (kamail-draft-header-values hash))
+    (setq to (kamail-draft-ask-to))
+    (setq to-name (get-header-value to *kamail-address-alist*))
+    (when to-name
+      (setq to (format nil "~A <~A>" to-name to))
+    )
+    (setq subject (concat "Fw: " osubject))
+    (kamail-draft-format-header (kamail-draft-select-from)
+				to cc subject ng nil ref)
+    (insert (or *kamail-draft-new-string* "\n"))
+    (when *kamail-signature-auto-insert*
+      (kamail-insert-signature))
+    (kamail-cite-body nil
+		      (buffer-name buffer))
+
+    (kamail-forward-attachments)
+    ; ºÇ½é¤Î¥Ñ¡¼¥È¤òÃµ¤¹
+    (goto-char (point-min))
+    (when (scan-buffer (format nil "^--~A$" boundary)
+		       :regexp t :tail t)
+      (if (scan-buffer (format nil "^--~A$" boundary)
+		       :regexp t :tail nil)
+	  (forward-line -2)
+	(while (forward-line 1)
+	  (and (eolp) (return)))))
+    (kamail-draft-refresh)
+    (run-hooks '*kamail-prepare-draft-hook*)
+  ))
+ (defun kamail-forward-attachments ()
+      (save-excursion
+	(set-buffer *kamail-buffer-multipart*)
+	(kamail-save-attach-all)))
+ (defun kamail-attach-files (files)
+  (progn
+    ;(delete-buffer *kamail-buffer-multipart*)
+    (switch-to-buffer *kamail-buffer-draft*)
+    (setq files (mapcar #'(lambda (x)
+			       (list x)) files))
+
+    (kamail-add-attachments files)
+    (while (not (endp files))
+      (delete-file (car (pop files))))))
+
+#comment
+
+*Í×Ë¾¤Ê¤É [#z40c3dc8]
+-html¥á¡¼¥ë¤ò²èÁü¤ò¥ê¥ó¥¯¤µ¤»¤Æbrowserex¤Ê¤É¤ÇÉ½¼¨¤Ç¤­¤ë¤è¤¦¤Ë¤·¤¿¤¤¡£ --  &new{2005-08-06 17:13:59 (ÅÚ)};
+--[[tips/KaMail¤ÇHTML¥á¡¼¥ëÉ½¼¨]]¤Çºî¤Ã¤Æ¤¤¤¿¤À¤±¤¿¤è¤¦¤Ç¤¹¡£ --  &new{2005-08-08 23:08:35 (·î)};
+- ¥µ¥Þ¥ê¤ËÉ½¼¨¤Ç¤­¤ëÆâÍÆ¤òÁý¤ä¤¹¤¿¤á.kamail-cache¤ÎÆâÍÆ¤ò¼«Æ°¤ÇÁ´³Ñ¢ªÈ¾³ÑÊÑ´¹¤Ç¤­¤ë¤è¤¦¤Ë¤·¤¿¤¤¡£ -- [[katuya]] &new{2007-01-22 (·î) 21:48:11};
+
+#comment

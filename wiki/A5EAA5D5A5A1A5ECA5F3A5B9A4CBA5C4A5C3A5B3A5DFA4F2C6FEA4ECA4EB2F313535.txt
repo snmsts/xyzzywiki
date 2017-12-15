@@ -1,0 +1,69 @@
+*feature [#t490ef3e]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-09-30 12:31:47 (金)
+-バージョン: 20050929
+
+**メッセージ [#af822c62]
+いまいちよくわからないところもあるんですがこんな感じでどうでしょう。
+
+ <chapter>
+ <title>*features*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>lisp</package>
+ <description>
+ feature のリストです。
+ 環境に依存する要素を格納してる？
+ #+ と #- の評価に影響します。
+ 
+ 使用例：
+   (+ 2 #+xyzzy 3 #+foo 4)
+   =&gt; 5
+   (push :foo *features*)
+   =&gt; (:foo :windows-me :windows-98 :xyzzy :ieee-floating-point)
+   (+ 2 #+xyzzy 3 #+foo 4)
+   =&gt; 9
+   (pop *features*)
+   =&gt; :foo
+   (+ 2 #+xyzzy 3 #+foo 4)
+   =&gt; 5
+ 
+ </description>
+ <seealso>featurep</seealso>
+ <link></link>
+ <section>システム</section>
+ <file></file>
+ </chapter>
+
+ <chapter>
+ <title>featurep</title>
+ <type>Function</type>
+ <arguments>featurep FEATURE</arguments>
+ <package>lisp</package>
+ <description>
+ FEATURE が *features* の要素であればそれ以降のリストを返します。
+ そうでなければ nil を返します。
+ 
+ 使用例：
+  ;;; process.l より
+  (let ((shell (if (featurep :windows-nt) "cmd.exe" "command.com")))
+    (defvar *shell* shell)
+    (defvar *eshell* shell))
+ 
+ </description>
+ <seealso>*features*</seealso>
+ <link></link>
+ <section>システム</section>
+ <file>evalmacs.l</file>
+ </chapter>
+----
+-どーもです。自分も理解しているとは言い難いのですが、「feature」=「特徴」なので「環境に依存する要素を格納してる」と言うよりも「環境の特徴を表すキーワードを格納している」という印象を受けました。 -- [[NANRI]] &new{2005-10-01 00:29:02 (土)};
+-そう言われるとそのほうが表現として適切な気もします。CLtL を見てもそんな感じですね(環境ではなく実装となっていますが)。 -- [[提案者]] &new{2005-10-01 21:13:22 (土)};
+- 表現を適当に修正して取り込みました→[[refwiki:*features*]], [[refwiki:featurep]] -- [[NANRI]] &new{2005-11-13 (日) 21:59:23};
+
+#comment

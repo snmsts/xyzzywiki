@@ -1,0 +1,165 @@
+* Dabbrevで、ある開いていないファイルのみを読み込んで補完する方法 [#l78827e0]
+-ページ: [[質問箱]]
+-投稿者: [[fen]]
+-状態: 完了
+-投稿日: 2005-09-22 09:11:46 (木)
+
+** メッセージ [#yd6f6cbb]
+TeXの命令をファイルAにまとめておき、TeXソース編集時にソース
+やその他開いているファイルに記述してあるキーワードを読み込まずに
+ファイルAからのみキーワードを検索して表示するようなDabbrevがあ
+ればと思うのですが、そうしたことを実現する方法はないでしょうか。
+
+なお、static abbrevは略語を覚えなければならず、命令を書いている
+途中でちょっと思い出せないから補完に頼ってみる、ということが
+できないので、そちらは考えていません。
+
+どなたかご存知の方宜しくお願いします。
+----
+-キーワードファイルからの補完ならこういう方法がありますが http://hie.s64.xrea.com/xyzzy/note/hoge-mode.html#completion --  &new{2005-09-22 10:24:23 (木)};
+-ありがとうございました。これで試してみます。 -- [[fen]] &new{2005-09-22 11:38:56 (木)};
+-すみません。キーワードファイルを用いた方法ですと、他のマクロのキーワードファイルと衝突してしまうので、避けたいと思うようになりました。キーワードファイルでないファイルから補完するという手はないものでしょうか？ちなみに、現在試しているのは、
+
+ ;abbrev using keyword file
+ (setq *keyword-load-path* '("~/texkey"))
+ 
+ ;私の設定例
+ (defun my-latex-abbrev ()
+ 
+   ;動的補完設定
+   (abbrev-mode t)
+   ;とりあえず読み込んでおく部分
+   (let ((now-buffer)(keyword-file-name)(bn))
+ 	 (setq now-buffer (selected-buffer))
+ 	 (setq keyword-file-name "~/texkey")
+ 
+   ;こうしておくとバッファが表示されず、選択できない
+ 	   (rename-buffer (concat  " " (buffer-name(selected-buffer)))(selected-buffer))
+ 		
+ 	 (switch-to-buffer now-buffer)
+     )
+ )
+ 
+ ;(define-key elisp::*KaTeX-mode-map* #\C-. 'my-latex-abbrev)
+ 
+ ;LaTeXに関する自分の設定例をKaTeX-mode起動時に読み込む
+ (add-hook 'elisp::*katex-mode-hook* #'my-latex-abbrev)
+ 
+ (setq *popup-completion-list-default* :always)
+
+という設定です。texkeyはキーワードとなる命令を改行しながら並べただけです。先頭には;**0をつけていました。 -- [[fen]] &new{2005-11-01 15:08:56 (火)};
+-なんかabbrevの使い方を間違ってる気が…。ひえさんのページの設定で、キーワードとは別のcompletion-listを定義すればいいのでは？ --  &new{2005-11-01 17:22:14 (火)};
+
+ (defvar *my-latex-completion-list* nil)
+ (defvar *my-latex-popup-completion-list* :always)
+ (defvar *my-latex-keyword-hash-table* nil)
+ (defvar *my-latex-keyword-file* "~/texkey")
+ 
+ (defun my-latex-completion ()
+   (interactive)
+   (or *my-latex-completion-list*
+       (setq *my-latex-completion-list* (make-list-from-keyword-table *my-latex-keyword-hash-table*))
+       (return-from my-latex-completion nil))
+   (let ((opoint (point)))
+     (when (skip-syntax-spec-backward "w_.")
+       (let ((from (point)))
+         (goto-char opoint)
+         (do-completion from opoint :list *my-latex-completion-list*
+                        nil nil *my-latex-popup-completion-list*)))))
+ 
+ (defun my-latex-load-keyword ()
+   (and *my-latex-keyword-file*
+        (null *my-latex-keyword-hash-table*)
+        (setq *my-latex-keyword-hash-table*
+              (load-keyword-file *my-latex-keyword-file* t))))
+ 
+ (add-hook 'elisp::katex-mode-hook #'my-latex-load-keyword)
+-↑こんな感じで。あと、個人的にはpopupはモードごとに設定するほうが好みなので勝手に追加しました（ミニバッファでポップアップされるのが嫌い）。 --  &new{2005-11-01 17:24:56 (火)};
+-ありがとうございました。ただ、今度は~/texkeyを読み込んでポップアップでキーワードを表示させるのがうまくいかなくなりました。.xyzzyに
+
+ ;;; -*- Mode: Lisp; syntax: Common-Lisp-*-
+ 
+ (setq *error-output* (make-buffer-stream (create-new-buffer "*Stack Trace*")))
+ (setq si:*trace-on-error* t)
+ 
+ ;; Netinstaller configuration
+ (require "ni/setup")
+ ;; 自動設定を利用する
+ (ni-autoload)
+ 
+ 
+ ;; KaTeX
+ ;;; ロードパスに KaTeX のあるディレクトリを追加
+ (pushnew (merge-pathnames "site-lisp/katex" (si:system-root)) *load-path* :test #'equal)
+ ;;; elispパッケージを有効にする
+ (require "elisp")
+ 
+ ;; keyword list
+ (defvar *my-latex-completion-list* nil)
+ (defvar *my-latex-popup-completion-list* :always)
+ (defvar *my-latex-keyword-hash-table* nil)
+ (defvar *my-latex-keyword-file* "~/texkey")
+ 
+ (defun my-latex-completion ()
+   (interactive)
+   (or *my-latex-completion-list*
+       (setq *my-latex-completion-list* (make-list-from-keyword-table *my-latex-keyword-hash-table*))
+       (return-from R-completion nil))
+   (let ((opoint (point)))
+     (when (skip-syntax-spec-backward "w_.")
+       (let ((from (point)))
+         (goto-char opoint)
+         (do-completion from opoint :list *my-latex-completion-list*
+                        nil nil *my-latex-popup-completion-list*)))))
+ 
+ (defun my-latex-load-keyword ()
+   (and *my-latex-keyword-file*
+        (null *my-latex-keyword-hash-table*)
+        (setq *my-latex-keyword-hash-table*
+              (load-keyword-file *my-latex-keyword-file* t))))
+ 
+ (add-hook 'elisp::*katex-mode-hook* #'my-latex-load-keyword)
+ 
+ ;;; 拡張子と関数の関連付け
+ (pushnew '("\\.tex$" . elisp::katex-mode) *auto-mode-alist* :test #'equal)
+ ;;; オートロード
+ (autoload 'elisp::katex-mode "katex" t)
+
+のように書いているのですが、KaTeXのキーワードの色設定が有効になっているにもかかわらず、KaTeX起動時に自分用のキーワード~/texkeyがまったく読み込まれていませんでした。（手動でtexkeyを開くと普通にDabbrevできます。autoloadと~/texkey追加を逆にしてもだめでした。）何か自分の.xyzzyの書き方がおかしいのでしょうか？ -- [[fen]] &new{2005-11-02 09:29:08 (水)};
+-my-latex-completionのキー割り当て設定はどこ? --  &new{2005-11-02 12:07:24 (水)};
+-すみません。別にしたのでDabbrevのキーバインドでは起動しないのですね。実際に起動できるようになりましたが、Stack-Traceにて
+
+ >CALL STACK 11: (return-from (R-completion nil))
+ >CALL STACK 10: (if ((setq #1=#:tem (setq *my-latex-completion-list* (make-list-from-keyword-table *my-latex-keyword-hash-table*))) #1# (return-from R-completion nil)))
+ >CALL STACK  9: (if ((setq #1=#:tem *my-latex-completion-list*) #1# (if (setq #1# (setq *my-latex-completion-list* #)) #1# ...)))
+ >CALL STACK  8: (let ((#1=#:tem) (if (setq #1# *my-latex-completion-list*) #1# ...)))
+ >CALL STACK  7: (or (*my-latex-completion-list* (setq *my-latex-completion-list* (make-list-from-keyword-table *my-latex-keyword-hash-table*)) (return-from R-completion nil)))
+ >CALL STACK  6: (block (my-latex-completion (or *my-latex-completion-list* (setq *my-latex-completion-list* (make-list-from-keyword-table *my-latex-keyword-hash-table*)) ...) (let ((opoint #)) (when (skip-syntax-spec-backward "w_.") (let # # ...)))))
+ >CALL STACK  5: (#<lexical-closure: my-latex-completion>)
+ >CALL STACK  4: (command-execute my-latex-completion #<lexical-closure: editor::record-complex-command>)
+ >CALL STACK  3: (system:*byte-code ...)
+ >CALL STACK  2: (#<lexical-closure: execute-extended-command> my-latex-completion nil)
+ >CALL STACK  1: (command-execute execute-extended-command)
+ `return-from'のキャッチャを参照できません: R-completion
+
+
+というエラーが出ました。対処法をご教示ください。 -- [[fen]] &new{2005-11-02 14:26:16 (水)};
+-(return-from R-completion nil) のところを (return-from my-latex-completion nil) にする。そもそもなんで R-completion なんて書いてあるのでしょう・・・ --  &new{2005-11-02 15:09:49 (水)};
+-ありがとうございました。エラーはなくなりましたが、文字通り、何も起こりません。ポップアップもまったく出ません。M-x my-latex-completionとしても出てきません。Stack Traceにもエラーは何一つ出ていません。KaTeXを読み込み、TeX文書中でテストしています。うーん、何がおかしいのでしょうか・・・。 -- [[fen]] &new{2005-11-02 15:45:16 (水)};
+-うひゃーコピペしたのを修正し忘れです＞R-completion。はずかしい。で、問題点ですが、elisp::*katex-mode-hook*をelisp::katex-mode-hookにしてください。katexではこのような変数名になってるのに気づきませんでした。すいません。一応上のコードも修正しておきました。 -- [[my-latex-completionを書いた人]] &new{2005-11-02 17:57:49 (水)};
+-反応が出るようになりましたが、\textbfという文字列を保管しようとしてみたところ、ステータスバーにはNo matchと出ました。~/texkeyには確かにあるはずなのですが、どうしてでしょうか？すみませんが、心当たりのある方よろしくお願いします。 -- [[fen]] &new{2005-11-02 19:03:57 (水)};
+-バックスラッシュのせいですね。skip-syntax-spec-backwardのところを"w_.@"にでも直してみてください。texkeyファイルを見せてもらった限りでは"w.@"でも十分かもしれません。 --  &new{2005-11-02 19:49:31 (水)};
+-皆様ありがとうございました！おかげさまで補完できる様になりました！ -- [[fen]] &new{2005-11-04 08:54:51 (金)};
+
+
+- 下記は [http://pc9.2ch.net/test/read.cgi/software/1163847543/324-325n 2ch で紹介されていた方法]です。
+
+ (defvar *filename-for-abbrev* nil) 
+ (setq *filename-for-abbrev* '("~/TAGS" "~/list.txt")) 
+ (dolist (file *filename-for-abbrev*) 
+   (or (get-file-buffer file) 
+       (let ((buf (create-new-buffer (concat " " (file-namestring file))))) 
+         (set-buffer buf) 
+         (insert-file-contents file))))
+
+#comment

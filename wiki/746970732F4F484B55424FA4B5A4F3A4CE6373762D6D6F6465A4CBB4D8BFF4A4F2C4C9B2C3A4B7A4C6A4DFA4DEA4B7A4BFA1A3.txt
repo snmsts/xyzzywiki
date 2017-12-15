@@ -1,0 +1,17 @@
+* 現在の csv-mode には適用不可。現在レコードの表示編集は C-x C-w から実施。 [#le6b5e0e]
+ 
+----
+　*csv-view*バッファを作り　そのバッファにデータベースの各レコードの表示。
+そのバッファからの各レコードの編集・更新や新しいレコードの作成をできるようにした。
+ただし、カスタマイズができなかったり、エラー処理が施されてなかったりします。(つる 2003/05/01)~
+"mycsv.l"を微妙に更新しました。なお、私の環境では次を".xyzzy"に書き込んで使用しています。
+あ、それからちなみにキーバインドの"F21"は"C-RET"に割り当ててます。(つる 2003/05/19)
+ (export '(ed::csv-mode  ed::tsv-mode) "ed")
+ (autoload 'csv-mode "mycsv" t)
+ (autoload 'tsv-mode "mycsv" t)
+ (pushnew '("\\.csv$" . csv-mode) *auto-mode-alist* :test 'equal)
+ (pushnew '("\\.tsv$" . tsv-mode) *auto-mode-alist* :test 'equal)
+ (set-extended-key-translate-table exkey-C-return #\F21)
+#ref(mycsv.l)
+
+#comment

@@ -1,0 +1,34 @@
+* filer-modeで上下キーでループさせたい。 
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2004-06-11 (金) 11:24:18
+
+** メッセージ 
+filerで一番上の行で上を押したら一番下の行へ
+一番下の行で下を押したら一番上の行へカーソルを
+移動させたいのですが、何を変更すればよいでしょうか。
+----
+-.xyzzy か siteinit.l にでも。 -- [[OHKUBO Hiroshi]] &new{2004-06-12 (土) 12:11:30};
+
+ (in-package "editor")
+ (export '(filer-forward-line-or-goto-bof
+           filer-backward-line-or-goto-eof))
+ (defun filer-forward-line-or-goto-bof (&optional (arg 1))
+   (let ((old-file (filer-get-current-file)))
+     (filer-forward-line arg)
+     (when (string= old-file (filer-get-current-file))
+       (filer-goto-bof))))
+ (defun filer-backward-line-or-goto-eof (&optional (arg 1))
+   (let ((old-file (filer-get-current-file)))
+     (filer-forward-line (- arg))
+     (when (string= old-file (filer-get-current-file))
+       (filer-goto-eof))))
+ (define-key filer-keymap #\C-n 'filer-forward-line-or-goto-bof)
+ (define-key filer-keymap #\C-p 'filer-backward-line-or-goto-eof)
+ (define-key filer-keymap #\Up 'filer-backward-line-or-goto-eof)
+ (define-key filer-keymap #\Down 'filer-forward-line-or-goto-bof)
+ (in-package "user")
+-期待した通りの動きになりました有難う御座います。 --  &new{2004-06-14 (月) 09:14:08};
+
+#comment

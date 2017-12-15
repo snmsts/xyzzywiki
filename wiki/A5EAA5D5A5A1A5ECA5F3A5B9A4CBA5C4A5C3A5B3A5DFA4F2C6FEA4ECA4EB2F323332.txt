@@ -1,0 +1,215 @@
+* typep, deftype, si:canonicalize-type [#s41d464d]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[Nomura]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-09-10 (日) 18:03:53
+-バージョン: 
+
+** メッセージ [#xdbb5245]
+typepというより型の説明になってしまったかもしれません。とはいえ『型一覧』の型と異なる部分もあるようなので、一応書き連ねてみました。subtypepも調べなおしてみたのですが、一部の複合型（notを含む場合とか）の挙動がおかしい気がするので保留しました。
+
+ <chapter>
+ <title>typep</title>
+ <type>Function</type>
+ <arguments>typep OBJECT TYPE</arguments>
+ <package>lisp</package>
+ <description>
+ OBJECT が TYPE の型であれば、non-nil な値を返します。
+ 
+ TYPE に与えることのできる引数には以下のようなものがあります。
+ 
+ 1. 一般の型 
+   builtin 関数（characterp、listp など）で判定します。
+ 
+   'atom                'null           'ed:buffer
+   'base-character      'number         'ed:marker
+   'bignum              'package        'ed:process
+   'character           'random-state   'ed:regexp
+   'compiled-function   'ratio          'ed:syntax-table
+   'cons                'real           'ed:menu
+   'fixnum              'readtable      'ed:dde-handle
+   'function            'sequence       'ed:window
+   'hash-table          'stream         'ed:oledata
+   'keyword             'symbol
+   'list
+ 
+ 2. 条件式・複合型
+   条件を満たす場合に non-nil な値を返します。
+ 
+   '(satisfies FUNC)      OBJECT を引数に FUNC を funcall した結果を返す
+   '(member ELEMENTS)     OBJECT が ELEMENTS に含まれる
+   '(eql OBJ)             OBJECT が OBJ に等しい
+   '(not TYPE1)           OBJECT が TYPE2 の型でない
+   '(and TYPE1 TYPE2 ...) OBJECT が TYPE1, TYPE2, ... すべての型である
+   '(or TYPE1 TYPE2 ...)  OBJECT が TYPE1, TYPE2, ... いずれかの型である
+   't                     常に真
+   'nil                   常に偽
+ 
+ 3. 文字
+   'standard-char         文字のうち standard-char-p なもの
+   'extended-char (*)     常に nil を返す（extended-char は存在しない？）
+ 
+ 4. 数値
+   範囲を指定できます。省略することも可能。
+   MIN および MAX に、数値の代わりに * を与えると、
+   下限（上限）を指定しなかったとみなされます。
+ 
+   '(integer MIN MAX)
+   '(float MIN MAX)
+   '(rational MIN MAX)
+   '(short-float MIN MAX)
+   '(single-float MIN MAX)
+   '(double-float MIN MAX)
+   '(long-float MIN MAX)
+ 
+   '(complex TYPE1)      integer 型、float 型などで区別可能。範囲指定はできない。
+ 
+ 5. 一次元配列
+   長さを指定できます。
+   長さには整数値か * を指定します。省略も可能。
+ 
+   '(simple-vector LENGTH)
+   '(simple-string LENGTH)
+   '(string LENGTH)
+   
+   '(vector TYPE1 LENGTH)       TYPE1 は t（普通のベクタ）または character（文字列）
+   
+ 6. 一次元以上の配列
+   '(simple-array TYPE1 DIM)    TYPE1 は t（普通のベクタ）または character（文字列）
+   '(array TYPE1 DIM)           DIM は次元
+ 
+   '(simple-array TYPE1 (DIMS)) TYPE1 は t（普通のベクタ）または character（文字列）
+   '(array TYPE1 (DIMS))        DIMS は各次元のサイズ（たとえば 2x3 なら (2 3) ）
+ 
+ 7. defstruct で定義された構造体
+ 
+ 使用例:
+   ;; 一般の型
+   (typep #\a 'character)
+   =&gt; t
+   (typep (selected-buffer) 'buffer)
+   =&gt; t
+ 
+   ;; 複合型
+   (typep 3 '(satisfies oddp))       ; 奇数（関数 oddp による判定）
+   =&gt; t
+   (typep 'b '(member a b c))        ; a b c がリストとしてまとめられる
+   =&gt; (b c)
+   (typep 3 '(and atom number))      ; atom かつ number
+   =&gt; t
+   (typep 3 '(and atom number list)) ; atom かつ number かつ list
+   =&gt; nil
+   (typep 3 '(or atom number list))  ; atom または number または list
+   =&gt; t
+ 
+   ;; 数値
+   (typep 3 'integer)                ; 範囲指定しないならリストにする必要なし
+   =&gt; t
+   (typep 3 '(integer 1 5))
+   =&gt; t
+   (typep x '(integer * 5))
+   =&gt; t
+   (typep x '(integer 5 *))
+   =&gt; nil
+   
+   (typep #C(1 2) 'complex)
+   =&gt; t
+   (typep #C(1 2) '(complex float))
+   =&gt; nil
+ 
+   ;; 一次元配列
+   (typep #(1 2 3) '(simple-vector 3))
+   =&gt; t
+   (typep #(1 2 3) '(vector t 3))
+   =&gt; t
+   (typep "abc" '(vector character 3))
+   =&gt; t
+ 
+   ;; 一次元以上の配列
+   (setf a (make-array '(3 4)))
+   =&gt; #2A((nil nil nil nil) (nil nil nil nil) (nil nil nil nil))
+   (typep a '(array t *))     ; 次元を指定しない
+   =&gt; t
+   (typep a '(array t 2))     ; 2 次元配列
+   =&gt; t
+   (typep a '(array t (3 4))) ; サイズも一致
+   =&gt; t
+   (typep a '(array t (* 4))) ; サイズの一部だけを指定することも可能
+   =&gt; t
+ 
+   ;; 構造体
+   (typep (selected-pseudo-frame) 'ed::pseudo-frame)
+   =&gt; t
+ </description>
+ <seealso>si:canonicalize-type</seealso>
+ <seealso>type-of</seealso>
+ <seealso>subtypep</seealso>
+ <link></link>
+ <section>データ型</section>
+ <file>typespec.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>deftype</title>
+ <type>Macro</type>
+ <arguments>deftype NAME (&amp;rest LAMBDA-LIST) &amp;rest BODY</arguments>
+ <package>lisp</package>
+ <description>
+ NAME と言う名前のデータ型を定義します。
+ 定義したデータ型は typep や subtypep などで使うことができます。
+ ただし typep で使う場合には、使用前に si:canonicalize-type で
+ 処理することが必要なようです。
+ 
+ 使用例:
+   ;; lisp/typespec.l より
+   ;; mod という型を定義
+   (deftype mod (n)
+     `(integer 0 ,(1- n))) ; 0 以上 n 未満の整数
+   (typep 3 (si:canonicalize-type '(mod 5)))
+   =&gt; t
+ 
+   ;; 奇数型を作ってみる
+   (deftype odd ()
+     `(and integer
+           (satisfies oddp)))
+   (typep 3 (si:canonicalize-type 'odd))
+   =&gt; t
+   (subtypep 'odd 'integer)
+   =&gt; t
+   =&gt; t
+ </description>
+ <seealso>si:canonicalize-type</seealso>
+ <seealso>subtypep</seealso>
+ <seealso>typep</seealso>
+ <link></link>
+ <section>データ型</section>
+ <file>typespec.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>si:canonicalize-type</title>
+ <type>Function</type>
+ <arguments>canonicalize-type TYPE</arguments>
+ <package>system</package>
+ <description>
+ deftype で宣言されたデータ型 TYPE を展開し、標準の型に直します。
+ 
+ たとえば typep は標準の型しか処理しないため、
+ deftype で宣言された型を使いたい場合にはこの関数で処理する必要があります。
+ 
+ 使用例:
+   (si:canonicalize-type '(mod 5))
+   =&gt; (integer 0 4)
+ </description>
+ <seealso>typep</seealso>
+ <link></link>
+ <section>データ型</section>
+ <file>typespec.l</file>
+ </chapter>
+--------
+- どーもです。自分も確認してみます。 -- [[NANRI]] &new{2006-09-12 (火) 20:59:08};
+
+#comment

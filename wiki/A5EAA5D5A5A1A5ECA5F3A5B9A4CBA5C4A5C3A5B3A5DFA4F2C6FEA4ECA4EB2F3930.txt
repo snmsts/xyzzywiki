@@ -1,0 +1,91 @@
+*window-height, window-lines, window-width [#w28fe555]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[OHKUBO]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2004-11-23 (火) 18:58:44
+-バージョン: 20041115
+
+**メッセージ [#t2ae8acb]
+加筆しました。
+
+ <chapter>
+ <title>window-height</title>
+ <type>Function</type>
+ <arguments>window-height &amp;optional WINDOW</arguments>
+ <package>editor</package>
+ <description>
+ ウィンドウの高さを行単位で返します。
+ 部分的でなく完全に表示可能な行の数を返しますが、返す最小値は 1 です。
+ xyzzy 0.2.2.232 では内部的には window-lines と完全に同一定義です。
+ 
+ 使用例：
+   ;;; 現在のウィンドウを縦に半分にする。
+   (split-window (- (floor (window-height) 2) 2))
+   =&gt; t
+ 
+ 補足：
+   xyzzy 0.2.2.232 では内部的には window-lines と完全に同一定義ですが、
+   window-height と window-lines は同一オブジェクトではありません。
+   (eq #'window-height #'window-lines) =&gt; nil
+ </description>
+ <seealso>window-lines</seealso>
+ <seealso>window-width</seealso>
+ <seealso>window-columns</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>window-lines</title>
+ <type>Function</type>
+ <arguments>window-lines &amp;optional WINDOW</arguments>
+ <package>editor</package>
+ <description>
+ ウィンドウの表示可能行数を返します。
+ 部分的でなく完全に表示可能な行の数を返しますが、返す最小値は 1 です。
+ xyzzy 0.2.2.232 では内部的には window-height と完全に同一定義です。
+ 
+ 使用例：
+   (window-lines)
+   =&gt; 18
+ 
+ 補足：
+   xyzzy 0.2.2.232 では内部的には window-height と完全に同一定義ですが、
+   window-lines と window-height は同一オブジェクトではありません。
+   (eq #'window-lines #'window-height) =&gt; nil
+ </description>
+ <seealso>window-height</seealso>
+ <seealso>window-width</seealso>
+ <seealso>window-columns</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>window-width</title>
+ <type>Function</type>
+ <arguments>window-width &amp;optional WINDOW</arguments>
+ <package>editor</package>
+ <description>
+ ウィンドウの幅をキャラクタ単位で返します。
+ 文字を表示可能な領域の幅ではなく、「行番号」表示領域、「折り返しマーク」
+ 表示領域を含んだ領域についての幅を返します。
+ キャラクタ幅に満たない幅については切り捨てますが、返す最小値は 1 です。
+ </description>
+ <seealso>window-columns</seealso>
+ <seealso>window-height</seealso>
+ <seealso>window-lines</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-取り込みました->[[refwiki:window-height]], [[refwiki:window-lines]], [[refwiki:window-width]] -- [[NANRI]] &new{2005-03-02 00:47:57 (水)};
+
+#comment

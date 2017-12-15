@@ -1,0 +1,132 @@
+;;; -*- Mode: Lisp; Package: EDITOR -*-
+;;;
+;;; This file is not part of xyzzy.
+;;;
+; $Id: util.l,v 1.2 2003/04/27 02:17:48 torihat Exp $
+;
+; util.l
+;
+; by HATTORI Masashi <gyo@he.mirai.ne.jp>
+
+(require "ni/local")
+
+(provide "util")
+
+(defvar *util-name* "util")	  ; ディレクトリ名
+(defvar *util-version* "0.0.0.1") ; バージョン
+
+; 元ファイルの場所
+(defvar *util-dev-dir*
+  (merge-pathnames (concat "dev/" *util-name*) (si:system-root)))
+; 配置先の場所
+(defvar *util-targ-dir*
+  (merge-pathnames (concat "site-lisp/" *util-name*) (si:system-root)))
+; アーカイブ作成場所
+(defvar *util-archive-dir*
+  (merge-pathnames "www.mirai.ne.jp/~gyo/xyzzy/" (si:system-root)))
+
+; アーカイブファイル名
+(defvar *util-archive-file*
+  (format nil "~A-~A.lzh"
+	  *util-name*
+	  *util-version*))
+
+; ファイルのリスト (元ファイル . 配置先)
+;   元ファイルは *util-dev-dir* に置く
+;   配置先は(si:system-root) からのパス (省略可。省略すると *util-targ-dir*)
+(defvar *util-file-list* '(("util.l" . "site-lisp/util.l")
+			   ("util.lc" . "site-lisp/util.lc")
+			   ))
+
+; バイトコンパイルしないファイルの正規表現
+(defvar *util-file-not-compile-regexp* "config.l$\\|makefile.l$")
+
+(defun util-dist-path (flist)
+  (merge-pathnames (car flist) *util-dev-dir*))
+
+(defun util-targ-path (flist)
+  (if (cdr flist)
+      (merge-pathnames (cdr flist) (si:system-root))
+    (merge-pathnames (car flist) *util-targ-dir*)))
+
+; ファイルを配置先にコピーする
+(defun util-deploy ()
+  (interactive)
+  (unless (file-exist-p *util-targ-dir*)
+    (create-directory *util-targ-dir*))
+  (let ((deplist))
+    (dolist (f *util-file-list*)
+      (let ((dist (util-dist-path f))
+	    (targ (util-targ-path f)))
+	(unless (path-equal dist targ)
+	  (push (cons dist targ) deplist))))
+    (setq deplist (reverse deplist))
+    (when (yes-or-no-p "コピーする？~%~%~{~S~%~}" deplist)
+      (dolist (f deplist)
+	(let ((dist (car f))
+	      (targ (cdr f)))
+	  (copy-file dist targ :if-exists :newer))))))
+
+; バイトコンパイルする
+(defun util-make-lisp ()
+  (interactive)
+  (dolist (f *util-file-list*)
+    (let* ((dist (util-dist-path f))
+	   (distc (concat dist "c")))
+      (when (and (equal (pathname-type dist) "l")
+		 (not (string-matchp *util-file-not-compile-regexp* dist))
+		 (or (not (file-exist-p distc))
+		     (file-newer-than-file-p dist distc)))
+	(byte-compile-file dist)))))
+
+; タグファイルを作成する
+(defun util-make-tags-file ()
+  (interactive)
+  (let ((old (default-directory))
+	(path *util-dev-dir*))
+    (set-default-directory path)
+    (make-tags-file path 0)
+    (set-default-directory old)))
+
+; コンパイル済みファイル、バックアップファイルを削除する
+(defun util-make-clean ()
+  (interactive)
+  (dolist (f (directory *util-dev-dir*
+			:absolute t
+			:recursive t))
+    (when (or (string-match "~$" f)
+	      (string-match "\.lc" f)
+	      (string-matchp "xtags" f))
+      (delete-file f)
+      (message "File deleted: ~A" f))))
+
+(defun util-make-all ()
+  (interactive)
+  (util-make-clean)
+  (util-make-lisp)
+  (util-make-tags-file))
+
+; アーカイブファイルを作成する
+(defun util-make-archive ()
+  (interactive)
+  (let (files
+	archive)
+    (util-deploy)
+    (dolist (f *util-file-list*)
+      (let ((targ (util-targ-path f)))
+	(pushnew targ files :test #'path-equal)))
+    (setq archive
+	  (read-file-name "File: "
+			  :default (merge-pathnames *util-archive-file* *util-archive-dir*)))
+    (create-archive archive
+		    files
+		    (si:system-root))
+    (message "~A created." archive)
+    ))
+
+; NetInstallerのリストを更新する
+(defun util-ni-update ()
+  (interactive)
+  (let ((path (merge-pathnames *util-archive-file*
+			       *util-archive-dir*)))
+    (ni::local-app-add path)))

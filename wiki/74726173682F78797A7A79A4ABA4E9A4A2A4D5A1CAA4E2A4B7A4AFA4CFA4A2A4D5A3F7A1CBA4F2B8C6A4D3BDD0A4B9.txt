@@ -1,0 +1,55 @@
+[[trash]]
+
+* about [#h9a45254]
+
+http://www.h5.dion.ne.jp/~akt/ でＡＫＴさんが公開されているファイラ用のソースコードです。あふ（もしくはあふｗ）の表示パスを、xyzzyのカレントバッファに変更します。
+
+** 使い方など [#ae8b00b4]
+
+http://www.h5.dion.ne.jp/~akt/ から入手できるあふ（もしくはあふｗ）と、それに対応するあふこまんど（もしくはあふｗこまんど ）が必要です。試していませんが、あふこまんど（もしくはあふｗこまんど ）のかわりにあふ（もしくはあふｗ）本体でもいけるんじゃないかと。
+
+以下のソースコードを.xyzzyとかに書いておいて、
+
+ C-x a
+
+とすれば、あふ（もしくはあふｗ）の表示パスが切り替わっているはずです。一応、xyzzyのカレントバッファが関連付けられたファイルを確かめています。関連づけられていない場合には.xyzzyがあるディレクトリを開くようにしてあります。
+
+ ;; あふ（もしくはあふｗ）があるディレクトリを指定
+ (setq *af-directory* "C:\\app\\afxw32\\")
+ 
+ (defun afset ()
+   "カレントバッファと関連付けられたファイルのある
+ ディレクトリパスをあふで表示する。カレントバッファと関連付けられたファイルが存在しない場合、
+ .xyzzyの存在するディレクトリを開く"
+   (interactive)
+   (let ((buf (get-buffer-file-name))
+         af-option)
+     ;; なければ.xyzzyのディレクトリ
+     (if (equal buf nil)
+         (setq buf (concat (user-homedir-pathname) ".xyzzy")))
+ 
+     (setq af-option
+           (concat
+            "-O"                 ;; ;; Oは他ファイル窓のパス
+            "\""
+            (map-slash-to-backslash
+             buf)
+            "\""
+            " -*O\"*\.*\""))     ;; ファイルマスク
+     (if (equal (os-platform) 'windows-xp)
+         (progn          ;; xpの時はあふｗで
+           (call-process
+            (concat
+             (map-slash-to-backslash (concat *af-directory* "AFxwCMD.EXE"))
+             " "
+             af-option)))
+       (progn            ;; それ以外はとりあえずあふ
+         (call-process
+          (concat
+           (map-slash-to-backslash (concat *af-directory* "AFxCMD.EXE"))
+           " "
+           af-option))))))
+ 
+ ;; キーバインドの指定
+ ;; C-x aを指定してある
+ (global-set-key '(#\C-x #\a) 'afset)

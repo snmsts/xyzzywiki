@@ -1,0 +1,90 @@
+#freeze
+*[[NetInstaller]]/配布されているパッケージ一覧 [#vca6dab9]
+:Junk Scripts ([[home>http://www7a.biglobe.ne.jp/~hat/]])|http://www7a.biglobe.ne.jp/~hat/xyzzy/packages.l
+
+:66MHz.com ([[home>http://www1.odn.ne.jp/ymtz/]])|http://www1.odn.ne.jp/ymtz/archive/packages.l
+
+:雑記帖 ([[home>http://ohkubo.s53.xrea.com/]])|http://ohkubo.s53.xrea.com/xyzzy/packages.l
+
+:kia's website ([[home>http://www.geocities.jp/kiaswebsite/]])|http://www.geocities.jp/kiaswebsite/xyzzy/packages.txt
+
+:xyzzyのじかん ([[home>http://miyamuko.s56.xrea.com/]])|http://miyamuko.s56.xrea.com/xyzzy/package.l
+
+:ふかふか ([[home>http://www5e.biglobe.ne.jp/~fukafuka/]])|http://www5e.biglobe.ne.jp/~fukafuka/xyzzy/packages.l
+
+:HIE no xyzzy ([[home>http://hie.s64.xrea.com/xyzzy/]])|http://hie.s64.xrea.com/xyzzy/pub/packages.l
+
+:FortuneOverture ([[home>http://www20.big.or.jp/~rin_ne/]])|http://www20.big.or.jp/~rin_ne/soft/packages.l
+
+:佐野の Masatoshi's xyzzy extend lisps ([[home>http://xyzzy.s53.xrea.com/]])|http://xyzzy.s53.xrea.com/ni/ni.l
+
+:On Slant ([[home>http://bernie.s14.xrea.com/]])|http://bernie.s14.xrea.com/xyzzy/packages.l
+
+:Memory Palace ([[home>http://www.geocities.co.jp/Technopolis-Mars/8229/]])|http://www.geocities.co.jp/Technopolis-Mars/8229/xyzzy/packages.l.txt
+
+:Source of Nothingness ([[home>http://raido.sakura.ne.jp/southly/rn/]])|http://raido.sakura.ne.jp/southly/xyzzy/packages.l
+
+:chez sugi([[home>http://chez-sugi.net/]])|http://chez-sugi.net/xyzzy/packages.l
+
+:雄猫のがらくた置き場([[home>http://osuneko.at.infoseek.co.jp/]])|http://osuneko.at.infoseek.co.jp/xyzzy/packages.l
+
+:LKPTeam 人生捨ててます？([[home>http://www5d.biglobe.ne.jp/~lostland/ndiary/index.html]])|http://www5d.biglobe.ne.jp/~lostland/xyzzy/packages.l
+
+:とらいきゃっち・ふぁいなりー([[home>http://hw001.gate01.com/eggplant/tcf/index.html]])|http://hw001.gate01.com/eggplant/tcf/lisp/packages.l
+
+// 重複なので退避。packages.l.txt の内容を優先し「Memory Palace」の方を残しました。
+//:記憶の宮殿([[home>http://www.geocities.co.jp/Technopolis-Mars/8229/]])|http://www.geocities.co.jp/Technopolis-Mars/8229/xyzzy/packages.l.txt
+
+:Yutaka Nomura's Page ([[home>http://f55.aaa.livedoor.jp/~ynomura/xyzzy/]])|http://f55.aaa.livedoor.jp/~ynomura/xyzzy/packages.l
+
+// 404になっていました。復活したら戻してあげてください。
+//:MicroTips(xyzzy dept) //([[home>http://members.at.infoseek.co.jp/zauberer/microtips/xyzzy.html]])|http://members.at.infoseek.co.jp/zauberer/microtips/packages.l
+
+:しょぼしょぼスクリプト([[home>http://www2.ocn.ne.jp/~cheerful/script/xyzzy/]])|http://www2.ocn.ne.jp/~cheerful/script/xyzzy/packages_tki.l
+
+:へなちょこリファレンスXML関連([[home>http://xyzzy.s53.xrea.com/reference/]])|http://xyzzy.s53.xrea.com/reference/archive/ni.l
+
+:ななしの人の部屋([[home>http://www.osk.3web.ne.jp/~usitukai/]])|http://www.osk.3web.ne.jp/~usitukai/warez/ni/packages.l
+
+//:いらんこと。([[home>http://www.august.oor.jp/logs/boo/]])|http://www.august.oor.jp/logs/estraier/packages.l
+
+:らいおさむのお屋敷([[home>http://www.osamurai.flnet.org/]])|http://www.osamurai.flnet.org/memo/xyzzy/src/packages.l
+
+:sazasaza([[home>http://sazasaza.client.jp/xyzzy/]])|http://sazasaza.client.jp/xyzzy/package.l
+
+:きまぐれにxyzzy([[home>http://homepage2.nifty.com/kimagurenixyzzy/index.html]])|http://homepage2.nifty.com/kimagurenixyzzy/packages.l
+
+:silog([[home>http://white.s151.xrea.com/wiki/]])|http://white.s151.xrea.com/wiki/index.php?plugin=attach&refer=script&openfile=packages.l
+
+:*Megahurtz([[home>http://www.geocities.co.jp/megahurtz_dk/xyzzy.html]])|http://www.geocities.co.jp/megahurtz_dk/packages.txt
+
+:oojah xyzzy([[home>http://xyzzy.g-artistic.net/]])|http://up.xyzzy.jp/public/bulb/
+
+:WOMO([[home>http://womo.nconc.net/]])|http://womo.nconc.net/misc/packages.l
+
+// 404になっていました。復活したら戻してあげてください。
+//:Han's Room ([[home>http://www3.ocn.ne.jp/~han/xyzzy/]])|http://www3.ocn.ne.jp/~han/xyzzy/packages.l
+:うぐぅ御所([[home>http://www1.bbiq.jp/rohinomiya/]])|http://www1.bbiq.jp/rohinomiya/products/packages.l
+
+:思いつくまま xyzzy(ほーむなし？)|http://up.xyzzy.jp/public/whimsical/
+
+:bove-crach([[home>http://park.geocities.jp/bovecrach/]])|http://park.geocities.jp/bovecrach/xyzzy/packages.txt
+
+:佐野の実験場([[home>http://up.xyzzy.jp/public/sana/]])|http://up.xyzzy.jp/public/sana/
+
+:ottt([[home>http://ottt.x0.com/]])|http://ottt.x0.com/xyzzy/lisp/package/packages.l
+
+:世界の仕組み研究所([[home>http://www7.atwiki.jp/knenet]])|http://www7.atwiki.jp/knenet?cmd=upload&act=open&pageid=62&file=packages.l
+
+:鉄のサイト([[home>http://ironsand.net/]])|http://ironsand.net/misc/packages.l
+
+:カフェイン中毒([[home>http://bowbow99.sakura.ne.jp/]])|http://bowbow99.sakura.ne.jp/xyzzy/packages.l
+
+:COMA Note([[home>http://coma.xrea.jp/]])|http://coma.xrea.jp/xyzzy/packages.l
+
+:Gauche, xyzzy memo([[home>http://sinm.adam.ne.jp/]])|http://sinm.adam.ne.jp/xyzzy/packages.l
+
+// テンプレート
+// :サイト名([[home>サイトURI]])|packages.l
+
+#pcomment

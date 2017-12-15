@@ -1,0 +1,498 @@
+;;-*-lisp-interaction-*-
+
+(load-library "xml-parser-modoki")
+
+(defvar datafile nil "リファレンスの場所")
+(unless datafile
+  (setq datafile (merge-pathnames "reference.xml" (etc-path))))
+
+(defvar txtoutputfile nil "txtの出力先")
+(unless txtoutputfile
+  (setq txtoutputfile (merge-pathnames "reference.txt" (etc-path))))
+
+(defvar kwdoutputfile nil "kwdの出力先")
+(unless kwdoutputfile
+  (setq kwdoutputfile (merge-pathnames "lisp" (etc-path))))
+
+(defvar htmloutputfile nil "htmlの出力先")
+(unless htmloutputfile
+  (setq htmloutputfile "~/ref"))
+
+
+(defvar xmlcache nil "リファレンスの読み込み時キャッシュ")
+
+(defvar xmltype nil "名前も適当")
+(defvar xmlsection nil "")
+
+
+;汎用関数
+(defun get-elem (elem xmlist)
+  "xmlの要素抽出関数"
+  (assoc
+   elem
+   (cddr xmlist)
+   :test #'string-equal))
+
+;;結果を書き換えるべからず
+(defun xml ()
+  "xmlリファレンスを読み込む"
+  (if xmlcache
+      xmlcache
+    (setq xmlcache
+	  (sort (cdar (ed::xmlpm-parse-file datafile))
+		#'string-lessp :key #'(lambda (x) (caddr (get-elem "title" x)))))))
+
+;;もう少し汎用化しといたほうがいいかも。
+(defun type-set ()
+  "タイプごとの集合を作る"
+  (if xmltype
+      xmltype
+    (let (alist section aso)
+      (dolist (i (reverse (xml)))
+	(setq section (caddr (get-elem "type" i)))
+	(setq aso (assoc section alist :test #'string-equal ))
+	(setq
+	 aso
+	 (if aso
+	     aso
+	   (car (push (list section nil) alist))))
+	(push i (cdr aso)))
+      (setq xmltype alist))))
+
+(defun section-set ()
+  "セクションごとの集合を作る"
+  (if xmlsection
+      xmlsection
+    (let (alist section aso)
+      (dolist (i (reverse (xml)))
+	(setq section (caddr (get-elem "section" i)))
+	(setq aso (assoc section alist :test #'string-equal ))
+	(setq
+	 aso
+	 (if aso
+	     aso
+	   (car (push (list section nil) alist))))
+	(push i (cdr aso)))
+      (setq xmlsection alist))))
+
+
+(defun elem-list (elem alist)
+  "リストに含まれている全てのエレメントのリストを作る"
+  (let (a)
+    (dolist (i alist)
+      (when i
+	(pushnew (caddr (get-elem elem i)) a :test #'string-equal)))
+    (sort a  #'string<)))
+
+;txt出力用関数
+
+(defun txtheader (fp)
+  "txtヘッダ出力"
+  (format fp "Converted from ~A by xml2txt.l at ~A\n"
+	  datafile
+	  (format-date-string "%g%e年%m月%d日"))
+  (dotimes (i 70)
+    (format fp "="))
+  (format fp "\n"))
+
+(defun txtchapter (fp)
+  "txtの本文出力"
+  (dolist (i (xml))
+    ;;関数名
+    (format fp "■~A~%"
+	    (caddr (get-elem "title" i)))
+    ;;付随要素
+    (dolist (j '( "Type" "Arguments" "Package" "Seealso" "Link" "File" "Section" "Description"))
+      (let ((q (get-elem j i)))
+	(when (caddr q)
+	  (format fp "[~11@A]: ~A~%" j
+		  ;;謎の書式修正
+		  (if (string-match "" (caddr q))
+		      (format nil "~%~A"
+			      (substitute-string (caddr q)  "" ""))
+		    (caddr q))))))
+    ;;フッタの改行
+    (format fp "~2%")))
+
+(defun txttips (fp)
+  "目的別索引"
+  (let (elist)
+    (format fp "■目的別索引~%")
+    (dolist (i (setq elist (elem-list "section" (cdr (assoc "Tips" (type-set) :test #'string-equal)))))
+	       (format fp "  - ~A~%" i))
+      (format fp "  - 関数一覧~2%")
+    (dolist (i elist)
+      (format fp "■~A~%" i)
+      (dolist (j (cdr (assoc "Tips" (type-set) :test #'string-equal)))
+	(when (string-equal (caddr(get-elem "section" j )) i)
+	  (format fp "  - ~A~%" (caddr (get-elem "title" j)))))
+      (format fp "~%"))))
+
+(defun txtall (fp)
+  "実質何もかも出力"
+  (format fp "■関数一覧~%")
+  (dolist (i (xml))
+    (format fp "  - ~A~%" (caddr (get-elem "title" i))))
+  (format fp "~%"))
+
+;;to text
+(defun xml2txt ()
+  "to text"
+  (with-open-file (fp txtoutputfile :direction :output)
+    (txtheader fp)
+    (txtchapter fp)
+    (txttips fp)
+    (txtall fp)))
+
+;kwd出力用関数
+
+;;速度なんて知らんねぇ
+(defun xml2kwd ()
+  "to kwd"
+  (with-open-file (fp kwdoutputfile :direction :output)
+    (dolist (i (xml))
+      (when
+	  (find
+	   (caddr (get-elem "type" i))
+	   '("Function" "Special Form" "Macro" "Misc")
+	   :test #'string-equal)
+	(format fp "~A~%"   (caddr (get-elem "title" i)))))
+    (format fp ";*2~%")
+    (dolist (i (xml))
+      (when
+	  (string-equal
+	   (caddr (get-elem "type" i))
+	   "Variable")
+	(format fp "~A~%"   (caddr (get-elem "title" i)))))))
+
+;html出力用関数
+
+(defvar INDEX_NAME_LIST
+  '(("データ型" . "datatypes")
+    ("変数と定数" . "variables")
+    ("制御構造" . "program")
+    ("パッケージ" . "packages")
+    ("関数" . "function")
+    ("マクロ" . "macro")
+    ("シンボル" . "symbols")
+    ("数値" . "numbers")
+    ("文字" . "characters")
+    ("文字列" . "string")
+    ("シーケンス" . "sequence")
+    ("リスト" . "list")
+    ("ハッシュ" . "hash")
+    ("配列" . "array") 
+    ("チャンク" . "chunk")
+    ("評価" . "evaluation")
+    ("入出力" . "io")
+    ("ファイルシステム" . "filesystem")
+    ("エラー" . "errors")
+    ("ウィンドウ" . "window")
+    ("バッファ" . "buffer")
+    ("ミニバッファ" . "minibuffer")
+    ("リージョン" . "region")
+    ("モード" . "mode")
+    ("シンタックス" . "syntax")
+    ("キーマップ" . "keymap")
+    ("テキスト" . "text")
+    ("検索・正規表現" . "search")
+    ("ダイアログ" . "dialog")
+    ("日付・時間" . "time")
+    ("メニュー" . "menu")
+    ("ファイラー" . "filer")
+    ("ポジション" . "position")
+    ("プロセス" . "process")
+    ("システム" . "system")
+    ("その他" . "misc")
+    ("未分類" . "other")))
+
+
+
+
+(defvar use_frame  t)
+(defvar html_title "xyzzy Reference")
+
+(defvar HTML_CONTENTS  "contents.html")
+(defvar HTML_INDEX  "allindex.html")
+(defvar HTML_FRAME  "index.html")
+(defvar HTML_INTRO  "intro.html")
+(defvar HTML_TIPS  "tips.html")
+
+(defvar HTML_DIR  "html")
+
+(defvar WINDOW_LEFT)
+(defvar WINDOW_RIGHT)
+
+(if use_frame
+    (setq WINDOW_LEFT "left"
+	  WINDOW_RIGHT "right")
+  (setq WINDOW_LEFT "self"
+	WINDOW_RIGHT "self"))
+
+;=====================================#
+; URL encode
+;=====================================#
+(defun en_url(url)
+  (setq url (map-internal-to-utf-8 url))
+  (let (c
+	cc
+	(neurl ""))
+    (dotimes (i (length url))
+      (setq c (substring url i (1+ i)))
+      (setq cc (char-code (char c 0)))
+      (setq neurl
+	    (if (string-match "[ 0-9a-zA-Z.~:;()\/\-]" c)
+		(concat neurl c)
+	      (if (<  cc 255)
+		  (format nil "~A~:@(%~2,'0X~)" neurl cc)
+		(format nil "~A~:@(%~2,'0X%~2,'0X~)"
+			neurl (truncate cc 256) (mod cc 256))))))
+    ;  $url =~ tr/ /+/;
+    neurl))
+
+;=====================================#
+; ファイル出力
+;=====================================#
+(defun write_file (data file)
+  (with-open-file (out file :direction :output)
+    (format out data)))
+
+
+;=====================================;
+; HTML Header
+;=====================================;
+
+
+(defun html-header (title)
+  "通常版header"
+  (format nil 
+	  "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">
+<html lang=\"ja\"><head>
+<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Shift_JIS\">
+<meta http-equiv=\"Content-Style-Type\" content=\"text/css\">
+<link href=\"reference.css\" rel=\"stylesheet\" type=\"text/css\">
+<title>~A</title>
+</head>
+" title))
+
+
+(defun html-fheader (title)
+  "フレーム用header"
+  (format nil
+	  "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Frameset//EN\">
+<html lang=\"ja\"><head>
+<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Shift_JIS\">
+<meta http-equiv=\"Content-Style-Type\" content=\"text/css\">
+<link href=\"reference.css\" rel=\"stylesheet\" type=\"text/css\">
+<title>~A</title>
+</head>" title))
+
+
+;=====================================;
+; 目次の作成
+;=====================================;
+(defun html-make-index (title contents)
+  ;&report( sprintf( "creating %s ... ", $file), 1);
+  (write_file
+   (with-output-to-string (out)
+     (format out
+	     (concat (html-header title)
+		     "<body>\n"
+		     ;"<a name=\"top\"></a>\n"
+		     "<span class=\"menu\">\n"))
+     (format out "[ <a href=\"~A\" target=\"~A\">Intro</a>\n" HTML_INTRO WINDOW_RIGHT)
+     (format out " | 目次\n")
+     (format out " | <a href=\"~A\" target=\"~A\">索引</a>\n" HTML_INDEX WINDOW_LEFT)
+     (format out " | <a href=\"~A\" target=\"~A\">目的別</a> ]\n" HTML_TIPS WINDOW_LEFT)
+     (format out "</span>\n")
+     
+     ; 総合目次
+     (format out "<h2>目次</h2>\n")
+     (format out "<ul>\n")
+     
+     (dolist (key INDEX_NAME_LIST)
+       (format out "<li><a href=\"~A#~A\">~A</a> (~D)</li>\n"
+	       (section_index_file_name (cdr key)) (cdr key) (car key)
+	       (length (cddr  (assoc (car key) (section-set) :test #'string-equal)))
+	       ))
+     
+     (format out
+	     (concat "</ul>\n"
+		     "<hr>\n"
+		     "</body>\n</html>\n"))
+     )
+   contents
+   )
+  
+;  &report( "done.\n");
+  )
+;=====================================#
+; セクション毎の目次の作成
+;=====================================#
+(defun make_section_index()
+  (dolist (key INDEX_NAME_LIST)
+    ;&report( sprintf( "creating %s ... ", $file), 1);
+    (write_file
+     (with-output-to-string (out)
+       (format out (html_header (car key)))
+       (format out "<body>\n")
+       (format out "<a name=\"~A\"></a>\n" (cdr key))
+       (format out "<span class=\"menu\">\n")
+       
+       (format out "[ <a href=\"~A\" target=\"~A\">Intro</a>\n" HTML_INTRO WINDOW_RIGHT)
+       (format out " | <a href=\"~A\" target=\"~A\">目次</a>\n" HTML_CONTENTS WINDOW_LEFT)
+       (format out " | <a href=\"~A\" target=\"~A\">索引</a>\n" HTML_INDEX WINDOW_LEFT)
+       (format out " | <a href=\"~A\" target=\"~A\">目的別</a> ]\n" HTML_TIPS WINDOW_LEFT)
+
+       (format out "</span>\n")
+
+       (format out "<h3><a href=\"~A\" target=\"~A\">~A</a></h3>\n"
+	       (section_file_name (car key)) WINDOW_RIGHT (car key))
+       (format out "<ul>\n")
+       (dolist (i (cdr (assoc (car key) (section-set) :test #'string-equal)))
+	 (when i
+	   (format out "<li><a href=\"~A#~A\" target=\"~A\">~A</a></li>\n"
+		   (section_file_name (car key))
+		   (en_url (caddr (get-elem "title" i))) WINDOW_RIGHT (caddr (get-elem "title" i)))))
+       (format out (concat "</ul>\n"
+			   "<hr>\n"
+			   "</body>\n</html>\n"))
+       )
+     (section_index_file_name (car key)))
+    ;&report( "done.\n");
+    ))
+
+;=====================================#
+; 目的別索引
+;=====================================#
+(defun  make_tips_index (file)
+  ;&report( sprintf( "creating %s ... ", $file), 1);
+  (write_file
+   (with-output-to-string (out)
+     (format out (concat (html-header "目的別索引")
+			 "<body>\n"
+			 ;#$out .= "<a name=\"top\"></a>\n";
+			 "<span class=\"menu\">\n"))
+     (format out "[ <a href=\"~A\" target=\"~A\">Intro</a>\n" HTML_INTRO WINDOW_RIGHT)
+     ;#$out .= sprintf " | <a href=\"%s#top\" target=\"%s\">目次</a>\n", $HTML_CONTENTS, $WINDOW_LEFT;
+     (format out " | <a href=\"~A\" target=\"~A\">目次</a>\n" HTML_CONTENTS WINDOW_LEFT)
+     (format out " | <a href=\"~A\" target=\"~A\">索引</a>\n" HTML_INDEX WINDOW_LEFT)
+     (format out (concat " | 目的別 ]\n"
+			 "</span>\n"
+			 "<h2>目的別索引</h2>\n"))
+     (dolist (i (elem-list "section" (cdr (assoc "Tips" (type-set) :test #'string-equal))))
+       (format out "<h4><a href=\"~A\" target=\"~A\">~A</a></h4>\n"
+	       (section_file_name i) WINDOW_RIGHT i)
+       (format out "<ul>\n")
+       (dolist (j (cdr (assoc "Tips" (type-set) :test #'string-equal)))
+	 (when (string-equal (caddr(get-elem "section" j )) i)
+	   (format out "<li><a href=\"~A#~A\" target=\"~A\">~A</a></li>\n"
+		   (section_file_name i)
+		   (en_url (caddr (get-elem "title" j)))
+		   WINDOW_RIGHT
+		   (caddr (get-elem "title" j))
+		   )))
+       (format out "</ul>\n"))
+     )
+   file)
+  ;&report( "done.\n");
+  )
+
+;=====================================#
+; セクションファイル名
+;=====================================#
+(defun section_file_name (sect)
+  (format nil "~A.html"
+	  (or (cdr (assoc sect INDEX_NAME_LIST :test #'string-equal))
+	      sect)))
+
+
+;=====================================#
+; セクション目次ファイル名
+;=====================================#
+(defun section_index_file_name (sect)
+  (format nil "~A-index.html"
+	  (or (cdr (assoc sect INDEX_NAME_LIST :test #'string-equal))
+	      sect)))
+
+
+;=====================================#
+; 各説明
+;=====================================#
+(make_section_string (car (cdr (car (section-set)))))
+
+(defun  make_section_string(key)
+  (with-output-to-string (out)
+    (format out "<a name=\"~A\"></a>\n" (en_url (caddr (get-elem "title" key))))
+    (format out "<hr>\n")
+    (format out "<h3>~A</h3>\n" (caddr (get-elem "title" key)))
+    (dolist (k '( "Type" "Arguments" "Package" "File"))
+      (let ((v (caddr (get-elem k key))))
+	(when v
+	  (format out "<span class=\"element\">~A</span>: <span class=\"pcdata\">~A</span><br>\n"
+		  k v
+		  ))))
+    ; Description
+    (format out "<br>\n<pre>~A</pre>\n<br>\n"
+	    (let ((des (caddr (get-elem "description" key))))
+	      (print des)
+	      (if (string-match "" des)
+		  (format nil "~%~A"
+			  (substitute-string des  "" ""))
+		des)))
+    ))
+
+  # See Also
+  my $seealso = $val->{ "seealso"};
+  if( $seealso){
+    my $temp;
+    for my $s ( split( "\t", $seealso)){
+      my $section = $all{$s}->{ "section"};
+      if( $temp){
+        $temp .= ", ";
+      }
+      if( $section){
+        $temp .= sprintf "<a href=\"%s#%s\">%s</a>", &section_file_name( $section), &en_url( $s), $s;
+      }
+      else{
+        $temp .= $s;
+      }
+    }
+    $out .= sprintf "<span class=\"element\">%s</span>: <span class=\"seealso\">%s</span><br>\n", "SeeAlso", $temp;
+  }
+
+  # Link
+  my $link = $val->{ "link"};
+  if( $link){
+    for my $href ( split( "\t", $link)){
+      $out .= sprintf( "<span class=\"element\">%s</span>: <a href=\"%s\" target=\"link\">%s</a><br>\n", "Link", $href, $href);
+    }
+  }
+  
+  # Section
+  my $section = $val->{ "section"};
+  
+  $out .= "<br>\n";
+  $out .= "<span class=\"menu\">\n";
+  $out .= sprintf "[ <a href=\"%s\" target=\"%s\">Intro</a>\n", $HTML_INTRO, $WINDOW_RIGHT;
+  #$out .= sprintf " | <a href=\"%s#top\" target=\"%s\">目次</a>\n", $HTML_CONTENTS, $WINDOW_LEFT;
+  $out .= sprintf " | <a href=\"%s\" target=\"%s\">目次</a>\n", $HTML_CONTENTS, $WINDOW_LEFT;
+  $out .= sprintf " | <a href=\"%s\" target=\"%s\">索引</a>\n", $HTML_INDEX, $WINDOW_LEFT;
+  $out .= sprintf " | <a href=\"%s\" target=\"%s\">目的別</a>\n", $HTML_TIPS, $WINDOW_LEFT;
+  if( $section){
+    #$out .= sprintf "[<a href=\"%s#%s\" target=\"%s\">%s</a>]\n", $HTML_CONTENTS, $INDEX_NAME_LIST{$section}, $WINDOW_LEFT, $section;
+    $out .= sprintf " | <a href=\"%s\" target=\"%s\">%s</a>\n", &section_index_file_name( $section), $WINDOW_LEFT, $section;
+  }
+  $out .= " ]\n";
+  $out .= "</span>\n";
+
+  return $out;
+}
+
+(defun xml2html ()
+  "to html"
+  (html-make-index html_title HTML_CONTENTS)
+  (make_section_index)
+  (make_tips_index HTML_TIPS)
+
+  )

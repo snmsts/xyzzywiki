@@ -1,0 +1,13 @@
+*NetInstaller/その他 [#q7d87ade]
+
+少しお借りします。[[NAXEL]]。
+
+
+バグとか気づいた点とかありましたら、お書きください。
+
+----
+
+#pcomment(NetInstaller/その他/Comment,30,reply)
+
+----
+#related

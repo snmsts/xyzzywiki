@@ -1,0 +1,129 @@
+#freeze
+[[tips]]
+
+[[Meadow/Emacs memo:http://www.bookshelf.jp/soft/meadow.html]] にヒントを得て書いてみました。
+
+ご自身の責任にてお使い下さい。
+
+引用部分以外については、引用・改変・再配布などご自由にどうぞ。
+
+- C-s、C-r で migemo を on にして isearch に。
+- C-w、C-f、C-d で migemo を off にして文字列を追加・削除。
+- C-t で migemo の、C-a で 正規表現のトグル。
+
+ ;; migemo で C-w を使う
+ (in-package "editor")
+ (defun isearch-forward-point ()
+   (+ (point)
+      (length *isearch-current-match-string*)))
+ 
+ (defun isearch-yank-word ()
+   (let* ((start (if *migemo-on*
+ 		    (point)
+ 		  (+ (point) (length *isearch-current-string*))))
+ 	 (end (if *migemo-on*
+ 		  (save-excursion
+ 		    (goto-char
+ 		     (isearch-forward-point))
+ 		    (forward-word)
+ 		    (point))
+ 		(save-excursion
+ 		  (goto-char start)
+ 		  (forward-word)
+ 		  (point))))
+ 	 (next-word (buffer-substring start end)))
+     (when *migemo-on*
+       (setq *isearch-current-string* next-word))
+     (if (and *isearch-smart-case*
+ 	     (eq *case-fold-search* :smart)
+ 	     (not (string-match "[A-Z]" *isearch-current-string*)))
+ 	(setq next-word (string-downcase next-word)))
+     (isearch-push-status)
+     (if *migemo-on*
+ 	(progn
+ 	  (migemo-toggle nil)
+ 	  (isearch-scanner next-word nil))
+       (isearch-scanner (concat *isearch-current-string* next-word) nil))))
+ 
+ ;; 一文字ずつ追加
+ (defun isearch-yank-char ()
+   (interactive)
+   (let* ((start (if *migemo-on*
+ 		    (point)
+ 		  (+ (point) (length *isearch-current-string*))))
+ 	 (end (if *migemo-on*
+ 		  (1+ (isearch-forward-point))
+ 		(save-excursion
+ 		  (goto-char start)
+ 		  (1+ (point)))))
+ 	 (next-word (buffer-substring start end)))
+     (when *migemo-on*
+       (setq *isearch-current-string* next-word))
+     (if (and *isearch-smart-case*
+ 	     (eq *case-fold-search* :smart)
+ 	     (not (string-match "[A-Z]" *isearch-current-string*)))
+ 	(setq next-word (string-downcase next-word)))
+     (isearch-push-status)
+     (if *migemo-on*
+ 	(progn
+ 	  (migemo-toggle nil)
+ 	  (isearch-scanner next-word nil))
+       (isearch-scanner (concat *isearch-current-string* next-word) nil))))
+ (define-key *isearch-map* #\C-f 'isearch-yank-char)
+ 
+ ;; 一文字ずつ削除
+ (defun isearch-real-delete-char ()
+   (interactive)
+   (unless (< (length *isearch-current-string*) 1)
+     (setq *isearch-current-string*
+ 	  (if *migemo-on*
+ 	      (progn
+ 		(migemo-toggle nil)
+ 		(buffer-substring (point) (isearch-forward-point)))
+ 	    (subseq *isearch-current-string* 0 (1- (length *isearch-current-string*))))))
+   (setq *isearch-this-command* 'isearch-search-history-forward))
+ (define-key *isearch-map* #\C-d 'isearch-real-delete-char)
+ 
+ (defun migemo-isearch-forward (&optional b)
+   (interactive)
+   (setq *isearch-use-regexp* nil)
+   (unless *migemo-on*
+     (migemo-toggle t))
+   (if b
+       (isearch-backward)
+     (isearch-forward)))
+ 
+ (defun migemo-isearch-backward ()
+   (interactive)
+   (migemo-isearch-forward t))
+ 
+ (global-set-key #\C-s 'migemo-isearch-forward)
+ (global-set-key #\C-r 'migemo-isearch-backward)
+ 
+ ;; 正規表現のトグル(2ch xyzzy Part10 727 より)
+ (defvar *isearch-use-regexp* nil)
+ (defun isearch-regexp-toggle ()
+   (interactive)
+   (when *migemo-on*
+     (migemo-toggle nil))
+   (setq *isearch-use-regexp*
+ 	(not *isearch-use-regexp*)
+ 	*isearch-scanner-hook*
+ 	#'(lambda (p)
+ 	    (setq *isearch-regexp* *isearch-use-regexp*)
+ 	    p))
+   (message "isearch ~[nomal~;regexp~]"
+ 	   (if *isearch-use-regexp* 1 0)))
+ (define-key *isearch-map* '#\C-a 'isearch-regexp-toggle)
+ 
+ ;; migemo のオン・オフ
+ (defun isearch-migemo-toggle()
+   (interactive)
+   (migemo-toggle))
+ (define-key *isearch-map* #\C-t 'isearch-migemo-toggle)
+ (in-package "user")
+-C-g で検索をキャンセルできない副作用？があるようです -- [[hello]] &new{2005-06-01 23:17:35 (水)};
+-C-g で isearch に入る前のカーソル位置に戻るということですよね？こちらではできているような気がしますが。最近ちょっとPCから離れ気味なので、なにかおかしな所があったら適当に直していただければと思います。 -- [[書いた人]] &new{2005-06-01 23:53:50 (水)};
+-C-g で検索をキャンセルできない副作用とはどういう意味でしょうか？xyzzy のインクリメンタルサーチでは C-g でインクリメンタルサーチを開始する前のカーソル位置に、Enter でヒットした文字列の先頭にカーソルを移動して終了するようになっていると思うのですが、このコードを記述するとそのような挙動をしなくなるということでしょうか？もう少し詳しく説明してもらえませんか？ -- [[書いた人]] &new{2005-06-04 12:55:21 (土)};
+
+#comment

@@ -1,0 +1,116 @@
+#freeze
+*索引 [#p6b1c2bd]
+#contents
+
+*はじめに [#jef658a5]
+FAQにもあったと思うのですが、
+書き込めないのでこちらで……。
+
+エンコーディングを指定して開きなおす方法。
+例えば、現在sjisで開いて文字化けしてしまった UTF-8のファイルをUTF-8で開きなおす、もしくは再認識させる方法。
+
+主に2chから転載
+
+
+*コマンドで開きなおす [#q8d9ad3c]
+
+FAQにもあったやつ。
+
+ C-u C-x C-v
+
+ただし、ファイルも指定しないといけないので面倒。
+
+*メニューから選択する方法 [#g2ecff3f]
+
+ポップアップメニューを出してそこから選ぶ。
+上記のコマンドのようにファイルを選ぶ必要はない。
+
+''便利です。''
+
+xyzzyの使い方が分からぬやし 励ましあえ その11
+http://pc11.2ch.net/test/read.cgi/software/1191681847/184
+
+ 184 名前：名無しさん＠お腹いっぱい。[sage] 投稿日：2007/12/21(金) 19:04:37 ID:nNO6ohrn0
+ >>182
+ 昔のスレに出てたこれ使ってるけど、結構便利。
+ 
+ (defun revert-buffer-encoding-popup2 ()
+   (interactive)
+   (let ((menu (create-popup-menu)))
+     (mapc #'(lambda (x)
+               (add-menu-item menu nil (car x)
+                              #'(lambda () 
+                                  (interactive)
+                                  (revert-buffer (cdr x)))))
+           `(("utf-8". ,*encoding-utf8n*)
+             ("sjis" . ,*encoding-sjis*)
+             ("auto" . ,*encoding-auto*)
+             ("euc-jp" . ,*encoding-euc-jp*)))
+     (track-popup-menu menu)))
+ 
+ (global-set-key '(#\C-c #\e) 'revert-buffer-encoding-popup2)
+
+185です。
+  185 [2007/12/21(金) 21:08:08 ID:mFz2J5WY0] 名無しさん＠お腹いっぱい。 <sage>
+  
+   >>184 
+   横からトンｸｽ。気に入ったので 
+   ついでにファイルメニューにも追加するようにした。 
+
+ポップアップメニューとメニュー用のコードをマージして、少し短くしています。
+232や、himadatenodeの日記も参考にしてます。
+
+ (defvar *encoding-menu* nil)
+ (defun encoding-menu ()
+   (or *encoding-menu*
+       (let ((menu (create-popup-menu)))
+         (mapc #'(lambda (x)
+                   (add-menu-item menu nil (car x)
+                                  #'(lambda ()
+                                      (interactive)
+                                      (revert-buffer (cdr x)))))
+               `(("utf-8n \t(&8)" . ,*encoding-utf8n*)
+                 ("utf-16 \t(&6)" . ,*encoding-utf16*)
+                 ("sjis   \t(&S)" . ,*encoding-sjis*)
+                 ("auto   \t(&A)" . ,*encoding-auto*)
+                 ("euc-jp \t(&E)" . ,*encoding-euc-jp*)
+                 ("jis    \t(&J)" . ,*encoding-jis*)))
+         (add-menu-item menu :select "詳細指定\t(&_)"
+                        #'(lambda (encoding)
+                            (interactive "zEncoding: ")
+                            (revert-buffer encoding)))
+         (setq *encoding-menu* menu))))
+ (defun revert-buffer-encoding-popup2 ()
+   (interactive)
+   (track-popup-menu (encoding-menu)))
+ 
+ (defun encoding-menu-in-file-autoload ()
+   (let ((filemenu (get-menu *app-menu* 'ed::file)))
+     (insert-popup-menu filemenu
+                        (1- (get-menu-position (get-menu *app-menu* 'ed::file) :above-session))
+                        (encoding-menu) "Reopen with Encoding (&G)\tC-c e")))
+ (add-hook '*init-app-menus-hook* 'encoding-menu-in-file-autoload)
+ (global-set-key '(#\C-c #\e) 'revert-buffer-encoding-popup2)
+
+*ファイルに元から書いておいて、コードを指定する方法 [#ha22c692]
+
+xyzzyの使い方が分からぬやし 励ましあえ その11
+http://pc11.2ch.net/test/read.cgi/software/1191681847/186
+
+ 186 名前：名無しさん＠お腹いっぱい。[sage] 投稿日：2007/12/21(金) 23:21:35   ID:O+Tk7wFZ0
+ >>182
+ ファイルの先頭の方に
+ <!-- -*- encoding: utf-8 -*- -->
+ を書いておく。
+
+vimでもこんなのあった気がする。
+
+*参考リンク [#y249db08]
+
+文字コードの再読読み込み - himadatenodeの日記~
+http://d.hatena.ne.jp/himadatanode/20080103/p2
+
+こっちにほとんど載ってた orz
+
+----
+- revert-buffer-encoding-popup2 の初出は xyzzy part12 （http://www.bookshelf.jp/2ch/win/1103400818.html#177）辺り

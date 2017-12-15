@@ -1,0 +1,11 @@
+[[L10N/english]]
+
+ dabbrev.l:174:      (plain-error "ないよん"))
+-Not Found --  &new{2005-03-04 21:59:29 (金)};
+-%%No entries とかがいいかな？%% abbrevじゃないので撤回。
+
+#comment
+ dabbrev.l:246:	(plain-error "ないよん")))))
+-Not Found --  &new{2005-03-04 21:59:40 (金)};
+
+#comment

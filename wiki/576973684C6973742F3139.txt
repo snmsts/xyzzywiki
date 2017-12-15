@@ -1,0 +1,15 @@
+* perl準拠の正規表現が使える検索/置換 
+-ページ: [[WishList]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2004-04-27 (火) 12:30:30
+
+** メッセージ 
+perl（できればMacJperl）に準拠した正規表現を使って検索・置換を行いたいのです。
+Mac用のエディタ miで採用している方式が近いと思います。
+（参考：http://infoshako.sk.tsukuba.ac.jp/DAV/comp/mac/howto/mi_Help/help/regexp/regexp.htm）
+ひとつよろしくお願いします。
+----
+-WishListを４個も作ってしまってますね。本題ですが、lispで、Perl風正規表現文字列をxyzzy-lisp準拠のものにエンコード（置換）するのが一番よさそうです。reference.xmlの「正規表現の表記」を見て、作ってみれば良いかと。 --  &new{2004-04-27 (火) 13:53:30};
+
+#comment

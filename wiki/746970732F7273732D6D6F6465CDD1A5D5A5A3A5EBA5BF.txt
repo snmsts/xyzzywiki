@@ -1,0 +1,96 @@
+[[tips]]
+
+[[WalWiki>http://digit.que.ne.jp/work/]]をヒントにこんなのもあっていいかなと思って作ってみたものの、
+普通にブラウザでアクセスするほうが良いという結果になりました。((HTMLをとってくる時間がストレス(--# ))
+でも、せっかく作ったのでさらしておきます。
+
+-はてなアンテナ用
+#ref(hatena.l)
+-tdiary用 → [[tdiary2rss.cgi>http://blog.bulknews.net/mt/archives/000941.html]]の方が便利。
+#ref(tdiary.l)
+
+-懲りずに作ったゲットニュース用
+#ref(getnews.l)
+
+-[[iBlog>http://www.lifli.com/Products/iBlog/main.htm]]が出力するRSSに対応する
+#ref(iblog.l)
+
+-[[ZZoops xyzzy news>http://hie.s64.xrea.com/zzoops/modules/news/]]を RSS 化します。
+#ref(ZZoops-news.l)
+
+-[[2ちゃんねる ヘッドライン BBY>http://headline.2ch.net/bbynews/]]なんかを RSS 化します。((あんまり意味なし))
+#ref(bby.l)
+
+-2ちゃんねるのスレ一覧を RSS 化します。((ますます意味なし))
+#ref(2ch-board.l)
+----
+はてなだと、
+ http://a.hatena.ne.jp/i9N/source?mode=lirs
+とかで、LIRSなどがとれるので、LIRSフィルタとかを使った方が多少速いです。
+----
+tdiary でも RDF Site Summary を出力するプラグインあったんですね。
+あるんじゃないかなとは思ってましたが、
+"RSS" で探していたのでその当時は発見できませんでした。
+でも、こんなのができたので、まいっか。
+
+ (require "xml-parser-modoki")
+ (require "rss/main")
+ 
+ (in-package "rss")
+ 
+ ; RSSファイルを作る
+ (defun make-rss-file (rfile fn file title url description)
+   (let (items)
+     (save-excursion
+       (set-buffer (get-buffer-create *rss-buffer-temp*))
+       (erase-buffer (selected-buffer))
+       (insert-file-contents file)
+       (setq items (funcall fn url))
+       (delete-buffer (selected-buffer)))
+     (convert-to-rss (rss-create title url description items)
+                     rfile)))
+ ; てきとーさんぷる
+ ; id="xyzzy〜"というのを目印に探す。
+ (defun foo-parse-buffer (url)
+   (let (items
+         title
+         anchor)
+     (save-excursion
+       (goto-char (point-min))
+       (while (scan-buffer "<[^>]*id=\"\\(xyzzy[^\"]+\\)\"[^>]*>\\([^<]+\\)"
+                           :regexp t
+                           :tail t)
+         (setq anchor (match-string 1))
+         (setq title (match-string 2))
+         ; (while (string-match "\\([^<]*\\)<[^>]*>\\([^<]*\\)\\(</[^>]*>\\)?\\(.*\\)" title)
+         ;    (setq title (string-replace-match title "\\1\\2\\4")))
+         (setq title (ed::xmlpm-decode-special-chars title))
+         (push (rss-create-item title
+                                (concat url "#" anchor))
+               items))
+       (nreverse items))))
+ 
+ ; コマンドにしたいときは、例えばこんな感じかも。
+ (in-package "user")
+ (defun make-my-rss-file (file)
+   (interactive "fFile: ")
+   (rss::make-rss-file "foo.rss"
+                       'rss::foo-parse-buffer
+                       file
+                       "foo"
+                       "http://localhost/"
+                       "foofoo"))
+
+使い方
+ (rss::make-rss-file "RSSファイル名"
+                     '解析関数
+                     "解析対象ファイル"
+                     "タイトル"
+                     "URL"
+                     "サイトの説明とか")
+
+解析関数は自分のサイトの書き方に合わせて自分で作る必要があります。
+サンプルの rss::foo-parse-buffer は「id="xyzzy〜"」という文字列を目印にして、
+それを含む要素の中身を集めます。((てきとーなので中身にタグとかコメントとか含めませんが。))
+ですから、 HTML の方で RSS の見出しにしたいところのタグに「id="xyzzy〜"」
+という属性をあらかじめ書いておけば使えるようになると思います。

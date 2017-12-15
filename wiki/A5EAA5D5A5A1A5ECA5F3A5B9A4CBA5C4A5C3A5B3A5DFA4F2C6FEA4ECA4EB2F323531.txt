@@ -1,0 +1,131 @@
+* define-abbrev-tableの説明案 [#i5e73dd5]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[anonymous]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: ツッコミをいれる
+-投稿日:     2007-01-06 (土) 23:08:29
+-バージョン: 
+
+** メッセージ [#t49723e3]
+define-abbrev-tableの説明案
+
+詳細不明とあったので説明案を提示します。適所変更すれば使える…といいな。
+
+現在の説明：&br;
+ <chapter>
+ <title>define-abbrev-table</title>
+ <type>Function</type>
+ <arguments>define-abbrev-table TABNAME &amp;optional DEFS</arguments>
+ <package>editor</package>
+ <description>
+ abbrev-tableを定義します。
+ （詳細不明）
+ </description>
+ <seealso></seealso>
+ <section>モード</section>
+ <file>abbrev.l</file>
+ </chapter>
+
+提案する説明：
+ <chapter>
+ <title>define-abbrev-table</title>
+ <type>Function</type>
+ <arguments>define-abbrev-table TABNAME &amp;optional DEFS</arguments>
+ <package>editor</package>
+ <description>
+ abbrev-tableを定義します。
+ これを行うことでTABNAMEが*abbrev-table-name-list*に追加されます。
+ 定義後はTABNAMEをメジャーモードのabbrev-tableやグローバルなabbrev-tableとして設定できるようになります。
+ 
+ 使用例：
+  (defvar *c-mode-abbrev-table* nil)
+  (unless *c-mode-abbrev-table*
+    (define-abbrev-table '*c-mode-abbrev-table*))
+ c-mode.l より
+ 
+ またメジャーモードのabbrev-table（local-abbrev-table）の設定は、以下のように行います。
+ 
+ 使用例：
+  (setq *local-abbrev-table* *c-mode-abbrev-table*)
+ c-mode.l より
+ 
+ ちなみにグローバルなabbrev-table（global-abbrev-table）は、以下のように設定されています。
+  (define-abbrev-table '*global-abbrev-table*)
+ abbrev.l より
+ 
+ グローバルなabbrev-tableは、通常必要になることはありません。
+ （使用環境毎に*global-abbrev-table*を変更したい場合くらい？）
+ </description>
+ <seealso></seealso>
+ <section>モード</section>
+ <file>abbrev.l</file>
+ </chapter>
+
+----
+- どーもです。定義を確認してみましたが、メジャーモードとかグローバルとかはdefine-abbrev-tableのところでは無関係ですね。その辺りのことは展開の時にいろいろやってます。ということで、ばっさりとカットさせていただいて、こんな感じでいかがでしょう。 -- [[NANRI]] &new{2007-01-10 (水) 03:00:07};
+ <chapter>
+ <title>define-abbrev-table</title>
+ <type>Function</type>
+ <arguments>define-abbrev-table TABNAME &amp;optional DEFS</arguments>
+ <package>editor</package>
+ <description>
+ abbrev-tableを定義します。
+ 
+   TABNAME : abbrev-tableの名前にあたるシンボル
+   DEFS    : 静的略称展開の定義のリスト
+ 
+ また、TABNAMEが*abbrev-table-name-list*に登録され、編集やファイル出力と
+ いった操作が可能になります。
+ 
+ 使用例:
+   ;;; c-mode.lの定義
+  (defvar *c-mode-abbrev-table* nil)
+  (unless *c-mode-abbrev-table*
+    (define-abbrev-table '*c-mode-abbrev-table*))
+ </description>
+ <seealso>*abbrev-table-name-list*</seealso>
+ <seealso>*local-abbrev-table*</seealso>
+ <seealso>*global-abbrev-table*</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>abbrev.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*local-abbrev-table*</title>
+ <type>BufferLocal</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ バッファごとのabbrev-tableを設定します。
+ ここでの定義は*global-abbrev-table*よりも優先して使用されます。
+ </description>
+ <seealso>expand-abbrev</seealso>
+ <seealso>*global-abbrev-table*</seealso>
+ <seealso>define-abbrev-table</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>abbrev.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*global-abbrev-table*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ グローバルなabbrev-tableを設定します。
+ </description>
+ <seealso>expand-abbrev</seealso>
+ <seealso>*local-abbrev-table*</seealso>
+ <seealso>define-abbrev-table</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>abbrev.l</file>
+ </chapter>
+- なるほろー。説明分けちゃえばよかったのか;)seealsoをちょこと編集 -- [[投稿者]] &new{2007-01-11 (木) 03:49:48};
+- seealso要素を増やすときはこんな感じで記述します。 -- [[NANRI]] &new{2007-01-11 (木) 22:08:15};
+- タグで１つずつ囲むんでしたね・・・たびたび修正どもです -- [[投稿者]] &new{2007-01-12 (金) 00:40:46};
+
+#comment

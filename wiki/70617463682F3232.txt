@@ -1,0 +1,33 @@
+* local-variable-p [#xeb2c48f]
+
+-ページ: [[patch]]
+-投稿者: 中野
+-優先順位: 低
+-状態: 提案
+-カテゴリー: 訂正
+-投稿日: 2007-02-22 (木) 15:12:52
+-バージョン: 
+
+** メッセージ [#ac49f753]
+- ダイナミックなスコープを持つ変数はバッファーローカルな変数であっても nil を返すようです。
+
+例えば、次のコードは nil を返します。
+ (progn
+   (defvar *test* nil)
+   (make-local-variable '*test*)
+   (local-variable-p '*test*))
+ => nil
+
+** patch [#y1bb415f]
+eval.cc の 1700行目 を次のように変えるとよさそうです。
+ 1700c1700
+ <   return boole ((xsymbol_flags (var) & (SFbuffer_local | SFdynamic_bind
+ ---
+ >   return boole ((xsymbol_flags (var) & (SFbuffer_local
+
+
+
+--------
+- local-variable-pのその動作はxyzzy lispの仕様のはずです。xyzzy lispではダイナミックなスコープを持つとバッファローカルの値を参照できないようになります。[[qanda:Emacs Lisp と Commo Lisp の違いは？]]参照。 -- [[NANRI]] &new{2007-02-22 (木) 19:45:45};
+
+#comment

@@ -1,0 +1,42 @@
+* other-buffer, bury-buffer [#la2fe301]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-10-12 (木) 01:02:15
+-バージョン: 
+
+** メッセージ [#gc9b44ef]
+other-bufferの説明は間違ってたので修正。
+ <chapter>
+ <title>other-buffer</title>
+ <type>Function</type>
+ <arguments>other-buffer &amp;optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ 最近、表示されていたバッファを返します。
+ </description>
+ <seealso>bury-buffer</seealso>
+ <seealso>next-buffer</seealso>
+ <section>バッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>bury-buffer</title>
+ <type>Function</type>
+ <arguments>bury-buffer &amp;optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ other-bufferの候補の最後にします。
+ </description>
+ <seealso>other-buffer</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+--------
+
+#comment

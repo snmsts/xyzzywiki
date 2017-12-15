@@ -1,0 +1,61 @@
+*2004-03-24 (水) 04:47:42 [#ja4d6bc5]
+-変更元ページを指定
+--From:[[tips/KaMail で変なディレクトリを作った場合の対処]]
+--To:[[Memo/KaMail で変なディレクトリを作った場合の対処]]
+-tips/KaMail で変なディレクトリを作った場合の対処→Memo/KaMail で変なディレクトリを作った場合の対処
+*2004-10-31 (日) 02:59:36 [#q17c84f7]
+-変更元ページを指定
+--From:[[buffer-barを表示しない人向け]]
+--To:[[tips/buffer-barを表示しない人向け]]
+-buffer-barを表示しない人向け→tips/buffer-barを表示しない人向け
+*2005-01-20 (木) 21:16:02 [#re02ac0c]
+-変更元ページを指定
+--From:[[QuickTour/etc/key]]
+--To:[[QuickTour/ext/key]]
+-QuickTour/etc/key→QuickTour/ext/key
+*2005-03-02 15:03:13 (水) [#k21ae093]
+-変更元ページを指定
+--From:[[Tetris]]
+--To:[[Games/Tetris]]
+-Tetris→Games/Tetris
+*2005-03-06 00:16:42 (日) [#vc107536]
+-変更元ページを指定
+--From:[[QandA にツッコミを入れる/10]]
+--To:[[質問箱/67]]
+-QandA にツッコミを入れる/10→質問箱/67
+*2005-04-08 18:54:27 (金) [#ff6ed098]
+-変更元ページを指定
+--From:[[tip/キーボードマクロを便利に]]
+--To:[[tips/キーボードマクロを便利に]]
+-tip/キーボードマクロを便利に→tips/キーボードマクロを便利に
+*2005-04-28 02:21:38 (木) [#hc3b9105]
+-変更元ページを指定
+--From:[[SimplePasteを使う]]
+--To:[[tips/SimplePasteを使う]]
+-SimplePasteを使う→tips/SimplePasteを使う
+*2005-06-13 17:11:00 (月) [#w60f5936]
+-変更元ページを指定
+--From:[[ソースからビルドしてみる]]
+--To:[[Memo/ソースからビルドしてみる]]
+-ソースからビルドしてみる→Memo/ソースからビルドしてみる
+*2005-07-07 21:44:58 (木) [#y5294a54]
+-変更元ページを指定
+--From:[[QandA にツッコミを入れる/Comment]]
+--To:[[コメント/QandA にツッコミを入れる]]
+-QandA にツッコミを入れる/Comment→コメント/QandA にツッコミを入れる
+*2005-08-11 15:47:15 (木) [#t6b12e87]
+-変更元ページを指定
+--From:[[Installer of xyzzy]]
+--To:[[Installer of xyzzy/old]]
+-Installer of xyzzy→Installer of xyzzy/old
+-Installer of xyzzy/Comment→Installer of xyzzy/old/Comment
+*2005-10-10 04:02:15 (月) [#p26d38ae]
+-変更元ページを指定
+--From:[[rss-modeを片手で]]
+--To:[[tips/rss-modeを片手で]]
+-rss-modeを片手で→tips/rss-modeを片手で
+*2006-11-01 (水) 04:01:13 [#i7bf9685]
+-変更元ページを指定
+--From:[[addrefでrefwikiにあるものはrefwikiからとってくる]]
+--To:[[tips/addrefでrefwikiにあるものはrefwikiからとってくる]]
+-addrefでrefwikiにあるものはrefwikiからとってくる→tips/addrefでrefwikiにあるものはrefwikiからとってくる

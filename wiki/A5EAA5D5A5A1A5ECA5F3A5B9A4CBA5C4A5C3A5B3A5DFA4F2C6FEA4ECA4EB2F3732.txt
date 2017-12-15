@@ -1,0 +1,44 @@
+*adjoin [#l20d2ded]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[nakano]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2004-07-29 (木) 21:40:26
+-バージョン: 
+
+**メッセージ [#le2a0a79]
+Common Lisp と xyzzy で非互換な点を追記しました．
+
+ <chapter>
+ <title>adjoin</title>
+ <type>Function</type>
+ <arguments>ITEM LIST &amp;key :TEST :TEST-NOT :KEY</arguments>
+ <package>lisp</package>
+ <description>
+ ITEMがLISTのmemberでなければ先頭に追加したLISTを返す。memberならLISTを
+ そのまま返します。
+ 
+   (adjoin item list) == (if (member item list) list (cons item list))
+ 
+   KEY : KEYに fn が指定された場合，xyzzyでは
+     (adjoin item list) == (if (member item list :key fn) list (cons item list))
+   となりますが，CLTL2では次のように動作し，非互換です．
+     (adjoin item list) == (if (member (funcall fn item) list :key fn) list (cons item list))
+ 
+ 使用例：
+   (adjoin 'a '(b c d))
+   =&gt; (a b c d)
+   (adjoin 'b '(a b c d))
+   =&gt; (a b c d)
+   (adjoin '(a) '((b) (c) (d)) :key #'car)
+   =&gt; ((a) (b) (c) (d))
+ </description>
+ <seealso>pushnew</seealso>
+ <section>リスト</section>
+ <file>builtin.l</file>
+ </chapter>
+----
+
+#comment

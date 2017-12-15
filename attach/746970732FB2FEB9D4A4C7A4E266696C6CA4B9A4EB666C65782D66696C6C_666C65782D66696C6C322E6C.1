@@ -1,0 +1,133 @@
+;;
+;; Last updated: <2001/03/15 10:14:23 +0900>
+;;
+;; NAKANO による変更
+;; 2003/07/23 
+;; fill-columnより小さい位置で改行しても挿入されるように変更
+;; バッファ毎に設定を変えられるように変更
+#|
+
+◆ Install
+
+  siteinit.l か .xyzzy のどこかに
+                (require "flex-fill2")
+  と書いておいてください． flex-fillと同時には使えませんので，使用している
+  人はアンインストールしてください．
+
+◆ Uninstall
+
+   記述した(require "flex-fill2") を消してください．
+
+◆ 設定例
+flex-fillを今まで使っていた人はそのまま設定を引き継ぐことが出来ます．
+  *flexible-fill-prefix-regexp*
+  *flexible-fill-bullet-prefix-regexp*
+  *flexible-fill-bullet-prefix-char*
+  *flexible-fill-mode-list*
+をコメントを参考に設定してください．
+
+バッファー毎に異なる設定をしたい時は，それぞれ
+  *flexible-fill-local-prefix-regexp*
+  *flexible-fill-local-bullet-prefix-regexp*
+  *flexible-fill-local-bullet-prefix-char*
+という変数をローカル変数として作成し，値を設定してください．
+localのつかない方の値は，デフォルト値として使用されます．
+
+※java-modeの場合の例
+(require "java")
+(define-key *java-mode-map* #\RET
+	    #'(lambda ()
+		(interactive)
+		(c-newline-and-indent)
+		(and auto-fill *auto-fill-hook
+		     (funcall *auto-fill-hook *last-command-char*))))
+(setf *flexible-fill-mode-list* '(text-mode java-mode))
+(add-hook '*java-mode-hook*
+  #'(lambda ()
+     (auto-fill-mode t)
+     (make-local-variable 'ed::*flexible-fill-local-prefix-regexp*)
+     (setq ed::*flexible-fill-local-prefix-regexp* "^\\([ \t]*\\(//\\|\\*[ \t]\\)[ \t]*\\)")))
+
+|#
+
+(provide "flex-fill2")
+
+(in-package "editor")
+
+(export '(*flexible-fill-prefix-regexp*
+	  *flexible-fill-bullet-prefix-regexp*
+	  *flexible-fill-bullet-prefix-char*
+	  *flexible-fill-mode-list*
+	  ))
+
+; 行頭がこいつにマッチすると flex-fill になる
+(defvar *flexible-fill-prefix-regexp* "^#?[ \t]+")
+
+; 行頭がこいつにマッチすると，次の行から flex-fill
+(defvar *flexible-fill-bullet-prefix-regexp* "^\\(・\\|[0-9]+)\\|[ \t]*\\*\\)")
+
+; そのときの fill-prefix はこの char で埋められる
+(defvar *flexible-fill-bullet-prefix-char* #\SPC)
+
+; ここで指定したモードのみ flex-fill
+(defvar *flexible-fill-mode-list* '(text-mode fundamental-mode))
+
+(defun set-flexible-fill-prefix ()
+  (interactive "*")
+  (when (not (and auto-fill
+		  (member buffer-mode *flexible-fill-mode-list*)))
+    (return-from set-flexible-fill-prefix nil))
+  (let ((goal-column (goal-column))
+	(fill-pre-regexp (if (boundp '*flexible-fill-local-prefix-regexp*)
+			     *flexible-fill-local-prefix-regexp*
+			   *flexible-fill-prefix-regexp*))
+	(fill-bul-pre-regexp (if (boundp '*flexible-fill-local-bullet-prefix-regexp*)
+				 *flexible-fill-local-bullet-prefix-regexp*
+			       *flexible-fill-bullet-prefix-regexp*))
+	(fill-bul-pre-char (if (boundp '*flexible-fill-local-bullet-prefix-char*)
+			       *flexible-fill-local-bullet-prefix-char*
+			     *flexible-fill-bullet-prefix-char*)))
+    (save-excursion
+      (goto-bol)
+      (cond ((looking-at fill-pre-regexp)
+	     (setq fill-prefix (buffer-substring (match-beginning 0) (match-end 0))))
+	    ((looking-at fill-bul-pre-regexp)
+	     (setq fill-prefix
+		   (make-vector (- (progn (goto-char (match-end 0)) (current-column))
+				   (progn (goto-char (match-beginning 0)) (current-column)))
+				:element-type 'character
+				:initial-element fill-bul-pre-char)))
+	    (t
+	     (setq fill-prefix nil))))
+    (set-goal-column goal-column)))
+
+(add-hook '*post-command-hook* 'set-flexible-fill-prefix)
+
+
+(defun do-my-auto-fill (c)
+  (unless (plusp fill-column)
+    (return-from do-my-auto-fill nil))
+  (when (or (member c '(#\LFD #\RET))
+	    (and (>= (current-column) fill-column)
+		 (or (member c '(#\TAB #\SPC))
+		     (and (or (kanji-char-p c)
+			      (kana-char-p c))
+			  (not (listen *keyboard*))))))
+    (when (= (save-excursion
+	       (kinsoku-goto-column fill-column *fill-kinsoku-mode*)
+	       (forward-char 1)
+	       (prog1
+		   (point)
+		 (unless (member c '(#\LFD #\RET))
+		   (insert #\LFD))))
+	       (point))
+      (forward-char 1))
+    (when fill-prefix
+      (if (bolp)
+	  (insert fill-prefix)
+	(save-excursion
+	  (goto-bol)
+	  (insert fill-prefix))))
+    (run-hooks 'auto-fill-hook)))
+
+(setq-default *auto-fill-hook 'do-my-auto-fill)

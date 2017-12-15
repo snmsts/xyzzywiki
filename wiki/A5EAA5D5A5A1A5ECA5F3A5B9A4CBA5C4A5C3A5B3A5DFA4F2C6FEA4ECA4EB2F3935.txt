@@ -1,0 +1,34 @@
+*get-window-start-line [#sebda734]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[OHKUBO]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-11-27 (土) 11:06:57
+-バージョン: 20041115
+
+**メッセージ [#sef0933f]
+ <chapter>
+ <title>get-window-start-line</title>
+ <type>Function</type>
+ <arguments>get-window-start-line &amp;optional WINDOW</arguments>
+ <package>editor</package>
+ <description>
+ ウィンドウの先頭行が表示行で何行目かを返します。
+ 
+ 補足：
+   どういった場合に起こりえるのか不明ですが、ウィンドウにバッファが関連付
+   いていない場合は nil を返します。
+ </description>
+ <seealso>current-virtual-line-number</seealso>
+ <seealso>current-line-number</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-取り込みました->[[refwiki:get-window-start-line]] -- [[NANRI]] &new{2005-03-02 00:51:39 (水)};
+
+#comment

@@ -1,0 +1,28 @@
+* KaTeX-insert-quote [#rdc785dd]
+
+-ページ: [[patch]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 提案
+-カテゴリー: 訂正
+-投稿日: 2006-12-12 (火) 19:36:51
+-バージョン: 
+
+** メッセージ [#k4df598b]
+動きは知らないのですが、elispにおける「?\n」に対応するのは#\LFDだと思うので。
+
+ --- katex.l~	Thu Oct 14 23:21:33 2004
+ +++ katex.l	Tue Dec 12 19:32:41 2006
+ @@ -1053,7 +1053,7 @@
+      ((= (preceding-char) #\\ ) #\")
+      ((or (= (preceding-char) (code-char 32))
+  	 (= (preceding-char) (code-char 9))
+ -	 (= (preceding-char) #\n)
+ +	 (= (preceding-char) #\LFD)
+  	 (bobp)
+  	 (string-match
+  	  (regexp-quote (char-to-string (preceding-char)))
+
+--------
+
+#comment

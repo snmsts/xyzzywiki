@@ -1,0 +1,148 @@
+[[trash]]
+
+**関数のグラフを表示する [#l321d32f]
+
+lisp/wipのfractal.lを参考にして、こんなものをでっち上げました。
+関数のグラフを300×300のウインドウに描きます。
+C++などさっぱりですので,多分かなり危険なシロモノです。
+各自、自己責任でお願いします。windowsXPでしか試していません。
+以下のソース部分をsite-lispフォルダにファイル名を"gr-func.l"とし
+て保存し,なるべく,byte-compileして下さい。--[[yis]]
+
+**ソース [#b61947ce]
+ ;;; -*- Mode: Lisp -*-
+ #|   gr-func.l 関数のグラフを表示する 
+ ■使い方
+ scratch(または.xyzzy)に
+ (require "gr-func")
+ (defun gr-func (funcs &optional (x-min -5) (x-max (- x-min))
+		       (y-min x-min) (y-max (- y-min)))
+   (win-user::gr-func funcs x-min x-max y-min y-max))
+ 等と記述し,scratchで
+ (gr-func 'tan)
+ とか
+ (gr-func #'(lambda (x) (* x x)) -2 2 -1 5)
+ (gr-func (list 'sin 'identity) -1 5 -2 2)
+ とかしてみて下さい。
+ 引数のx-min,x-max,y-min,y-maxは表示ウィンドウの仮想座標です。
+ 関数(lambda 形の関数も可)を2つ以上与えるときはリストにして下さい。
+ ただし,同じ線種で表示されるためグラフは区別できません。
+ 関数の値が不適なときは強制的に0にするのでとりあえずグラフは表示さ
+ れます。
+ 座標軸の目盛は10の巾乗間隔で適当につけられます。
+ ■ライセンス　もちろんNYSLです。|#
+ ;
+ (provide "gr-func")
+ (eval-when (:compile-toplevel :load-toplevel :execute)
+  (require "wip/winapi"))
+ (in-package "win-user")
+ ;(*define WS_EX_TOPMOST #x00000008)
+ (defconstant *gr-class* "grClass")
+ (defvar *hwnd-gr* nil)
+ (defparameter *gr-width* 308);;300
+ (defparameter *gr-height* 328);;300
+ (unless (fboundp 'gr-wndproc-stub)
+  (defun-c-callable LRESULT gr-wndproc-stub
+      ((HWND hwnd) (UINT msg) (WPARAM wparam) (LPARAM lparam))
+    (gr-wndproc hwnd msg wparam lparam)))
+ (defun gr-wndproc (hwnd msg wparam lparam)
+  (when (= msg WM_NCDESTROY)
+    (setq *hwnd-gr* nil))
+  (DefWindowProc hwnd msg wparam lparam))
+ (defun register-gr-window ()
+  (let ((wc (make-WNDCLASS)))
+    (setf (WNDCLASS-style wc) (logior CS_HREDRAW CS_VREDRAW))
+    (setf (WNDCLASS-lpfnWndProc wc) #'gr-wndproc-stub)
+    (setf (WNDCLASS-cbClsExtra wc) 0)
+    (setf (WNDCLASS-cbWndExtra wc) 0)
+    (setf (WNDCLASS-hInstance wc) (GetModuleHandle 0))
+    (setf (WNDCLASS-hIcon wc) 
+         (LoadIcon 0 (MAKEINTRESOURCE IDI_APPLICATION)))
+    (setf (WNDCLASS-hCursor wc) 
+         (LoadCursor 0 (MAKEINTRESOURCE IDC_ARROW)))
+    (setf (WNDCLASS-hbrBackground wc) (+ 1 COLOR_WINDOW))
+    (setf (WNDCLASS-lpszMenuName wc) 0)
+    (setf (WNDCLASS-lpszClassName wc)
+	  (si:make-string-chunk *gr-class*))
+    (RegisterClass wc)))
+ (defun create-gr-window ()
+  (let ((hwnd (CreateWindowEx 8 ;WS_EX_TOPMOST
+	                    (si:make-string-chunk *gr-class*)
+			    (si:make-string-chunk "gr-func")
+			    WS_OVERLAPPEDWINDOW
+			    CW_USEDEFAULT CW_USEDEFAULT
+			    *gr-width* *gr-height*
+			    0 0 (GetModuleHandle 0) 0)))
+    (ShowWindow hwnd SW_SHOW)
+    (UpdateWindow hwnd)
+    hwnd))
+ (defun gr-init ()
+  (cond (*hwnd-gr*
+	 (InvalidateRect *hwnd-gr* 0 1)
+	 (ShowWindow *hwnd-gr* SW_SHOW)
+	 (UpdateWindow *hwnd-gr*))
+	(t
+	 (register-gr-window)
+	 (setq *hwnd-gr* (create-gr-window)))))
+ (setf (get 'with-gr-paint 'ed:lisp-indent-hook) 1)
+ (defmacro with-gr-paint ((hdc) &body body)
+  `(unwind-protect
+       (let (,hdc)
+	 (progn
+	   (gr-init)
+	   (setq ,hdc (GetDC *hwnd-gr*))
+	   ,@body)
+	 (when ,hdc
+	   (ReleaseDC *hwnd-gr* ,hdc)))))
+ (defun gr-func (funcs x-min x-max y-min y-max)
+  (if (atom funcs) (setq funcs (list funcs)))  
+  (and (or (>= x-min x-max) (>= y-min y-max)) 
+       (error "範囲が不適切です"))
+  (let* ((width (max 1 (- *gr-width* 8)))
+	 (height (max 1 (- *gr-height* 28)))
+	 (xrng (- x-max x-min))
+	 (scx (/ xrng width))
+	 (yrng (- y-max y-min))
+	 (scy (/ yrng height)))
+  (labels ((pix-vx (pix) (float (+ x-min (* scx pix)) 0.0));float
+	 (piy-vy (piy) (float (- y-max (* scy piy)) 0.0));float
+	 (vx-pix (vx) (round (/ (- vx x-min) scx)))
+	 (vy-piy (vy) (round (/ (- y-max vy) scy)))
+	 (gr-funcall (fn x) 
+               (let ((f (ignore-errors (funcall fn x))))
+		(if (realp f) f
+		  (prog1 0 
+                      (message "gr-func:invalid at x=~A" x))))))
+  (with-gr-paint (hdc)
+   (MoveToEx hdc 0 (vy-piy 0) 0)
+   (LineTo hdc width (vy-piy 0))
+   (MoveToEx hdc (vx-pix 0) 0 0)
+   (LineTo hdc (vx-pix 0) height)
+    (let* ((unit (expt 10 (1- (floor (log xrng 10)))))
+	   (n (ceiling xrng unit))
+	   (pos (if (< y-min 0 y-max) (vy-piy 0) height))
+	   (ini (* unit (ceiling x-min unit))))
+      (dotimes (i n) 
+         (MoveToEx hdc (vx-pix (+ ini (* i unit))) (- pos 2) 0)
+	(LineTo hdc (vx-pix (+ ini (* i unit))) pos)))
+    (let* ((unit (expt 10 (1- (floor (log yrng 10)))))
+	   (n (ceiling yrng unit))
+	   (pos (if (< x-min 0 x-max) (vx-pix 0) 0))
+	   (ini (* unit (ceiling y-min unit))))
+      (dotimes (i n) 
+         (MoveToEx hdc pos (vy-piy (+ ini (* i unit))) 0)
+	(LineTo hdc (+ pos 3) (vy-piy (+ ini (* i unit))))))
+    (dolist (fn funcs)
+      (MoveToEx hdc 0 (vy-piy (gr-funcall fn (pix-vx -1))) 0)
+      (do* ((pix 0 (1+ pix)))
+	  ((> pix width) 't)
+	(LineTo hdc pix 
+             (vy-piy (gr-funcall fn (pix-vx pix))))))))) nil)
+ ;;ends here
+- 使い方の部分で間違いがありました。(require "gr-func")の部分を外に出しておいて下さい。申し訳ありません。 -- [[yis]] &new{2010-04-19 (月) 13:45:15};
+- 他のソフト(spi)と変数の衝突が起きるようですので、WS_EX_TOPMOSTの値を実値に置き替えました。 -- [[yis]] &new{2010-04-19 (月) 14:46:32};
+- 他のソフト(spi)と変数の衝突が起きるようですので、WS_EX_TOPMOSTの値を実値に置き替えました。 -- [[yis]] &new{2010-04-19 (月) 23:20:29};
+- 一部の関数で分数値が与えられるため遅くなっていたのを修正。誤差の発生を抑えるため308x328にした。 -- [[yis]] &new{2010-04-22 (木) 08:13:54};
+- LzSyIGCtBMfOZ -- [[ycrvlb]] &new{2010-04-22 (木) 21:20:57};
+
+#comment

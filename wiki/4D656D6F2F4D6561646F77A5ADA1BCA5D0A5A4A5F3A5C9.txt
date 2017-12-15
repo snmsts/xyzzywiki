@@ -1,0 +1,30 @@
+#contents
+*Meadowキーバインドに近づける。 [#w8faba0a]
+
+Meadowデフォルト設定に近くなるような設定。もっと知っている人は追加お願いします。
+
+ ; ヤンク、キルにクリップボードを使う。
+ (global-set-key '(#\C-w) 'kill-region-to-clipboard)
+ (global-set-key '(#\M-w) 'copy-region-to-clipboard)
+ (global-set-key '(#\C-y) 'paste-from-clipboard)
+ 
+ 
+ ; kill-line-to-clipboard を定義する。（2005/8/9 修正案取り込みました。ありがとうございました）
+ (defun kill-line-to-clipboard (&optional lines)
+   (interactive "*p")
+   (kill-line lines)
+   (copy-to-clipboard (apply #'concat (car ed::*kill-ring*))))
+ ; C-k に割り当て
+ (global-set-key '(#\C-k) 'kill-line-to-clipboard )
+
+
+// kill-line-to-clipboard の修正案ありがとうございました。そっくりになりました。
+// 
+// ; こんな感じでしょうか？　yankできるものとクリップボードの中身が一緒になればいいんですよね。
+// (defun kill-line-to-clipboard (&optional lines)
+//   (interactive "*p")
+//   (kill-line lines)
+//   (copy-to-clipboard (apply #'concat (car ed::*kill-ring*))))
+
+Emacs標準キーバインドは↓のページでゲットしましょう。~
+[[Emacsキーバインド]]

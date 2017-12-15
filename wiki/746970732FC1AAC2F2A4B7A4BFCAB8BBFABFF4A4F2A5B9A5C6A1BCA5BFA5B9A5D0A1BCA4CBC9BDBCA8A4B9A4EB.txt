@@ -1,0 +1,18 @@
+[[tips]]
+
+-選択した文字数をステータスバーに表示します。
+-改行コードはカウントしません。
+-2chの「xyzzy Part14」スレ#421から。
+
+ ;選択した文字数をステータスバーに表示
+ (add-hook '*post-command-hook*
+ 	  #'(lambda ()
+ 	      (when (eql (get-selection-type) 2)
+ 		(message "Selected chars: ~D"
+ 			 (- (abs (- (selection-point)
+ 				    (selection-mark)))
+ 			    (abs (- (save-excursion (goto-char (selection-point)) (current-line-number))
+ 				    (save-excursion (goto-char (selection-mark)) (current-line-number)))))))))
+
+#comment
+[[ルイヴィトンバッグ>http://www.jpnbag.com]]

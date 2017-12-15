@@ -1,0 +1,13 @@
+~->[[tips]]
+
+Cookieをファイルに保存するようにし、忍法帳が必須の板でも書き込めるようにしてみました（外部へのリンクです）。
+#ref(http://www.green.dti.ne.jp/poi/temp/amendment_http_post.l);
+
+config.lの最後に&br;
+(load "~/.2ch/amendment_http_post.l")&br;
+のように記述して使用してください。
+
+2ch-modeのhttp-post()とform-format-cookie-vars()を再定義しているのでそれらを独自に修正している方などは注意してください。
+
+・更新履歴&br;
+2011/03/09 Lv2より上にレベルアップしなかったことへの対処（をしたつもり…）&br;

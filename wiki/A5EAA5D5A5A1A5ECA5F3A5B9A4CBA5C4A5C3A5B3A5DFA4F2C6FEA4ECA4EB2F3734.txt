@@ -1,0 +1,29 @@
+*self-insert-command [#j53edaad]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-08-03 (火) 01:50:45
+-バージョン: 20031002
+
+**メッセージ [#hb3ca6e0]
+ <chapter>
+ <title>self-insert-command</title>
+ <type>Function</type>
+ <arguments>self-insert-command &amp;optional (ARG 1)</arguments>
+ <package>editor</package>
+ <description>
+ 最後に入力されたキー*last-command-char*を挿入モードの如何によりinsert/overwrite-charします。
+ 括弧が入力された時に強調表示がなされるのもこの中での作用です。
+ </description>
+ <seealso>*auto-fill-hook</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>cmds.l</file>
+ </chapter>
+----
+-seealsoに *auto-fill-hook を追加しました -- [[nakano]] &new{2004-08-03 (火) 23:30:04};
+
+#comment

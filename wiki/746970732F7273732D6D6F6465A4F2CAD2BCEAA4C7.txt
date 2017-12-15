@@ -1,0 +1,28 @@
+ぼんやりとブラウズするにはホームポジションからせこせこ動くのはけしからん…~
+ん？~
+05/10/10 佐野
+ (add-hook 'rss::*rss-start-hook*
+ 	  #'(lambda ()
+ 	      (define-key rss::*rss-group-map* #\u 'rss::rss-finish)
+ 	      (define-key rss::*rss-group-map* #\j 'next-virtual-line)
+ 	      (define-key rss::*rss-group-map* #\k 'previous-virtual-line)
+ 	      (define-key rss::*rss-mode-map* #\j #'(lambda ()
+ 						 (interactive)
+ 						 (if (rss::rss-browser-open-p)
+ 						     (rss::rss-browser-scroll-down)
+ 						   (rss::rss-item-next))))
+ 	      (define-key rss::*rss-mode-map* #\k #'(lambda ()
+ 						 (interactive)
+ 						 (if (rss::rss-browser-open-p)
+ 						     (rss::rss-browser-scroll-up)
+ 						   (rss::rss-item-prev))))
+ 	      (define-key rss::*rss-mode-map* #\u 'rss::rss-close)
+ 	      (define-key rss::*rss-mode-map* #\l 'rss::rss-reload)
+ 	      (define-key rss::*rss-menu-map* #\j 'next-virtual-line)
+ 	      (define-key rss::*rss-menu-map* #\k 'previous-virtual-line)
+ 	      (define-key rss::*rss-menu-map* #\l 'rss::rss-menu-update-all)
+ 	      (define-key rss::*rss-menu-map* #\u 'rss::rss-group-open)))
+----
+- 現状に即して訂正 -- [[佐野]] &new{2006-01-29 (日) 22:06:49};
+
+#comment

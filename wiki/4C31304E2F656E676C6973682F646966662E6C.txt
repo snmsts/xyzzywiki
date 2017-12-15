@@ -1,0 +1,14 @@
+[[L10N/english]]
+
+ diff.l:244:	(plain-error "ないっす"))
+-Not Found --  &new{2005-03-04 21:55:20 (金)};
+
+#comment
+ diff.l:311:	      (msgbox "違いはありません"))))
+-There are no difference. --  &new{2005-03-04 21:55:39 (金)};
+
+#comment
+ diff.l:326:      (plain-error "ないっす"))
+-Not Found --  &new{2005-03-04 21:55:09 (金)};
+
+#comment

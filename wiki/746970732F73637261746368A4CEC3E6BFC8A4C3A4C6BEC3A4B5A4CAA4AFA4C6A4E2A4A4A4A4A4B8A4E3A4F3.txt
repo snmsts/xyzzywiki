@@ -1,0 +1,16 @@
+ ;; *scratch* を終了時に保存
+ (add-hook '*kill-xyzzy-hook*
+           #'(lambda ()
+               (save-excursion
+                 (set-buffer (find-buffer "*scratch*"))
+                 (write-file "~/scratch"))))
+ 
+ ;; *scratch* を起動時にロード
+ (add-hook '*post-startup-hook*
+           #'(lambda ()
+               (save-excursion
+                 (set-buffer (find-buffer "*scratch*"))
+                 (insert-file-contents "~/scratch" t))))
+
+----
+-ちょこっといじりました。insert-file-contentsの2番目の引数はお好みで。 -- [[NANRI]] &new{2005-07-30 19:04:09 (土)};

@@ -1,0 +1,12 @@
+#freeze
+* fields [#cc28d5b3]
+|項目名|見出し|形式|オプション|デフォルト値|h
+|name|投稿者|page|20|anonymous|
+|state|状態|hidden||質問|
+|summary|サマリ|title|60||
+|body|メッセージ|textarea|60,10,40||
+
+* state [#n964b679]
+|見出し|セルの書式|h
+|質問|BGCOLOR(#ffccff):%s|
+|回答済み|BGCOLOR(#ccffcc):%s|

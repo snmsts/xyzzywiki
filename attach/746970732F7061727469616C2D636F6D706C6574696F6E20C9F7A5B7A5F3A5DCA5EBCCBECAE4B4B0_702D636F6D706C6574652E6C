@@ -1,0 +1,114 @@
+(provide "p-complete")
+
+(defvar *pc-word-delimiters* "-_."
+  "A string of characters treated as word delimiters for completion.")
+
+(defvar *pc-complete-asterisk* t
+  "non-nil なら先頭と末尾の \"*\" を勝手に補う
+
+ex: l.m.h -> *lisp-mode-hook*
+")
+
+(defvar *pc-complete-hyphen* nil
+  "non-nil なら途中に \"-\" など(単語構成文字以外)を勝手に補う
+
+ex: m.l.k.t -> make-list-from-keyword-table")
+
+(defvar *pc-complete-trailing-words* :maybe
+  "末尾にさらに word が続くものも候補にするかどうか
+
+nil		しない
+t		常にする
+その他		候補がなければする
+
+ex: b....o -> backward-delete-char-untabify-or-selection")
+
+(defun pc-make-pattern (words &optional ast hyphen trail)
+  (setq words (mapcar #'regexp-quote words))
+  (do ((pattern (if ast "^\\*?" "^"))
+       (delim (if hyphen ".*-" "\\sw*-"))
+       (tail (if (eq trail t) ""
+	       (if ast "\\sw*\\*?$" "\\sw*$"))))
+      ((endp (cdr words)) (compile-regexp (concat pattern (car words) tail)))
+    (setq pattern (concat pattern (car words) delim)
+	  words (cdr words))))
+
+(defun pc-find-completions (regexp &optional pkg ext-only)
+  (let ((exp (compile-regexp regexp))
+	result)
+    (if ext-only
+	(do-external-symbols (sym (or pkg *package*) result)
+	  (and
+	   (string-match exp (string sym))
+	   (or (boundp sym) (fboundp sym))
+	   (pushnew (symbol-name sym) result :test #'string=)
+	   ))
+      (do-symbols (sym (or pkg *package*) result)
+	(and
+	 (string-match exp (string sym))
+	 (or (boundp sym) (fboundp sym))
+	 (pushnew (symbol-name sym) result :test #'string=)
+	 )))))
+
+(defun pc-complete-lisp-symbol (&optional arg)
+  "シンボルを単語ごとに補完"
+  (interactive "*P")
+  (let* ((end (point))
+	 beg str pkg ext-only words regexp list)
+    (ed::protect-match-data
+      ;; find string to complete
+      (save-excursion
+	(let ((otab (syntax-table)))
+	  (unwind-protect
+	    (progn
+	      (use-syntax-table ed::*lisp-mode-syntax-table*)
+	      (unless (skip-syntax-spec-backward "w_")
+		(return-from pc-complete-lisp-symbol nil))
+	      ;; qualified?
+	      (when (looking-at "\\(\\sw*\\)\\(::?\\)")
+		(goto-char (match-end 0))
+		(setq pkg (match-string 1))
+		(if (string= pkg "") (setq pkg "keyword"))
+		;; single colon -> external symbol
+		;; doubled colon -> internal symbol
+		(setq ext-only (= 1 (length (match-string 2)))))
+	      (setq beg (point)
+		    str (buffer-substring beg end)))
+	    (use-syntax-table otab)))
+	;; string -> words
+	(save-restriction
+	  (narrow-to-region beg end)
+	  (loop
+	    (push (buffer-substring (point)
+				    (progn
+				      (skip-chars-forward (concat "^" *pc-word-delimiters*))
+				      (point)))
+		  words)
+	    (or (forward-char 1)
+		(return (setq words (nreverse words)))))))
+      ;; find symbols
+      (setq list
+	    (pc-find-completions (pc-make-pattern words
+						    *pc-complete-asterisk*
+						    *pc-complete-hyphen*
+						    (if arg (not *pc-complete-trailing-words*)
+						      *pc-complete-trailing-words*))
+				  pkg ext-only))
+      ;; show results
+      (case (length list)
+	(0 (if (member *pc-complete-trailing-words* '(t nil))
+	       (message "No completion")
+	     (let ((*pc-complete-trailing-words* t))
+	       (pc-complete-lisp-symbol))))
+	(1 (when (string/= (car list) str)
+	     (delete-region beg end)
+	     (insert (car list)))
+	   (message "Solo completion")
+	   (refresh-screen))
+	(t
+	 ;; 補完リスト表示
+	 (popup-list list
+		     #'(lambda (name)
+			 (delete-region beg end)
+			 (insert name)
+			 (refresh-screen))))))))

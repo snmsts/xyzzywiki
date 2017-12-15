@@ -1,0 +1,27 @@
+* C-x C-w と C-x C-r を emacs 風にしたい [#x94e5a94]
+-ページ: [[質問箱]]
+-投稿者: [[おき]]
+-状態: 完了
+-投稿日: 2005-04-08 14:07:25 (金)
+
+** メッセージ [#zd44d10f]
+C-x C-w はバッファの(次以降に保存する)パス/ファイルネームまでは変更されません。~
+これを emacs 風(指定したパスにバッファを書き込みつつ次以降 C-x C-s 等で同じパスに保存)にするには、どうすればいいでしょうか？
+
+
+C-x C-r が何をやっているのかわかりません。~
+これを emacs 風(新しいバッファに read-only で読み込む)にするには、~
+ ; Ctrl-x Ctrl-r
+ ;(define-key ctl-x-map #\C-r 'find-file-read-only)
+これでよろしいでしょうか？
+----
+-前者 C-x C-w は途端に自己解決しました。
+http://hie.s64.xrea.com/xyzzy/qanda/html/fileoperation.html#70
+によれば、
+ ; Emacs 風 write-file
+ (global-set-key '(#\C-x #\C-w) 'emacs-write-file)
+で良さそうです。 -- [[おき]] &new{2005-04-08 14:13:05 (金)};
+- 質問メッセージの define-key の前のコメント文字をはずせば、それでいいと思いますよ。 --  &new{2006-03-01 (水) 16:34:07};
+ ; Ctrl-x Ctrl-r
+ (define-key ctl-x-map #\C-r 'find-file-read-only)
+#comment

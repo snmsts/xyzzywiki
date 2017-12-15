@@ -1,0 +1,34 @@
+* .xyzzy で define-key ctl-x-map しても反映されない [#fe5cdaf8]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2004-11-21 (日) 11:05:48
+
+** メッセージ [#id285a3f]
+こちらの Wiki にある emacs キーバインドにする
+lisp を .xyzzy に貼り付けましたが、
+
+(define-key ctl-x-map #\3 'split-window-vertically)
+
+が効いていませんでした。
+手で (define-key ...) を eval-last-sexp するか
+
+(global-set-key '(#\C-x #\3) 'split-window-vertically)
+
+にすると効くようになりました。
+なぜなのでしょうか?
+----
+-再現しません。もし、再現するコードがあるのでしたら添付してみてください。（それで原因がわかるかどうかは不明ですが）　個人的には気にしなければいいじゃんとか思いますけど。 -- [[NANRI]] &new{2004-11-21 (日) 17:37:10};
+-(define-key ctl-x-map ...) と (global-set-key '(#\C-x ...)) は完全に等価ということでしょうか? --  &new{2004-11-21 (日) 22:09:16};
+-自分が使っている範囲では等価ですが、完全に等価かどうかはよく知りません。 -- [[NANRI]] &new{2004-11-21 (日) 23:14:54};
+-とりあえず全て global-set-key で統一して対処しました:-) ありがとうございました． --  &new{2004-11-22 (月) 00:15:40};
+
+ ; 参考まで
+ (progn
+   (setq *hoge* (copy-keymap *global-keymap*))
+   (define-key ctl-x-map #\3 'split-window-vertically)
+   (define-key *hoge* '(#\C-x #\3) 'split-window-vertically)
+   (equalp *global-keymap* *hoge*))
+ =>t
+
+#comment

@@ -1,0 +1,38 @@
+*flet
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 普通
+-状態: 保留
+-カテゴリー: 新規項目
+-投稿日: 2003-08-15 (金) 13:55:20
+-バージョン: 030705
+
+**メッセージ
+適当翻訳モード
+
+ <title>flet</title>
+ <type>Special Form</type>
+ <arguments>"({(NAME LAMBDA-LIST {declaration}* [doc-string] {FORM}*)}*) {FORM}*"</arguments>
+ <package>lisp</package>
+ <description>
+ ローカルな関数を定義してフォームを評価します。フォーム内でfletで定義された関数が同じ名前の外部で定義された関数よりも優先されます。
+ 
+ 関数は同時に複数定義できます。それぞれの定義方法はdefunのように最初に関数名次にパラメータのリスト
+ (&optional,&rest,&key パラメータも使えます)そしてoptional declaration??とdocstringそして最後にフォームと続きます。
+ 
+ (flet ((safesqrt (x) (sqrt (abs x)))) 
+   ;; The safesqrt function is used in two places. 
+   (safesqrt (apply #'+ (map 'list #'safesqrt longlist))))
+ 
+ </description>
+ <seealso>labels</seealso>
+ <seealso>macrolet</seealso>
+ <link></link>
+ <section>関数</section>
+ <file>builtin.l</file>
+----
+-追加しました。 -- [[山本]] SIZE(10){2003-08-31 (日) 20:39:44}
+-こいつもでした。 -- [[佐野]] SIZE(10){2003-10-20 (月) 22:50:56}
+
+#comment

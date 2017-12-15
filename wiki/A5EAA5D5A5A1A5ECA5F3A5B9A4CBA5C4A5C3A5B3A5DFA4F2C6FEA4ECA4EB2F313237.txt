@@ -1,0 +1,146 @@
+*selectionシリーズいくつか。 [#g8cb166f]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-06-02 17:31:45 (木)
+-バージョン: 20050330
+
+**メッセージ [#i3cc99eb]
+簡単なところでも少し足さないとやり方忘れるので…
+結構大変。
+ <chapter>
+ <title>selection-start-end</title>
+ <type>Macro</type>
+ <arguments>selection-start-end (START END) &amp;body BODY</arguments>
+ <package>editor</package>
+ <description>
+ セレクションの開始位置、終了位置を取得します。
+ セレクションが存在すれば、
+ 局所的にSTARTに開始位置、ENDに終了位置をセットされた環境を作り
+ BODYを順次評価します。
+ 
+ 使用例:
+   ;;; セレクションに含まれる文字列を返します。
+   (selection-start-end (start end)
+     (buffer-substring start end))
+   =&gt;"foo"
+ </description>
+ <seealso>ed::get-selection-start-end</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>select.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>selection-whole-buffer</title>
+ <type>Function</type>
+ <arguments>selection-whole-buffer</arguments>
+ <package>editor</package>
+ <description>
+ バッファ全体をセレクションにします。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>select.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>selection-end-of-virtual-line</title>
+ <type>Function</type>
+ <arguments>selection-end-of-virtual-line</arguments>
+ <package>editor</package>
+ <description>
+ 表示行の末尾までをセレクションにします。
+ </description>
+ <seealso>end-of-virtual-line</seealso>
+ <seealso>selection-beginning-of-virtual-line</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>select.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>selection-end-of-line</title>
+ <type>Function</type>
+ <arguments>selection-end-of-line</arguments>
+ <package>editor</package>
+ <description>
+ 行末までをセレクションにします。
+ </description>
+ <seealso>selection-beginning-of-line</seealso>
+ <seealso>end-of-line</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>select.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>selection-end-of-buffer</title>
+ <type>Function</type>
+ <arguments>selection-end-of-buffer</arguments>
+ <package>editor</package>
+ <description>
+ バッファの最後までをセレクションにします。
+ end-of-bufferと違いマーク自体は変化しません。
+ </description>
+ <seealso>end-of-buffer</seealso>
+ <seealso>selection-beginning-of-buffer</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>select.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>selection-beginning-of-virtual-line</title>
+ <type>Function</type>
+ <arguments>selection-beginning-of-virtual-line</arguments>
+ <package>editor</package>
+ <description>
+ 表示行の先頭までをセレクションにします。
+ </description>
+ <seealso>beginning-of-virtual-line</seealso>
+ <seealso>selection-end-of-virtual-line</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>select.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>selection-beginning-of-line</title>
+ <type>Function</type>
+ <arguments>selection-beginning-of-line</arguments>
+ <package>editor</package>
+ <description>
+ 行頭までをセレクションにします。
+ </description>
+ <seealso>beginning-of-line</seealso>
+ <seealso>selection-end-of-line</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>select.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>selection-beginning-of-buffer</title>
+ <type>Function</type>
+ <arguments>selection-beginning-of-buffer</arguments>
+ <package>editor</package>
+ <description>
+ カーソル位置からバッファの先頭までをセレクションにします。
+ beginning-of-bufferと違いマーク自体は変化しません。
+ </description>
+ <seealso>beginning-of-buffer</seealso>
+ <seealso>selection-end-of-buffer</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>select.l</file>
+ </chapter>
+
+----
+-取り込みました。→[[refwiki:selection-beginning-of-buffer]], [[refwiki:selection-beginning-of-line]], [[refwiki:selection-beginning-of-virtual-line]], [[refwiki:selection-end-of-line]], [[refwiki:selection-end-of-buffer]], [[refwiki:selection-whole-buffer]], [[refwiki:selection-end-of-virtual-line]], [[refwiki:selection-start-end]] -- [[NANRI]] &new{2005-07-03 23:52:39 (日)};
+
+#comment

@@ -1,0 +1,60 @@
+-「移植キット」で search-forward、search-backward、re-search-forward、re-search-backward
+の再定義がされています。
+-文字列がみつからなかったときの動きがちがうような気がするので変更して使っています。
+-私の移植したものについては期待する動きをしていますがEmacsで試したことはないので
+ちがっていたらごめんなさい。
+
+-「GNU Emacs Lispリファレンスマニュアル」より
+ noerror が t の場合、サーチが失敗しても nil を返すだけで、エラーは出しません。
+ noerror が nil でも t でもない場合、これはポイントを limit まで動かし、nil を返します。 
+
+
+-「移植キット」より一部変更
+ (defun elisp-search (string reverse regexp &optional limit noerror repeat)
+   (let* ((tail (not reverse))
+          (count (if repeat repeat 1))
+          (limit (if (numberp limit) limit
+                   (if reverse (point-min) (point-max))))
+          (noerror (if (eq 't limit) limit noerror))
+          (spoint (point)))
+     ;(when reverse (backward-char 1)) ;set :no-dup reverse
+     (setq *last-search-regexp-p* regexp)
+     (if regexp
+         (setq *last-search-regexp* string)
+       (setq *last-search-string* string))
+     (save-restriction
+       (while (and (> count 0)
+                   spoint)
+         (setq spoint
+               (if (scan-buffer string
+                                :regexp regexp
+                                :reverse reverse
+                                :tail tail
+                                :no-dup reverse
+                                :case-fold *case-fold-search*
+                                :left-bound *word-search*
+                                :right-bound *word-search*
+                                :limit limit)
+                   (point)
+ ;削除           (cond
+ ;削除            ((numberp noerror)
+ ;削除             (goto-char limit)
+ ;削除              nil)
+ ;削除            (noerror nil)
+ ;削除            (t
+ ;削除             (plain-error "文字列が見つかりまへん")
+ ;削除             nil))))
+                 (cond                                     ;追加
+                  ((eq t noerror)                          ;追加
+                   nil)                                    ;追加
+                  ((eq nil noerror)                        ;追加
+                   (plain-error "文字列が見つかりまへん")  ;追加
+                   nil)                                    ;追加
+                  (t                                       ;追加
+                   (goto-char limit)                       ;追加
+                   nil))))                                 ;追加
+         (setq count (1- count))))
+     spoint))
+
+----
+#comment

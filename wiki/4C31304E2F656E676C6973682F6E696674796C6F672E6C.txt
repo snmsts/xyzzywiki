@@ -1,0 +1,44 @@
+[[L10N/english]]
+
+ niftylog.l:23:			 (:item nil "ﾒｯｾｰｼﾞを読んだことにする(&R)"
+- (:item nil "Mark messages as &read" --  &new{2006-03-11 (土) 00:37:38};
+
+#comment
+ niftylog.l:25:			 (:item nil "ﾒｯｾｰｼﾞを読んでないことにする(&N)"
+- (:item nil "Mark messages as u&nread"  --  &new{2006-03-11 (土) 00:38:09};
+
+#comment
+ niftylog.l:27:			 (:item nil "ｽﾚｯﾄﾞを読んだことにする(&T)"
+- (:item nil "Mark &threads as read" --  &new{2006-03-11 (土) 00:38:38};
+
+#comment
+ niftylog.l:29:			 (:item nil "ｽﾚｯﾄﾞを読んでないことにする(&H)"
+- (:item nil "Mark t&hreads as unread" --  &new{2006-03-11 (土) 00:38:57};
+
+#comment
+ niftylog.l:31:			 (:item nil "ﾆｭｰｽｸﾞﾙｰﾌﾟを読んだことにする(&G)")
+- (:item nil "Mark news &groups as read") --  &new{2006-03-11 (土) 00:40:09};
+
+#comment
+ niftylog.l:32:			 (:item nil "ﾆｭｰｽｸﾞﾙｰﾌﾟを読んでないことにする(&P)"))
+- (:item nil "Mark news grou&ps as unread") --  &new{2006-03-11 (土) 00:39:51};
+
+#comment
+ niftylog.l:33:		       "ﾒｯｾｰｼﾞ(&M)")
+- "&Message") --  &new{2006-03-11 (土) 00:40:37};
+
+#comment
+ niftylog.l:38:   "^- [A-Z0-9 ]*MES(\\([ 0-9][0-9]\\)):.+ [0-9][0-9]/[0-9][0-9]/[0-9][0-9] -$"))
+#comment
+ niftylog.l:42:   "^−\\(会議室\\([ 0-9][0-9]\\)  .+\\)発言数 :[0-9]+ 未読 :[0-9]+−"))
+#comment
+ niftylog.l:46:   "[0-9][0-9][0-9]+/[0-9][0-9][0-9]+ +[A-Z][A-Z][A-Z][0-9][0-9][0-9][0-9][0-9]  "))
+#comment
+ niftylog.l:49:  "\\([A-Z][A-Z][A-Z][0-9][0-9][0-9][0-9][0-9]  .+\\)\n(")
+#comment
+ niftylog.l:52:  ")   [0-9][0-9]/[0-9][0-9]/[0-9][0-9] [0-9][0-9]:[0-9][0-9]")
+#comment
+ niftylog.l:125:		    (comment (compile-regexp (concat "  \\(" digits "\\)へのコメント")))
+#comment
+ niftylog.l:233:  (interactive "lﾛｸﾞﾌｧｲﾙの読み込み: " :title0 "ﾛｸﾞﾌｧｲﾙの読み込み")
+#comment

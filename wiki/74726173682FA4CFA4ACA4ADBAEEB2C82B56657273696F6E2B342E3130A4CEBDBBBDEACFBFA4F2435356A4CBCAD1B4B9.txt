@@ -1,0 +1,143 @@
+#freeze
+ ;;; -*- Mode: Lisp; -*-
+ ;;; hwa-to-csv.l Ver.1.2.0.20081231
+ ;;; Public Domain
+ 
+ #|
+ このプログラムは，はがき作家の住所録(*.hwa)をカンマ区切りファイル(*.csv)又はタブ区切りファイル(*.tsv)に変換します。
+ 
+ ;;; 導入方法
+ 
+ 簡単な方法: このプログラム全体を.xyzzyに丸ごとコピー&ペーストし，xyzzyを再起動してください。
+ 
+ 凝った方法: このプログラム全体を「hwa-to-csv.l」と名付けて保存し，必要ならバイトコンパイルして，初期化ファイル(.xyzzy又はsiteinit.l)に次の行を追記してください。
+ (require "hwa-to-csv")
+ 更に必要なら，次の初期設定を追記してください。各変数の意味は，それぞれのdocstringを参照してください。
+ (setq *hwa-to-csv-autosave* t
+       *hwa-to-csv-output-tsv* nil
+       *hwa-to-csv-output-encoding* *default-fileio-encoding*
+       *hwa-to-csv-output-eol-excel-like* nil
+       *hwa-to-csv-find-file-auto-mode* t)
+ その後，xyzzyを再起動してください。siteinit.lに追記した場合はバイトコンパイルとダンプファイルの再構築を忘れずに。
+ 
+ ;;; 使用方法
+ 
+ xyzzyのウインドウにはがき作家の住所録(*.hwa)をドロップしてください。変換されたCSV又はTSVが同じフォルダに保存されます。
+ *hwa-to-csv-find-file-auto-mode*がnilの場合，自動で変換されませんので，xyzzyで住所録を開いた直後に M-x hwa-to-csv 等としてhwa-to-csvを呼び出してください。 [#x1d3ddef]
+ |#
+ 
+ 
+ 
+ 
+ ;;; 初期設定
+ 
+ (defvar *hwa-to-csv-autosave* t
+   "CSVに変換した結果(出力)を自動で保存するかどうかを指定します。出力ファイル名は入力ファイル名に.csvを附けたものになります。(例: 1.hwa -> 1.hwa.csv)
+   t: 自動で保存します。出力ファイルが既存の場合でも上書きされます。
+ nil: 自動で保存しません。")
+ (defvar *hwa-to-csv-output-tsv* nil
+   "出力にCSV(カンマ区切り)でなくTSV(タブ区切り)を使用するかどうかを指定します。
+   t: TSVで出力します。出力ファイル名は*.hwa.tsvとなります。
+ nil: CSVで出力します。")
+ (defvar *hwa-to-csv-output-encoding* *default-fileio-encoding*
+   "出力の文字エンコーディングを指定します。")
+ (defvar *hwa-to-csv-output-eol-excel-like* nil
+   "入力データに含まれる改行の出力方法を指定します。
+   t: Microsoft Office Excel風の出力になります。
+ nil: RFC 4180風の出力になります。")
+ (defvar *hwa-to-csv-find-file-auto-mode* t
+   "住所録(*.hwa)を開いた時にhwa-to-csvを自動で実行するかどうかを指定します。
+   t: 自動実行します。
+ nil: 自動実行しません。")
+ 
+ 
+ 
+ 
+ ;;; 共有の函数
+ 
+ (defun replace-regexp-whole (regexp replace &optional case-fold)
+   (interactive "*sregexp: \nsreplace: ")
+   (save-excursion
+     (goto-char (point-min))
+     (replace-regexp (compile-regexp regexp case-fold) replace t)))
+ 
+ (defmacro with-temp-csv-buffer ((input-buffer &key output-buffer (encoding *default-fileio-encoding*) output-tsv) &body body)
+   (let ((bi (gensym)) (bo (gensym)) (code (gensym)) (tsv (eval output-tsv)))
+     `(let ((,bi ,input-buffer)
+            (,bo ,output-buffer)
+            (,code ,encoding))
+        (unless ,bo
+          (setq ,bo (concat (buffer-name ,bi) ,(if tsv ".tsv" ".csv"))))
+        (switch-to-buffer ,bo)
+        (set-buffer-fileio-encoding ,code)
+        (make-local-variable 'need-not-save)
+        (setq need-not-save t)
+        (when (find-symbol "csv-mode" "editor")
+          ,(if tsv '(tsv-mode) '(csv-mode)))
+        (erase-buffer (selected-buffer))
+        (insert-buffer ,bi)
+        ,@body)))
+ ;;; (pme (with-temp-csv-buffer ((selected-buffer)) :tsv t))
+ 
+ 
+ 
+ 
+ ;;; 本体の定義
+ 
+ (defmacro hwa-to-csv-defun-hwa-to-csv-output (name docstring output-tsv)
+   "hwa-to-csv-output-csvとhwa-to-csv-output-tsvを定義するためのマクロです。"
+   (let ((separating-char (if output-tsv "\t" ",")))
+     `(defun ,(intern name) (&optional (eol-excel-like *hwa-to-csv-output-eol-excel-like*))
+        ,docstring
+        (interactive)
+        (revert-buffer *encoding-utf16le*)
+        (with-temp-csv-buffer
+         ((selected-buffer) :encoding *hwa-to-csv-output-encoding* :output-tsv ,output-tsv)
+         (replace-regexp-whole "\n" "\X0e")
+         (replace-regexp-whole "\X0\X0\X2\X0\X0\X0\X0\X0\X1\X0\X0\X0" "\n")
+         (replace-regexp-whole ".*?\X2\X0\X1\X0\X0\X0\X0\X0\X0\X0\X0\X0\X0\X0\X0\X0\X0\X0\X0\X0\X0\X0\X0\X0\X0\X0\X0.\X0?\X0" "\n")
+         (replace-regexp-whole "\"" "\"\"")
+         (replace-regexp-whole "\Xd6fe\Xd7ff.\Xd7ff" (concat "\"" ,separating-char "\""))
+         (replace-regexp-whole "[\X017f\X1329\X164f]" (concat "\"" ,separating-char "\""))
+         (replace-regexp-whole "[\Xd6ff\Xd7ff\Xd6fe\Xd7fe]" "")
+         (replace-regexp-whole "[\X00-\X08\X0b\X0c\X0e-\X1f]" "")
+         (goto-char (point-min))
+         (delete-blank-lines)
+         (kill-line)
+         (replace-regexp-whole (concat "^\"" ,separating-char) "")
+         (if eol-excel-like
+             (progn
+               (set-buffer-eol-code *eol-lf*)
+               (replace-regexp-whole "\X0d" "\X0e")
+               (replace-regexp-whole "\n" "\"\X0d\n")
+               (replace-regexp-whole "\X0e" "\n"))
+           (progn
+             (set-buffer-eol-code *eol-crlf*)
+             (replace-regexp-whole "\n" "\"\n")
+             (replace-regexp-whole "\X0d" "\n")))
+         (set-buffer-file-name (buffer-name (selected-buffer)))
+         (when *hwa-to-csv-autosave*
+           (save-buffer))
+         (selected-buffer)))))
+ 
+ (hwa-to-csv-defun-hwa-to-csv-output
+  "hwa-to-csv-output-csv"
+  "はがき作家 Version 4.10/4.51の住所録(*.hwa)をカンマ区切りファイル(CSV, *.csv)に変換します。"
+  nil)
+ (hwa-to-csv-defun-hwa-to-csv-output
+  "hwa-to-csv-output-tsv"
+  "はがき作家 Version 4.10/4.51の住所録(*.hwa)をタブ区切りファイル(TSV, *.tsv)に変換します。"
+  t)
+ 
+ (defun hwa-to-csv ()
+   "はがき作家 Version 4.10/4.51の住所録(*.hwa)をカンマ区切りファイル(*.csv)又はタブ区切りファイル(*.tsv)に変換します。"
+   (interactive)
+   (if *hwa-to-csv-output-tsv*
+       (hwa-to-csv-output-tsv)
+     (hwa-to-csv-output-csv)))
+ 
+ (defun hwa-to-csv-find-file-auto-mode ()
+   (when *hwa-to-csv-find-file-auto-mode*
+     (hwa-to-csv)))
+ 
+ (pushnew '("\\.hwa$" . hwa-to-csv-find-file-auto-mode) *auto-mode-alist* :test 'equal)

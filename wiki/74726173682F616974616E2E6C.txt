@@ -1,0 +1,37 @@
+[[trash]]
+2chのEmacsスレpart16に出現したaitanをxyzzyに連れてきました。おひまな方はどうぞ。
+
+ (defun aitan()
+   (interactive)
+   (split-window (- (window-height) 5))
+   (set-window (next-window (selected-window)))
+   (set-buffer (get-buffer-create "aitan"))
+   (make-local-variable 'need-not-save)
+   (setq need-not-save t)
+   (erase-buffer (selected-buffer))
+   (let ((lngth 20) (cnt (float 0)))
+   (beginning-of-line)
+   (insert " 〇＿〇\n")(insert "( ･(ｪ)･)ﾉ")(insert "＠\"")
+   (while t
+     (setq cnt (float 0)) 
+     (while (< cnt lngth) 
+       (beginning-of-line)(forward-char 9)(insert "―") 
+       (sit-for (calcwait cnt lngth))(setq cnt (1+ cnt))) 
+     (while (> cnt 0) 
+       (beginning-of-line)(forward-char 9)(delete-char 1) 
+       (sit-for (calcwait cnt lngth))(setq cnt (1- cnt))) 
+     (sit-for 0.2))))
+  (defun calcwait (cnt lngth) 
+   (setq v (/ (+ (sin (* (/ (float cnt) (float lngth)) 3.14)) 
+ 		(sin (* (/ (+ (float cnt) 1) (float lngth)) 3.14))) 2)) 
+   (/ (round (* (abs (/ 1.0 v)) 6)) 1000))
+ ;;すいませんもうしません… 
+
+いや、その、はい…^^;
+-ありゃ、ログインとかせず書けちゃいましたけどよかったですか？ -- [[Dek]] &new{2005-10-21 17:11:13 (金)};
+-新スレおめやよ〜 -- [[川*’ー’）]] &new{2005-10-24 10:38:37 (月)};
+-こーゆーの好きです。またしてください -- [[（・＿・）ﾉｼ]] &new{2005-10-24 10:59:37 (月)};
+- 終了のしかたが分かりません --  &new{2007-05-06 (日) 19:23:30};
+- C-g　C-x k C-x 1 --  &new{2007-05-06 (日) 20:13:38};
+
+#comment

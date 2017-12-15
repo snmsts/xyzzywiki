@@ -1,0 +1,91 @@
+*へなちょこリファレンス [#yf2ef89c]
+「へなちょこリファレンス作成計画」は、逸見さん・服部さん・くぼーんさん・山本さんとサイトを転々と流浪し、現在はこのサイトで管理されています。&br;
+へなちょこリファレンス（以降では単にリファレンスと表記します。）を使用すると、xyzzy Lispの関数や変数について調べることができます。
+-[[重要なお知らせ>#notice]]
+-[[最新版の参照>#ref]]
+-[[reference.xmlのダウンロード>#download]]
+-[[reference.xmlへのご意見・ご協力>#tsukkomi]]
+-[[reference.xmlのリリース予定>#release]]
+-[[reference.xmlについて現在の作業状況>#working]]
+-reference.xml(他)作り方ガイド
+--[[reference.xmlの概要>リファレンスノート#abstract]]
+--[[reference.xmlのDOCTYPE>リファレンスノート#doctype]]
+--[[reference.xmlの項目の記述例>リファレンスノート#example]]
+--[[reference.xmlの項目の書き方>リファレンスフォーマット]]
+-[[reference.xml使い方ガイド>QuickTour/etc/へなちょこリファレンスの使い方]]
+-[[リファレンスにツッコミを入れる]] 溜め込んでいるものでマージしても良いものがあれば[[ここ>リファレンスにツッコミを入れる]]へ。また、リファレンスの誤植・改善点の通報、リファレンスへの要望等もお待ちしてます。
+**重要なお知らせ [#notice]
+以前はxyzzyリファレンスのライセンスは不明確でしたが、現在はxyzzy本体と同じMITライセンスでの配布しています。xyzzy本体とxyzzyリファレンスを同梱した形での配布の際に全く問題が発生しないようにするのが目的です。
+
+具体的なライセンスの条文は以下のものを予定しています。
+ Copyright (c) 2007 The Xyzzy Documentation Project
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a 
+ copy of this software and associated documentation files (the "Software"), 
+ to deal in the Software without restriction, including without 
+ limitation the rights to use, copy, modify, merge, publish, distribute, 
+ sublicense, and/or sell copies of the Software, and to permit persons to 
+ whom the Software is furnished to do so, subject to the following 
+ conditions:
+ 
+ The above copyright notice and this permission notice shall be included 
+ in all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+この件についてのご意見・ご質問はNANRI（southly@gmail.com）までお寄せくださ
+い。((xyzzy MLが最も適当だと思いますが、このWikiのコメント欄でも直接メールでもかまいません))
+
+よろしくお願いします。
+
+**最新版の参照 [#ref]
+-[[QuickTour/etc/へなちょこリファレンスの使い方]]
+-[[目次>reference:wiki.cgi]]
+-[[インクリメンタル検索（α版）>reference:is.cgi]]
+
+#lookup(リファレンス検索,検索)
+**reference.xmlのダウンロード [#download]
+[[アーカイブページ>reference:archive]]もしくはnetinstallerによる入手([[package>reference:archive/ni.l]])が可能です。~
+
+**reference.xmlへのご意見・ご協力[#tsukkomi]
+-内容に関することは[[リファレンスにツッコミを入れる]]のページにてどうぞ。
+-作業に関することなど内容以外のことはこのページのコメント欄でどうぞ。
+
+**reference.xmlのリリース情報 [#release]
+-07/07/29リリース予定
+-07/02/28リリースしました。３ヶ月周期にもどるかも
+-07/01/29リリースしました。次回のリリースは07/02/28の予定です。
+-06/12末のリリースを予定（通常３ヶ月周期）しておりましたが延期することになりました。現在07/01末を予定。
+-06/10/01にリリースしました。
+-不具合を修正して06/07/12に再度リリースしました。
+-06/06/29にリリースしました。
+-06/03/29にリリースしました。
+-05/12/20にリリースしました。
+--変更点。
+---配置ディレクトリを変更。htmlファイルを/reference/->/html/reference/へ~
+reference.xmlを/reference/reference.xmlに。その他のディレクトリは現状維持。~
+このように変更する目的は、reference.xmlと非公式reference.xmlを統合した状態で使う場合にetcでは雑音が多すぎるという観点からです。~
+現状複数のxml->etc/reference.xmlを作るユーティリティを作って既存のユーティリティとの不整合を防ごうと考えておりますが、もっと良い方法があるのかもしれません。良いアイデアがある人は教えてください。
+-05/09/29にリリースしました。
+-05/03/30にreference.xmlをリリースをしました。~
+**reference.xmlについて現在の作業状況[#working]
+-(ToDo) シンボル名と前後の文章を半角空白で分離する。
+-(ToDo) 英文をできるかぎり訳す。
+-(ToDo) キー入力を書く。
+-(ToDo) Changelog.html から変数・定数に関する記述を抜き出す。→作業中
+-%%(ToDo) seealsoに存在しないものが入っているのを消す。%%→一応済み
+-%%(ToDo) argumentsの書式を統一する。%%→済み
+-%%(ToDo) 戻り値・返り値を統一する。→戻り値に統一する。%%→済み
+-%%read-*系の builtin 関数をミニバッファセクションに追加。%%→済み
+-(予定？)必要があればだけど、標準キーバインド一覧の内容(コマンドに対する説明)をリファレンス形式へ。
+
+----
+***リファレンスの記述以外に関する意見、感想等 [#ncd93c6b]
+#pcomment
+#norelated

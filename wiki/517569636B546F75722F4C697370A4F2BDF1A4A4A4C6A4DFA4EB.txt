@@ -1,0 +1,44 @@
+[[QuickTour]]
+
+C位しか触ったことない人がLISPで簡単な関数を書くためのガイド。
+*基本 [#g5ddce57]
+.xyzzy の中に書いてxyzzy再起動して試してみて。&br;
+siteinit.l に書いたときはダンプファイルを消してからxyzzyを再起動。
+-関数を作る「defun」。
+ ;セミコロン以下はコメントになる
+ (defun fo())     ;引数なしの関数「fo」
+ (defun foo(x y)) ;引数が２つの関数「foo」
+
+
+-xyzzyから呼びだせるようにするには(interactive)を入れる。
+ ;カーソルをバッファの先頭から二番目に移動する関数"top"を作る。
+ ;xyzzyで、「M-x top」 と入力すれば呼び出せる
+ (defun top()           ;引数なしの関数「top」を作る
+  (interactive)         ;topはxyzzyから呼び出せる
+  (beginning-of-buffer) ;バッファの先頭に移動する
+  (forward-char)        ;一文字進む
+ )                      ;閉じ括弧で (defun が終了
+ ;
+ ;ついでにHome-Keyを押すと関数topを実行するようにする
+ ;(global-set-key #\Home 'top)
+
+-バッファ中の全てのxyzzyをzyxxyに置換する関数xzを作る。
+ (defun xz()
+  (interactive)
+  (beginning-of-buffer)
+   (perform-replace "xyzzy" "zyxxy" nil t t t)  ; "t" はtrue "nil" はfalse
+  ;(perform-replace "xy[z]\\{2\\}y" "zyxxy" nil t t t)                 ;正規表現を使う場合
+  ;(perform-replace "x\\(y\\)[z]\\{2\\}\\(y\\)" "z\\1xx\\2" nil t t t) ;正規表現を使う場合２
+ )
+ ;コマンド中で正規表現を書くときは、\の代わりに\\としないといけないっぽい？
+ ;
+ ;ついでに作った関数xzを呼び出す関数も作ってみる。
+ (defun xyzzytozyxxy()
+  (interactive)
+  (xz)
+ )
+-あとはこの辺を参考に書いてみるべし。
+--[[refwiki:関数一覧>http://xyzzy.s53.xrea.com/reference/wiki.cgi?w=type%3EFunction%3C/type&a=search]]
+--[[refwiki:正規表現の表記]]&br;
+----
+#pcomment

@@ -1,0 +1,6 @@
+[[L10N/english]]
+
+ wip/hellowin.l:13:	 (text (si:make-string-chunk "はろ〜 ういんど〜ず"))
+-Hello, Windows. --  &new{2005-03-04 20:22:20 (金)};
+
+#comment

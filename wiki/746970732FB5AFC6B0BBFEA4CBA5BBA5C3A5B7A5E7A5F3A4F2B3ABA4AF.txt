@@ -1,0 +1,31 @@
+[[tips]]
+
+起動時にセッションを開き自動保存するようにします。~
+.xyzzy,siteinitなどに記述してください。
+
+ (defvar *default-session* "~/.default_session")
+ 
+ (defun load-default-session ()
+   (unless (file-exist-p *default-session*)
+     (save-session *default-session*))
+   (load-session *default-session* t)
+   (toggle-session-auto-save t))
+ 
+ (add-hook '*post-startup-hook* 'load-default-session)
+ 
+ (defun save-default-session ()
+   (save-session *default-session* t))
+ 
+ (add-hook '*kill-xyzzy-hook* 'save-default-session)
+
+
+どうも見落としている気がするんだけれど、誰かすでに書いていない？~
+佐野
+----
+- *Trace Output*が消えてしまう気がします。*pre-startup-hook*に引っ掛けると消えませんが、いろいろ大丈夫なのか分かりません。他のセッションを開いても~/.default_sessionに保存するために、(defun save-default-session () (save-session *default-session* t)) (add-hook '*kill-xyzzy-hook* 'save-default-session)など付け加えた方がいいのではないかと個人的に思うのですが、どうでしょうか？ --  &new{2006-06-15 (木) 17:43:24};
+- こんなんでどうでしょう。 -- [[佐野]] &new{2006-06-15 (木) 18:10:49};
+-- s/-S オプションが死にますね。もう少し考えてみる必要があるかも。普段セッションまるで使ってなかったのでまだまだ穴が一杯かも -- [[佐野]] &new{2006-06-16 (金) 00:40:32};
+- 初期バージョンはともかく、現在のは[共通設定]-[さまざま]の「終了時の状態を保存する」でいいんじゃ、という印象になってます。ちなみにデフォルトセッションというと以前まいくろちっぷすに書いてあったような記憶があります。内容は覚えていませんが。 -- [[NANRI]] &new{2006-06-16 (金) 01:07:36};
+- デジャブ感はそれでしたか。不覚…optprop周りは相当何度も読んでるはずなのに… -- [[佐野]] &new{2006-06-16 (金) 01:24:56};
+
+#comment

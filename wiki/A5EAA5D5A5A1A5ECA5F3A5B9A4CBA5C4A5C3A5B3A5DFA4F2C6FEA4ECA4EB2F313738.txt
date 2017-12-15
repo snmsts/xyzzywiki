@@ -1,0 +1,136 @@
+* process に関したコマンド [#ma547ca4]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-11-20 (日) 20:39:57
+-バージョン: 
+
+** メッセージ [#q224c1ec]
+ <chapter>
+ <title>make-process</title>
+ <type>Function</type>
+ <arguments>make-process COMMAND-LINE &amp;key :environ :output :exec-directory :incode :outcode :eol-code</arguments>
+ <package>editor</package>
+ <description>
+ プロセスを起動します。
+ 
+   COMMAND-LINE    : 実行するコマンドをオプション付で指定します。
+   :environ        : 設定する環境変数を連想リスト形式で渡します。
+                     (("HOME" . "C:/applications/xyzzy/")
+                      ("TOPDIR" . "C:/spool/"))
+   :output         : プロセスの標準出力を出力するバッファを指定します。
+   :exec-directory : 実行するディレクトリを指定します。
+   :incode         : プロセスの入力の文字コードを指定します。
+   :outcode        : プロセスの出力の文字コードを指定します。
+   :eol-code       : 改行コードを指定します。
+ 
+ プロセスへの入力はprocess-send-stringを使用します。
+ プロセスはバッファに関連付けられ、プロセスの出力がバッファにそのまま出力されます。
+ バッファに関連付けられたプロセスの状態は，モードライン上に :Run や :Exit と
+ 表示されます。また、環境変数や出力先等を変更できます。
+ 
+ 戻り値は，プロセスの関連付けられたバッファです。
+ 
+ 参考:
+   [xyzzy:02210]山本真二さん
+   call-process または別の組み込み関数で、標準入力、標準出力、標準エラー
+   出力を直接バッファに繋ぐようにした方が早くてかっこいいと思うのですが、
+   難しいですか？
+ 
+   (make-process *eshell* :output (selected-buffer))
+   (process-send-string (buffer-process (selected-buffer))
+                        (concatenate 'string cmd *shell-ret*))
+ </description>
+ <seealso>call-process</seealso>
+ <seealso>execute-subprocess</seealso>
+ <seealso>buffer-process</seealso>
+ <seealso>mode-line-format</seealso>
+ <seealso>process-send-string</seealso>
+ <seealso>set-process-sentinel</seealso>
+ <seealso>set-process-filter</seealso>
+ <link></link>
+ <section>プロセス</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>execute-shell-command</title>
+ <type>Function</type>
+ <arguments>execute-shell-command COMMAND &amp;optional INFILE OUTPUT ENVIRON DIRECTORY</arguments>
+ <package>editor</package>
+ <description>
+ 外部プログラムを実行します。結果だけをxyzzyに取り込みます。
+ 
+   COMMAND    : 実行するコマンドをオプション付で指定します。
+   INFILE     : 標準入力を使用する外部プログラムであれば入力ファイル名を
+                指定します。
+   OUTPUT     : 標準出力を出力するバッファを指定します。
+   ENVIRON    : 設定する環境変数を連想リスト形式で渡します。
+                 (("HOME" . "C:/applications/xyzzy/")
+                  ("TOPDIR" . "C:/spool/"))
+   DIRECTORY  : 実行するディレクトリを指定します。
+ 
+ このコマンドは call-process を使って実装されています。
+ call-processとは違って標準出力をバッファに出力します。出力するバッファは完
+ 全に破壊されますので注意してください。
+ 外部プログラムとして実行したくない場合は，execute-subprocess を使います。
+ 
+ 使用例：
+   ;;; コマンドプロンプトのhelpを表示してみる。
+   (execute-shell-command "help" nil (selected-buffer))
+ </description>
+ <seealso>call-process</seealso>
+ <seealso>execute-subprocess</seealso>
+ <section>プロセス</section>
+ <file>process.l</file>
+ </chapter>
+
+ <chapter>
+ <title>call-process</title>
+ <type>Function</type>
+ <arguments>call-process COMMAND-LINE &amp;key :environ :no-std-handles :input :output :error :exec-directory :show :wait</arguments>
+ <package>editor</package>
+ <description>
+ 外部プログラムを実行します。完全にxyzzyの外部でプログラムを実行します。
+ 
+   COMMAND-LINE    : 実行するコマンドをオプション付で指定します。
+   :environ        : 設定する環境変数を連想リスト形式で渡します。
+                     (("HOME" . "C:/applications/xyzzy/")
+                      ("TOPDIR" . "C:/spool/"))
+   :no-std-handles : （詳細不明）
+   :input          : 標準入力を使用する外部プログラムであれば入力ファイル名
+                     を指定します。
+   :output         : 標準出力を使用する外部プログラムであれば出力ファイル名
+                     を指定します。
+   :error          : （詳細不明）
+   :exec-directory : 実行するディレクトリを指定します。
+   :show           : 外部プログラムの実行時の表示を指定します。
+                     :show      通常のウィンドウ
+                     :no-active 非アクティブ
+                     :minimize  最小化
+                     :maximize  最大化
+                     :hide      非表示
+                     上記以外   通常のウィンドウ
+   :wait           : 外部プログラムが終了するのを待ち合わせます。
+ 
+ 実行したプロセスを取得したいときは make-process を使います．
+ 
+ 使用例：
+   ;;; notepad.exeの終了を待ち合わせてみる。
+   (call-process "notepad" :wait t)
+ </description>
+ <seealso>execute-shell-command</seealso>
+ <seealso>make-process</seealso>
+ <section>プロセス</section>
+ <file>builtin.l</file>
+ </chapter>
+--------
+- どーもです。call-processの:showの説明を足しておきました。 -- [[NANRI]] &new{2005-11-20 (日) 23:11:50};
+- どーもです． -- [[中野]] &new{2005-11-21 (月) 01:18:17};
+- make-process の seealsoを追加しました -- [[中野]] &new{2005-11-28 (月) 21:31:05};
+- 取り込みました。 -- [[NANRI]] &new{2005-12-12 (月) 02:34:31};
+
+#comment

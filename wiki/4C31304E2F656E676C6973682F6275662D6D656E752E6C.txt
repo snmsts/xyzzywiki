@@ -1,0 +1,7 @@
+[[L10N/english]]
+
+ buf-menu.l:54:    (plain-error "バッファ名がありません"))
+-No name of the buffer. --  &new{2005-03-05 20:01:16 (土)};
+-No buffer name. --  &new{2005-09-16 19:02:13 (金)};
+
+#comment

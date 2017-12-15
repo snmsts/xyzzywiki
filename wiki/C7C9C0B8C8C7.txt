@@ -1,0 +1,48 @@
+本家の開発が停止してから長きにわたって表立った動きの無かった xyzzy 本体ですが、2012年に何か始まったようなので。
+
+*派生版 xyzzy 一覧 [#x31969b3]
+
+** 0.2.2系 [#f1904876]
+- [[ホームページ:http://xyzzy-022.github.io/]]
+- 最新版: 0.2.2.253 (2014-04-29)
+
+オリジナル（0.2.2.235）との互換性を重視したバージョン。
+既存の拡張が動かなくならない範囲で
+- multiframe版の変更を取り込み
+- xyzzy+の変更を取り込み
+- Common Lispとの互換性を向上
+- Windows Vista/7/8 対応
+などの変更が入るようです
+
+毎月肉の日（29日）リリースを予定。
+
+*** xyzzy Lua対応版 [#sfa1eafa]
+- [[ホームページ:https://github.com/yasuoohno/xyzzy]]
+
+** 0.2.3系（multiframe版） [#efe0268f]
+- [[ホームページ:https://bitbucket.org/mumurik/xyzzy/wiki/Home]]
+- 最新版: 0.2.3.12 (2012-09-10)
+
+1つのxyzzyで複数のウィンドウ（Windows的な意味で）を開けるようにしたバージョン。
+
+その他にも様々な変更や修正が含まれています。
+- NANRI さんがまとめてた色々な変更（[[patch]]にあるものとか）
+- [[USB起動:http://blog.2310.net/archives/618]]
+- xyzzyからxyzzyをアップデート
+- [[NetInstaller]]を同梱（httpsに対応する修正が含まれている）
+-- [[NAXEL]] を登録済み
+
+詳しくは [[更新履歴:https://bitbucket.org/mumurik/xyzzy/wiki/%E6%9B%B4%E6%96%B0%E5%B1%A5%E6%AD%B4]] を参照。
+
+現在は0.2.2系の変更を取り込んで月1回のリリース。
+
+** xyzzy+（unicode版） [#y6f115c7]
+- [[ホームページ:http://xyzzy.codeplex.com/]]
+- 最新版: 0.2.2.235+0 alpha (2012-03-20)
+
+ユニコードにちゃんと（？）対応したバージョン。まだα版のようです。
+
+春分の日、夏至、秋分の日、冬至の年4回リリース予定。
+
+*コメント [#w7f92ab8]
+#pcomment

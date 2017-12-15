@@ -1,0 +1,103 @@
+ (require :iso8859-1)
+ 
+ (defvar *german-map* nil)
+ (defvar *german-accent-map* nil)
+ (defvar *german-accent-grave-map* nil)
+ 
+ (defvar *key-shift-assoc* '((#\0 #\))
+ 			    (#\1 #\!)
+ 			    (#\2 #\@)
+ 			    (#\3 #\#)
+ 			    (#\4 #\$)
+ 			    (#\5 #\%)
+ 			    (#\6 #\^)
+ 			    (#\7 #\&)
+ 			    (#\8 #\*)
+ 			    (#\9 #\()
+ 			    (#\- #\_)
+ 			    (#\= #\+)
+ 			    (#\[ #\{)
+ 			    (#\] #\})
+ 			    (#\; #\:)
+ 			    (#\' #\")
+ 			    (#\\  #\|)
+ 			    (#\, #\<)
+ 			    (#\. #\>)
+ 			    (#\/ #\?))
+   "for 101/104keyboards. I currently do not use 106/109. sorry")
+ 
+ (defvar *german-qwrtz-trans-assoc*
+   '((#\y #\z)
+     (#\z #\y)))
+ 
+ (unless *german-accent-map*
+   (let ((km (make-keymap)))
+     (mapc (lambda (i)
+ 	    (define-key km i (intern (format nil "latin1-~C-acute" i)))
+ 	    (define-key km (char-upcase i) (intern (format nil "latin1-~C-acute" (char-upcase i)))))
+ 	  '(#\a #\i #\u #\e #\o))
+     (setq *german-accent-map* km)))
+ 
+ (unless *german-accent-grave-map*
+   (let ((km (make-keymap)))
+     (mapc (lambda (i)
+ 	    (define-key km i (intern (format nil "latin1-~C-grave" i)))
+ 	    (define-key km (char-upcase i) (intern (format nil "latin1-~C-grave" (char-upcase i)))))
+ 	  '(#\a #\i #\u #\e #\o))
+     (setq *german-accent-grave-map* km)))
+ 
+ (defvar *german-shift-assoc*
+   `((#\, #\;)
+     (#\. #\:)
+     (#\- #\_ #\/)
+     (#\# #\' #\\)
+     (#\+ #\* #\])
+     (latin1-o-diaeresis latin1-O-diaeresis #\;)
+     (latin1-a-diaeresis latin1-A-diaeresis #\')
+     (latin1-u-diaeresis latin1-U-diaeresis #\[)
+     (latin1-ss #\? #\-)
+     (,*german-accent-map* ,*german-accent-grave-map* #\=)
+     (#\2 #\")
+     (#\3 latin1-section-sign)
+     (#\6 #\&)
+     (#\7 #\/)
+     (#\8 #\()
+     (#\9 #\))
+     (#\0 #\=)
+     ))
+ 
+ (unless *german-map*
+   (let ((km (make-sparse-keymap)))
+     (flet ((self-insert (self)
+ 	     (lambda (&optional (arg 1))
+ 	       (interactive "*p")
+ 	       (setq *last-command-char* self)
+ 	       (self-insert-command arg))))
+       (mapc (lambda(i)
+ 	      (define-key km (first i) (self-insert (second i)))
+ 	      (define-key km (char-upcase  (first i)) (self-insert (char-upcase (second i)))))
+ 	    *german-qwrtz-trans-assoc*)
+       (mapc (lambda (i)
+ 	      (let ((norm (first i))
+ 		    (shift (second i)))
+ 		(when (= 3 (length i))
+ 		  (define-key km (third i) (if (characterp norm) (self-insert norm) norm))
+ 		  (setq norm (third i)))
+ 		(define-key km
+ 			    (second (assoc norm *key-shift-assoc*))
+ 			    (if (characterp shift) (self-insert shift) shift))))
+ 	    *german-shift-assoc*)
+       )
+     (setq *german-map* km)))
+
+http://www-cc.gakushuin.ac.jp/~xomura/winforgerm/keyboard.html
+
+を参考に作ってみた。アクサンタギュとかアクサングレーブとかがそもそも何を意味しているのかも知らん。
+altgrについては未対応。英語にすら困っている私はそもそも私は多分一生使わない…
+
+ほかの言語使いがなんか書き足してくれたりしたらうれしいかな。
+
+
+佐野
+----
+#comment

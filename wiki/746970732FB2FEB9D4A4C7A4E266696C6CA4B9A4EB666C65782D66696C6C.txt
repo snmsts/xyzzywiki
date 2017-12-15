@@ -1,0 +1,76 @@
+[[tips]]
+#contents
+**flex-fill2 [#ra55234f]
+flex-fillをありがたくパクらせてもらい公開．
+
+追加機能
+- fill-column内での改行でも文字を自動で挿入．
+- モード毎に設定を変えられるように変更．
+
+#ref(flex-fill2.l)
+分かりにくいけども，ソースコードに簡単な設定例があるので
+それを参考にして使ってください．
+-モードによって挿入されるインデントを無視するようにしました． -- [[NAKANO]] SIZE(10){2003-07-24 (木) 10:30:26}
+- sddf -- [[sss]] &new{2015-08-04 (火) 10:36:40};
+
+#comment
+
+***flex-fill2をKaMailで使う [#sd27c1bb]
+ひえさんの[[flex-fill を使う:http://hie.s64.xrea.com/xyzzy/note/kamail.html#flex-fill]]を参考にしました。.kamailに追加してください
+ (require "flex-fill2")
+ (pushnew 'kamail *flexible-fill-mode-list*)
+ (define-key *kamail-draft-map* #\RET
+	     #'(lambda ()
+		 (interactive)
+		 (c-newline-and-indent)
+		 (and auto-fill *auto-fill-hook
+		      (funcall *auto-fill-hook *last-command-char*))))
+ (add-hook '*kamail-draft-mode-hook*
+	   #'(lambda ()
+	       (setq fill-column 62)
+	       (auto-fill-mode t)))
+-多分これで動くと思います。 -- [[rufein]] SIZE(10){2003-07-26 (土) 00:45:25}
+
+#comment
+
+**flex-fill3 [#ab11bafe]
+設定方法がかなり変わってしまったので，別物としておきました．
+下のようなjavadocのインデントもできるようになりました． (挿入された空白は_で表示してあります)
+ /**
+ _*_なんたら〜
+ _*_@return かんたら〜
+ _*_________その続き
+ _*_________そのまた続き
+  */
+使うには正規表現と多少のlispの知識が必要です．
+変更点は
+- 挿入する文字を生成する関数をユーザ側で設定するようにした
+- 多少のバグ修正も含まれるかも
+
+#ref(flex-fill3.l)
+#comment
+
+** バグ報告・要望など [#uda35756]
+- flex-fill2で，自動改行した後カーソルが行末に移動しません． -- [[ろーだみん]] &new{2006-07-01 (土) 11:07:31};
+- バグ報告ありがとうございます。 ただ、今はとてもこれらを直すまとまった時間はないのと、 flex-fill2 flex-fill3 は使っていないので、自分の中の優先順位が低いのが現状です。 -- [[中野]] &new{2006-07-02 (日) 16:28:03};
+- 中野様，Res有り難うございます．良かったら教えて頂きたいのですが現在は桁折マクロは何をお使いなのですか？ -- [[ろーだみん]] &new{2006-07-02 (日) 21:14:42};
+- flex-fill2、 flex-fill3 をベースにいじったものを使ってます。公開しようかとも思いましたが、あまりに基本的な機能がまともに動作しなくなっていたので、公開を見合わせました。そのうち公開するかもしれません。でも、毎度の事ながら完成度は低いので期待しないでください。 -- [[中野]] &new{2006-07-03 (月) 23:40:37};
+-新しいのを上げてくださるまでは do-my-auto-fill の (when fill-prefix ...) の部分を~
+ (when fill-prefix
+   (let ((marker (unless (bolp)
+                   (point-marker))))
+     (if (bolp)
+         (insert fill-prefix)
+       (let (begin)
+         (goto-bol)
+         (setq begin (point))
+         (skip-syntax-spec-forward " ")
+         (delete-region begin (point))
+         (insert fill-prefix)))
+     (when marker
+       (goto-char (marker-point marker))
+       (delete-marker marker))))
+こんな感じでいかが？
+- よくみれば無駄な let 追加しちゃってるし…… --  &new{2006-09-11 (月) 01:04:07};
+
+#comment

@@ -1,0 +1,15 @@
+[[L10N/english]]
+
+ errors.l:222:      (message "エラーはありません")
+-No errors.
+
+#comment
+ errors.l:237:	  (message "これ以上エラーはありません")
+-No more errors.
+
+#comment
+ errors.l:240:	(message "これ以上エラーはないっつってんだろうがこのバカチンが!"))))
+
+-Wrapped.
+
+#comment

@@ -1,0 +1,652 @@
+; maze3.l - こばやし
+;
+; 更新日 2005-04-15
+;
+; スペシャルサンクス: Slime さん
+
+(defvar *maze* nil)
+(defvar *maze-size* 0)
+(defvar *dir* 'south)
+(defvar *pos-x* 0)
+(defvar *pos-y* 0)
+
+(setq *random-state* (make-random-state t))
+
+(defun maze3 ()
+  (interactive)
+  (let ((buf-name "*maze3*"))
+    (set-buffer (or (find-buffer buf-name)
+		    (create-new-buffer buf-name)))
+    (erase-buffer (selected-buffer))
+    (set-buffer-fold-width nil)
+    (setq kept-undo-information nil)
+    (setq need-not-save t)
+    (setq auto-save nil)
+
+    (set-local-window-flags (selected-buffer) *window-flag-eof* nil)
+    (set-local-window-flags (selected-buffer) *window-flag-newline* nil)
+    (set-local-window-flags (selected-buffer) *window-flag-full-width-space* nil)
+    (set-local-window-flags (selected-buffer) *window-flag-half-width-space* nil)
+
+    (setq *maze-size* 9)
+    (maze *maze-size*)
+    (setq *pos-x* 0
+	  *pos-y* 0)
+    (draw)
+    (use-keymap *maze-mode-map*)
+    ))
+
+(defun clear ()
+  (erase-buffer (selected-buffer))
+  (save-excursion
+    (dotimes (i 50)
+      (insert #\SPC 80)
+      (insert #\LFD))))
+
+(defvar *maze-mode-map* nil)
+
+(unless *maze-mode-map*
+  (setq *maze-mode-map* (make-sparse-keymap))
+  (define-key *maze-mode-map* #\Left 'unturn)
+  (define-key *maze-mode-map* #\Right 'turn)
+  (define-key *maze-mode-map* #\Up    'ahead)
+  )
+
+(defun show-2d-maze ()
+  (goto-line 31)
+  (dotimes (i (+ 2 *maze-size*))
+    (overwrite-char #\#))
+  (dotimes (i *maze-size*)
+    (next-line)
+    (goto-bol)
+    (overwrite-char #\#)    
+    (dotimes (j *maze-size*)
+      (cond ((and (= j *pos-x*)
+		  (= i *pos-y*))
+	     (overwrite-char #\@))
+	    ((= 1 (aref *maze* j i))
+	     (overwrite-char #\#))
+	    (t
+	     (overwrite-char #\SPC))))
+    (overwrite-char #\#))
+  (next-line)
+  (goto-bol)
+  (dotimes (i (+ 2 *maze-size*))
+    (overwrite-char #\#))
+  (goto-char (point-min)))
+
+(defun make-wall(ary size)
+  (labels ((create-lst (n &optional acc)
+             (if (<= n 0)
+                 acc
+               (create-lst (- n 2) (cons n acc)))))
+    (let ((lst (create-lst (- size 2))))
+      (dolist (row lst)
+        (dolist (col lst)
+          (let ((r row)
+                (c col))
+            (case (random 4)
+              (0 (decf r))
+              (1 (incf c))
+              (2 (incf r))
+              (3 (decf c)))
+            (setf (aref ary r c) 1)))))))
+
+(defun maze (size)
+  (when (or (<= size 0) (evenp size))
+    (error "size error"))
+  (labels ((init (ary)
+             (dotimes (i size)
+               (dotimes (j size)
+		 (setf (aref ary i j) (if (and (oddp i) (oddp j)) 1 0))))))
+    (let ((ary (make-array (list size size))))
+      (init ary)
+      (make-wall ary size)
+      (setq *maze* ary)
+      )))
+
+(defun turn ()
+  (interactive)
+  (setq *dir* (case *dir*
+		(north 'east)
+		(west 'north)
+		(south 'west)
+		(east  'south)))
+  (draw))
+
+(defun unturn ()
+  (interactive)
+  (setq *dir* (case *dir*
+		(north 'west)
+		(west 'south)
+		(south 'east)
+		(east 'north)))
+  (draw))
+
+(defun ahead ()
+  (interactive)
+  (let ((x (case *dir*
+	     (north *pos-x*)
+	     (west (1- *pos-x*))
+	     (south *pos-x*)
+	     (east (1+ *pos-x*))))
+	(y (case *dir*
+	     (north (1- *pos-y*))
+	     (west *pos-y*)
+	     (south (1+ *pos-y*))
+	     (east *pos-y*))))
+    (unless (block-existp x y)
+      (setq *pos-x* x
+	    *pos-y* y)
+      (draw))))
+
+(defun draw ()
+  (setq buffer-read-only nil)
+  (clear)
+  (when (block1-existp)
+    (draw1))
+  (when (block2-existp)
+    (draw2))
+  (when (block3-existp)
+    (draw3))
+  (when (block4-existp)
+    (draw4))
+  (when (block5-existp)
+    (draw5))
+  (when (block6-existp)
+    (draw6))
+  (when (block7-existp)
+    (draw7))
+  (when (block8-existp)
+    (draw8))
+  (show-2d-maze)
+  (setq buffer-read-only t)
+  (goto-char (point-min)))
+
+(defun block-existp (x y)
+  (or (< x 0)
+      (< y 0)
+      (>= x *maze-size*)
+      (>= y *maze-size*)
+      (= 1 (aref *maze*  x y))))
+
+(defun block1-existp ()
+  (let ((x (case *dir*
+	     (north (1- *pos-x*))
+	     (west  *pos-x*)
+	     (south (1+ *pos-x*))
+	     (east  *pos-x*)))
+	(y (case *dir*
+	     (north *pos-y*)
+	     (west  (1+ *pos-y*))
+	     (south *pos-y*)
+	     (east (1- *pos-y*)))))
+    (block-existp x y)))
+
+(defun block2-existp ()
+  (let ((x (case *dir*
+	     (north (1- *pos-x*))
+	     (west (1- *pos-x*))
+	     (south (1+ *pos-x*))
+	     (east (1+ *pos-x*))))
+	(y (case *dir*
+	     (north (1- *pos-y*))
+	     (west  (1+ *pos-y*))
+	     (south (1+ *pos-y*))
+	     (east  (1- *pos-y*)))))
+    (block-existp x y)))
+
+(defun block3-existp ()
+  (let ((x (case *dir*
+	     (north (1- *pos-x*))
+	     (west  (- *pos-x* 2))
+	     (south (1+ *pos-x*))
+	     (east  (+ *pos-x* 2))))
+	(y (case *dir*
+	     (north (- *pos-y* 2))
+	     (west  (1+ *pos-y*))
+	     (south (+ *pos-y* 2))
+	     (east  (1- *pos-y*)))))
+    (block-existp x y)))
+
+(defun block4-existp ()
+  (let ((x (case *dir*
+	     (north *pos-x*)
+	     (west (- *pos-x* 2))
+	     (south *pos-x*)
+	     (east (+ *pos-x* 2))))
+	(y (case *dir*
+	     (north (- *pos-y* 2))
+	     (west *pos-y*)
+	     (south (+ *pos-y* 2))
+	     (east *pos-y*))))
+    (block-existp x y)))
+
+(defun block5-existp ()
+  (let ((x (case *dir*
+	     (north (1+ *pos-x*))
+	     (west (- *pos-x* 2))
+	     (south (1- *pos-x*))
+	     (east (+ *pos-x* 2))))
+	(y (case *dir*
+	     (north (- *pos-y* 2))
+	     (west (1- *pos-y*))
+	     (south (+ *pos-y* 2))
+	     (east (1+ *pos-y*)))))
+    (block-existp x y)))
+
+(defun block6-existp ()
+  (let ((x (case *dir*
+	     (north (1+ *pos-x*))
+	     (west (1- *pos-x*))
+	     (south (1- *pos-x*))
+	     (east (1+ *pos-x*))))
+	(y (case *dir*
+	     (north (1- *pos-y*))
+	     (west (1- *pos-y*))
+	     (south (1+ *pos-y*))
+	     (east (1+ *pos-y*)))))
+    (block-existp x y)))
+
+(defun block7-existp ()
+  (let ((x (case *dir*
+	     (north (1+ *pos-x*))
+	     (west  *pos-x*)
+	     (south (1- *pos-x*))
+	     (east *pos-x*)))
+	(y (case *dir*
+	     (north *pos-y*)
+	     (west (1- *pos-y*))
+	     (south *pos-y*)
+	     (east (1+ *pos-y*)))))
+    (block-existp x y)))
+
+(defun block8-existp ()
+  (let ((x (case *dir*
+	     (north *pos-x*)
+	     (west (1- *pos-x*))
+	     (south *pos-x*)
+	     (east (1+ *pos-x*))))
+	(y (case *dir*
+	     (north (1- *pos-y*))
+	     (west *pos-y*)
+	     (south (1+ *pos-y*))
+	     (east *pos-y*))))
+    (block-existp x y)))
+
+(defconstant line0 "／")
+(defconstant line1 "＼")
+(defconstant line2 "|")
+(defconstant line3 "_")
+
+
+#|
+  ┌─┬─┬─┐
+  │3 │4 │5 │
+  ├─┼─┼─┤
+  │2 │8 │6 │
+  ├─┼─┼─┤
+  │1 │☆│7 │
+  └─┘  └─┘
+
+  ☆: 視点
+
+  1 の位置にブロックがあると、draw1 が呼ばれます。
+  2 の位置にブロックがあると、draw2 が呼ばれます。
+  以下同様に、
+  7 の位置にブロックがあると、draw7 が呼ばれます。
+|#
+
+(defun draw1 ()
+  (labels ((rec1 (n)
+	     (unless (zerop n)
+	       (delete-char 2)
+	       (insert line1)
+	       (next-line)
+	       (rec1 (1- n))))
+	   (rec2 (n)
+	     (unless (zerop n)
+	       (delete-char 2)
+	       (insert line0)
+	       (next-line -1)
+	       (rec2 (1- n)))))
+    (goto-line 2)
+    (goto-column 2)
+    (rec1 5)
+    (goto-line 29)
+    (goto-column 2)
+    (rec2 5)
+    (goto-line 7)
+    (dotimes (i 18)
+      (goto-column 11)
+      (delete-char)
+      (insert line2)
+      (next-line))))
+
+(defun draw2 ()
+  (unless (block1-existp)
+    (goto-line 6)	; 上よこ
+    (goto-column 2)
+    (delete-char 9)
+    (insert line3 9)
+
+    (goto-line 24) ; 下よこ
+    (goto-column 2)
+    (delete-char 9)
+    (insert line3 9))
+
+  (goto-line 7)	; 手前たて
+  (dotimes (i 18)
+    (goto-column 11)
+    (delete-char)
+    (insert line2)
+    (next-line))
+
+  (unless (block8-existp)
+    (goto-line 7) ;  上ななめ
+    (goto-column 12)
+    (dotimes (i 4)
+      (delete-char 2)
+      (insert line1)
+      (next-line))
+
+    (goto-line 24) ; 下ななめ
+    (goto-column 12)
+    (dotimes (i 4)
+      (delete-char 2)
+      (insert line0)
+      (next-line -1))
+
+    (goto-line 11) ; 奥たて
+    (dotimes (i 10)
+      (goto-column 19)
+      (delete-char)
+      (insert line2)
+      (next-line)))
+    
+  )
+  
+(defun draw3 ()
+  (cond ((and (not (block1-existp))
+	      (not (block2-existp))
+	      (block8-existp))
+	 (goto-line 11) ; 手前ひだり、たて
+	 (dotimes (i 10)
+	   (goto-column 2)
+	   (delete-char)
+	   (insert line2)
+	   (next-line))
+	 
+	 (goto-line 10) ; 上よこ
+	 (goto-column 3)
+	 (delete-char 8)
+	 (insert line3 8)
+	 
+	 (goto-line 20) ; 下よこ
+	 (goto-column 3)
+	 (delete-char 8)
+	 (insert line3 8))
+
+	((block8-existp)
+	 nil)
+	(t
+	 (unless (block4-existp)
+	   (goto-line 11) ; 上ななめ
+	   (goto-column 20)
+	   (dotimes (i 2)
+	     (delete-char 2)
+	     (insert line1)
+	     (next-line))
+	   
+	   (goto-line 20) ; 下ななめ
+	   (goto-column 20)
+	   (dotimes (i 2)
+	     (delete-char 2)
+	     (insert line0)
+	     (next-line -1))
+	   
+	   (goto-line 13) ; 奥たて
+	   (dotimes (i 6)
+	     (goto-column 23)
+	     (delete-char)
+	     (insert line2)
+	     (next-line))
+	   )
+    
+	 (goto-line 11) ; 手前たて
+	 (dotimes (i 10)
+	   (goto-column 19)
+	   (delete-char)
+	   (insert line2)
+	   (next-line))
+	 
+	 (cond ((block1-existp)
+		(unless (block2-existp)
+		  (goto-line 10)
+		  (goto-column 12)
+		  (delete-char 7)
+		  (insert line3 7)
+		  (goto-line 20)
+		  (goto-column 12)
+		  (delete-char 7)
+		  (insert line3 7)))
+	       (t
+		(unless (block2-existp)
+		  (goto-line 10) ; 上よこ
+		  (goto-column 3)
+		  (delete-char 16)
+		  (insert line3 16)
+		  
+		  (goto-line 20) ; 下よこ
+		  (goto-column 3)
+		  (delete-char 16)
+		  (insert line3 16)
+
+		  (goto-line 11) ; 手前ひだり、たて
+		  (dotimes (i 10)
+		    (goto-column 2)
+		    (delete-char)
+		    (insert line2)
+		    (next-line))))
+	       ))))
+
+(defun draw4 ()
+  (unless (block8-existp)
+    (goto-line 10) ; 上よこ
+    (goto-column 20)
+    (delete-char 18)
+    (insert line3 18)
+    
+    (goto-line 20) ; 下よこ
+    (goto-column 20)
+    (delete-char 18)
+    (insert line3 18)
+    
+    (goto-line 11) ; ひだりたて
+    (dotimes (i 10)
+      (goto-column 19)
+      (delete-char)
+      (insert line2)
+      (next-line))
+    
+    (goto-line 11) ; みぎたて
+    (dotimes (i 10)
+      (goto-column 38)
+      (delete-char)
+      (insert line2)
+      (next-line)))
+  )
+
+(defun draw5 ()
+  (cond ((and (not (block6-existp))
+	      (not (block7-existp))
+	      (block8-existp))
+	 (goto-line 11) ; 手前みぎ、たて
+	 (dotimes (i 10)
+	   (goto-column 55)
+	   (delete-char)
+	   (insert line2)
+	   (next-line))
+	 
+	 (goto-line 10) ; 上よこ
+	 (goto-column 47)
+	 (delete-char 8)
+	 (insert line3 8)
+	 
+	 (goto-line 20) ; 下よこ
+	 (goto-column 47)
+	 (delete-char 8)
+	 (insert line3 8))
+
+	((block8-existp)
+	 nil)
+	(t
+	 (unless (block4-existp)
+	   (goto-line 12) ; 上ななめ
+	   (goto-column 34)
+	   (dotimes (i 2)
+	     (delete-char 2)
+	     (insert line0)
+	     (next-line -1))
+
+	   (goto-line 19) ; 下ななめ
+	   (goto-column 34)
+	   (dotimes (i 2)
+	     (delete-char 2)
+	     (insert line1)
+	     (next-line))
+
+	   (goto-line 13) ; 奥たて
+	   (dotimes (i 6)
+	     (goto-column 33)
+	     (delete-char)
+	     (insert line2)
+	     (next-line))
+	   )
+
+	 (goto-line 11) ; 手前たて
+	 (dotimes (i 10)
+	   (goto-column 38)
+	   (delete-char)
+	   (insert line2)
+	   (next-line))
+	 
+	 (cond ((block7-existp)
+		(unless (block6-existp)
+		  (goto-line 10) ; 上よこ
+		  (goto-column 39)
+		  (delete-char 7)
+		  (insert line3 7)
+		  (goto-line 20) ; 下よこ
+		  (goto-column 39)
+		  (delete-char 7)
+		  (insert line3 7)))
+	       (t
+		(unless (block6-existp)
+		  (goto-line 10) ; 上よこ
+		  (goto-column 39)
+		  (delete-char 16)
+		  (insert line3 16)
+		  
+		  (goto-line 20) ; 下よこ
+		  (goto-column 39)
+		  (delete-char 16)
+		  (insert line3 16)
+		  
+		  (goto-line 11) ; 手前みぎ、たて
+		  (dotimes (i 10)
+		    (goto-column 55)
+		    (delete-char)
+		    (insert line2)
+		    (next-line))))
+	       ))))
+
+(defun draw6 ()
+  (unless (block7-existp)
+    (goto-line 6) ; 上よこ
+    (goto-column 47)
+    (delete-char 9)
+    (insert line3 9)
+
+    (goto-line 24) ; 下よこ
+    (goto-column 47)
+    (delete-char 9)
+    (insert line3 9))
+
+  (goto-line 7) ; 手前たて
+  (dotimes (i 18)
+    (goto-column 46)
+    (delete-char)
+    (insert line2)
+    (next-line))
+
+  (unless (block8-existp)
+    (goto-line 10) ; 上ななめ
+    (goto-column 38)
+    (dotimes (i 4)
+      (delete-char 2)
+      (insert line0)
+      (next-line -1))
+
+    (goto-line 21) ; 下ななめ
+    (goto-column 38)
+    (dotimes (i 4)
+      (delete-char 2)
+      (insert line1)
+      (next-line))
+
+    (goto-line 11) ; 奥たて
+    (dotimes (i 10)
+      (goto-column 38)
+      (delete-char)
+      (insert line2)
+      (next-line))))
+      
+
+(defun draw7 ()
+  (goto-line 7) ; たて
+  (dotimes (i 18)
+    (goto-column 46)
+    (delete-char)
+    (insert line2)
+    (next-line))
+
+  (goto-line 6) ; 上ななめ
+  (goto-column 46)
+  (dotimes (i 5)
+    (delete-char 2)
+    (insert line0)
+    (next-line -1))
+
+  (goto-line 25) ; 下ななめ
+  (goto-column 46)
+  (dotimes (i 5)
+    (delete-char 2)
+    (insert line1)
+    (next-line)))
+
+(defun draw8 ()
+  (goto-line 6) ; 上よこ
+  (goto-column 12)
+  (delete-char 34)
+  (insert line3 34)
+
+  (goto-line 24) ; 下よこ
+  (goto-column 12)
+  (delete-char 34)
+  (insert line3 34)
+
+  (goto-line 7) ; 左たて
+  (dotimes (i 18)
+    (goto-column 11)
+    (delete-char)
+    (insert line2)
+    (next-line))
+
+  (goto-line 7) ; 右たて
+  (dotimes (i 18)
+    (goto-column 46)
+    (delete-char)
+    (insert line2)
+    (next-line)))
+

@@ -1,0 +1,97 @@
+* call-processによる呼出のエラー [#wb24813b]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2007-02-08 (木) 14:28:03
+
+** メッセージ [#ida597c5]
+次のサイトでブラウザを呼び出してgoogle検索を利用するスクリプトがあったのですが、標準ブラウザ(あるいは現在起動しているブラウザ)を使用する場合は良いのですが、指定したブラウザを利用しようとすると、「不正なキーワードリストです」というエラーがでます。
+
+http://hie.s64.xrea.com/xyzzy/note/search.html#search-google
+
+(call-process (concat "C:/usr/local/MozillaFirebird/MozillaFirebird.exe " url))
+
+***追記 [#n319fb7d]
+上記のサイトの一番上にあるコードです。
+
+ (defun search-google (&optional str)
+  (interactive)
+  (unless str
+    (setq str (read-string "Google: ")))
+  (long-operation
+    (let ((url (concat "http://www.google.com/search?hl=ja&lr=lang_ja&num=20&q="
+                       (si:www-url-encode str))))
+      ;─────────────────────
+      ; 1. 標準ブラウザを使う場合
+      ;(shell-execute url t) ; **** こちらだとうまくいく ****
+      ; 2. browser.dll & browserex.l を使う場合
+      ;(bx::navigate url)
+      ; 3. www-mode を使う場合
+      ;(www-open-url url)
+      ; 4. 指定したブラウザを使う場合
+      ;(call-process (concat "C:/usr/local/MozillaFirebird/MozillaFirebird.exe " url)) ; 変更前
+      (call-process (concat "C:/Documents and Settings/usr/My Documents/Mozilla Firefox/firefox.exe " url)) ; **** 変更後 うまく動作しない ****
+      ;─────────────────────
+      )))
+
+1.標準ブラウザでは動作するのに対し、4.指定したブラウザでは動かないのでおそらくその部分にエラーがあると思います。
+  >CALL STACK  8: (system:*throw-error #S(quit))
+  >CALL STACK  7: (system:*byte-code ...)
+  >CALL STACK  6: (lisp::*error quit nil simple-error)
+  >CALL STACK  5: (system:*byte-code ...)
+  >CALL STACK  4: (error quit)
+  >CALL STACK  3: (system:*byte-code ...)
+  >CALL STACK  2: (#<lexical-closure: quit>)
+  >CALL STACK  1: (command-execute quit)
+  Quit
+
+  >CALL STACK  8: (system:*throw-error #S(quit))
+  >CALL STACK  7: (system:*byte-code ...)
+  >CALL STACK  6: (lisp::*error quit nil simple-error)
+  >CALL STACK  5: (system:*byte-code ...)
+  >CALL STACK  4: (error quit)
+  >CALL STACK  3: (system:*byte-code ...)
+  >CALL STACK  2: (#<lexical-closure: quit>)
+  >CALL STACK  1: (command-execute quit)
+  Quit
+
+  >CALL STACK 15: (call-process "C:/Documents and Settings/usr/My Documents/Mozilla Firefox/firefox.exe http://www.google.com/search?hl=ja&lr=lang_ja&num=20&q=yahoo" :input nil :output nil :exec-directory ("C:\\WINDOWS\\system32" "C:\\WINDOWS" "C:\\WINDOWS\\system32\\wbem" ...) :error nil :show :wait t)
+  >CALL STACK 14: (system:*byte-code ...)
+  >CALL STACK 13: (elisp::call-process "C:/Documents and Settings/usr/My Documents/Mozilla Firefox/firefox.exe http://www.google.com/search?hl=ja&lr=lang_ja&num=20&q=foo")
+  >CALL STACK 12: (let (((elisp::url (elisp::concat "http://www.google.com/search?hl=ja&lr=lang_ja&num=20&q=" #))) (declare (special elisp::url)) (elisp::call-process (elisp::concat "C:/Documents and Settings/usr/My Documents/Mozilla Firefox/firefox.exe " elisp::url))))
+  >CALL STACK 11: (elisp::let (((elisp::url (elisp::concat "http://www.google.com/search?hl=ja&lr=lang_ja&num=20&q=" #))) (elisp::call-process (elisp::concat "C:/Documents and Settings/usr/My Documents/Mozilla Firefox/firefox.exe " elisp::url))))
+  >CALL STACK 10: (let (((#1=#:result (elisp::let # #))) (progn (end-wait-cursor)) #1#))
+  >CALL STACK  9: (prog1 ((elisp::let ((elisp::url #)) (elisp::call-process (elisp::concat "C:/Documents and Settings/usr/My Documents/Mozilla Firefox/firefox.exe " elisp::url))) (end-wait-cursor)))
+  >CALL STACK  8: (progn ((begin-wait-cursor) (prog1 (elisp::let (#) (elisp::call-process #)) (end-wait-cursor))))
+  >CALL STACK  7: (prog2 ((begin-wait-cursor) (elisp::let ((elisp::url #)) (elisp::call-process (elisp::concat "C:/Documents and Settings/usr/My Documents/Mozilla Firefox/firefox.exe " elisp::url))) (end-wait-cursor)))
+  >CALL STACK  6: (long-operation ((elisp::let ((elisp::url #)) (elisp::call-process (elisp::concat "C:/Documents and Settings/usr/My Documents/Mozilla Firefox/firefox.exe " elisp::url)))))
+  >CALL STACK  5: (block (elisp::search-google (unless elisp::str (setq elisp::str (elisp::read-string "Google: "))) (long-operation (elisp::let (#) (elisp::call-process #)))))
+  >CALL STACK  4: (elisp::search-google nil)
+  >CALL STACK  3: (block (elisp::search-google-selection (elisp::search-google (elisp::if (pre-selection-p) (selection-start-end # #) ...))))
+  >CALL STACK  2: (#<lexical-closure: elisp::search-google-selection>)
+  >CALL STACK  1: (command-execute elisp::search-google-selection)
+  不正なキーワードリストです: (:input nil :output nil :exec-directory ("C:\\WINDOWS\\system32" "C:\\WINDOWS" "C:\\WINDOWS\\system32\\wbem" "c:\\program files\\ati technologies\\ati.ace\\" "c:\\usr\\local\\bin" "c:\\gs\\gs8.53\\bin" ...) ...)
+
+自前のFirefox環境では上の表示がかなり汚いんですが、もしよろしければお願いします。
+
+:exec-directoryの問題かとも思ったのですが、単に
+ (call-process (concat firefox-exe " " url) :exec-directory (firefox-dir))
+だと
+ 不正な関数です: "C:/Documents and Settings/usr/My Documents/Mozilla Firefox/"
+というエラーで失敗しました。(単に:exec-directoryの書き方が間違っていたのかもしれませんが。。。)
+
+----
+- 関係があるかは分かりませんがファイル名にはスペースも入っています。考えられそうな間違いがあれば指摘していただけないでしょうか。 -- [[追記]] &new{2007-02-08 (木) 14:31:40};
+- 勘ですが (concat "(省略)firebird.exe \"" url "\"")) とか？ -- [[佐野]] &new{2007-02-08 (木) 14:42:15};
+- 試してみましたが同様のエラーが出るようです。。。lispに疎いのですが、その\にはどのような意味があるのでしょうか？ -- [[追記]] &new{2007-02-08 (木) 17:31:13};
+- 他所の言語と同様文字エスケープです。不正なキーワードというエラーはなんかもっと別のところから出ると思うのでどこまでも勘でしか答えられませんが。 -- [[佐野]] &new{2007-02-08 (木) 17:45:06};
+- lispに疎いのに、どうしてそれだけでエラーが特定できると思ったのか知らんけど、自分の変更した部分を含めてそのURLから持ってきたlispを晒したほうがいい。 --  &new{2007-02-08 (木) 19:30:06};
+- エラーについては、コマンドを入れるとエラーダイアログが出てきます。 -- [[追記]] &new{2007-02-09 (金) 00:59:12};
+- ちゃんと動くので違うところでエラーが出てそうですね。(toggle-trace-on-error)を.xyzzyに書いたあとxyzzyを再起動し、M-x search-googleを実行してエラーを発生させ、*Trace Outupt*というバッファの内容も晒すとはっきりするかも知れません。 --  &new{2007-02-09 (金) 01:44:41};
+- elispパッケージの中でsearch-googleを定義してるみたいなので、elisp用のcall-processが呼ばれてます。関数を(in-package "user")と(in-package "elisp")で挟んでみてください。 --  &new{2007-02-09 (金) 11:40:54};
+- ↑で示されたように(in-package ...)で囲むと動作しました。それに併せて、いくつか他の問題も解決しました。必要があって(in-pakcage a)を宣言した場合、(in-package "user")で一度ニュートラルな状態に戻すのが推奨された方法なんでしょうか。 -- [[追記]] &new{2007-02-09 (金) 13:29:15};
+- 誰かが推奨しているのは見たことありませんが、慣例というか、戻さないとお行儀の悪いスクリプトな感じ。今回のようなトラブルの原因になるので、別ファイル化せずに.xyzzyやsiteinit.lに書くことを前提としたlispはだいたいそうする。何も書かない状態がuserパッケージですし。&br;例えば[[tips/grep でマッチした箇所のシンタックスがコメントなら色づけて表示する]] [[tips/grep で入力した文字列を強調表示する]]など。 --  &new{2007-02-09 (金) 14:40:27};
+- 一からスクリプトを見直してそのあたりを(できる限り)直してみようと思います。ありがとうございました。 -- [[追記]] &new{2007-02-09 (金) 15:23:01};
+- emacs.lのcall-process自体がバグっているっぽいですね。ちなみに、自分が推奨する書き方はパッケージごとにファイルを分けるです。userパッケージに戻すというのはコード片を公開する時の作法で、実際の設定でもすべきとは思いません。 -- [[NANRI]] &new{2007-02-09 (金) 21:18:21};
+
+#comment

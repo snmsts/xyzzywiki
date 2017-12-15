@@ -1,0 +1,141 @@
+[[tips]]
+
+*なにをするものか？ [#g58398c2]
+指定した名前のbufferを探します。なかったらファイルを探しにいきます。それでもなかったらファイラがひらきます。
+
+*こんな人向け [#g80cfa35]
++バッファバーを表示させない人
++たくさんのバッファを開いたまま作業をする人
++何を開いているか忘れちゃう人
++でもファイルの名前はなんとなく覚えている人
+
+…該当するのは自分くらいか…。
+
+　長くなったので初版消しました。
+
+*ありがたい添削 [#j60726fd]
+添削してみました
+
+ ;--
+ (defun search-select-file (lst)
+   (dolist (x ignore-extension-list)
+     ;(delete-if #'(lambda (y) (string-matchp x y)) lst))  ; これは誤り
+     (setq lst (delete-if #'(lambda (y) (string-matchp x y)) lst)))
+   lst)
+ ;select-list-daialog は変更してないので省略
+ ;--
+ (defun search-and-get (keyword)
+     (interactive "sSearch buffer&file: ")
+   (let ((blst (mapcar #'buffer-name (remove (find-buffer " *Minibuf0*") (buffer-list))))
+ 	flst file-path)
+     (setq blst (delete-if-not #'(lambda (x) (string-matchp keyword x)) blst))
+     (cond (blst (select-list-daialog blst))           ;; バッファ名のリスト  ⇒ 動作していない
+ 	  ((and (setq flst (search-select-file
+ 			    (directory *search-base-path*
+ 				       :recursive t
+ 				       :file-only t
+ 				       :wild (concat "*" keyword "*"))))
+ 		(y-or-n-p "bufferにはないみたい。fileも探してみる?"))
+ 	   (select-list-daialog flst))                ;; 基準ディレクトリから相対パスのリスト
+ 	  (t (when (y-or-n-p "bufferにもfileにもないみたい。手で探してみる?")
+ 	       (setq file-path (filer *search-base-path* nil))
+ 	       (if (equal (file-namestring file-path) "")
+ 		   (message "キャンセルしました")
+ 		 (progn
+ 		   (find-file file-path)
+ 		   (unless (find-pseudo-frame "search-result")
+ 		     (new-pseudo-frame "search-result"))
+ 		   (select-pseudo-frame (find-pseudo-frame "search-result")))))))
+     ))
+ ;--
+ (global-set-key #\F12 'search-and-get)
+ ;(set-function-bar-label #\F12 "search-and-get")
+
+*最新版 [#p57272e7]
+
+ (defvar *ignore-extension-list* '("lc" "exe" "dll" "img" "iso"
+ 				  "chm" "hlp"
+ 				  "ttf" "otf" "fon" "cnt"
+ 				  "gid" "tmp" "css" "mds" "ini" "bat" "sys" "com" "log" "pol"
+ 				  "bmp" "jpe?g" "png" "gif" "tiff?" "ai" "eps"
+ 				  "lzh" "zip" "cab" "rar" "gz" "tar" "cab"
+ 				  "avi" "mpe?g" "wmv" "mov" "swf"
+ 				  "mp3" "wav" "aiff?" "ogg" "midi?" "wma" "mdb"
+ 				  ))
+ 
+ (defvar *ignore-extension-regex*
+   (format nil "\\.\\(~A~{\\|~A~}\\)$" (car *ignore-extension-list*) (cdr *ignore-extension-list*)))
+ 
+ (defvar *base-dir* (get-special-folder-location :personal))
+ 
+ (defun my-selector (lst title)
+   (multiple-value-bind (result data)
+       (dialog-box
+        `(dialog 0 0 165 110
+ 	 (:caption ,title)
+ 	 (:font 9 "ＭＳ Ｐゴシック")
+ 	 (:control
+ 	  (:listbox list nil #x50b10111 7 7 150 82)
+ 	  (:button IDOK "Open" #x50010001 7 93 25 14)
+ 	  (:button IDCANCEL "Cancel" #x50010000 35 93 25 14)))
+        (list (cons 'list lst))
+        '((list :column (40))))
+     (cond ((eql 'IDOK result) (cddr (assoc 'list data)))
+ 	  ((eql 'IDCANCEL result) nil)
+ 	  (t nil))))
+ 
+ (defun my-search-buffer-or-file (sn)
+   (interactive"sName: ")
+   (let ((lst (delete-if #'(lambda (x) (string-match "\\*.*" (buffer-name x))) (buffer-list))) data)
+     (setq lst (delete-if-not #'(lambda (x) (string-matchp sn (buffer-name x))) lst))
+     (setq lst (pairlis (mapcar #'buffer-name lst) lst))
+     (cond ((and lst (setq data (my-selector (push '("***ここにはない***" . "continue") lst) "buffer検索結果")) (bufferp data)) (set-buffer data))
+ 	  ((and
+ 	    (or (not lst) (string= data "continue"))
+ 	    (setq lst (directory *base-path* :recursive t :absolute t :file-only t))
+ 	    (setq lst (delete-if-not #'(lambda (x) (string-matchp sn (file-namestring x))) lst))
+ 	    (setq lst (delete-if #'(lambda (x) (string-matchp *ignore-extension-regex* x)) lst))
+ 	    (setq lst (set-difference lst (delete-if #'null (mapcar #'get-buffer-file-name (buffer-list)) :test #'path-equal)))
+ 	    (setq lst (pairlis (mapcar #'file-namestring lst) lst))
+ 	    (setq data (my-selector (push '("***ここにはない***" . "continue") lst) (format nil "~A 以下検索結果" *base-path*)))
+ 	    (string/= data "continue"))
+ 	   (find-file data))
+ 	  ((and (or (not lst) (string= data "continue")) (not (file-directory-p (setq data (filer *base-path*))))) (find-file data)))))
+ 
+ (global-set-key #\F12 'my-search-buffer-or-file)
+ ;↑
+ ;F12で起動します。お気に召さなければ適当に変えてください。
+
+*どうもありがとう [#u65cc92d]
+寄ってたかって、下手糞なlisp直してくれてありがとう。~
+現状を報告すると、~
+256MBSDに7,000くらいのファイルを詰め込んだ状態(階層はそれほど深くない)で検索。~
+Celeron900MHzノートでは(さほど)ストレスなし。~
+Crusoe???(古い)ではややもっさり。~
+まで体感速度伸ばせました。~
+こんなことなら最初のlisp残しておくんだったなあ。~
+やってることはさほど変わらないのに、全然別物になってるもんなあ。~
+それにしてもとても面白い数日でした。~
+~
+最初に書いたときからどのくらいたったのか…。~
+すっかり忘却の彼方に行ってしまったこのlisp。~
+そういえば、添削してもらって大興奮して、それからlisp楽しめるようになったんだよなあ。~
+今でもそんなに上達してるとは思えないけど、久しぶりに見返すとあんまりにもひどいので書き直しました。~
+
+
+*コメント [#m31e0ee5]
+
+-ダイアログのとこはよくわからんかったので、コピペです。全体的になんか無駄が多い気がするなあ。 --  &new{2004-10-30 (土) 16:27:12};
+-search-select-file は delete-if 使う方がよさそう． search-and-get のkeyword入力はinteractiveで処理した方が汎用的．ignore-extension-list は正規表現のリストなので， "\\.lc$" という風に書いたほうがよさそう．あと，個人的には*search-base-path* はやめて，(default-directory)のほうが使いやすそう --  &new{2004-11-05 (金) 04:20:11};
+-細かいこと言えばきりがないけど，体感できるほどの速度の変化は無いと思う．　それと search-result フレームは作らなくてもいいと思うけど，作ったほうが便利？ --  &new{2004-11-05 (金) 04:37:54};
+-助言ども。晒してみるもんだなあ、下手糞なlispでも。早速いじってみますわ。あと、個人的には「別フレーム」必要っす、kamailとかwindow分けるやつ使ってるとき探しにいくと、後々面倒なので。 --  &new{2004-11-05 (金) 20:15:30};
+-バッファリストからミニバッファを除くには(remove (find-buffer " *Minibuf0*") (buffer-list))とした方が比較が少なくて済むんじゃないかなと思います。後は個人的な好みですが、search-and-getの最初のifは条件節が長すぎて読みづらいです。先にlstを求めて、変数lstを条件節にするのが好みです。２点目、自分はifの入れ子が嫌いなので何とかcondで書きたいと思います。 -- [[NANRI]] &new{2004-11-06 (土) 00:51:57};
+-ほんと感謝っすわ。自分的には体感速度あげることできました。それと自分でも気になっていたifの入れ子も解決の示唆もらっちゃって助かりました。ただ、interactive処理はちょっとできませんでした。こういう場面ではinteractiveってのを教えてもらえたので、ぼちぼちと試行錯誤してみます。 --  &new{2004-11-07 (日) 00:11:32};
+-ちょっと補足。一番重い処理の該当ファイルの処理をファイル名を入力した直後にもってきたことで、あとの対話がさくさく進むので体感速度が増したんではないかと。もちろん、教えてもらったdelete-ifやらremoveやらも効いているとは思うんですが。 --  &new{2004-11-07 (日) 00:35:33};
+-バッファでヒットした時はうまく動作しないですね． それとバッファの段階でヒットしてもディレクトリ以下を探して欲しい時も．．．ないのかな． --  &new{2004-11-07 (日) 22:55:56};
+-指摘どもども。うちではbufferからも探して来れているので、コピペミスかな。buffer段階で…っつうのは確かにほしいかも。 --  &new{2004-11-07 (日) 23:42:29};
+-あ、すんません、コメントがある行だけかと思って書き込んだんすけど、かなり勉強になる添削ですねえ。ありがたやー。これからよーく見せてもらいます！ --  &new{2004-11-07 (日) 23:48:46};
+-別機能は手で探してもないときにテキストファイルを作るもんです。根本的に?なもんですが、ｘｙｚｚｙの自動セーブなんかを使いたいときとか便利かと。あーそれにしても面白かった。まだ、添削きちんと見きれてないとこもあるんすけど、明日の楽しみとっとくことにします。 --  &new{2004-11-08 (月) 01:40:47};
+-バグが多すぎました…。お昼休みはバグとりが日課に…。 --  &new{2004-11-12 (金) 17:28:56};
+
+#comment

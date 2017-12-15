@@ -1,0 +1,141 @@
+* defstruct の詳細について，分かる範囲で追加 [#c7bce6a0]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-11-19 (土) 14:42:56
+-バージョン: 
+
+** メッセージ [#n0e5fa91]
+ <title>defstruct</title>
+ <type>Macro</type>
+ <arguments>defstruct NAME-AND-OPTIONS &amp;rest REST</arguments>
+ <package>lisp</package>
+ <description>
+ 構造体を定義します。C言語のstruct文に相当します。
+ オプションとして以下のものを指定できます。
+ 以下、xxxx の部分には構造体名が入ります。
+ 
+   :conc-name         通常、xxxx-スロット名 という名前を持つ関数で変数に
+                      アクセスしますが、この名前を変更します。xxxx- 
+                      の部分に相当する名前を指定します。
+   :constructor       指定したコンストラクタを生成します。
+                      複数の :constructor 宣言することができます。 引数には
+                        コンストラクタ名 (変数名1 変数名2 ... 変数名n)
+                      の様に指定します。&amp;key や &amp;optionalを使用したり、
+                      スロットのデフォルト値とは異なるデフォルト値を指定できま
+                      す。
+                      xyzzyでは指定してもしなくても、make-xxxx は作られますが、
+                      他のCommon Lisp処理系 (clisp, ACL) では作られないようです。
+                      これ以上の詳細は不明です。
+   :copier            コピー関数名を指定したものに変更します。異なる動作をする
+                      関数を指定できるわけではありません。
+                      コピー関数は、新しい構造体オブジェクトを作ってスロットを
+                      コピーします。新旧の構造体で各スロットは、同じオブジェク
+                      トを共有します。
+   :predicate         指定された構造体であるか否かを調べる関数名を指定します。
+                      この名前を持つ述語をシステムが生成します。
+                      デフォルトは、 xxxx-p です。
+   :include           他の構造体名を指定することで、構造体を継承します。
+                      継承した構造体にある変数の宣言が、この構造体でも宣言され
+                      ているものとして扱われます。
+                      これ以上の詳細は不明です。
+   :print-function    オブジェクトを print する時に使われる関数を指定します。
+                      format文などで ~A でオブジェクトをプリントする関数が変わ
+                      ります。指定する関数は3つの引数をとり、順に オブジェクト、
+                      ストリーム、（詳細不明）をとります。第3引数は、pretty print
+                      に関する値が来ます。
+                      :print-function が指定されない場合、 #S 構文でプリントさ
+                      れます。
+   :type              （詳細不明）
+   :named             （詳細不明）
+   :initial-offset    （詳細不明）
+ 
+ 引数:
+   NAME-AND-OPTIONS   オプションを指定しないときは構造体名、オプションを指定する
+                      ときは、
+                        (構造体名 (オプション名1 値1) (オプション名2 値2) ... )
+                      の様に指定します。
+   REST               構造体のスロットを指定します。スロット名のみを書くか、
+                        (スロット名 デフォルト値 :type タイプ名 :read-only フラグ) 
+                      の様に書いてひとつのスロットを定義します。 
+                      :type と :read-only は、逆順にしても片方のみでも構いません。
+                      リスト形式で書いた場合、後ろから順に省略できます。
+                      タイプ名は、この構造体のオブジェクトであるかどうかを調べる
+                      述語の生成に使うことができますが、xyzzy では使われていない
+                      ようです。
+ 
+ 特にオプション指定しないと make-xxxx, copy-xxxx, xxxx-p, xxxx-変数名 という関数
+ が作られるようです。 
+ 
+   make-xxxx     デフォルトのコンストラクタ
+   copy-xxxx     デフォルトのコピー関数
+   xxxx-p        指定された構造体であるか否かを調べる関数
+   xxxx-変数名   変数へのアクセス関数
+ 
+ 定義：
+   ;;; struct.lの定義
+   (defmacro defstruct (name-and-options &amp;rest rest)
+     (eval-when (:compile-toplevel :load-toplevel :execute)
+       (defstruct-helper name-and-options rest)))
+ 
+ 使用例：
+   ;;; FTPサーバを表す構造体の場合
+   ;;; 初期値を予め指定することも可能
+   (defstruct ftpsvr 
+      anonymous hostname (port 80))
+   =&gt; #&lt;structure-definition: ftpsvr&gt;
+   (setq f1 (make-ftpsvr))
+   =&gt; #S(ftpsvr anonymous nil hostname nil port 80)
+   (setq f2 (make-ftpsvr  :anonymous t :hostname "ftp.world.com"))
+   =&gt; #S(ftpsvr anonymous t hostname "ftp.world.com" port 80)
+   (setq f3 #S(ftpsvr anonymous nil hostname "localhost"))
+   =&gt; #S(ftpsvr anonymous nil hostname "localhost" port 80)
+ 
+   ;;; 人を表す構造体の場合
+   (defstruct person
+      (name nil :type string)
+      age
+      (bloodtype "A"))
+   =&gt; #&lt;structure-definition: person&gt;
+   (setq p1 (make-person :name "Mike" :age 19))
+   =&gt; #S(person name "Mike" age 19 bloodtype "A")
+   (person-name p1)
+   =&gt; "Mike"
+   (setq p2 (copy-person p1))
+   =&gt; #S(person name "Mike" age 19 bloodtype "A")
+   (setf (person-bloodtype p1) "O")
+   =&gt; "O"
+   (person-bloodtype p1)
+   =&gt; "O"
+   (person-bloodtype p2)
+   =&gt; "A"
+ 
+   ;;; 患者を表す構造体の場合
+   (defstruct (patient
+              (:conc-name p-)
+              (:print-function
+               (lambda (o s p)
+                 (format s "<patient ~A ~D ~A>" (p-name o) (p-age o) (p-sicks o))))
+               (:include person))
+      (sicks nil :type (or nil list))
+      id)
+   =&gt; #&lt;structure-definition: patient&gt;
+   (setq p3 (make-patient :name "Lucy" :age 18 :sicks '("かぜ")))
+   =&gt; #S(patient name "Lucy" age 18 bloodtype "A" sicks ("かぜ") id nil)
+   (format nil "~A" p3)
+   =&gt; "<patient Lucy 18 (かぜ)>"
+ </description>
+ <seealso></seealso>
+ <section>変数と定数</section>
+ <file>struct.l</file>
+
+--------
+- どーもです。:copierの説明は途中で切れてませんか? -- [[NANRI]] &new{2005-11-20 (日) 22:48:02};
+- 直しました．実は :constructor の 指定してもしなくても make-xxxx が作られるという部分は，正直少し自信ありません． clisp, ACL と比べましたが，よくわかりませんでした． -- [[中野]] &new{2005-11-21 (月) 00:58:34};
+- defstructはちゃんと使ったことが無いのでよく分かりません。後でCLtL2を確認しておきます。 -- [[NANRI]] &new{2005-11-23 (水) 23:14:10};
+- 取り込みました。 -- [[NANRI]] &new{2005-12-12 (月) 02:33:36};
+
+#comment

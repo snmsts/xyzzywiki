@@ -1,0 +1,47 @@
+* キーワード/コメントの適用範囲について [#v6f8aa36]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2004-09-15 (水) 16:49:14
+
+** メッセージ [#x2bfb2c0]
+xyzzyの勉強も兼ねて ini-mode 作ってみたのですが、500行を超えると、
+キーワードもコメントも適用されなくなります。
+どこを修正するとOKになるのでしょうか。
+
+ (provide "ini-mode")
+ 
+ (defvar *ini-keyword-hash-table* nil)
+ (defvar *ini-keyword-file* "ini")
+ 
+ (defun ini-mode ()
+   (interactive)
+   (kill-all-local-variables)
+   (setq buffer-mode 'ini-mode)
+   (setq mode-name "ini")
+   (use-syntax-table *ini-mode-syntax-table*)
+   (and *ini-keyword-file*
+        (null *ini-keyword-hash-table*)
+        (setq *ini-keyword-hash-table*
+              (load-keyword-file *ini-keyword-file* t)))
+   (when *ini-keyword-hash-table*
+     (make-local-variable 'keyword-hash-table)
+     (setq keyword-hash-table *ini-keyword-hash-table*)))
+ 
+ (defvar *ini-mode-syntax-table* nil)
+ (unless *ini-mode-syntax-table*
+   (setq *ini-mode-syntax-table* (make-syntax-table))
+   (set-syntax-start-comment *ini-mode-syntax-table* #\; nil)
+   (set-syntax-end-comment *ini-mode-syntax-table* #\LFD nil t)
+   (set-syntax-string *ini-mode-syntax-table* #\")
+   (set-syntax-match *ini-mode-syntax-table* #\[ #\])
+ )
+
+----
+-試してみましたが、コメントは適用されるみたいですよ。キーワードのほうはキーワードファイルが無いのでよく分かりませんが。とりあえず、[[OHKUBOさんの>http://ohkubo.s53.xrea.com/xyzzy/index.html#ini-mode]]と比べてみてはいかがでしょう。 -- [[NANRI]] &new{2004-09-15 (水) 17:41:54};
+-既存のものがあるのですね。OHKUBOさんのini-modeでキーワードファイルを変えずにやってみた所、500行目以降も問題なく適用されていました。やはり書き方の問題なのでしょうね。もう少し見比べてみます。有難う御座いました -- [[質問者]] &new{2004-09-19 (日) 21:49:16};
+-use-syntax-tableをコメントアウトしたら、500行目以降のキーワードが反映されていました。OHKUBOさんのini-modeだと別関数を呼んでその中でuse-syntax-tableを使っているのがポイントかもしれません。 -- [[質問者]] &new{2004-09-27 (月) 10:53:32};
+-うちの ini-mode で use-syntax-table を別関数から呼ぶなんていう変なことをしているのは、コメント文字を変更できるようにしてみたかったからだけです。他のことは全く意識していなかったはずです（２年以上前に書いたことなのでうろおぼえですが(^^;;）。ここに書かれている症状は確認してみていないのですが、キーワードファイルの行数(≒キーワード数)が 500 を超えると、「全てのキーワードが適用されず、また、コメントも全く適用されない」ということでしょうか？ -- [[OHKUBO]] &new{2004-09-27 (月) 22:17:56};
+-見直した所、原因がわかりました。set-syntax-stringで指定した"が余計な所に入っていた為、その"に対する閉じ"が現れるまでキーワード等が無効になってました。テストに使っていたiniファイルの内容の問題でした。 -- [[質問者]] &new{2004-09-28 (火) 08:37:32};
+
+#comment

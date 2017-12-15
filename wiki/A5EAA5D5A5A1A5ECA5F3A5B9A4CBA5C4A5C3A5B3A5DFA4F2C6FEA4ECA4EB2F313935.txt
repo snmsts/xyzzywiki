@@ -1,0 +1,68 @@
+* prog, prog* [#ua6e3fa8]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-03-22 (水) 00:04:37
+-バージョン: 20051220
+
+** メッセージ [#s5680b5d]
+ <chapter>
+ <title>prog*</title>
+ <type>Macro</type>
+ <arguments>prog* VARLIST &amp;body BODY</arguments>
+ <package>lisp</package>
+ <description>
+ prog とよく似ていますが、 VARLIST の中で先に定義した他の変数を参照でき
+ る点が異なります。
+ </description>
+ <seealso>tagbody</seealso>
+ <seealso>prog</seealso>
+ <seealso>let*</seealso>
+ <link></link>
+ <section>制御構造</section>
+ <file>evalmacs.l</file>
+ </chapter>
+
+ <chapter>
+ <title>prog</title>
+ <type>Macro</type>
+ <arguments>prog VARLIST &amp;body BODY</arguments>
+ <package>lisp</package>
+ <description>
+ let と block と tagbody を合わせた制御構造です。
+ 
+ VARLIST によって局所変数を作り BODY を評価する点は let と同じですが、
+ BODY の中で return が使える点、ラベルを作ってジャンプできる点が異なります。
+ 
+ 例：
+   (let ((x 1)) (return x))
+   =&gt; `return-from'のキャッチャを参照できません: nil
+ 
+   (prog ((x 1)) (return x))
+   =&gt; 1
+ 
+   (prog ((x 0))
+     tag
+     (princ x)
+     (incf x)
+     (if (= x 10)
+         (return x)
+       (go tag)))
+   -&gt; 0123456789
+   =&gt; 10
+ </description>
+ <seealso>prog*</seealso>
+ <seealso>let</seealso>
+ <seealso>tagbody</seealso>
+ <link></link>
+ <section>制御構造</section>
+ <file>evalmacs.l</file>
+ </chapter>
+
+--------
+- どーもです。prog*のほうのseealsoはletじゃなくてlet*かなと思ったので変えておきました。違ってたらすみません。 -- [[NANRI]] &new{2006-03-22 (水) 20:32:34};
+
+#comment

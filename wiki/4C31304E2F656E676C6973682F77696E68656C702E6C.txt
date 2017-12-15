@@ -1,0 +1,7 @@
+[[L10N/english]]
+
+ winhelp.l:59:				(error "ビューワが定義されていません"))
+-Viewer is undefined. --  &new{2005-03-04 20:24:11 (金)};
+- MSInfo Viewer is undefined. の方が適切かも --  &new{2008-05-19 (月) 13:09:32};
+
+#comment

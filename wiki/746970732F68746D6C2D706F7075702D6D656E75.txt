@@ -1,0 +1,41 @@
+[[tips]]
+
+----
+Netinstaller 対応を行いました。以後こちらのソースはいじらないと思われます（が、手を入れてくださるのは大歓迎です。）-- おおさわ
+
+http://womo.nconc.net/misc/packages.l
+
+http://womo.nconc.net/computer/xyzzy/
+----
+
+** 概要 [#b2ff4e6c]
+
+html+-modeでポップアップメニューからいろいろな編集をするための小道具です。
+
+HTMLを一から書いていく時というよりも、既存のHTMLの修正時に使うことを想定しています。
+
+#ref(html-popup-menu_g.png,left,100%)
+#img(,clear)
+
+** ダウンロードと使い方 [#xf73be20]
+
+#ref(html-popup-menu.l)
+
++ html+-modeがはいっていない場合は適時導入。（「QuickTour/ext/html+-mode」などが親切）
++ html-popup-menu.l を ~/site-lisp/ にコピーする。
++ ~/.xyzzy か ~/site-lisp/siteinit.l に以下の記述を追加する
+     (add-hook 'ed::*html+-mode-hook* #'(lambda () (require "html-popup-menu")))
++ xyzzyを再起動（siteinit.lに記述した場合はダンプファイルを再作成）する。
++ 適当なhtmlファイルの真ん中あたりで Ctrl + ] または Ctrl + Shift + ]  を押す。
+
+** TODO [#ccffbb47]
+
+- 行単位での編集
+- class、idの挿入
+- 属性の削除、編集
+- アクセスキー
+- 上下の兄弟と入れ替える
+
+** コメント [#kcea150e]
+
+#comment

@@ -1,0 +1,18 @@
+ひえさんところを参照さしてもらいました 佐野 03/05/10~
+…変数名にまるでやる気が感じられない。
+ (defun toggle-close-box (&optional (arg nil sv))
+   (interactive)
+   (let (s
+ 	(r (get-menu *app-menu* 'close-box nil)))
+     (if sv
+ 	(setq s arg)
+       (setq s (not r)))
+     (if s
+ 	(unless
+ 	    r
+ 	  (add-menu-item *app-menu* 'close-box :close-box 
+ 			 #'kill-selected-buffer))
+       (delete-menu *app-menu* 'close-box nil)
+       )))
+
+#comment

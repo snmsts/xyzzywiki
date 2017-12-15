@@ -1,0 +1,53 @@
+* grep結果をフルパスで取得できないでしょうか？ [#w128b5b6]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2010-09-15 (水) 15:16:20
+
+** メッセージ [#t89cc4ce]
+お世話になっております。
+
+ダイアログ版のgrep結果は相対パスで取得されます。
+結果をデスクトップなどに保存すると、後々開いたときに[F10]でジャンプできません。
+
+結果をフルパスで取得することは可能でしょうか？
+
+
+----
+- うちのではジャンプできてます。どういう入力のときにジャンプできなくなるのでしょうか。結果をフルパスにするにはファイルに手を入れないといけません。 --  &new{2010-09-16 (木) 06:04:12};
+ diff --git a/lisp/glob.l b/lisp/glob.l
+ index 44d9220..9163d3f 100644
+ --- a/lisp/glob.l
+ +++ b/lisp/glob.l
+ @@ -104,7 +104,7 @@
+  		 (dot (equal dir ".")))
+  	    (unless dir
+  	      (return nil))
+ -	    (setq files (directory dir :wild wild :file-only t))
+ +	    (setq files (directory dir :absolute t :wild wild :file-only t))
+  	    (let ((dirp (file-directory-p dir)))
+  	      (if dirp
+  		  (or (equal dir "")
+ diff --git a/lisp/grepd.l b/lisp/grepd.l
+ index 7027ea8..33a9989 100644
+ --- a/lisp/grepd.l
+ +++ b/lisp/grepd.l
+ @@ -75,6 +75,7 @@
+  		(found nil)
+  		tick)
+  	    (glob-exec dirlist
+ +		       :absolute t
+  		       :recursive *grep-subdir*
+  		       :file-only t :wild file
+  		       :callback
+- C:\hoge\fuga.txt　に対して行われたgrep結果をデスクトップに保存した場合などです。 --  &new{2010-09-16 (木) 10:18:04};
+- すみません、「一旦、xyzzyを終了して」というのが抜けていました。　保存したgrep結果を新規のxyzzyで開いた場合に[F10]でジャンプできなくなります。 --  &new{2010-09-16 (木) 10:29:35};
+- 上記のファイル更新で実現できました！ありがとうございます！！ --  &new{2010-09-16 (木) 10:44:05};
+- あーなるほど、勘違いしてました。そういうときはgrep結果を開いた後、「M-x cd」でデフォルトディレクトリをC:/hoge/移動するとF10でジャンプできるようになります。 --  &new{2010-09-16 (木) 12:08:57};
+- そういう方法があったんですね、参考になります！　お世話になりました。本当にありがとうございますm(_ _)m --  &new{2010-09-17 (金) 15:53:20};
+- 1 -- [[1]] &new{2014-09-24 (水) 11:08:27};
+- 1 -- [[-1']] &new{2014-09-24 (水) 11:08:46};
+- 1 -- [[1]] &new{2014-09-24 (水) 11:09:01};
+
+#comment
+- 1 -- [[1]] &new{2014-09-24 (水) 11:08:32};

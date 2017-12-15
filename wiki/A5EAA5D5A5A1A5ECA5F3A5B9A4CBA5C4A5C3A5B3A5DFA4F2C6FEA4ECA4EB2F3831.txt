@@ -1,0 +1,990 @@
+*filer関連 [#c5c179d9]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-09-03 (金) 23:13:10
+-バージョン: 
+
+**メッセージ [#rc8d6201]
+ファイラ関係の変数・関数です。filer.l での使われ方、ML・Changelogでの記述、勘をもとに書きました。（なので間違っている所もあるかも）
+
+自分の感覚だと「ファイラー」ではなく「ファイラ」と伸ばさないので（xyzzyのメニューでの記述がそうなので）、
+そう書いてしまいましたが、<section>の記述にあわせたほうがいいでしょうか？
+
+builtin な変数の場合、<file> には何を書くべきでしょうか？ とりあえず何も書いていないのですが、gen-syms.cc と書いておいたほうがいいでしょうか？
+
+ <chapter>
+ <title>*filer-click-toggle-marks-always*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ nilなら、ファイラで左クリックしたとき、その位置にカーソルがある場合の
+ みマークを反転します。
+ non-nil なら、カーソルの移動とマークの反転の両方を同時に行います。
+ デフォルトは t です。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>*filer-eat-esc*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ nilなら、モードレスファイラでESCを押しても閉じません。
+ デフォルトは t です。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-context-menu</title>
+ <type>Function</type>
+ <arguments>filer-context-menu</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてコンテキストメニューを表示します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>*filer-format-comma*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ non-nilなら、ファイルサイズをカンマ区切りで表示します。
+ [共通設定] - [ファイラ] - [ファイルサイズをカンマ区切りで表示(C)] で値を指定することができます。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>*filer-chdir-primary-p*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ （詳細不明）
+ <!-- ファイラにてアクティブなウィンドウのディレクトリを変更したかどうか。 -->
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>*filer-drag-and-drop-helper</title>
+ <type>Function</type>
+ <arguments>*filer-drag-and-drop-helper EFFECT FILES SRC DEST</arguments>
+ <package>editor</package>
+ <description>
+ （詳細不明）
+ <!-- ファイラへドラッグアンドドロップした時の動作です。 -->
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>filer.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*filer-retrieve-icon*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ non-nil のとき、ファイラでファイルタイプに応じたアイコンを表示します。
+ [共通設定] - [ファイラ] - [アイコンをファイルから取ってくる(I)] で値を指定することができます。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>filer.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*filer-last-file-mask*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ 一画面ファイラの初期のファイルマスクをリストで設定します。
+ </description>
+ <seealso>*filer-primary-file-mask*</seealso>
+ <seealso>*filer-secondary-file-mask*</seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>*filer-left-window-p*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ 二画面ファイラを閉じたとき、どちらのウィンドウがアクティブだったかが保存
+ されます。ファイラ未起動時の値は t です。
+ 
+   nil     : 右側のウィンドウ
+   non-nil : 左側のウィンドウ
+ 
+ <!--
+   使用例：
+   ; [xyzzy:07026]
+   ; ファイラの起動時に表示するディレクトリを前回の終了時と同じに
+   (register-history-variable '*filer-primary-directory*)
+   (register-history-variable '*filer-secondary-directory*)
+   (register-history-variable '*filer-left-window-p*) 
+ -->
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>*filer-secondary-directory*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ 二画面ファイラのアクティブでない方のディレクトリを示します。
+ 右側か左側かは *filer-left-window-p* の値によって決まります。
+ ファイラ未起動時は右側のディレクトリを指定できます。
+ </description>
+ <seealso>*filer-primary-directory*</seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>*filer-primary-directory*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ 二画面ファイラのアクティブな方のディレクトリを示します。
+ 右側か左側かは *filer-left-window-p* の値によって決まります。
+ ファイラ未起動時は左側のディレクトリを指定できます。
+ 
+ 使用例：
+   ; [xyzzy:07218]
+   ; 常にカレントディレクトリからファイラを起動する。
+   (defun foo ()
+     (interactive)
+     (let ((*filer-primary-directory* nil)
+           (*filer-secondary-directory* nil))
+       (open-filer)))
+ </description>
+ <seealso>*filer-secondary-directory*</seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>*filer-dual-window*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファなどでディレクトリを入力した時に立ち上がるファイラを選択します。<!-- もうちょっとしっくりくる説明はないだろうか -->
+ nil なら一画面ファイラ、non-nil なら二画面ファイラが起動します。
+ デフォルトは nil です。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>*filer-last-command-char*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてコマンドを実行した時に最後に入力された文字を示します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-read-char</title>
+ <type>Function</type>
+ <arguments>filer-read-char</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてキーボードからの入力を読み込み、文字を返します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-swap-windows</title>
+ <type>Function</type>
+ <arguments>filer-swap-windows</arguments>
+ <package>editor</package>
+ <description>
+ 二画面ファイラにてもう一方のウィンドウへフォーカスが移ります。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-modify-column-width</title>
+ <type>Function</type>
+ <arguments>filer-modify-column-width N D &amp;optional SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにおけるそれぞれのカラムの幅を変えます。
+ 
+   N                  : 変更するカラム
+              0           ファイル名
+              1           サイズ
+              2           更新日時
+              3           属性
+   D                  : 変更量
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-modal-p</title>
+ <type>Function</type>
+ <arguments>filer-modal-p</arguments>
+ <package>editor</package>
+ <description>
+ ファイラがモーダルか判別します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-viewer</title>
+ <type>Function</type>
+ <arguments>filer-viewer</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてカーソル位置のファイルの最初の方を見ることができます。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-calc-directory-byte-size</title>
+ <type>Function</type>
+ <arguments>filer-calc-directory-byte-size</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにて選択したディレクトリのファイルサイズの合計を計算します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-calc-directory-size</title>
+ <type>Function</type>
+ <arguments>filer-calc-directory-size</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにて選択したディレクトリのディスク使用量を計算します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-left-window-p</title>
+ <type>Function</type>
+ <arguments>filer-left-window-p</arguments>
+ <package>editor</package>
+ <description>
+ 二画面ファイラにて現在アクティブなウィンドウが左側のウィンドウか判別します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-right-window</title>
+ <type>Function</type>
+ <arguments>filer-right-window</arguments>
+ <package>editor</package>
+ <description>
+ 二画面ファイラにて右側のウィンドウをアクティブにします。
+ </description>
+ <seealso>filer-left-window</seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-left-window</title>
+ <type>Function</type>
+ <arguments>filer-left-window</arguments>
+ <package>editor</package>
+ <description>
+ 二画面ファイラにて左側のウィンドウをアクティブにします。
+ </description>
+ <seealso>filer-right-window</seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-dual-window-p</title>
+ <type>Function</type>
+ <arguments>filer-dual-window-p</arguments>
+ <package>editor</package>
+ <description>
+ ファイラが二画面ファイラかどうかを判別します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-get-sort-order</title>
+ <type>Function</type>
+ <arguments>filer-get-sort-order &amp;optional SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにおけるファイルの表示順を返します。
+ 
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-sort</title>
+ <type>Function</type>
+ <arguments>filer-sort ARG &amp;optional SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにおけるファイルの表示順を変更します。
+ 
+   ARG                : 表示順を指定します
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-count-marks</title>
+ <type>Function</type>
+ <arguments>filer-count-marks &amp;optional FILE-ONLY-P SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてマークされたファイルの数を返します。
+ 
+   FILE-ONLY-P        : ディレクトリも対象にするか
+              nil         ディレクトリも対象にします
+              non-nil     ファイルだけを対象にします
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します。
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-clear-all-marks</title>
+ <type>Function</type>
+ <arguments>filer-clear-all-marks &amp;optional SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてマークを全て解除します。
+ 
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-set-file-mask</title>
+ <type>Function</type>
+ <arguments>filer-set-file-mask MASK &amp;optional SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにて表示する条件を指定します。
+ 
+   MASK               : 表示する条件
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-goto-file</title>
+ <type>Function</type>
+ <arguments>filer-goto-file STRING &amp;optional START REVERSE WILD-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてファイル名が STRING の位置にカーソルを移動します。
+ 
+   STRING             : 検索するファイル名
+   START              : （詳細不明）<!-- 検索を開始する位置？ -->
+              nil         （詳細不明）<!-- 最初から？ -->
+              non-nil     （詳細不明）<!-- カーソル位置から？ -->
+   REVERSE            : 探す方向
+              nil         前方向
+              non-nil     後方向
+   WILD-P             : （詳細不明）<!-- ワイルドカードを有効にするか？ -->
+              nil         （詳細不明）<!-- 無効？ -->
+              non-nil     （詳細不明）<!-- 有効？ -->
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-isearch</title>
+ <type>Function</type>
+ <arguments>filer-isearch &amp;optional CHAR NO-WRAP SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてインクリメンタルサーチによるカーソル移動を行います。
+ 
+   CHAR               : 検索する文字。nil の時は入力されたキーを検索します。
+   NO-WRAP            : 最後までいったら、最初に戻るかどうか
+              nil         戻らない
+              non-nil     戻る
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-set-text</title>
+ <type>Function</type>
+ <arguments>filer-set-text STRING</arguments>
+ <package>editor</package>
+ <description>
+ 一画面ファイラのファイル名の欄に STRING をセットします。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-get-text</title>
+ <type>Function</type>
+ <arguments>filer-get-text</arguments>
+ <package>editor</package>
+ <description>
+ 一画面ファイラにて上部のファイル名の欄に書いてあるテキストを返します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-current-file-directory-p</title>
+ <type>Function</type>
+ <arguments>filer-current-file-directory-p &amp;optional SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてカーソル位置のファイルがディレクトリかどうかを判定します。
+ 
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-current-file-dot-dot-p</title>
+ <type>Function</type>
+ <arguments>filer-current-file-dot-dot-p &amp;optional SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてカーソル位置のファイルが親ディレクトリを示す &quot;..&quot; 
+ であるかどうかを判定します。
+ 
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-get-current-file</title>
+ <type>Function</type>
+ <arguments>filer-get-current-file &amp;optional SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてカーソル位置のファイルのパスを返します。
+ 
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-get-mark-files</title>
+ <type>Function</type>
+ <arguments>filer-get-mark-files &amp;optional FILE-ONLY-P SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてマークされたファイルのパスをリストの形で返します。
+ 
+   FILE-ONLY-P        : ディレクトリも対象にするか
+              nil         ディレクトリも対象にします
+              non-nil     ファイルだけを対象にします
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-close</title>
+ <type>Function</type>
+ <arguments>filer-close RESULT</arguments>
+ <package>editor</package>
+ <description>
+ ファイラを閉じます。
+ 
+   RESULT : （詳細不明）
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-toggle-all-marks</title>
+ <type>Function</type>
+ <arguments>filer-toggle-all-marks &amp;optional FILE-ONLY-P SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにて現在のディレクトリの全てのファイルについてマークされた状態と
+ されていない状態を反転させます。
+ 
+   FILE-ONLY-P        : ディレクトリも対象にするか
+              nil         ディレクトリも対象にします
+              non-nil     ファイルだけを対象にします
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-toggle-mark</title>
+ <type>Function</type>
+ <arguments>filer-toggle-mark &amp;optional FILE-ONLY-P SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてカーソル位置のファイルについてマークされた状態とされていない
+ 状態を反転させます。
+ 
+   FILE-ONLY-P        : ディレクトリも対象にするか
+              nil         ディレクトリも対象にします
+              non-nil     ファイルだけを対象にします
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-mark-match-files</title>
+ <type>Function</type>
+ <arguments>filer-mark-match-files MASK &amp;optional SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ MASK の示す条件を満たすファイルを全てマークします。
+ 
+   MASK               : マークするファイル名の条件
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-mark-all</title>
+ <type>Function</type>
+ <arguments>filer-mark-all &amp;optional FILE-ONLY-P SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにて現在表示しているディレクトリにあるファイル全てをマークします。
+ 
+   FILE-ONLY-P        : ディレクトリも対象にするか
+              nil         ディレクトリも対象にします
+              non-nil     ファイルだけを対象にします
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-mark</title>
+ <type>Function</type>
+ <arguments>filer-mark &amp;optional FILE-ONLY-P SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてカーソル位置のファイルをマークします。
+ 
+   FILE-ONLY-P        : ディレクトリも対象にするか
+              nil         ディレクトリも対象にします
+              non-nil     ファイルだけを対象にします
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-get-drive</title>
+ <type>Function</type>
+ <arguments>filer-get-drive &amp;optional SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにて現在表示しているドライブを取得します。
+ 
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-get-directory</title>
+ <type>Function</type>
+ <arguments>filer-get-directory &amp;optional SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにて現在表示しているディレクトリのフルパスを取得します。
+ 
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-set-directory</title>
+ <type>Function</type>
+ <arguments>filer-set-directory DIRECTORY &amp;optional SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにて表示するディレクトリを DIRECTORY に変更します。
+ 
+   DIRECTORY          : ディレクトリを指定します
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-subscribe-to-reload</title>
+ <type>Function</type>
+ <arguments>filer-subscribe-to-reload PATH &amp;optional SUB-DIRECTORY-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにて PATH を表示しているウィンドウを更新し、
+ 最新の状態にします。
+ 
+   PATH            : パスを指定します
+   SUB-DIRECTORY-P : PATH のサブディレクトリを更新対象にするか否か
+           nil         更新しない
+           non-nil     更新する
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-demand-reload</title>
+ <type>Function</type>
+ <arguments>filer-demand-reload</arguments>
+ <package>editor</package>
+ <description>
+ （詳細不明）
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-reload</title>
+ <type>Function</type>
+ <arguments>filer-reload &amp;optional MASK SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラの画面を更新し、最新の状態にします。
+ 
+   MASK               : 表示するファイルの条件を指定します
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-scroll-right</title>
+ <type>Function</type>
+ <arguments>filer-scroll-right &amp;optional SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにて右方向にスクロールします。
+ 
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso>filer-scroll-left</seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-scroll-left</title>
+ <type>Function</type>
+ <arguments>filer-scroll-left &amp;optional SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにて左方向にスクロールします。
+ 
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso>filer-scroll-right</seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-goto-eof</title>
+ <type>Function</type>
+ <arguments>filer-goto-eof &amp;optional SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてカーソルのウィンドウの最後に移動します。
+ 
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso>filer-goto-bof</seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-goto-bof</title>
+ <type>Function</type>
+ <arguments>filer-goto-bof &amp;optional SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてカーソルをウィンドウの先頭に移動します。
+ 
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso>filer-goto-eof</seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-forward-page</title>
+ <type>Function</type>
+ <arguments>filer-forward-page &amp;optional ARG SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてカーソルを次のページに移動します。
+ 
+   ARG                : 指定ページ数移動します
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-forward-line</title>
+ <type>Function</type>
+ <arguments>filer-forward-line &amp;optional ARG SECONDARY-WINDOW-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてカーソルを次の行に移動します。
+ 
+   ARG                : 指定行数移動します
+   SECONDARY-WINDOW-P : 対象とするウィンドウを指定します
+              nil         現在アクティブなウィンドウ
+              non-nil     現在アクティブでないウィンドウ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラー</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-20041115 での追加を確認しました。記載は「ファイラー」に統一されていました。「ファイラー」「ファイラ」の記載、<file>に指定する内容については、別途、カテゴリー「記述形式」でのツッコミがよいのではないかと思います。 -- [[OHKUBO]] &new{2004-11-27 (土) 10:37:04};
+
+#comment

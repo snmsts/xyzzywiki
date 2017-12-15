@@ -1,0 +1,297 @@
+<!-- -*- C -*- -->
+<job>
+<!-- only for input -->
+<script language="VBScript">
+function vbinput(strprompt,title,default)
+     vbinput = InputBox(strprompt,title,default)
+end function
+</script>
+<script language="JavaScript">
+
+var AUTOINSTALL = 0; //set 1 if you want install without dialog.
+//related to AUTOINSTALL
+var AI_INSTDIR ="";  //install directory if empty set %ProgramFilesDir%/xyzzy as default.
+var AI_MAKE_SHORTCUT = 1; //if set 1 to make shortcut.0 not to make shortcut.
+var AI_COPY_CLI = 1; //if set 1 to copy xyzzycli to %windir%.
+
+//related to AUTOINSTALL end here.
+var TMPDIR = ".\\xinst\\"; //temp directory
+//Install from
+var URL_CALDIX = "http://www.kmonos.net/lib/arc/caldix.exe";
+var URL_XYZZY  = "http://www.jsdlab.co.jp/~kei/download/xyzzy-0.2.2.234.lzh";
+var URL_NETI   = "http://www7a.biglobe.ne.jp/~hat/download.cgi?xyzzy/ni-0.0.1.0.lzh";
+var URL_LHA    = "http://xyzzy.s53.xrea.com/archive/lha.exe";
+//source of lha.exe can get from http://xyzzy.s53.xrea.com/archive/lha.cxx
+var URL_SINIT  = "http://xyzzy.s53.xrea.com/archive/siteinit.l";
+
+var PROGRAM_MAJOR_VERSION  = 0;
+var PROGRAM_MINOR_VERSION  = 0;
+var PROGRAM_MAJOR_REVISION = 0;
+var PROGRAM_MINOR_REVISION = 1;
+var PROGRAM_PATCH_LEVEL    = 0;
+
+//functions named from xyzzy functions.
+
+//return version string
+function SoftwareVersion() {
+  var verstr;
+  verstr=PROGRAM_MAJOR_VERSION.toString()+".";
+  verstr+=PROGRAM_MINOR_VERSION.toString()+".";
+  verstr+=PROGRAM_MAJOR_REVISION.toString()+".";
+  verstr+=PROGRAM_MINOR_REVISION.toString();
+  if(PROGRAM_PATCH_LEVEL) {
+    verstr+="."+PROGRAM_PATCH_LEVEL.toString();
+  }
+  return verstr;
+}
+//add "\\" at end of path if not exists.
+function AppendTrailBackSlash(Path) {
+  var par = /^(.+)\\$/ig;
+  var res = par.exec(Path);
+  if(res == null) {
+    return Path+"\\";
+  }else{
+    return Path;
+  }
+}
+
+function OsPlatform() {
+  var SystemSet = GetObject("winmgmts:").InstancesOf ("Win32_OperatingSystem");
+  for(e = new Enumerator(SystemSet) ; !e.atEnd() ; e.moveNext())
+    {
+      System = e.item();
+      switch(System.Caption){
+      case "Microsoft Windows 2000 Professional":
+        return "windows-2000";
+      default:
+        return System.Caption;
+      }
+    }
+}
+//from xyzzy end here.
+
+function GetQuickLaunchPath() {
+  //バージョン確認等々いろいろテクニカルっぽい
+  //いろいろそろうまでは、適当に切り上げる。
+  var WshShell = WScript.CreateObject("WScript.Shell");
+  var ret;
+  switch(OsPlatform()) {
+  case "windows-2000":
+    //all usersの設定はない？
+    var WshSysEnv = WshShell.Environment("Process");
+    ret=WshSysEnv("USERPROFILE");
+    ret+="\\Application Data\\Microsoft\\Internet Explorer\\Quick Launch";
+    return ret;
+  default:
+    WshShell.Popup("テスト環境で試せていないOSです\n"+
+                   "以下の文字列を作者に報告してほしいなぁ\n\n"+
+                   OsPlatform()
+                   ,0,"unknown os",4);
+    return null;
+  }
+}
+//make directory recursively
+function CreateFolderEx(Path) {
+  var Fs=new ActiveXObject("Scripting.FileSystemObject");
+  var sParent=Fs.GetParentFolderName(Path);
+  if( Fs.FolderExists(sParent) && !Fs.FolderExists(Path)) {
+    Fs.CreateFolder(Path);
+  } else if(Fs.FolderExists(Path)) {
+  } else {
+    CreateFolderEx(sParent);
+    Fs.CreateFolder(Path);
+  }
+  return Path;
+}
+//get file from internet
+function GetHttp(url,fileName) {
+
+  var adSaveCreateOverWrite = 2; 
+  WshShell = new ActiveXObject("WScript.Shell");
+  WshShell.RegWrite("HKLM\\SOFTWARE\\Microsoft\\Internet Explorer\\ActiveX Compatibility\\\{00000566-0000-0010-8000-00AA006D2EA4\}\\Compatibility Flags",0,"REG_DWORD") ;
+  var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); 
+  var adoStream = new ActiveXObject("ADODB.Stream"); 
+  xmlhttp.Open( "GET", url , false ); 
+  xmlhttp.Send(); 
+  adoStream.Type = 1;
+  adoStream.Open(); 
+  adoStream.Write( xmlhttp.ResponseBody );  
+  adoStream.SaveToFile( fileName, adSaveCreateOverWrite ); 
+  adoStream.Close();
+  WshShell.RegWrite("HKLM\\SOFTWARE\\Microsoft\\Internet Explorer\\ActiveX Compatibility\\\{00000566-0000-0010-8000-00AA006D2EA4\}\\Compatibility Flags",1024,"REG_DWORD") ;
+}
+
+//read from ini 作っただけで使ってない…
+function GetProfile(strSection,strKey,varDefault,strFileName) {
+  //test
+  var fso = new ActiveXObject("Scripting.FileSystemObject");
+  var f = fso.OpenTextFile(strFileName,1,false);
+  var section="";
+  var ret=varDefault;
+  while (!f.AtEndOfStream) {
+    var s = f.ReadLine();
+    var par = /^\[(.*)\]$/ig;
+    var res = par.exec(s);
+    if(res != null) {
+      section=res[1];
+      continue;
+    }
+    par = /^([^=]+)=([^;]+)(.*)/ig;
+    res = par.exec(s);
+    if(res != null) {
+      if(res[1]==strKey) {
+        ret=res[2];
+        break;
+      }
+    }
+  }
+  f.Close( );
+  return ret;
+}
+
+//write to ini
+function WriteProfile(AppName,KeyName,String,FileName) {
+  //気が向いたら書く
+}
+
+//download caldix & run
+function RunCaldix() {
+  if(!AUTOINSTALL) {
+    var WshShell = WScript.CreateObject("WScript.Shell");
+    var ret=7;
+    ret=WshShell.Popup("installerを実行するのに統合アーカイバの設定が必須です。\n" +
+                       "caldixのダウンロード、実行を行います\n" +
+                       "caldixの実行自体はマニュアル操作になります。\n" +
+                       "\n" +
+                       "わからんけどまぁ基本、開始のクリックを繰り返すだけかと"
+                       ,0,"install caldix ?",4);
+    if(ret == 6) {
+      //on click yes
+      GetHttp(URL_CALDIX,TMPDIR+"caldix.exe");
+      WshShell.Run(TMPDIR+ "caldix", 1, true);
+    }
+  }
+}
+
+//build up directory structure
+function BuildDirectory() {
+  var WshShell = WScript.CreateObject("WScript.Shell");
+  var fso = new ActiveXObject("Scripting.FileSystemObject");
+  GetHttp(URL_XYZZY,TMPDIR+"xyzzy.lzh");
+  GetHttp(URL_NETI ,TMPDIR+"ni.lzh");
+  GetHttp(URL_LHA  ,TMPDIR+"lha.exe");
+  GetHttp(URL_SINIT,TMPDIR+"siteinit.l");
+  WshShell.Run(TMPDIR+"lha x "+"\""+TMPDIR+"xyzzy.lzh\" "+TMPDIR,1,true);
+  WshShell.Run(TMPDIR+"lha x "+"\""+TMPDIR+"ni.lzh\" "+TMPDIR,1,true);
+  fso.CopyFolder(TMPDIR+"site-lisp",TMPDIR+"xyzzy\\");
+  fso.DeleteFolder(TMPDIR+"site-lisp");
+  fso.CopyFile (TMPDIR+"siteinit.l",TMPDIR+"xyzzy\\site-lisp\\siteinit.l");
+}
+
+//copy directory
+function SetNCopyInstallDirectory() {
+  //set install directory
+  var WshShell = WScript.CreateObject("WScript.Shell");
+  if(AI_INSTDIR == "") {
+    AI_INSTDIR = WshShell.RegRead
+      ("HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\ProgramFilesDir")+"\\xyzzy";
+  }
+  if(!AUTOINSTALL) {
+    AI_INSTDIR = vbinput("Input Install Directory","Where ?",AI_INSTDIR);
+  }
+  //copy
+  AI_INSTDIR=AppendTrailBackSlash(AI_INSTDIR);
+  var fso = new ActiveXObject("Scripting.FileSystemObject");
+  CreateFolderEx(AI_INSTDIR);
+  fso.CopyFile  (TMPDIR+"xyzzy\\*",AI_INSTDIR);
+  fso.CopyFolder(TMPDIR+"xyzzy\\*",AI_INSTDIR);
+}
+//write install directory to registry
+function WriteRegistry() {
+  //consider to uninstall.It's better to use registry.
+  var WshShell = WScript.CreateObject("WScript.Shell");
+  WshShell.RegWrite ("HKLM\\SOFTWARE\\Xyzzy\\RootDir",AI_INSTDIR, "REG_SZ");
+  WshShell.RegWrite ("HKLM\\SOFTWARE\\Xyzzy\\InstallerVer",SoftwareVersion(),"REG_SZ");
+}
+
+function MakeShortcuts() {
+  var y_n;
+  var WshShell = WScript.CreateObject("WScript.Shell");
+  var mkshortcut = function (path,tpath,desc,wdir) {
+    var oShellLink = WshShell.CreateShortcut(path);
+    oShellLink.TargetPath = tpath;
+    oShellLink.WindowStyle = 1;
+    //oShellLink.Hotkey = "CTRL+SHIFT+F";
+    //oShellLink.IconLocation = "notepad.exe, 0";
+    oShellLink.Description = desc;
+    oShellLink.WorkingDirectory = wdir;
+    oShellLink.Save();
+  };
+  if(AUTOINSTALL) {
+    y_n=AI_MAKE_SHORTCUT;
+  }else{
+    ret=WshShell.Popup("ショートカット作る?"
+                       ,0,"shall i make shortcuts ?",4);
+    y_n = (ret == 6);
+  }
+  if(y_n){
+    var strDesktop =(WshShell.SpecialFolders("AllUsersDesktop") ||
+                     WshShell.SpecialFolders("Desktop"));
+    mkshortcut(strDesktop + "\\xyzzy.lnk",
+               AI_INSTDIR+"xyzzycli.exe",
+               "Common Lisp interpreter",
+               strDesktop);
+    var qlc=GetQuickLaunchPath();
+    if(qlc) {
+      mkshortcut(qlc + "\\xyzzy.lnk",
+                 AI_INSTDIR+"xyzzycli.exe",
+                 "Common Lisp interpreter",
+                 qlc);
+    }
+    var smenu = (WshShell.SpecialFolders("AllUsersPrograms") ||
+                 WshShell.SpecialFolders("Programs"));
+    CreateFolderEx(smenu+"\\Xyzzy");
+    mkshortcut(smenu+"\\Xyzzy\\xyzzy.lnk",
+               AI_INSTDIR+"xyzzycli.exe",
+               "Common Lisp interpreter",
+               smenu+"\\Xyzzy");
+    var sendto = WshShell.SpecialFolders("SendTo");
+    mkshortcut(sendto+"\\xyzzy.lnk",
+               AI_INSTDIR+"xyzzycli.exe",
+               "Common Lisp interpreter",
+               sendto);
+  }
+}
+
+function CopyCliToSystem() {
+  var WshShell = WScript.CreateObject("WScript.Shell");
+  var y_n;
+  if(AUTOINSTALL) {
+    y_n=AI_COPY_CLI;
+  }else{
+    ret=WshShell.Popup("xyzzycliをsystemにコピーしますか？"
+                       ,0,"shall i copy cli to system?",4);
+    y_n = (ret == 6);
+  }
+  if(y_n) {
+    var fso = new ActiveXObject("Scripting.FileSystemObject");
+    var WshSysEnv = WScript.CreateObject("WScript.Shell").Environment("Process");
+    var dest =WshSysEnv("windir");
+    fso.CopyFile (AI_INSTDIR+"xyzzycli.exe",dest+"\\xyzzy.exe");
+    var f = fso.OpenTextFile(dest+"\\xyzzy.ini", 2, true);
+    f.Write("[xyzzy]\r\n");
+    f.Write("path="+AI_INSTDIR+"xyzzy.exe\r\n");
+    f.Close();
+  }
+}
+
+//main from here
+CreateFolderEx(TMPDIR);
+RunCaldix();
+BuildDirectory();
+SetNCopyInstallDirectory();
+WriteRegistry();
+MakeShortcuts();
+CopyCliToSystem();
+</script>
+</job>

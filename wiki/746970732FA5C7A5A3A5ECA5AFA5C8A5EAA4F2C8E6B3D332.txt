@@ -1,0 +1,429 @@
+#freeze
+[[tips]]
+
+[[tips/ディレクトリを比較]]のページを作成した人ですが、compare-utility070125版を元にさせていただいて、diff.exeを使って比較するようにしてみました。
+
+いくらか速度は上がったような気がしますが、自分で使う機能に限定しているのでcompare-utilityより機能ダウンしているかもしれません。
+
+ ;;; -*- Mode: Lisp -*-
+ 
+ ;; ディレクトリを比較
+ ;;
+ ;; 比較ディレクトリから取得するファイルの設定
+ ;;  ・*diff-directory-recursive*
+ ;;     サブディレクトリも検索対象にするか  t:対象にする  nil:対象にしない
+ ;;  ・*diff-directory-exclude-files*
+ ;;     除外するファイルの指定  区切り文字は「;」  例: *.c;*.h
+ ;;
+ ;; それぞれ引数に(表示属性番号,比較ディレクトリのパスを除いたファイルパス)が
+ ;; 入ってきます
+ ;;  ・*diff-directory-exec-update*
+ ;;      更新「!」の列が選択された場合に動作
+ ;;  ・*diff-directory-exec-same*
+ ;;      同じ「 」の列が選択された場合に動作
+ ;;  ・*diff-directory-exec-add*
+ ;;      追加「+」の列が選択された場合に動作
+ ;;  ・*diff-directory-exec-delete*
+ ;;      削除「-」の列が選択された場合に動作
+ 
+ (provide "diff-directory")
+ 
+ (require "diff")
+ 
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;;;   変数定義
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;; diff-directory の hooks
+ (defvar *diff-directory-mode-hook* nil)
+ (defvar *diff-directory-quit-hook* nil)
+ ;; diff-directory関連のキーマップ
+ (defvar *diff-directory-mode-map* nil)
+ ;; diff-directoryするディレクトリ
+ (defvar *diff-directory-new-dir* nil)
+ (defvar *diff-directory-old-dir* nil)
+ ;; diff-directoryのバッファ名
+ (defvar *diff-directory-buffer-name* "*diff-directory*")
+ (defvar *diff-directory-temp-buffer-name* " *diff-directory-temp*")
+ ;; diff-directoryの表示属性
+ (defvar *diff-directory-sel-attribute* '(("!" "更新") (" " "同じ") ("+" "追加") ("-" "削除") (nil "全部")))
+ ;; diff-directoryのパラメータ
+ (defvar *diff-directory-recursive* t)
+ (defvar *diff-directory-exclude-files* nil)
+ ;; diff-directoryの表示属性変更
+ (defvar *diff-directory-toggle-disp* (position nil *diff-directory-sel-attribute* :test #'string= :key #'car))
+ ;; ファイルリストを保管する変数
+ (defvar *diff-directory-same-file-list* nil)
+ (defvar *diff-directory-diff-file-list* nil)
+ (defvar *diff-directory-add-file-list* nil)
+ (defvar *diff-directory-del-file-list* nil)
+ (defvar *diff-directory-all-file-list* nil)
+ 
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;;;   変数設定
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;; diff.exe の path
+ (defvar *diff-directory-command-name* (map-slash-to-backslash (merge-pathnames "bin/diff.exe" (si:system-root))))
+ ;; diff の option
+ (defvar *diff-directory-command-option* "-a -q -s --binary")
+ ;; diff-directory-execでsel毎に起動する処理をここに
+ (defvar *diff-directory-exec-update*  'diff-directory-diff-file)
+ (defvar *diff-directory-exec-same*    'diff-directory-find-file)
+ (defvar *diff-directory-exec-add*     'diff-directory-add-file)
+ (defvar *diff-directory-exec-delete*  'diff-directory-del-file)
+ ;; 更新ファイルなどの色の設定
+ (defvar *diff-directory-update-keyword-color* '(:color 0 10))
+ (defvar *diff-directory-add-keyword-color* '(:color 0 11))
+ (defvar *diff-directory-delete-keyword-color* '(:color 0 13))
+ 
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;;;   公開関数定義
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;; ディレクトリを比較
+ (defun diff-directory (ndir odir &optional change)
+   (interactive "Dnew dir: \nDold dir: " :default0 "" :default1 "")
+   (long-operation
+     (unless change
+ ;;; フルパスを追加して保持
+       (setf *diff-directory-new-dir* (namestring ndir)
+           *diff-directory-old-dir* (namestring odir)
+           *diff-directory-diff-file-list* nil
+           *diff-directory-same-file-list* nil
+           *diff-directory-add-file-list* nil
+           *diff-directory-del-file-list* nil
+           *diff-directory-all-file-list* nil)
+ ; ファイルリスト作成
+       (diff-directory-make-list))
+ ;;; 書き出し
+     (with-output-to-temp-buffer (*diff-directory-buffer-name* nil)
+       ; 表紙
+       (format t "new dir: ~A\t~A~%old dir: ~A\t~A~%~%"
+             *diff-directory-new-dir*
+             (length (append *diff-directory-same-file-list*
+                             *diff-directory-diff-file-list*
+                             *diff-directory-add-file-list*))
+             *diff-directory-old-dir*
+             (length (append *diff-directory-same-file-list*
+                             *diff-directory-diff-file-list*
+                             *diff-directory-del-file-list*)))
+       (format t "更新: ~A, 同じ: ~A, 追加: ~A, 削除: ~A, 全部: ~A~%~%"
+             (length *diff-directory-diff-file-list*)
+             (length *diff-directory-same-file-list*)
+             (length *diff-directory-add-file-list*)
+             (length *diff-directory-del-file-list*)
+             (length *diff-directory-all-file-list*))
+ ; 表示属性種別
+       (format t "表示中の属性: \"~A\"~%~%"
+             (second (nth *diff-directory-toggle-disp* *diff-directory-sel-attribute*)))
+ ; ファイル表示
+       ; 表示するリストを選択して名前順で並べ替え
+       (dolist (one-file (sort (copy-alist (case *diff-directory-toggle-disp*
+                                           (0 *diff-directory-diff-file-list*)
+                                           (1 *diff-directory-same-file-list*)
+                                           (2 *diff-directory-add-file-list*)
+                                           (3 *diff-directory-del-file-list*)
+                                           (4 *diff-directory-all-file-list*)))  #'string-lessp :key #'car))
+       (let* ((file (car one-file))
+              (sel (cdr one-file))
+              (format-ctrl " ~A ~A~%")
+              (s (car (nth sel *diff-directory-sel-attribute*))))
+         (format t format-ctrl s file))))
+     ;; バッファ設定
+     (diff-directory-mode)))
+ 
+ ;; 次の不一致行に移動
+ (defun diff-directory-next (&optional p)
+   (interactive)
+   (unless (scan-buffer (compile-regexp "^ \\([!\\+\\-]\\)")
+                      :no-dup t
+                      :reverse p)
+     (plain-error "ないっす"))
+   (recenter))
+ 
+ ;; 前の不一致行に移動
+ (defun diff-directory-previous ()
+   (interactive)
+   (diff-directory-next t))
+ 
+ ;; diff-directory に付加機能を搭載
+ (defun diff-directory-exec ()
+   (interactive)
+   (multiple-value-bind (sel file)
+       (diff-directory-get-current-item)
+     (case sel
+       (0 (funcall *diff-directory-exec-update* file))
+       (1 (funcall *diff-directory-exec-same*   file))
+       (2 (funcall *diff-directory-exec-add*    file))
+       (3 (funcall *diff-directory-exec-delete* file))
+       (t (message "処理がないよん")))))
+ 
+ ;; 現在行の sel と file を取得
+ (defun diff-directory-get-current-item ()
+   (let ((current-string
+        (buffer-substring (save-excursion (goto-bol) (point))
+                          (save-excursion (goto-eol) (point))))
+       sel file)
+     (if (string-match "^ \\([! \\+\\-]\\) \\(.+\\)$" current-string)
+       (setf sel (position (match-string 1) *diff-directory-sel-attribute* :test #'string= :key #'car)
+             file (match-string 2))
+       (plain-error "場所が変だよん"))
+     (values sel file)))
+ 
+ ;; diff-directoryの表示属性変更
+ (defun diff-directory-toggle-disp ()
+   (interactive)
+   (incf *diff-directory-toggle-disp*)
+   (setf *diff-directory-toggle-disp*
+       (mod *diff-directory-toggle-disp* (list-length *diff-directory-sel-attribute*)))
+   (diff-directory *diff-directory-new-dir* *diff-directory-old-dir* t))
+ 
+ ;; diff-directoryの表示属性指定
+ (defun diff-directory-disp-diff ()
+   (interactive)
+   (setf *diff-directory-toggle-disp* 0)
+   (diff-directory *diff-directory-new-dir* *diff-directory-old-dir* t))
+ 
+ (defun diff-directory-disp-same ()
+   (interactive)
+   (setf *diff-directory-toggle-disp* 1)
+   (diff-directory *diff-directory-new-dir* *diff-directory-old-dir* t))
+ 
+ (defun diff-directory-disp-add ()
+   (interactive)
+   (setf *diff-directory-toggle-disp* 2)
+   (diff-directory *diff-directory-new-dir* *diff-directory-old-dir* t))
+ 
+ (defun diff-directory-disp-del ()
+   (interactive)
+   (setf *diff-directory-toggle-disp* 3)
+   (diff-directory *diff-directory-new-dir* *diff-directory-old-dir* t))
+ 
+ (defun diff-directory-disp-all ()
+   (interactive)
+   (setf *diff-directory-toggle-disp* 4)
+   (diff-directory *diff-directory-new-dir* *diff-directory-old-dir* t))
+ 
+ ;; diff-directoryのファイルを開く
+ (defun diff-directory-find-new-file (&optional o)
+   (interactive)
+   (multiple-value-bind (s f)
+       (diff-directory-get-current-item)
+     (let ((file (merge-pathnames f (if o
+                                      *diff-directory-old-dir*
+                                    *diff-directory-new-dir*))))
+       (if (file-exist-p file)
+         (progn
+           (when (= (count-windows) 1)
+             (split-window (truncate (/ (window-height) 2))))
+           (find-file-other-window file)
+           (other-window -1))
+       (plain-error "じゃあやめとくね")))))
+ 
+ (defun diff-directory-find-old-file ()
+   (interactive)
+   (diff-directory-find-new-file t))
+ 
+ ;; diff-directoryの除外ファイル指定
+ (defun diff-directory-exclude-file ()
+   (interactive)
+   (setf *diff-directory-exclude-files*
+       (read-string "除外ファイル(;区切り): " :default *diff-directory-exclude-files*))
+   (diff-directory-refresh))
+ 
+ ;; diff-directoryの再描画
+ (defun diff-directory-refresh ()
+   (interactive)
+   (save-excursion
+     (diff-directory *diff-directory-new-dir* *diff-directory-old-dir*))
+   (message "描画かんりょー"))
+ 
+ ;; diff-directoryの終了
+ (defun diff-directory-quit ()
+   (interactive)
+   (delete-buffer (selected-buffer))
+   (run-hooks '*diff-directory-quit-hook*))
+ 
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;;;   内部関数定義
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ (defun diff-directory-get-file-list (path)
+   (delete-if #'(lambda (f)
+                (and *diff-directory-exclude-files*
+                     (string-matchp
+                      (format nil "~{~A~^\\|~}"
+                              (mapcar #'(lambda (x)
+                                          (concat (substitute-string x "^\\\\\\*" "") "$"))
+                                      (split-string (regexp-quote *diff-directory-exclude-files*) ";"))) f)))
+            (directory path
+                       :recursive t
+                       :file-only t)))
+ 
+ (defun diff-directory-scan-files (regexp num)
+   (let (nodup file)
+     (goto-char (point-min))
+     (while (scan-buffer (compile-regexp regexp)
+                       :no-dup nodup)
+       (setf nodup t
+           file
+           (case num
+             ((0 1) (match-string 1))
+             ((2 3) (substring (substitute-string (match-string 1) ": " "/") 1))))
+       (case num
+       (0 (push (cons file num) *diff-directory-diff-file-list*))
+       (1 (push (cons file num) *diff-directory-same-file-list*))
+       (2 (let ((path (merge-pathnames file *diff-directory-new-dir*)))
+            (if (file-directory-p path)
+                (when *diff-directory-recursive*
+                  (dolist (f (diff-directory-get-file-list path))
+                    (push (cons (concat (append-trail-slash file) f) num) *diff-directory-add-file-list*)))
+              (push (cons file num) *diff-directory-add-file-list*))))
+       (3 (let ((path (merge-pathnames file *diff-directory-old-dir*)))
+            (if (file-directory-p path)
+                (when *diff-directory-recursive*
+                  (dolist (f (diff-directory-get-file-list path))
+                    (push (cons (concat (append-trail-slash file) f) num) *diff-directory-del-file-list*)))
+              (push (cons file num) *diff-directory-del-file-list*))))))))
+ 
+ (defun diff-directory-make-list ()
+   (let ((tmpfile (make-temp-file-name))
+       (buf (create-new-buffer *diff-directory-temp-buffer-name*))
+       (new-dir (map-slash-to-backslash (remove-trail-slash *diff-directory-new-dir*)))
+       (old-dir (map-slash-to-backslash (remove-trail-slash *diff-directory-old-dir*))))
+     (call-process (format nil "~A ~A~A~A ~A ~A"
+                         *diff-directory-command-name*
+                         *diff-directory-command-option*
+                         (if *diff-directory-recursive* " -r" "")
+                         (if *diff-directory-exclude-files*
+                             (format nil "~{ -x ~A~}" (split-string *diff-directory-exclude-files* ";"))
+                           "")
+                         new-dir
+                         old-dir)
+                 :output tmpfile
+                 :show :hide
+                 :wait t)
+     (save-excursion
+       (set-buffer buf)
+       (erase-buffer buf)
+       (insert-file-contents tmpfile t)
+       (diff-directory-scan-files (format nil "^Files ~A/\\(.+\\) and ~A.+ differ$"
+                                        (regexp-quote new-dir)
+                                        (regexp-quote old-dir)) 0)
+       (diff-directory-scan-files (format nil "^Files ~A/\\(.+\\) and ~A.+ are identical$"
+                                        (regexp-quote new-dir)
+                                        (regexp-quote old-dir)) 1)
+       (diff-directory-scan-files (format nil "^Only in ~A\\(.+\\)$" (regexp-quote new-dir)) 2)
+       (diff-directory-scan-files (format nil "^Only in ~A\\(.+\\)$" (regexp-quote old-dir)) 3)
+       (setf *diff-directory-all-file-list* (append *diff-directory-same-file-list*
+                                                  *diff-directory-diff-file-list*
+                                                  *diff-directory-add-file-list*
+                                                  *diff-directory-del-file-list*))
+       (delete-file tmpfile)
+       (delete-buffer buf))))
+ 
+ (defun diff-directory-find-file ( f )
+   "同じファイル「 」を開く"
+   ; 古い方にマージするはずだから、古い方を開く
+   ; C-u で新しい方を開く
+   (let ((file (merge-pathnames f (if (eq *prefix-args* 'universal-argument)
+                                    *diff-directory-new-dir*
+                                  *diff-directory-old-dir*))))
+     (if (and (y-or-n-p "これ開くの？:")
+            (file-exist-p file))
+       (find-file file)
+       (plain-error "じゃあやめとくね"))))
+ 
+ (defun diff-directory-diff-file ( f )
+   "更新されているファイル「!」のdiffを取る"
+   (let ((n (merge-pathnames f *diff-directory-new-dir*))
+       (o (merge-pathnames f *diff-directory-old-dir*))
+       (detail (modulep "diff-detail")))
+     (unless (and (file-exist-p n) (file-exist-p o))
+       (plain-error "どっちかのファイルがないよん"))
+     (define-key *diff-mode-map* #\q 'diff-directory-diff-quit)
+     (when detail
+       (define-key *diff-detail-mode-map* #\q 'diff-directory-diff-quit))
+     (if (and (eq *prefix-args* 'universal-argument) detail)
+       (diff-detail-char n o)
+       (diff n o))))
+ 
+ (defun diff-directory-add-file ( f )
+   "追加されているファイル「+」を反映する"
+   ; 古い方に追加するはず
+   (let ((n (merge-pathnames f *diff-directory-new-dir*))
+       (o (merge-pathnames f *diff-directory-old-dir*)))
+     (unless (file-exist-p n)
+       (plain-error "追加したいファイルがないよん"))
+     (when (file-exist-p o)
+       (plain-error "もうファイルがあるよん"))
+     (unless (y-or-n-p "これ追加するの？:")
+       (plain-error "じゃあやめとくね"))
+     ; ディレクトリが存在しない場合は作る
+     (or (valid-path-p o)
+       (create-directory (directory-namestring o))
+       (plain-error "アクセスが拒否されちゃった＞＜"))
+     (unless (copy-file n o :if-access-denied :skip)
+       (plain-error "アクセスが拒否されちゃった＞＜"))
+     (diff-directory-refresh)))
+ 
+ (defun diff-directory-del-file ( f )
+   "削除されているファイル「-」を反映する"
+   ; 古い方を削除するはず
+   (let ((o (merge-pathnames f *diff-directory-old-dir*)))
+     (unless (file-exist-p o)
+       (plain-error "もうファイルがないよん"))
+     (unless (y-or-n-p "これ削除するの？:")
+       (plain-error "じゃあやめとくね"))
+     (unless (delete-file o :if-access-denied :skip)
+       (plain-error "アクセスが拒否されちゃった＞＜"))
+     (diff-directory-refresh)))
+ 
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;;;   diff-directory-mode
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ (defun diff-directory-mode ()
+   (set-buffer *diff-directory-buffer-name*)
+   (setf buffer-read-only t)
+   (use-keymap *diff-directory-mode-map*)
+   (unless (local-variable-p 'regexp-keyword-list)
+     (make-local-variable 'regexp-keyword-list))
+   (setf regexp-keyword-list
+       (compile-regexp-keyword-list
+        `(("^ ! .+$" nil ,*diff-directory-update-keyword-color* t)
+          ("^ \\+ .+$" nil ,*diff-directory-add-keyword-color* t)
+          ("^ \\- .+$" nil ,*diff-directory-delete-keyword-color* t))))
+   (run-hooks '*diff-directory-mode-hook*)
+   )
+ 
+ ;; *diff-directory-mode-map*設定
+ (unless *diff-directory-mode-map*
+   (setf *diff-directory-mode-map* (make-sparse-keymap))
+   (define-key *diff-directory-mode-map* #\RET   'diff-directory-exec)
+   (define-key *diff-directory-mode-map* #\n     'diff-directory-next)
+   (define-key *diff-directory-mode-map* #\p     'diff-directory-previous)
+   (define-key *diff-directory-mode-map* #\r     'diff-directory-refresh)
+   (define-key *diff-directory-mode-map* #\t     'diff-directory-toggle-disp)
+   (define-key *diff-directory-mode-map* #\1     'diff-directory-disp-diff)
+   (define-key *diff-directory-mode-map* #\2     'diff-directory-disp-same)
+   (define-key *diff-directory-mode-map* #\3     'diff-directory-disp-add)
+   (define-key *diff-directory-mode-map* #\4     'diff-directory-disp-del)
+   (define-key *diff-directory-mode-map* #\5     'diff-directory-disp-all)
+   (define-key *diff-directory-mode-map* #\C-n   'diff-directory-find-new-file)
+   (define-key *diff-directory-mode-map* #\C-o   'diff-directory-find-old-file)
+   (define-key *diff-directory-mode-map* #\e     'diff-directory-exclude-file)
+   (define-key *diff-directory-mode-map* #\q     'diff-directory-quit)
+   )
+ 
+ (defun diff-directory-diff-quit ()
+   (interactive)
+   (let ((detail (modulep "diff-detail")))
+     (diff-quit)
+     (when (find-buffer "*diff-directory*")
+       (set-buffer "*diff-directory*"))
+     (define-key *diff-mode-map* #\q 'diff-quit)
+     (when detail
+       (define-key *diff-detail-mode-map* #\q 'diff-quit))))
+ 
+ ;;;
+
+----
+- 若干高速化（多分）。もっと良い高速化の方法があったら教えて下さい。 --  &new{2008-03-29 (土) 12:47:58};
+- 片方にしかディレクトリが無い場合に検索漏れがでるバグを修正。 --  &new{2008-04-10 (木) 21:58:00};

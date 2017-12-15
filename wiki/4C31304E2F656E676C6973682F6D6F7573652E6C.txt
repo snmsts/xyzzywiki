@@ -1,0 +1,6 @@
+[[L10N/english]]
+
+ mouse.l:229:				  " を開く")
+- (Open as URL) --  &new{2005-03-04 21:35:57 (金)};
+
+#comment

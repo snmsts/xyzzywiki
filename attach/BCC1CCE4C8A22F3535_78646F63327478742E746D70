@@ -1,0 +1,319 @@
+; -*- Mode: Lisp; Package: editor -*-
+
+#|
+※このLispは、miyamuko さんの xdoc2txt.l を改悪（一部機能ダウン、
+余計な機能〔ツールメニューに「xdoc2txt を有効(⇔無効)にする」を追加、
+重複ファイル名の場合は頭にディレクトリ名をつける〕を追加）したものです。
+
+動作には rename-buffer-with-directory
+（http://www.afis.to/~start/xyzzy/library/buffer.html#buffer_rename）
+をuserパッケージに記述する必要があります。
+また、(require "xdoc2txt") は (require "grepd") (require "ggrep") の後に
+記述する必要があると思います。
+encap.l はよくわからなかったので使っていません。
+アンインストールは
+(unregister-history-variable 'ed::*use-xdoc2txt*)
+を評価してから行ってください。
+
+以下、miyamuko さんの記述を引用（一部削除しています）
+---------------------------------------------------
+
+= xdoc2txt - pdf, word, excel などの各種バイナリ文書からテキストを抽出
+
+* Author:  miyamuko ((<URL:mailto:miyamuko (at) mtb.biglobe.ne.jp>))
+* URL: ((<URL:http://miyamuko.s56.xrea.com/xyzzy/xdoc2txt.html>))
+* Version: $Id: xdoc2txt.l,v 1.5 2004/09/18 15:00:07 miyamuko Exp $
+
+
+== 説明
+
+((<"xdoc2txt"|URL:http://www31.ocn.ne.jp/~h_ishida/xdoc2txt.html>)) を利用して
+pdf, word, excel などの各種バイナリ文書からテキストを抽出して表示します。
+
+* find-file-hooks に引っ掛けて実行しているので pdf などを xyzzy に D&D するだけで
+内容を閲覧できます。
+
+* grep-dialog で pdf ファイルなどを開かずに grep できます。
+* ((<encap|URL:http://www.geocities.co.jp/SiliconValley-PaloAlto/5042/xyzzy/#encap>))
+が必要です。
+* ((<ggrep|URL:http://ohkubo.s53.xrea.com/xyzzy/#ggrep>))
+にも対応しています。
+
+== インストール
+
+((<NetInstaller|URL:http://www.mirai.ne.jp/~gyo/xyzzy/ni.html>)) でインストールした場合は
+3 以降で OK です。
+
+(1) アーカイブをダウンロードします。
+
+((<URL:http://miyamuko.s56.xrea.com/xyzzy/archives/xdoc2txt.zip>))
+
+(2) アーカイブを展開して、$XYZZY/site-lisp 配下にファイルをコピーします。
+
+(3) ~/.xyzzy または $XYZZY/site-lisp/siteinit.l に以下のコードを追加します。
+
+;; xdoc2txt
+(require "xdoc2txt")
+
+(4) 設定を反映させるには xyzzy を再起動してください。
+
+※siteinit.l に記述した場合には再ダンプが必要です。
+
+(5) xdoc2txt をインストールした場所にパスを通すか、
+((<*xdoc2txt-command*>)) で指定します。
+
+(6) pdf ファイルなどを xyzzy で開きます。
+
+
+== リファレンス
+
+=== 変数
+
+--- *xdoc2txt-command*
+xdoc2txt を実行するコマンドを指定します。デフォルトは xdoc2txt です。
+
+xdoc2txt.exe にパスを通していない場合やオプションを指定したい場合は
+ここで設定します。
+
+例:
+(setf *xdoc2txt-command* "C:/Tools/xdox2txt/xdoc2txt -c")
+
+--- *xdoc2txt-suffix*
+xdoc2txt で開くファイルの拡張子 (regexp) のリストです。
+
+デフォルト値は以下の通りです。(HTML 以外の xdoc2txt がサポートしているファイル)
+
+'("rtf" "doc" "xls" "ppt"
+  "j[at]w" "j[bu]w" "j[fv]w" "jt[dt]"
+  "oa[s23]"
+  "bun"
+  "wj[23]" "wk[34]" "123"
+  "wri"
+  "pdf")
+
+
+== これからやるかもしれないこと
+
+* なし?
+
+
+== 関連するかもしれないページ
+
+: xdoc2txt － PDF,WORD,EXCEL,一太郎などの各種バイナリ文書からテキストを抽出
+((<URL:http://www31.ocn.ne.jp/~h_ishida/xdoc2txt.html>))
+
+
+== ライセンス
+
+xdoc2txt は修正 BSD ライセンスに基づいて利用可能です。
+
+Copyright (C) 2003-2004 MIYAMUKO Katsuyuki. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+1 Redistributions of source code must retain the above copyright notice,
+this list of conditions and the following disclaimer as the first lines
+of this file unmodified.
+
+2 Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+		  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+		  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+		  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+		  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+		  SUCH DAMAGE.
+		  |#
+
+(provide "xdoc2txt")
+(in-package "editor")
+
+(export '(*xdoc2txt-command*
+	  *xdoc2txt-suffix*))
+
+(defvar *xdoc2txt-command* "xdoc2txt")
+(defvar *xdoc2txt-suffix*
+  '("rtf" "doc" "xls" "ppt"
+    "j[at]w" "j[bu]w" "j[fv]w" "jt[dt]"
+    "oa[s23]"
+    "bun"
+    "wj[23]" "wk[34]" "123"
+    "wri"
+    "pdf"
+    ;    "mht" "html"
+    ))
+
+(defun xdoc2txt-command ()
+  (map-slash-to-backslash *xdoc2txt-command*))
+
+(defun xdoc2txt-file-regexp ()
+  (format nil "\\.\\(~A~{\\|~A~}\\)$"
+	  (car *xdoc2txt-suffix*) (cdr *xdoc2txt-suffix*)))
+
+;; コマンドとファイル名両方を quote するとだめ。
+;; コマンドを get-short-path-name すると .exe を省略できない。
+;; というわけでコマンドを quote、ファイル名を get-short-path-name することで
+;; 空白を含むパスに対応。
+(defun xdoc2txt-commandline (filename)
+  (format nil "\"~A\" ~A" (xdoc2txt-command) (get-short-path-name filename)))
+
+(defun xdoc2txt (filename output)
+  (call-process (xdoc2txt-commandline filename)
+		:output output
+		:exec-directory (directory-namestring (xdoc2txt-command))
+		:show :minimize
+		:wait t))
+
+(defun xdoc2txt-find-file (filename)
+  (interactive "lFind file: \n" :title0 "Find file")
+  (setf filename (namestring filename))
+  (when (get-file-buffer filename)
+    (return-from xdoc2txt-find-file (get-file-buffer filename)))
+  (let ((tmpfile (make-temp-file-name))
+	(bufname (create-new-buffer (file-namestring filename))))
+    (xdoc2txt filename tmpfile)
+    (set-buffer bufname)
+    (erase-buffer bufname)
+    (insert-file-contents tmpfile)
+    (set-default-directory (directory-namestring filename))
+    (save-excursion
+      (goto-char (point-min))
+      (replace-buffer "\x0d\n" "\n")) ; ごみ掃除。
+    (set-buffer-file-name filename)
+    ;(toggle-read-only t) ; read-only
+    (make-local-variable 'need-not-save)
+    (setq need-not-save t)
+    (update-visited-file-modtime)
+    (set-buffer-modified-p nil)
+    (user::rename-buffer-with-directory bufname)
+    (when tmpfile (delete-file tmpfile))
+    (selected-buffer)))
+
+(defun xdoc2txt-find-file-hook (filename)
+  (when (string-matchp (xdoc2txt-file-regexp) filename)
+    (xdoc2txt-find-file filename)))
+
+(add-hook '*before-find-file-hook* 'xdoc2txt-find-file-hook)
+
+
+;;
+;; grep-dialog
+;;
+
+;; xdoc2txt 対応 scan-files-1。
+;; 既存の関数を書き換えている。
+(defun scan-files-1 (file pattern buffer scanner)
+  (let ((file-buffer (get-file-buffer file))
+	(xdoc2 (string-matchp (xdoc2txt-file-regexp) file)) tmpfile)
+    (if file-buffer
+	(set-buffer file-buffer)
+      (progn
+	(when xdoc2
+	  (setq tmpfile (make-temp-file-name))
+	  (xdoc2txt file tmpfile))
+	(set-buffer buffer)
+	(erase-buffer buffer)
+	(ignore-errors (insert-file-contents (if xdoc2 tmpfile file)))
+	(when tmpfile (delete-file tmpfile))))
+    (save-excursion
+      (goto-char (point-min))
+      (when xdoc2
+	(save-excursion (replace-buffer "\x0d\n" "\n"))) ; ごみ掃除。
+      (message "scanning (~A)" file)
+      (cond (*grep-name-only*
+	     (when (funcall scanner)
+	       (princ file)
+	       (terpri)
+	       t))
+	    (t
+	     (grep-scan-file file scanner))))))
+
+(defun ggrep-scan-files-1 (file patterns buffer scanner common-path &optional linenum-list)
+  (let ((file-buffer (get-file-buffer file))
+	(xdoc2 (string-matchp (xdoc2txt-file-regexp) file)) tmpfile)
+    (if (and file-buffer (not *ggrep-encoding-check-file*))
+	(set-buffer file-buffer)
+      (progn
+	(when xdoc2
+	  (setq tmpfile (make-temp-file-name))
+	  (xdoc2txt file tmpfile))
+	(let* ((encoding
+		(if (or (not *ggrep-encoding-name*)
+			(not (stringp *ggrep-encoding-name*)))
+		    *expected-fileio-encoding*
+		  (car (member *ggrep-encoding-name* *char-encoding-list*
+			       :key 'char-encoding-name
+			       :test 'string=))))
+	       (*expected-fileio-encoding*
+		(or encoding
+		    (find-file-auto-encoding (if xdoc2 tmpfile file))
+		    *expected-fileio-encoding*)))
+	  (declare (special *expected-fileio-encoding*))
+	  (set-buffer buffer)
+	  (erase-buffer buffer)
+	  (ignore-errors (insert-file-contents (if xdoc2 tmpfile file)))
+	  (when tmpfile (delete-file tmpfile)))))
+    (save-excursion
+      (goto-char (point-min))
+      (when xdoc2
+	(save-excursion (replace-buffer "\x0d\n" "\n"))) ; ごみ掃除。
+      (message "scanning (~A)" (subseq file (length common-path)))
+      (cond (*ggrep-name-only* ;; linenum-list 無視
+	     (when (funcall scanner)
+	       (princ (subseq file (length common-path)))
+	       (terpri)
+	       t))
+	    (t
+	     (ggrep-scan-file file scanner common-path linenum-list))))))
+
+;; xdoc2txt の有効・無効を切り替える
+(define-history-variable *use-xdoc2txt* nil)
+
+(defun use-xdoc2txt-hook ()
+  (setq *xdoc2txt-suffix*
+	(if *use-xdoc2txt*
+	    '("rtf" "doc" "xls" "ppt"
+	      "j[at]w" "j[bu]w" "j[fv]w" "jt[dt]"
+	      "oa[s23]"
+	      "bun"
+	      "wj[23]" "wk[34]" "123"
+	      "wri"
+	      "pdf"
+	      "mht" "html" "htm"
+	      )
+	  nil)))
+
+(defun toggle-use-xdoc2txt ()
+  (interactive)
+  (setq *use-xdoc2txt* (not *use-xdoc2txt*))
+  (use-xdoc2txt-hook))
+
+(defun use-xdoc2txt-menu ()
+  (let ((tools (get-menu *app-menu* 'ed::tools)))
+    (when tools
+      (unless (get-menu-position tools 'use-xdoc2txt)
+	(insert-menu-item tools 17
+			  'use-xdoc2txt "xdoc2txt を有効(⇔無効)にする"
+			  'toggle-use-xdoc2txt
+			  #'(lambda () (if *use-xdoc2txt*  :check))
+			  )
+	(insert-menu-separator tools 18 'use-xdoc2txt-sep)))))
+
+(add-hook '*post-startup-hook* 'use-xdoc2txt-hook)
+
+(if *app-menu*
+    (use-xdoc2txt-menu)
+  (add-hook '*init-app-menus-hook* 'use-xdoc2txt-menu))
+
+;;
+;; $Id: xdoc2txt.l,v 1.5 2004/09/18 15:00:07 miyamuko Exp $
+;;

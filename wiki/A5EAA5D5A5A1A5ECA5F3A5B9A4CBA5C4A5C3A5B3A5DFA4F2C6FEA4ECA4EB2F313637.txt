@@ -1,0 +1,317 @@
+*array関連 [#l76dccbe]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-11-04 22:54:21 (金)
+-バージョン: 
+
+**メッセージ [#ndfd145a]
+lispで配列なんてどの程度需要があるんだろう、
+なんてことは気にせず書いてみました。
+ <chapter>
+ <title>array-row-major-index</title>
+ <type>Function</type>
+ <arguments>array-row-major-index ARRAY &amp;rest SUBSCRIPTS</arguments>
+ <package>lisp</package>
+ <description>
+ ARRAY の SUBSCRIPTS で表される要素が、ARRAY を一次元の配列とみなしたときに
+ 何番目の要素にあたるかのインデックスを返します。
+ 
+ SUBSCRIPTS の数は ARRAY の次元と等しい必要があり、
+ また各引数は ARRAY の各次元のサイズ未満である必要があります。
+ 
+ 使用例:
+   (setf x (make-array '(2 3)))
+   =&gt; #2A((nil nil nil) (nil nil nil))
+   (array-row-major-index x 0 2)
+   =&gt; 2
+   (array-row-major-index x 1 1)
+   =&gt; 4
+ 
+   上の例はこんな感じです。
+ 
+         0   1   2
+      ┌─┬─┬─┐
+    0 │ 0│ 1│ 2│
+      ├─┼─┼─┤
+    1 │ 3│ 4│ 5│
+      └─┴─┴─┘
+ </description>
+ <seealso>row-major-aref</seealso>
+ <link></link>
+ <section>配列</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>row-major-aref</title>
+ <type>Function</type>
+ <arguments>row-major-aref ARRAY INDEX</arguments>
+ <package>lisp</package>
+ <description>
+ ARRAY を一次元の配列とみなしたときに、INDEX 番目になる要素を返します。
+ 
+ 使用例:
+   (setf x (make-array '(2 3) :initial-contents '((a b c) (d e f))))
+   =&gt; #2A((a b c) (d e f))
+   (row-major-aref x 0)
+   =&gt; a
+   (row-major-aref x 2)
+   =&gt; c
+   (row-major-aref x 3)
+   =&gt; d
+ </description>
+ <seealso>aref</seealso>
+ <seealso>svref</seealso>
+ <seealso>array-row-major-index</seealso>
+ <link></link>
+ <section>配列</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>adjustable-array-p</title>
+ <type>Function</type>
+ <arguments>adjustable-array-p ARRAY</arguments>
+ <package>lisp</package>
+ <description>
+ ARRAY がサイズ変更可能なら t、不可能なら nil を返します。
+ </description>
+ <seealso>make-array</seealso>
+ <link></link>
+ <section>配列</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>array-element-type</title>
+ <type>Function</type>
+ <arguments>array-element-type ARRAY</arguments>
+ <package>lisp</package>
+ <description>
+ ARRAY の要素のタイプを判別します。
+ 配列なら t、文字列なら character を返します。
+ </description>
+ <seealso>make-array</seealso>
+ <link></link>
+ <section>配列</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>array-total-size</title>
+ <type>Function</type>
+ <arguments>array-total-size ARRAY</arguments>
+ <package>lisp</package>
+ <description>
+ 配列 ARRAY の全要素数を返します。
+ 
+ 使用例:
+   (setf x (make-array '(2 3)))
+   =&gt; #2A((nil nil nil) (nil nil nil))
+   (array-total-size x)
+   =&gt; 6
+ </description>
+ <seealso>array-dimension</seealso>
+ <seealso>array-dimensions</seealso>
+ <link></link>
+ <section>配列</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>array-dimension</title>
+ <type>Function</type>
+ <arguments>array-dimension ARRAY AXIS-NUMBER</arguments>
+ <package>lisp</package>
+ <description>
+ 配列 ARRAY の AXIS-NUMBER 番目の次元のサイズを返します。
+ AXIS-NUMBER は 0 から始まる整数値です。
+ なお、フィルポインタを持っているベクタに関しても、本来のサイズを返します。
+ 
+ 使用例:
+   (setf x (make-array '(2 3)))
+   =&gt; #2A((nil nil nil) (nil nil nil))
+   (array-dimension x 0)
+   =&gt; 2
+   (array-dimension x 1)
+   =&gt; 3
+ 
+   ;; フィルポインタつきのベクタ
+   (setf x (make-array 5 :initial-contents '(a b c d e) :fill-pointer 3))
+   =&gt; #(a b c)
+   (array-dimension x 0)
+   =&gt; 5
+   (length x) ; length だとフィルポインタまでの長さになる
+   =&gt; 3
+ </description>
+ <seealso>array-dimensions</seealso>
+ <link></link>
+ <section>配列</section>
+ <file>array.l</file>
+ </chapter>
+
+ <chapter>
+ <title>array-dimensions</title>
+ <type>Function</type>
+ <arguments>array-dimensions ARRAY</arguments>
+ <package>lisp</package>
+ <description>
+ 配列 ARRAY の各次元のサイズをリストにして返します。
+ 
+ 使用例:
+   (setf x (make-array '(2 3)))
+   =&gt; #2A((nil nil nil) (nil nil nil))
+   (array-dimensions x)
+   =&gt; (2 3)
+ </description>
+ <seealso>array-dimension</seealso>
+ <seealso>array-total-size</seealso>
+ <link></link>
+ <section>配列</section>
+ <file>array.l</file>
+ </chapter>
+
+ <chapter>
+ <title>array-rank</title>
+ <type>Function</type>
+ <arguments>array-rank ARRAY</arguments>
+ <package>lisp</package>
+ <description>
+ 配列 ARRAY の次元を返します。
+ 
+ 使用例:
+   (setf x (make-array '(2 3)))
+   =&gt; #2A((nil nil nil) (nil nil nil))
+   (array-rank x)
+   =&gt; 2
+ </description>
+ <seealso>make-array</seealso>
+ <link></link>
+ <section>配列</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>array-has-fill-pointer-p</title>
+ <type>Function</type>
+ <arguments>array-has-fill-pointer-p ARRAY</arguments>
+ <package>lisp</package>
+ <description>
+ 配列 ARRAY がフィルポインタを持っているなら t、
+ 持っていないなら nil を返します。
+ </description>
+ <seealso>fill-pointer</seealso>
+ <link></link>
+ <section>配列</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>fill-pointer</title>
+ <type>Function</type>
+ <arguments>fill-pointer VECTOR</arguments>
+ <package>lisp</package>
+ <description>
+ ベクタ（一次元配列） VECTOR のフィルポインタの位置を返します。
+ VECTOR がフィルポインタを持たない場合、エラーとなります。
+   
+ 備考:
+   フィルポインタは、ベクタの見た目上の最後の位置を決めます。
+   make-array では与えられた DIMENSION の配列を作りますが、
+   フィルポインタを与えた場合、画面に表示されたり vector-pop などの関数が
+   作用したりするのはフィルポインタの位置までとなります。
+ 
+   なお、aref を使えばフィルポインタ以降の要素にもアクセスできます。
+   また、フィルポインタに関係ないベクタ本来の長さを知りたい場合は
+   array-dimension （または array-dimensions）を使います。
+ </description>
+ <seealso>make-array</seealso>
+ <seealso>vector-pop</seealso>
+ <seealso>vector-push</seealso>
+ <link></link>
+ <section>配列</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>vector-push</title>
+ <type>Function</type>
+ <arguments>vector-push NEW-ELEMENT VECTOR</arguments>
+ <package>lisp</package>
+ <description>
+ ベクタ（一次元配列） VECTOR のフィルポインタの次の位置に
+ 新しい要素 NEW-ELEMENT を追加します。
+ 
+ VECTOR はフィルポインタを持っているベクタである必要があります。
+ フィルポインタが VECTOR の最後に達している場合には何もせず nil を返します。
+ 
+ 使用例:
+   ;; フィルポインタがベクタの長さに一致
+   (setf x (make-array 5 :initial-contents '(a b c d e) :fill-pointer t))
+   =&gt; #(a b c d e)
+   (fill-pointer x)
+   =&gt; 5
+   (vector-push 'xyz x)
+   =&gt; nil
+   x
+   =&gt;#(a b c d e)
+ 
+   ;; フィルポインタがベクタの長さより小さい
+   (setf x (make-array 5 :initial-contents '(a b c d e) :fill-pointer 3))
+   =&gt; #(a b c)
+   (fill-pointer x)
+   =&gt; 3
+   (vector-push 'xyz x)
+   =&gt; 3
+   x
+   =&gt; #(a b c xyz)
+ </description>
+ <seealso>fill-pointer</seealso>
+ <seealso>vector-pop</seealso>
+ <seealso>vector-push-extend</seealso>
+ <link></link>
+ <section>配列</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>vector-pop</title>
+ <type>Function</type>
+ <arguments>vector-pop VECTOR</arguments>
+ <package>lisp</package>
+ <description>
+ ベクタ（一次元配列） VECTOR のフィルポインタの位置の要素を取り除き、
+ その要素を返します。
+ 
+ VECTOR はフィルポインタを持っているベクタである必要があります。
+ 
+ 使用例:
+   ;; フィルポインタなし
+   (setf x (make-array 5 :initial-contents '(a b c d e)))
+   =&gt; #(a b c d e)
+   (vector-pop x)
+   =&gt; エラー
+ 
+   ;; フィルポインタあり
+   (setf x (make-array 5 :initial-contents '(a b c d e) :fill-pointer t))
+   =&gt; #(a b c d e)
+   (vector-pop x)
+   =&gt; e
+   x
+   =&gt; #(a b c d)
+ </description>
+ <seealso>fill-pointer</seealso>
+ <seealso>vector-push</seealso>
+ <link></link>
+ <section>配列</section>
+ <file>builtin.l</file>
+ </chapter>
+あとツッコミが一つ。vector-push-extendの引数のEXTENSIONは拡張するかどうかではなく、拡張する場合にどの程度サイズを大きくするかということみたいです。
+----
+- 取り込みました。 -- [[NANRI]] &new{2005-12-12 (月) 02:30:11};
+
+#comment

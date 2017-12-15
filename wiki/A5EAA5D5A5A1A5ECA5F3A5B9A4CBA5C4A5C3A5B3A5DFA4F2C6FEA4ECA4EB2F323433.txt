@@ -1,0 +1,192 @@
+* read- 系関数 [#s5851cd7]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-10-16 (月) 11:20:06
+-バージョン: 20061001
+
+** メッセージ [#l24d3d36]
+用語の説明が不十分かもしれません。recursive-p のところとか……
+
+ <chapter>
+ <title>read-as-string</title>
+ <type>Function</type>
+ <arguments>read-as-string STREAM &amp;optional EOF-ERROR-P EOF-VALUE</arguments>
+ <package>editor</package>
+ <description>
+ ストリームからトークンを読み込んで文字列として返します。
+ マクロ文字やエスケープ文字は読み取りません。
+ </description>
+ <seealso>read</seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>read-line-into</title>
+ <type>Function</type>
+ <arguments>read-line-into STRING &amp;optional INPUT-STREAM EOF-ERROR-P EOF-VALUE</arguments>
+ <package>editor</package>
+ <description>
+ 指定された入力ストリームから一行読み込んで、指定された文字列に格納します。
+ 格納先の文字列は破壊されます。
+ 
+   STRING       : 結果を埋め込む先の文字列。
+                  フィルポインタを持ち、かつアジャスタブルでなければならない
+   INPUT-STREAM : 入力元のストリーム
+   EOF-ERROR-P  : non-nil なら、入力ストリームが終端に達しているとエラー
+   EOF-VALUE    : 入力ストリームが最初から終端に達していた場合の戻り値
+ 
+ INPUT-STREAM が終端に達していた場合を除いて戻り値は STRING です。
+ また二つ目の戻り値として、改行文字を読み込んだ場合は nil を、終端に達
+ した場合は t を返します。
+ 
+ 使用例：
+   (let ((x (make-vector 2 :element-type 'character :fill-pointer 0 :adjustable t)))
+     (read-line-into x (make-string-input-stream "abcdef")))
+   =&gt; "abcdef"
+   =&gt; t
+ 
+   (let ((x (make-vector 2 :element-type 'character :fill-pointer 0 :adjustable t)))
+     (read-line-into x (make-string-input-stream "abc\ndef")))
+   =&gt; "abc"
+   =&gt; nil
+ </description>
+ <seealso>read-line</seealso>
+ <seealso>read-into</seealso>
+ <seealso>read</seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>read-into</title>
+ <type>Function</type>
+ <arguments>read-into STRING &amp;optional INPUT-STREAM EOF-ERROR-P EOF-VALUE MAX-LENGTH</arguments>
+ <package>editor</package>
+ <description>
+ 指定された入力ストリームから文字列を読み込み、指定された文字列に格納します。
+ 結果の書き込みは破壊的に行われます。
+ 
+   STRING       : 結果を格納する文字列。フィルポインタを持たなければならない
+   INPUT-STREAM : 入力元のストリーム
+   EOF-ERROR-P  : non-nil なら、入力ストリームが終端に達しているとエラー
+   EOF-VALUE    : 入力ストリームが最初から終端に達していた場合の戻り値
+   MAX-LENGTH   : 読み込む長さの上限。デフォルトは STRING の本来の長さ
+ 
+ INPUT-STREAM が終端に達していた場合を除いて戻り値は STRING です。
+ 
+ 使用例：
+   (let ((x (make-vector 2 :element-type 'character :fill-pointer 0)))
+     (read-into x (make-string-input-stream "abcdef")))
+   =&gt; "ab"
+ 
+   (let ((x (make-vector 10 :element-type 'character :fill-pointer 0)))
+     (read-into x (make-string-input-stream "abcdef")))
+   =&gt; "abcdef"
+ 
+   (let ((x (make-vector 10 :element-type 'character :fill-pointer 0)))
+     (read-into x (make-string-input-stream "abcdef") t nil 3))
+   =&gt; "abc"
+ </description>
+ <seealso>read</seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>read-line</title>
+ <type>Function</type>
+ <arguments>read-line &amp;optional INPUT-STREAM EOF-ERROR-P EOF-VALUE RECURSIVE-P</arguments>
+ <package>lisp</package>
+ <description>
+ 指定された入力ストリームから一行読み込んで文字列として返します。
+ 
+   INPUT-STREAM : 入力元のストリーム
+   EOF-ERROR-P  : nil 以外の場合、入力ストリームが終端に達しているとエラー
+   EOF-VALUE    : 入力ストリームが最初から終端に達していた場合の戻り値
+ 
+ 二つ目の戻り値として、改行文字を読み込んだ場合は nil を、に達した場合
+ は t を返します。
+ 
+ RECURSIVE-P は、与えることはできますが使用されません。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>read-delimited-list</title>
+ <type>Function</type>
+ <arguments>read-delimited-list CHAR &amp;optional INPUT-STREAM RECURSIVE-P</arguments>
+ <package>lisp</package>
+ <description>
+ 指定した文字が現れるまで Lisp オブジェクトを読み込み、結果のリストを返します。
+ 
+   CHAR         : リストの終わりを表す文字
+   INPUT-STREAM : 入力元のストリーム
+   RECURSIVE-P  : nil ならトップレベル、non-nil なら再帰呼び出しとして読み込む
+ </description>
+ <seealso>read</seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>read-preserving-whitespace</title>
+ <type>Function</type>
+ <arguments>read-preserving-whitespace &amp;optional IN-STREAM EOF-ERROR-P EOF-VALUE RECURSIVE-P</arguments>
+ <package>lisp</package>
+ <description>
+ ストリームから Lisp のオブジェクトを読み込んで返します。
+ read とほぼ同じですが、読んだ最後の文字が空白文字だった場合、その文字を
+ ストリームへ戻します。
+ </description>
+ <seealso>read</seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>set-syntax-from-char</title>
+ <type>Function</type>
+ <arguments>set-syntax-from-char TO-CHAR FROM-CHAR &amp;optional TO-READTABLE FROM-READTABLE</arguments>
+ <package>lisp</package>
+ <description>
+ 文字のシンタックスを変更します。
+ lisp のリーダの挙動が変わります。
+ 
+   TO-CHAR        : シンタックスを変更する文字
+   FROM-CHAR      : 設定するシンタックスを持つ文字
+   TO-READTABLE   : 変更するリードテーブル (指定しなければ *readtable*)
+   FROM-READTABLE : 変更元のリードテーブル (指定しなければデフォルトのリードテーブル)
+ 
+ 使用例：
+   ;;; カンマを whitespace として扱うようにしてみる
+   (let ((readtab (copy-readtable)))
+     (set-syntax-from-char #\, #\SPC readtab *readtable*)
+     (let ((*readtable* readtab))
+       (read-from-string "(a,b,c)")))
+   =&gt; (a b c)
+   =&gt; 7
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>マクロ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+--------
+- どーもです。用語についてはとりあえずあまり気にしない方針で。 -- [[NANRI]] &new{2006-10-21 (土) 01:52:01};
+
+#comment

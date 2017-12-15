@@ -1,0 +1,38 @@
+*substitute-if-not [#k067f7cf]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[nakano]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-07-25 (日) 22:22:41
+-バージョン: 
+
+**メッセージ [#o9b61078]
+ <chapter>
+ <title>substitute-if-not</title>
+ <type>Function</type>
+ <arguments>substitute-if-not NEWITEM TEST SEQUENCE &amp;key :FROM-END :START :END :COUNT :KEY</arguments>
+ <package>lisp</package>
+ <description>
+   SEQUENCEに対してTESTを満足しない要素をNEWITEMに置き換えた列を返す．
+   元のSEQUENCEは変更されないが，返り値と一部を共有するかもしれない．
+ 
+   TEST     : テストを行う単項演算子
+   START    : 開始位置．デフォルトは0で非負の整数
+   END      : 終了位置．デフォルトはnilで，nilの場合は列の長さを指定した場合と等しい動作．
+   COUNT    : 置き換える最大の回数．
+   FROM-END : nilならば先頭から，non-nil で末尾から置換を行う．COUNTが与えられた時のみ意味を持つ．
+ 
+ </description>
+ <seealso>subst-if-not</seealso>
+ <seealso>substitute</seealso>
+ <seealso>substitute-if</seealso>
+ <seealso>nsubstitute-if-not</seealso>
+ <link></link>
+ <section>リスト</section>
+ <file>sequence.l</file>
+ </chapter>
+----
+
+#comment

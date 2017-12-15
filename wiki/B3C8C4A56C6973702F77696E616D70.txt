@@ -1,0 +1,64 @@
+[[拡張lisp]]
+*概要 [#v8c4b0e8]
+winampを制御します。~
+別途[[../winapi]]が必要です。多分。
+*スクリーンショット [#j99253ee]
+#ref(winamp.png,nolink)
+#img(,clear)
+わからんな。
+
+*使い方 [#j48e1cda]
+siteinitに放り込む。
+ (require "winamp")
+あとは表示->ツールバーの中身を見てください。
+*ダウンロード [#u5a625ab]
+#ref(winamp030531.lzh)
+#ref(winamp030727.lzh)
+#ref(winamp031027.lzh)
+
+*苦情ほか [#kf3123c3]
+-かなり頻繁に使わせてもらっています．便利です． ただwinampを起動する間，結構時間がかかるので，　時間短縮 or 別プロセス化 を次のバージョンでは是非お願いします． --  SIZE(10){2003-07-02 (水) 00:25:11}
+-突発的に作ったはいいけど普段はラジオを聞いているので組み込んでもいないという無責任作者です。起動時間短縮は僕がどうこうできるものではないと思います。少し考えてみます。forkが有ったら楽しいのになぁ…。 -- [[佐野]] SIZE(10){2003-07-02 (水) 00:45:56}
+-時間がかかっているのは (while (zerop ret) ... ) の起動待ちの所みたいです． 普通にwinamp起動するよりも結構時間かかるので． あと全然分かってないのですが，forkって make-processでは実現できないのでしょうか？ #下の作ってみました --  SIZE(10){2003-07-06 (日) 01:10:47}
+-半月ぶり位にwinampを入れてみました。やっぱり軽い。forkは多分ちょっぴり違うものです。メッセージングのオーバーヘッドな気がしました。whileの間にsleep-forとか挟んだらどうなりますか？（私の環境では（1GHz Celeron速い分類ではないはず）遅さを実感できなかったので） -- [[佐野]] SIZE(10){2003-07-06 (日) 03:52:52}
+-うわ． きびきびと動作してくれました． 0.1秒入れただけですけど効果絶大．  --  SIZE(10){2003-07-06 (日) 04:48:05}
+-以後気をつけます。 -- [[佐野]] SIZE(10){2003-07-06 (日) 05:13:56}
+-20030727版の変更点は NetInstaller対応でよかったですか? -- [[NAKANO]] SIZE(10){2003-07-27 (日) 16:51:42}
+-対応のみです。 -- [[佐野]] SIZE(10){2003-07-27 (日) 17:23:24}
+-foobar2000も動かせないかなぁ(ぼそ) --  SIZE(10){2003-10-27 (月) 23:43:57}
+- foobar2000欲しいですね --  &new{2012-01-19 (木) 16:39:47};
+
+#comment
+
+* 曲名・アーティスト名 表示してよ [#k4fb051b]
+ (defun winamp-tool-bar ()
+   (create-tool-bar
+    'winamp-tool-bar
+    (merge-pathnames "toolbar.bmp" (etc-path))
+    '(("Previous" 71 (lambda ()
+ 		      (interactive)
+ 		      (winamp::Previous-track-button)
+ 		      (sleep-for 0.1)
+ 		      (message (winamp::get-title-playing))))
+      ("Play" 64 (lambda ()
+ 		  (interactive)
+ 		  (winamp::Play-button)
+ 		  (sleep-for 0.1)
+ 		  (message (winamp::get-title-playing)))
+       winamp::update-play)
+      ("Pause/UnPause" 66 (lambda ()
+ 			   (interactive)
+ 			   (winamp::Pause/Unpause-button)
+ 			   (message (winamp::get-title-playing)))
+       winamp::update-pause)
+      ("Stop" 68 winamp::Stop-button winamp::update-stop)
+      ("Next" 72 (lambda ()
+ 		  (interactive)
+ 		  (winamp::Next-track-button)
+ 		  (sleep-for 0.1)
+ 		  (message (winamp::get-title-playing))))
+      )))
+-messageで表示はなかなか粋な感じですね。ちょっぴりいじってから取り込もうと思います。 -- [[佐野]] SIZE(10){2003-07-06 (日) 04:01:43}
+-取り込みました。 -- [[佐野]] SIZE(10){2003-10-27 (月) 23:11:48}
+
+#comment

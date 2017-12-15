@@ -1,0 +1,60 @@
+* パッケージ使用 [#qec436b2]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-03-11 (土) 01:07:06
+-バージョン: 
+
+** メッセージ [#ye049338]
+とりあえず今期一項も書いていないのはいまいちなので
+荒くかけるところから。
+
+ <chapter>
+ <title>package-used-by-list</title>
+ <type>Function</type>
+ <arguments>package-used-by-list PACKAGE</arguments>
+ <package>lisp</package>
+ <description>
+ 指定されたパッケージが使用されているパッケージを返します
+ 
+   PACKAGE:パッケージそのものもしくはパッケージ名の文字列
+ 
+ 使用例:
+   (package-used-by-list (find-package "lisp"))
+   =&gt;(#&lt;package: system&gt; #&lt;package: editor&gt; #&lt;package: user&gt;)
+ </description>
+ <seealso>use-package</seealso>
+ <seealso>package-use-list</seealso>
+ <link></link>
+ <section>パッケージ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>package-use-list</title>
+ <type>Function</type>
+ <arguments>package-use-list PACKAGE</arguments>
+ <package>lisp</package>
+ <description>
+ 指定されたパッケージが使用しているパッケージを返します
+ 
+   PACKAGE:パッケージそのものもしくはパッケージ名の文字列
+ 
+ 使用例：
+   (package-use-list "user")
+   =&gt;(#&lt;package: lisp&gt; #&lt;package: editor&gt;)
+ </description>
+ <seealso>package-used-by-list</seealso>
+ <seealso>use-package</seealso>
+ <link></link>
+ <section>パッケージ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+--------
+- どーもです。 -- [[NANRI]] &new{2006-03-11 (土) 14:29:53};
+
+#comment

@@ -1,0 +1,20 @@
+* 「lisp-mode-mapが定義されていない」メッセージが表示される [#f50e7ee6]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2014-10-29 (水) 23:17:41
+
+** メッセージ [#i1406ee0]
+0.2.2.253に上げたところ、起動時に「lisp-mode-mapが定義されていない」というメッセージが表示されるようになりました。
+.xyzzyに
+;; lisp-mode
+(load-library "lispmode")
+…
+(define-key *lisp-mode-map* #\M-i 'lisp-insert-open-signature)
+(define-key *lisp-mode-map* #\M-o 'lisp-insert-close-signature)
+としていて（lisp-insert-…は自前の関数）、define-keyを外すとメッセージが出ないので、ここで引っかかっているようです。
+descrive-variableで*lisp-mode-map*を探すと確かに無いのです。でも、lispmode.lではdefvarされていて、*modules*を見るとlispmodeはロードされている。
+原因がお分かりでしたら、教えていただけますか。
+----
+
+#comment

@@ -1,0 +1,72 @@
+*unexportの説明 [#s01bf6ed]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[roki]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-09-11 19:13:49 (日)
+-バージョン: 
+
+**メッセージ [#z5d13315]
+unexportの説明が
+
+ シンボルのリストを指定して、その全てのシンボルをパッケージに登録します。 
+
+となっていますが、
+
+ シンボルのリストを指定して、その全てのシンボルをパッケージに内部シンボルとして登録します。
+
+または
+
+ シンボルのリストを指定して、その全てのシンボルをパッケージの外部から参照できないようにします。
+
+といった表記の方が適切ではないでしょうか。
+----
+-ありがとうございます。[[export>refwiki:export]]の説明との対比を考えると後者の説明が良さそうですね。ついでなので使用例っぽいのを足してみたり。 -- [[NANRI]] &new{2005-09-11 21:37:03 (日)};
+ <chapter>
+ <title>unexport</title>
+ <type>Function</type>
+ <arguments>unexport SYMBOLS &amp;optional PACKAGE</arguments>
+ <package>lisp</package>
+ <description>
+ シンボルのリストを指定して、その全てのシンボルをパッケージの外部から参照
+ できないようにします。
+ 
+   ;; find-file は editor パッケージの外部シンボル
+   (find-symbol "find-file" "editor")
+   =&gt;find-file
+     :external
+ 
+   ;; よって editor パッケージを use している user パッケージから参照できる
+   (find-symbol "find-file" "user")
+   =&gt;find-file
+     :inherited
+ 
+   ;; 外部から参照できなくする
+   (unepxport 'find-file "editor")
+   =&gt;t
+ 
+   ;; 内部シンボルになった
+   (find-symbol "find-file" "editor")
+   =&gt;editor::find-file
+     :internal
+ 
+   ;; user パッケージから参照できなくなった
+   (find-symbol "find-file" "user")
+   =&gt;nil
+     nil
+ 
+   ;; 元に戻す
+   (export 'ed::find-file "editor")
+   =&gt;t
+ </description>
+ <seealso>export</seealso>
+ <seealso>パッケージ</seealso>
+ <link></link>
+ <section>パッケージ</section>
+ <file>builtin.l</file>
+ </chapter>
+-取り込みました。→[[refwiki:unexport]] -- [[NANRI]] &new{2005-10-23 00:44:49 (日)};
+
+#comment

@@ -1,0 +1,70 @@
+;;; rijn-compress.l
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (require "rijn"))
+
+(in-package "rijndael")
+(defun create-archive-and-encrypt (archive-file files directory &optional key)
+  (create-archive archive-file files directory)
+  (unwind-protect
+      (encrypt-file archive-file
+		    (concat archive-file ".rjn")
+		    (or key (getpass "Password for archive: ")))
+    (delete-file archive-file  :if-does-not-exist :skip :if-access-denied :error)))
+
+(defun extract-archive-with-decryption (archive-file to-directory &optional key &rest files)
+  (let ((temp (substring archive-file 0 -4))) ; イマイチ
+    (decrypt-file archive-file temp
+		  (or key (getpass "Password for archive: ")))
+    (unwind-protect
+	(apply #'extract-archive temp to-directory files)
+      (delete-file temp :if-does-not-exist :skip :if-access-denied :error))))
+
+(in-package "editor")
+(defun filer-create-archive-and-encrypt ()
+  (let ((marks (filer-get-mark-files)))
+    (when marks
+      (multiple-value-bind (arc base)
+	  (filer-get-archive-name)
+	(when arc
+	  (filer-subscribe-to-reload (directory-namestring arc))
+	  (let ((sfx (string-matchp "\\.exe$" arc)))
+	    (when sfx
+	      (setf (subseq arc (- (length arc) 3)) "lzh"))
+	    (rijndael::create-archive-and-encrypt
+	     arc
+	     (if (string-matchp "\\.cab$" arc)
+		 (mapcar #'(lambda (f)
+			     (if (file-directory-p f)
+				 (merge-pathnames "*.*" f)
+			       f))
+			 marks)
+	       marks)
+	     base
+	     (prog2 (si:*activate-toplevel)
+		 (user::getpass "Password for archive: ")
+	       (open-filer)))
+	    (when sfx
+	      (convert-to-SFX arc "-gw"))
+	    (filer-clear-all-marks)))))))
+
+
+(defun filer-extract-archive-with-decryption (&optional (not-current t))
+  (let ((files (filer-get-mark-files)))
+    (when files
+      (let ((dir (filer-get-directory not-current)))
+	(filer-subscribe-to-reload dir t)
+	(dolist (file files)
+	  (when (or (null ed::*filer-query-before-process*)
+		    (yes-or-no-p "アーカイブファイル~%~A~%を~%~A~%に解凍しますか?"
+				 file dir))
+	    (rijndael::extract-archive-with-decryption
+	     file dir
+	     (prog2 (si:*activate-toplevel)
+		 (user::getpass "Password for archive: ")
+	       (open-filer)))))
+	(filer-clear-all-marks)))))
+
+
+;; (define-key filer-keymap #\M-e 'ed::filer-extract-archive-with-decryption)
+;; (define-key filer-keymap #\M-o 'ed::filer-create-archive-and-encrypt)

@@ -1,0 +1,29 @@
+* howm-wrap 関数が定義されていません: elisp-lib::action-lock-switch [#t6dc79da]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2006-07-05 (水) 05:31:59
+
+** メッセージ [#h8734e5b]
+xyzzy起動時にサマリのように表示されて、howm-wrapが使えません。インストールは同梱のreadme.txtに記載されている手順で行いました。
+----
+- howm のインストールは私も何度か挫折しています。直接の原因はわかりませんが、自分のところのファイル構造を書いておきます。参考になるでしょうか。 -- [[おおさわ]] &new{2006-07-05 (水) 17:59:40};
+
+ ~/howm/howm-wrap/howm-1.1.0.3/ja/0000-00-00-000000.howm
+ ~/howm-init.l
+ ~/howm-pre-init.l
+ ~/.xyzzy に記述を追加
+ 
+ xyzzy/site-lisp/howm-wrap.l
+ xyzzy/site-lisp/howm/action-lock.lc
+ xyzzy/site-lisp/howm/elisp-lib.lc
+ xyzzy/site-lisp/howm/howm-font-lock.lc
+ xyzzy/site-lisp/howm/howm-menu.lc
+ xyzzy/site-lisp/howm/howm-mode.lc
+ xyzzy/site-lisp/howm/howm-view.lc
+ xyzzy/site-lisp/howm/howm-wrap.lc
+
+~/ = ホームディレクトリ（XYZZYHOME）、xyzzy/ = xyzzy のインストールディレクトリ（xyzzy/xyzzy.exe がある）
+- おおさわ様ありがとうございます。c:\xyzzyを作成して、記されたとおりのディレクトリと配置にしたところ、エラーも無く、howm-wrapが使えました。今度は自分の環境に当てはめて、ファイルを配置しなおしてチャレンジしてみます。 --  &new{2006-07-06 (木) 06:42:04};
+
+#comment

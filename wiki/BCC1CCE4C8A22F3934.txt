@@ -1,0 +1,120 @@
+* 文字エンコーディングの変換について2 [#ca149f59]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2005-06-13 18:34:23 (月)
+
+** メッセージ [#icfbbce5]
+[[質問箱/42]]で貰った回答を元に以下を作りました。
+
+ (defun my-encoding (encoding &optional)
+   (interactive "zEncoding: ")
+   (revert-buffer encoding)
+   )
+
+これだと候補が多いため以下の様にリストを作成して候補を絞ろうとしました
+が、うまく認識してくれません。
+
+ (setq enclist '(SJIS EUC-JP UTF8))
+ (defun my-encoding (encoding &optional)
+  (interactive (list(completing-read "Encoding: " enclist)))
+   (revert-buffer encoding)
+   )
+
+どこを直したらOKになるでしょうか。
+
+----
+どこを…ってツッコミどころだらけですねぇ
+ (defvar *enclist* (list *encoding-sjis* *encoding-euc-jp* *encoding-utf8*))
+ (defun my-encoding ()
+   (interactive)
+   (revert-buffer
+    (find (completing-read "Encoding: "
+                           (mapcar #'char-encoding-name *enclist*))
+          *enclist*
+          :test #'(lambda (x y)
+                    (equal x (char-encoding-name y))))))
+-大体こんな感じでしょうか？ -- [[佐野]] &new{2005-06-13 19:34:41 (月)};
+-問題点をいくつか -- [[佐野]] &new{2005-06-13 19:39:06 (月)};
+--interactive "z"で受け取るエンコーディングはそのまんまなシンボルではない -- [[佐野]] &new{2005-06-13 19:39:16 (月)};
+--interactiveで受け取れるのはごくごくかぎられた書式だけ。 -- [[佐野]] &new{2005-06-13 19:40:09 (月)};
+--optionalは後置引数ではない -- [[佐野]] &new{2005-06-13 19:41:28 (月)};
+-これくらいでしょうか…。 -- [[佐野]] &new{2005-06-13 19:42:27 (月)};
+ (defun my-encoding (&optional encoding)
+   (interactive)
+   (let ((*char-encoding-list*
+          (list *encoding-sjis*
+                *encoding-utf8n*
+                *encoding-euc-jp*)))
+     (unless encoding
+       (setq encoding (read-char-encoding "Encoding: ")))
+     (revert-buffer encoding)
+     ))
+-別解（出遅れちゃいました） -- [[NANRI]] &new{2005-06-13 19:43:17 (月)};
+-あぁそっちの方が綺麗ですね… -- [[佐野]] &new{2005-06-13 19:50:29 (月)};
+-タイミングかぶりまくってましたね(苦笑) 3,4回、衝突してました(^^; エンコーディング周りはリファレンスにも無いので、Lispを読めないと情報が無くて難しい所だと思います。 -- [[NANRI]] &new{2005-06-13 20:04:47 (月)};
+-回答有難う御座います。動作が確認できました。が、佐野さんと、NANRIさんの回答でどうして同じ結果になるのかすら分からない。。もちっと頑張ってみます。 -- [[質問者]] &new{2005-06-14 09:43:52 (火)};
+-勉強の題材にするなら佐野さんのの方がいいと思います。mapcar, completing-read, find がどんな引数を持って、どんな値を返すかに注目するとよいかも。それと、エンコーディングを表す変数の型を意識しないといけません。 -- [[NANRI]] &new{2005-06-14 19:55:40 (火)};
+
+----
+どういう風に組み立てていったかを順序だてて書いておきます。~
+どこかでまとめたいのですが、ドキュメントがまとまっていないにしても”無いよりもマシ”と~
+受け取ってもらえると幸いです。~
+
+まずはrevert-bufferがどんな引数を受け取るのか考えました。どこにも書いてありませんよね？
+とりあえず適当なバッファで
+ ESC ESC (revert-buffer 'utf-8)
+とかやってみました…駄目でした。良くわからないので(interactive "z")が何を返しているのか調べる~
+事にしました。~
+ (defun test (x) (interactive "z") x)
+としてtestを定義scratchバッファで~
+ (call-interactively 'test)
+んでeuc-jpとか答えると~
+ #.(make-iso2022-encoding "euc-jp" "Japanese(EUC-JP)" :no-escape t :g0 :us-ascii :g1 :jisx0208 :g2 :jisx0201-kana :g3 :jisx0212 :cjk :jp :ascii-eol nil :ascii-control nil :7bits nil :locking-shift nil :short-form nil :use-cns11643 nil :vender nil)
+返ってきました、何じゃこりゃってなもんで少し考え込みます（実際は一瞬たりとも考え込みませんが）~
+まぁ良くわかんなかったらlispディレクトリでgrep~
+というわけで"euc-jp"を探してみます(sjisでやると少し遠回りをするかと思いますが。)~
+結果をボーっと眺めます。
+ encoding.l:64:  (make-iso2022-encoding "euc-jp" "日本語(EUC-JP)"
+これめっちゃ怪しいじゃないですか？
+というわけで前の行のdefvarである*encoding-euc-jp*をscratchバッファで評価してみます。
+ #.(make-iso2022-encoding "euc-jp" "Japanese(EUC-JP)" :no-escape t :g0 :us-ascii :g1 :jisx0208 :g2 :jisx0201-kana :g3 :jisx0212 :cjk :jp :ascii-eol nil :ascii-control nil :7bits nil :locking-shift nil :short-form nil :use-cns11643 nil :vender nil)
+ビンゴというわけでrevert-bufferに食わしてやるのは*encoding-シリーズであるとみなします。*encoding-の後に~
+ESC-TABでそれっぽいのがうぞうぞでるので今回のそれっぽいのを三つリストに追加しておきます。~
+この時点でdefvarができるわけです。~
+completing-readの引数は普通のシンボルか文字列のリストだから、*encoding-シリーズからそれっぽいシンボルなりを作る処理を書かないと~
+ということで調べます。grepでencoding…カンなんですけどというかlispディレクトリの[[それぞれのファイル>lispディレクトリの中身]]の役割が~
+なんとなく解っているとapp-menu.lは人間に解るように表示しなおす処理がほとんどだということがわかるのでapp-menu.lに着目しました。~
+んで~
+ app-menu.l:458:(defun make-char-encoding-popup-menu (command &optional init (list *char-encoding-list*))
+なんとなくこれに着目して処理を追っていくと
+(char-encoding-display-name)の関数が目に入ります。（入るんです。理屈じゃないんですよ~
+ためしに
+ (char-encoding-display-name *encoding-euc-jp*)
+をやると
+ "Japanese(EUC-JP)"
+（あ、デフォルトと違うかも）かなり近い気がしてきます。そこでaproposでchar-encodingとやると
+char-encoding-nameというのが見つかります。
+ (char-encoding-name *encoding-euc-jp*)
+結果を見ると
+ "euc-jp"
+欲しかったのはこれですね。~
+encodingのリストは既にあるのでそれの各要素に対して関数を適用した結果を返す関数はmapcarです。
+ (mapcar #'char-encoding-name *enclist*)
+結果は
+ ("sjis" "euc-jp" "utf8")
+これをそのままcompleting-readに食わせます。そうすると"sjis"かeuc-jpかutf8が帰ってくるはずです。~
+帰ってきた値（文字列）と*enclist*の各要素を比べて等しいかどうかの比較関数をlambda以下で書き~
+find関数を組み立ててみます。~
+find関数を組み立てたときにうまく動くかどうかテストをして、その結果をrevert-bufferに食わせるようにして~
+関数ができます。~
+
+欲しい機能があったときにどのように組み立てていくかというところで、いきなり全部を書こうとすると~
+細かい仕様に泣かされることがほとんどだと思います。インクリメンタルにインタラクティブに少しずつ組み立てていくことが~
+肝要です。
+----
+-後半バテてきてる。 -- [[佐野]] &new{2005-06-14 21:24:13 (火)};
+-佐野さん。わざわざ説明有難う御座います。後でじっくり追って見ます。 -- [[質問者]] &new{2005-06-15 12:31:15 (水)};
+
+
+#comment

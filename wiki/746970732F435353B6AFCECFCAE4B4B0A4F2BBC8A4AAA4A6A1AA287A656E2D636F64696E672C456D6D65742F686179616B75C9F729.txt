@@ -1,0 +1,461 @@
+[[tips]]
+* CSS補完(zen-coding,Emmet/hayaku風) [#z29f8956]
+
+** メニュー [#cf104cf0]
+#contents
+
+** これは何？ [#gbc02a0f]
+CSS専用の補完機能を提供します。たとえば "w" を変換すると "width:" 、"fz"で "font-size:" 、"por" で "position: relative;" 。~
+このように最短の略語で CSSのproperty(やvalue)を展開します。
+zen-coding の CSS版と考えてください。~
+現在、Emmet、hayakuというライブラリが Emacs/SublimeText/TextMate などで使われていますが、これらに相当するものです。~
+動作は似ていますが、何かに準拠しているわけではなく、オリジナルの実装です。
+
+** ダウンロード [#pfdbbfbd]
+[zencss-minor-mode:https://gist.github.com/okayu3/9aa22fce7deb5aa4ab33]
+** インストール [#j3bf0a13]
++ zencss-minor-mode.l を site-lisp に置いてください。
++ .xyzzy / sitelinit.l に、次の設定を行います。
+ (add-hook 'ed::*css-mode-hook*
+          #'(lambda ()
+              (require "zencss-minor-mode")
+              (ed::zencss-minor-mode)
+              ))
+
+** 使い方 [#f6ed80ef]
+CSS-mode で、任意の場所で
+ por+fz16+m5+p5x15x5x0x!+lh1.5+bd1#c00so
+などと打って ''M-e'' を押下すると、
+	position: relative;
+	font-size: 16px;
+	margin: 5px;
+	padding: 5px 15px 5px 0px !important;
+	line-height: 1.5em;
+	border: 1px #CC0000 solid;
+などと展開されます。ほら簡単でしょ？
+
+** 使い方の解説 [#o6493ccd]
++基本の使い方は、「適当に略記して展開してみよう」、です。"padding" なら "p" で展開します。
+"position" は "po"で。山ほど細かいルールを作ってますが、入力したいpropertyを適当に
+略してやってみて当たれば儲けもの、と思ってまずは使ってみてください。大抵当たると思います。
++さらに、value をくっつけます。"po:r" とか "po-r" などと打てば、"position" にとることの可能な
+valueの候補のなかから、rで始まるものを選んで展開します。この場合は "position:relative"。
++さらにさらに、":"や"-" を省略できるかもしれません。"por" なら "position: relative;"、
+"poa" なら "position: absolute;"。"fb" なら "font-weight: bold;"、とかね。
++続けて複数のpropetyを書きたい場合は、"+" または ";"を入力して引き続いて記載します。
+''m10+p10'' と ''m10;p10'' はほぼ同じ意味です。
++単位については、''10p'' と打てば ''10%'' に変換。
+単位を省略した場合、整数値ならば(それが妥当なら)"px"、小数値ならば "em" をつけて展開します。
++色については、"#X" と書けば "#XXXXXX" に、"#XY" と書けば "#XYXYXY"に、 "#XYZ" と書けば "#XXYYZZ"に
+それぞれ展開します。
++''!''をつければ '!important' が展開されます。
++vendor prefix、つまり''-webkit-'' やら ''-moz-'' やらは最近使うことは少なくなりましたが、
+必要がありそうならば勝手につけて展開します。
+
+** 主な略語 [#nbc6ff41]
+ごく一部ですが、略語となるもの達です。
+
+|''略語''|''展開されるCSS''|
+|a | animation:|
+|ac | text-emphasis:accent|
+|anim | animation:|
+|animdel | animation-delay:time|
+|animdir | animation-direction:normal|
+|animdur | animation-duration:0s|
+|animfm | animation-fill-mode:both|
+|animic | animation-iteration-count:1|
+|animn | animation-name:none|
+|animps | animation-play-state:running|
+|animtf | animation-timing-function:linear|
+|ap | appearance:none|
+|b | bottom:100%|
+|ba | bottom:auto|
+|bb | border-bottom:|
+|bc | border-color:#000|
+|bd | border:|
+|bdb | border-bottom:|
+|bdbc | border-bottom-color:#000|
+|bdbi | border-bottom-image:url()|
+|bdbk | border-break:close|
+|bdbli | border-bottom-left-image:url()|
+|bdblrs | border-bottom-left-radius:|
+|bdbri | border-bottom-right-image:url()|
+|bdbrrs | border-bottom-right-radius:|
+|bdbs | border-bottom-style:|
+|bdbw | border-bottom-width:|
+|bdc | border-color:#000|
+|bdci | border-corner-image:url()|
+|bdcl | border-collapse:|
+|bdf | border-fit:repeat|
+|bdi | border-image:url()|
+|bdl | border-left:|
+|bdlc | border-left-color:#000|
+|bdlen | border-length:|
+|bdli | border-left-image:url()|
+|bdls | border-left-style:|
+|bdlw | border-left-width:|
+|bdr | border-right:|
+|bdrc | border-right-color:#000|
+|bdri | border-right-image:url()|
+|bdrs | border-radius:|
+|bdrst | border-right-style:|
+|bdrw | border-right-width:|
+|bds | border-style:|
+|bdsp | border-spacing:|
+|bdt | border-top:|
+|bdtc | border-top-color:#000|
+|bdti | border-top-image:url()|
+|bdtli | border-top-left-image:url()|
+|bdtlrs | border-top-left-radius:|
+|bdtri | border-top-right-image:url()|
+|bdtrrs | border-top-right-radius:|
+|bdts | border-top-style:|
+|bdtw | border-top-width:|
+|bdw | border-width:|
+|bf | border-fit:|
+|bg | background:|
+|bga | background-attachment:|
+|bgbk | background-break:|
+|bgc | background-color:#fff|
+|bgcp | background-clip:padding-box|
+|bgi | background-image:url()|
+|bgo | background-origin:|
+|bgpx | background-position-x:|
+|bgpy | background-position-y:|
+|bgr | background-repeat:|
+|bgsz | background-size:|
+|bi | border-image:url()|
+|bj | bottom:|
+|bk | border-break:|
+|bl | border-left:|
+|bm | bottom:|
+|bn | background:none|
+|bo | background-origin:|
+|bo | border:|
+|bq | bottom:|
+|br | border-right:|
+|bs | border-style:|
+|bt | border-top:|
+|bu | bottom:|
+|bv | background-size:cover|
+|bw | border-width:|
+|bx | box-sizing:|
+|bxsh | box-shadow:none|
+|bxz | box-sizing:border-box|
+|by | background-position-y:|
+|bz | box-sizing:|
+|c | color:#FFF|
+|ca | clip:auto|
+|cb | clear:both|
+|cc | content:counter()|
+|cd | cursor:default|
+|ce | cursor:help|
+|ch | cursor:help|
+|ci | counter-increment:|
+|cl | clear:both|
+|cn | content:|
+|cnt | content:''|
+|co | counter-reset:|
+|coi | counter-increment:|
+|colm | columns:|
+|colmc | column-count:|
+|colmf | column-fill:|
+|colmg | column-gap:|
+|colmr | column-rule:|
+|colmrc | column-rule-color:|
+|colmrs | column-rule-style:|
+|colmrw | column-rule-width:|
+|colms | column-span:|
+|colmw | column-width:|
+|cor | counter-reset:|
+|cp | clip:|
+|cps | caption-side:|
+|cq | content:open-quote|
+|cr | cursor:|
+|cs | caption-side:|
+|ct | content:|
+|cu | cursor:|
+|cur | cursor:${pointer}|
+|d | display:|
+|db | display:block|
+|dc | display:compact|
+|df | display:table-footer-group|
+|dg | display:table-footer-group|
+|dh | display:table-header-group|
+|di | display:inline|
+|dl | display:list-item|
+|dn | display:none|
+|dp | display:compact|
+|dr | display:ruby|
+|dt | display:table|
+|e | empty-cells:|
+|ec | empty-cells:|
+|ef | font-effect:|
+|eh | empty-cells:hide|
+|em | font-emphasize:|
+|es | empty-cells:show|
+|f | font:|
+|fa | font-size-adjust:|
+|fb | font-weight:bold|
+|fc | font-family:cursive|
+|fd | font-emphasize-style:dot|
+|fe | font-effect:|
+|fef | font-effect:|
+|fem | font-emphasize:|
+|femp | font-emphasize-position:|
+|fems | font-emphasize-style:|
+|ff | font-family:|
+|fg | font-effect:engrave|
+|fi | font-style:italic|
+|fl | float:left|
+|fm | font-smooth:|
+|fn | font-variant:normal|
+|fo | font-style:oblique|
+|fp | font-emphasize-position:|
+|fq | font:|
+|fr | float:right|
+|fs | font-style:|
+|fsm | font-smooth:|
+|fst | font-stretch:|
+|ft | font-stretch:|
+|fu | font-stretch:ultra-condensed|
+|fv | font-variant:|
+|fw | font-weight:|
+|fz | font-size:|
+|fza | font-size-adjust:|
+|ga | background-attachment:|
+|gb | background-break:|
+|gc | background-color:#fff|
+|h | height:100%|
+|ha | height:auto|
+|ht | height:|
+|hy | hyphens:|
+|hz | height:|
+|i | -ms-interpolation-mode:|
+|ib | display:inline-block|
+|ic | text-justify:inter-cluster|
+|id | widows:|
+|ii | text-justify:inter-ideograph|
+|it | display:inline-table|
+|iv | visibility:|
+|iw | min-width:|
+|iz | z-index:|
+|kx | transform:skewX(angle)|
+|ky | transform:skewY(angle)|
+|kz | z-index:|
+|l | left:100%|
+|la | left:auto|
+|lc | list-style-type:circle|
+|ld | list-style-type:disc|
+|lh | line-height:|
+|li | list-style:|
+|lis | list-style:|
+|lisi | list-style-image:|
+|lisp | list-style-position:|
+|list | list-style-type:|
+|ll | list-style-type:lower-roman|
+|ln | list-style:none|
+|lo | list-style-position:outside|
+|lp | list-style-position:|
+|lr | list-style-type:lower-roman|
+|ls | letter-spacing:|
+|lt | letter-spacing:|
+|lts | letter-spacing:|
+|lu | list-style-type:upper-roman|
+|m | margin:|
+|ma | max-width:|
+|mah | max-height:|
+|mar | max-resolution:res|
+|maw | max-width:|
+|mb | margin-bottom:|
+|mh | max-height:|
+|mi | min-width:|
+|mih | min-height:|
+|mir | min-resolution:res|
+|miw | min-width:|
+|ml | margin-left:|
+|mn | max-height:none|
+|mr | margin-right:|
+|mt | margin-top:|
+|mw | max-width:|
+|n | nav-down:|
+|nc | content:no-close-quote|
+|nm | word-wrap:normal|
+|no | text-wrap:none|
+|nw | white-space:nowrap|
+|o | overflow:|
+|oa | overflow:auto|
+|oc | outline-color:#000|
+|oh | overflow:hidden|
+|oi | outline-color:invert|
+|olc | outline-color:#000|
+|olo | outline-offset:|
+|ols | outline-style:|
+|olw | outline-width:|
+|om | overflow-style:move|
+|on | outline:none|
+|oo | outline-offset:|
+|op | opacity:|
+|oq | overflow-style:marquee|
+|or | orphans:|
+|ori | orientation:|
+|orp | orphans:|
+|os | outline-style:|
+|ot | outline:|
+|ou | outline:|
+|ov | overflow:hidden|
+|ovs | overflow-style:scrollbar|
+|ovx | overflow-x:hidden|
+|ovy | overflow-y:hidden|
+|ow | outline-width:|
+|ox | overflow-x:|
+|oy | overflow-y:|
+|oz | outline:|
+|p | padding:|
+|pa | page-break-after:|
+|pb | padding-bottom:|
+|pf | position:fixed|
+|pg | page-break-before:|
+|pgba | page-break-after:|
+|pgbb | page-break-before:|
+|pgbi | page-break-inside:|
+|pi | page-break-inside:|
+|pl | padding-left:|
+|poa | position:absolute|
+|por | position:relative|
+|pos | position:relative|
+|pr | padding-right:|
+|pt | padding-top:|
+|pu | page-break-after:auto|
+|pv | page-break-inside:avoid|
+|q | quotes:|
+|qn | quotes:none|
+|r | right:100%|
+|ra | right:auto|
+|rb | resize:both|
+|rh | resize:horizontal|
+|rn | resize:none|
+|rsz | resize:|
+|rt | right:|
+|rv | resize:vertical|
+|rz | resize:|
+|sc | white-space-collapse:|
+|sd | transition-duration:time|
+|si | list-style-image:|
+|sk | transform:skewX(angle)|
+|sm | font-smooth:|
+|sp | transition-property:prop|
+|ss | font-family:sans-serif|
+|st | font-stretch:|
+|su | vertical-align:sub|
+|sz | z-index:|
+|t | top:|
+|ta | text-align:left|
+|ta-lst | text-align-last:|
+|ta-lst | text-align-last:|
+|tal | text-align-last:|
+|tb | table-layout:|
+|tbl | table-layout:|
+|tc | text-align:center|
+|td | text-decoration:none|
+|te | text-emphasis:|
+|tf | transform:|
+|tg | top:|
+|th | text-height:|
+|ti | text-indent:|
+|tj | text-justify:|
+|tk | text-justify:kashida|
+|tl | text-align-last:|
+|tm | text-height:max-size|
+|tn | text-decoration:none|
+|to | text-outline:|
+|tov | text-overflow:${ellipsis}|
+|tp | transition-property:prop|
+|tq | top:|
+|tr | text-replace:|
+|trf | transform:|
+|trfo | transform-origin:|
+|trfs | transform-style:preserve-3d|
+|trs | transition:|
+|trsde | transition-delay:time|
+|trsdu | transition-duration:time|
+|trsp | transition-property:prop|
+|trstf | transition-timing-function:tfunc|
+|tsh | text-shadow:none|
+|tt | text-transform:uppercase|
+|tu | text-transform:uppercase|
+|tw | text-wrap:|
+|tx | transform:translateX(x)|
+|ty | transform:translateY(y)|
+|ub | vertical-align:sub|
+|uc | font-stretch:ultra-condensed|
+|ud | display:|
+|ue | font-stretch:ultra-expanded|
+|up | vertical-align:super|
+|v | visibility:hidden|
+|va | vertical-align:top|
+|vb | vertical-align:bottom|
+|vc | visibility:collapse|
+|vh | visibility:hidden|
+|vl | vertical-align:baseline|
+|vm | vertical-align:middle|
+|vp | vertical-align:super|
+|vs | vertical-align:super|
+|vt | vertical-align:top|
+|vu | vertical-align:sub|
+|vv | visibility:visible|
+|w | width:|
+|wa | width:auto|
+|wb | word-break:|
+|wc | white-space-collapse:|
+|wd | widows:|
+|wfsm | -webkit-font-smoothing:${antialiased}|
+|wh | white-space:|
+|whs | white-space:|
+|whsc | white-space-collapse:|
+|wi | widows:|
+|wid | widows:|
+|wj | width:|
+|wk | word-break:keep-all|
+|wl | word-break:loose|
+|wm | word-wrap:normal|
+|wn | white-space:normal|
+|wo | word-break:|
+|wob | word-break:|
+|wos | word-spacing:|
+|wow | word-wrap:|
+|wp | white-space:pre|
+|ws | word-spacing:|
+|wu | word-wrap:unrestricted|
+|ww | word-wrap:|
+|xz | box-sizing:|
+|z | z-index:|
+|za | z-index:auto|
+|zm | zoom:1|
+|zn | z-index:|
+|zo | zoom:1|
+|zoo | zoom:1|
+
+** リージョン、セレクションの扱い [#p3266185]
++リージョン設定をした場合、カーソルと同じ行から始まっている場合はそのリージョン内の内容を元に展開します。
++セレクションがある場合、セレクションの最初の行の内容を展開します。
++カーソル位置より前に 「連続したスペース」または 「*」があった場合、その位置からカーソル位置までの内容を元に展開します。
++その他の場合、行頭からカーソル位置以降最初の空白または行末までの内容を元に展開します。
+
+** 今後の予定 [#y82518f8]
++snippet化
++カーソル位置がvalueだったら、propertyを探して property/value の形で補完する。
++comment機能
+
+** 変更履歴 [#u968abac]
+-[2014/06/25] 主な略語一覧を追加しました。
+-[2014/06/24] このドキュメントを書きました。
+
+** ライセンス [#hc7a1295]
+ご自身の責任にてお使い下さい。MIT ライセンスです。
+
+----
+total: &counter;
+- fsYhuzAoV -- [[ckibxiuidk]] &new{2015-03-21 (土) 19:12:22};
+
+#comment

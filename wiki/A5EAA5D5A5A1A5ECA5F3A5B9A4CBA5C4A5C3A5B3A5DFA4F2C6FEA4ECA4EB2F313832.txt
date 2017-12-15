@@ -1,0 +1,35 @@
+* find-name-buffer [#qba29c9b]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-12-02 (金) 02:00:51
+-バージョン: 
+
+** メッセージ [#b124da09]
+ <chapter>
+ <title>find-name-buffer</title>
+ <type>Function</type>
+ <arguments>find-buffer BUFFER-NAME</arguments>
+ <package>editor</package>
+ <description>
+ 名前がBUFFER-NAMEもしくはBUFFER-NAME&lt;数字&gt;なバッファのリストを返します。
+ 存在しなければnilを返します。
+ 
+ 使用例：
+   (find-name-buffer " *TAGS*")
+   =&gt; (#&lt;buffer:  *TAGS*&gt;&lt;2&gt; #&lt;buffer:  *TAGS*&gt;)
+   (find-name-buffer "*hoge hoge*")
+   =&gt; nil
+ </description>
+ <seealso>find-buffer</seealso>
+ <seealso>create-new-buffer</seealso>
+ <section>バッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+--------
+- 取り込みました。 -- [[NANRI]] &new{2005-12-12 (月) 02:36:09};
+
+#comment

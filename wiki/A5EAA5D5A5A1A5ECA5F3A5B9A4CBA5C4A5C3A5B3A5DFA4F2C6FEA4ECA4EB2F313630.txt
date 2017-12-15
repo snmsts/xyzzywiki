@@ -1,0 +1,211 @@
+*register 関係 [#v670aaa1]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-10-23 11:05:50 (日)
+-バージョン: 20050929
+
+**メッセージ [#b36b5b33]
+レジスタ関係でまだ記述がないものを書きました。
+レジスタ自体の説明もあったほうがいいのかもしれません。
+
+ <chapter>
+ <title>restore-window-configuration-register</title>
+ <type>Function</type>
+ <arguments>restore-window-configuration-register R</arguments>
+ <package>editor</package>
+ <description>
+ レジスタ R に保存したウィンドウ状態に戻します。
+ R に window-configuration が入っていないとエラーになります。
+ </description>
+ <seealso>save-window-configuration-to-register</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>register.l</file>
+ </chapter>
+
+ <chapter>
+ <title>save-window-configuration-to-register</title>
+ <type>Function</type>
+ <arguments>save-window-configuration-to-register R</arguments>
+ <package>editor</package>
+ <description>
+ レジスタ R に現在のウィンドウの状態を保存します。
+ 中身は current-window-configuration で得られるものと同じです。
+ 保存した状態に戻すには restore-window-configuration-register を使います。
+ </description>
+ <seealso>restore-window-configuration-register</seealso>
+ <seealso>current-window-configuration</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>register.l</file>
+ </chapter>
+
+ <chapter>
+ <title>view-register</title>
+ <type>Function</type>
+ <arguments>view-register R</arguments>
+ <package>editor</package>
+ <description>
+ レジスタ R の中身をバッファ *output* に表示します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>その他</section>
+ <file>register.l</file>
+ </chapter>
+
+ <chapter>
+ <title>prepend-to-register</title>
+ <type>Function</type>
+ <arguments>prepend-to-register R START END &amp;optional DELETE</arguments>
+ <package>editor</package>
+ <description>
+ START と END で指定されるリージョンを、レジスタ R に格納されているテキ
+ ストの先頭へ追加します。
+ R にテキストが入っていないとエラーになります。
+ DELETE が non-nil ならば同時にリージョンをを削除します。
+ </description>
+ <seealso>append-to-register</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>register.l</file>
+ </chapter>
+
+ <chapter>
+ <title>append-to-register</title>
+ <type>Function</type>
+ <arguments>append-to-register R START END &amp;optional DELETE</arguments>
+ <package>editor</package>
+ <description>
+ START と END で指定されるリージョンを、レジスタ R に格納されているテキ
+ ストの末尾へ追加します。
+ R にテキストが入っていないとエラーになります。
+ DELETE が non-nil ならば同時にリージョンをを削除します。
+ </description>
+ <seealso>prepend-to-register</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>register.l</file>
+ </chapter>
+
+ <chapter>
+ <title>copy-to-register</title>
+ <type>Function</type>
+ <arguments>copy-to-register R START END &amp;optional DELETE</arguments>
+ <package>editor</package>
+ <description>
+ START と END で指定されるリージョンをレジスタ R へコピーします。
+ DELETE が non-nil ならば同時にリージョンをを削除します。
+ 
+ コピーしたテキストの yank には、 insert-register を使います。 
+ </description>
+ <seealso>insert-register</seealso>
+ <seealso>append-to-register</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>register.l</file>
+ </chapter>
+
+ <chapter>
+ <title>insert-register</title>
+ <type>Function</type>
+ <arguments>insert-register R</arguments>
+ <package>editor</package>
+ <description>
+ レジスタ R の内容をバッファに挿入します。
+ R にテキストまたは矩形領域が入っていないとエラーになります。
+ </description>
+ <seealso>copy-to-register</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>register.l</file>
+ </chapter>
+
+ <chapter>
+ <title>jump-to-register</title>
+ <type>Function</type>
+ <arguments>jump-to-register R</arguments>
+ <package>editor</package>
+ <description>
+ レジスタ R に格納されたマーカーの位置へジャンプします。
+ R にマーカーが入っていないとエラーになります。
+ </description>
+ <seealso>point-to-register</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>register.l</file>
+ </chapter>
+
+ <chapter>
+ <title>point-to-register</title>
+ <type>Function</type>
+ <arguments>point-to-register R</arguments>
+ <package>editor</package>
+ <description>
+ 新しいマーカーを作って現在位置にセットし、レジスタ R に格納します。
+ </description>
+ <seealso>jump-to-register</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>register.l</file>
+ </chapter>
+
+ <chapter>
+ <title>ed::get-register</title>
+ <type>Function</type>
+ <arguments>get-register R</arguments>
+ <package>editor</package>
+ <description>
+ レジスタ R の値を返します。何も入ってない場合の戻り値は nil です。
+ </description>
+ <seealso>ed::set-register</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>register.l</file>
+ </chapter>
+
+ <chapter>
+ <title>ed::set-register</title>
+ <type>Function</type>
+ <arguments>set-register R VALUE</arguments>
+ <package>editor</package>
+ <description>
+ レジスタ R に値 VALUE を格納します。
+ </description>
+ <seealso>ed::get-register</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>register.l</file>
+ </chapter>
+
+ <chapter>
+ <title>ed::*register-alist*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ レジスタに格納されている値を保持する変数。
+ 中身は (name . datum) の形の連想リストです。
+ emacs と違い name にはどんな文字でも入るようです。
+ 
+ datum としては(通常は)以下のものが使用できます。
+   マーカー
+   文字列
+   矩形領域(文字列のリスト)
+   window configuration
+ </description>
+ <seealso>ed::get-register</seealso>
+ <seealso>ed::set-register</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file>register.l</file>
+ </chapter>
+----
+-どーもです。その他に分類されているものは何とかどこかに入りませんかね。ちょっと悩んでみます。 -- [[NANRI]] &new{2005-10-23 20:34:55 (日)};
+- 取り込みました。→[[refwiki:ed::*register-alist*]], [[refwiki:ed::set-register]], [[refwiki:ed::get-register]], [[refwiki:point-to-register]], [[refwiki:jump-to-register]], [[refwiki:insert-register]], [[refwiki:copy-to-register]], [[refwiki:append-to-register]], [[refwiki:prepend-to-register]], [[refwiki:view-register]], [[refwiki:save-window-configuration-to-register]], [[refwiki:restore-window-configuration-register]] -- [[NANRI]] &new{2005-12-03 (土) 03:11:11};
+
+#comment

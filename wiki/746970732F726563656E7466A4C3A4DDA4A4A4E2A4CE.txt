@@ -1,0 +1,84 @@
+[[tips]]
+
+最近開いたファイル一覧を一時バッファに表示し、RETでカレント行のファイルへ飛びます。
+
+ (provide "recentf")
+ (in-package "editor")
+ (export 'recentf)
+ 
+ (defvar *recentf-map*
+   (let ((keymap (make-sparse-keymap)))
+     (define-key keymap #\RET 'recentf-open-file)
+     (define-key keymap #\SPC 'recentf-open-file-other-window)
+     (define-key keymap #\p 'recentf-previous-line)
+     (define-key keymap #\n 'recentf-next-line)
+     (define-key keymap #\q 'recentf-quit)
+     keymap))
+ 
+ (defun recentf-next-line (&optional (arg 1))
+   (interactive "p")
+   (recentf-open-file-other-window)
+   (next-line arg)
+   (recentf-open-file-other-window))
+ (defun recentf-previous-line (&optional (arg 1))
+   (interactive "p")
+   (recentf-next-line (- arg)))
+ 
+ (defun recentf-open-file-other-window ()
+   (interactive)
+   (let ((file (recentf-read-filename (point))))
+     (if (file-exist-p file)
+         (if (equal file (save-excursion (other-window)
+                           (unless (buffer-modified-p)
+                             (get-buffer-file-name))))
+             (let ((buffer (get-file-buffer file)))
+               (set-window (get-buffer-window buffer))
+               (delete-buffer buffer)
+               (delete-window))
+           (progn
+             (pop-to-buffer (save-excursion
+                              (find-file file)
+                              (selected-buffer))
+                            t)
+             (set-window (get-buffer-window "*Recent files*"))))
+       (progn (message "ファイルが存在しません: ~A" file) nil))))
+ 
+ (defun recentf-open-file ()
+   (interactive)
+   (let ((file (recentf-read-filename (point))))
+     (if (file-exist-p file)
+         (find-file file)
+       (progn (message "ファイルが存在しません: ~A" file) nil))))
+ 
+ (defun recentf-read-filename (p)
+   (save-excursion
+     (goto-char p)
+     (goto-bol)
+     (buffer-substring (+ (point) 3) (progn (goto-eol) (point)))))
+ 
+ (defun recentf-quit ()
+   (interactive)
+   (when (> (count-windows) 1)
+     (delete-window))
+   (delete-buffer "*Recent files*"))
+ 
+ (defun recentf ()
+   (interactive)
+   (with-output-to-temp-buffer ("*Recent files*" nil)
+     (format t "Recent files:~2%")
+     (dolist (file-name *minibuffer-file-name-history* t)
+       (format t " - ~A~%" file-name)))
+   (set-buffer "*Recent files*")
+   (recentf-mode)
+   (goto-char (point-min)))
+ 
+ (defun recentf-mode ()
+   (setf buffer-mode 'recentf-mode)
+   (setf mode-name "recentf")
+   (set-text-attribute 0 12 'file-history :bold t)
+   (set-buffer-modified-p nil)
+   (setf buffer-read-only t)
+   (use-keymap *recentf-map*))
+- Aloha! wwb -- [[Gundosirx]] &new{2009-11-17 (火) 07:31:22};
+
+#comment

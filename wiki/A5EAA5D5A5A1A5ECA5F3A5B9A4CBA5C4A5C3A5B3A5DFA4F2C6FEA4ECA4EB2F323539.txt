@@ -1,0 +1,68 @@
+* call-menu set-meta-bit *inhibit-quit* [#ne495077]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[anonymous]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: 新規項目
+-投稿日:     2007-02-10 (土) 14:15:55
+-バージョン: 
+
+** メッセージ [#z0d6eafd]
+
+ <chapter>
+ <title>set-meta-bit</title>
+ <type>Function</type>
+ <arguments>set-meta-bit CHAR SET</arguments>
+ <package>editor</package>
+ <description>
+ CHAR を Meta付き、無しの文字に相互変換します。
+ 
+   SET: non-nil の時、CHAR の Meta付きの文字を返します。
+        nil の時、    CHAR の Meta無しの文字を返します。
+ 
+ 例:
+   (set-meta-bit #\S-C-Right t)
+   =&gt;#\S-C-M-Right
+   
+   (set-meta-bit #\M-S-C-Right nil)
+   =&gt;#\S-C-Right
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>文字</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>call-menu</title>
+ <type>Function</type>
+ <arguments>call-menu N</arguments>
+ <package>editor</package>
+ <description>
+ ファイル、編集 といったメニューの N 番目の項目を開きます。
+ 0 のときは、通常 ファイルのメニューを開きます。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>メニュー</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*inhibit-quit*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ この値が t のとき、 quit-char を入力しても無視されます。
+ </description>
+ <seealso>quit-char</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file></file>
+ </chapter>
+
+----
+- どーもです。 -- [[NANRI]] &new{2007-02-17 (土) 05:31:23};
+
+#comment

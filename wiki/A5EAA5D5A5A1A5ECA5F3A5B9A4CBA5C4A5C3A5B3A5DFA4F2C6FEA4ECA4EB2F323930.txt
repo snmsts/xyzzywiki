@@ -1,0 +1,116 @@
+* window-flags [#df984cb6]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[中野]]
+-優先順位:   低
+-状態:       着手
+-カテゴリー: 新規項目
+-投稿日:     2007-09-01 (土) 10:51:08
+-バージョン: 
+
+** メッセージ [#o91eaf7e]
+ <chapter>
+ <title>ed::toggle-window-flag</title>
+ <type>Function</type>
+ <arguments>toggle-window-flag F ARG SV</arguments>
+ <package>editor</package>
+ <description>
+ ウィンドウフラグをトグルします。
+ 
+  F : フラグを指定します。フラグの詳細は set-window-flags 参照。
+  ARG : SV が t の時に意味を持ちます。
+     nil 又は 負の数 : 指定したフラグを非表示。
+     それ以外        : 指定したフラグを表示。
+  SV : nil の時、フラグで指定された設定の表示・非表示をトグルします。
+ </description>
+ <seealso>set-window-flags</seealso>
+ <seealso>toggle-ruler</seealso>
+ <seealso>toggle-newline</seealso>
+ <seealso>toggle-tab</seealso>
+ <seealso>toggle-zenkaku-space</seealso>
+ <seealso>toggle-vscroll-bar</seealso>
+ <seealso>toggle-eof</seealso>
+ <seealso>toggle-hscroll-bar</seealso>
+ <seealso>toggle-mode-line</seealso>
+ <seealso>toggle-cursor-line</seealso>
+ <seealso>toggle-function-bar</seealso>
+ <seealso>toggle-fold-line</seealso>
+ <seealso>toggle-fold-mark</seealso>
+ <seealso>toggle-cursor-line</seealso>
+ <seealso>toggle-half-width-space</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>window.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>set-window-flags</title>
+ <type>Function</type>
+ <arguments>set-window-flags FLAGS</arguments>
+ <package>editor</package>
+ <description>
+ ウィンドウフラグを設定します。
+ 
+  FLAGS : 下記のフラグのビット和を指定します。
+         *window-flag-alternate-vscroll-bar* バッファ全体表示できている
+                                             場合の垂直スクロールバー
+         *window-flag-cursor-line*           行カーソル
+         *window-flag-eof*                   EOF
+         *window-flag-fold-line*             折り返しライン
+         *window-flag-fold-mark*             折り返し
+         *window-flag-full-width-space*      全角スペース
+         *window-flag-half-width-space*      半角スペース
+         *window-flag-hscroll-bar*           水平スクロールバー
+         *window-flag-just-inverse*          （詳細不明）
+         *window-flag-line-number*           行番号
+         *window-flag-mode-line*             モード行
+         *window-flag-newline*               改行
+         *window-flag-ruler*                 ルーラ
+         *window-flag-scrolling*             描画位置の計算でジャンプスクロール
+         *window-flag-tab*                   タブ
+         *window-flag-vscroll-bar*           垂直スクロールバー
+         *window-flag-zenkaku-space*         全角スペース
+                                             (*window-flag-full-width-space*と同じ)
+ </description>
+ <seealso>toggle-window-flags</seealso>
+ <seealso>get-window-flags</seealso>
+ <seealso>set-local-window-flags</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>get-local-window-flags</title>
+ <type>Function</type>
+ <arguments>get-local-window-flags WINDOW-OR-BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ ローカルに設定されたウィンドウフラグの状態を多値で返します。
+ 
+  WINDOW-OR-BUFFER : バッファかウィンドウのいずれかを指定します。
+ 
+  戻り値 :
+    一つ目 : ローカルに t に設定されたフラグ
+    二つ目 : ローカルに nil に設定されたフラグ
+ 
+  使用例 :
+   (progn
+     (set-local-window-flags (selected-window) *window-flag-line-number* t)
+     (set-local-window-flags (selected-window) *window-flag-ruler* t)
+     (set-local-window-flags (selected-window) *window-flag-vscroll-bar* nil)
+     (get-local-window-flags (selected-window)))
+   =&gt;
+   3
+   32
+ 
+ </description>
+ <seealso>set-local-window-flags</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+- ed::toggle-window-flagは内部シンボルなので見送りました。 -- [[NANRI]] &new{2007-10-09 (火) 02:08:21};
+
+#comment

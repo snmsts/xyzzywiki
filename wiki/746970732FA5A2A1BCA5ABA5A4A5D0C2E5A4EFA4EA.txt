@@ -1,0 +1,23 @@
+05/10/26 佐野
+
+ただ展開するだけならアーカイバソフトをインストールするのも面倒なので作成。
+
+
+ (defvar *extract-archive-dir* (get-special-folder-location :desktop))
+ (defvar *extract-archive-p* t)
+ 
+ (add-hook
+  '*before-find-file-hook*
+  #'(lambda (x)
+      (when
+ 	 (and *extract-archive-p*
+ 	      (ignore-errors
+ 	       (list-archive x)))
+        (let ((outdir (make-temp-file-name
+ 		      (pathname-name (get-short-path-name x))
+ 		      "" (merge-pathnames *extract-archive-dir*) t)))
+ 	 (extract-archive x (get-short-path-name  outdir))
+ 	 (shell-execute outdir)
+ 	 (selected-buffer)))))
+----
+#comment

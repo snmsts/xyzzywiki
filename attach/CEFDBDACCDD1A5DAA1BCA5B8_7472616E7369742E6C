@@ -1,0 +1,291 @@
+;;; -*- Mode: Lisp; Package: EDITOR -*-
+;;;
+;;; transt.l
+;;;
+;;; pseude (transient-mark-mode nil) environment for xyzzy
+;;;
+
+(provide "transit")
+(in-package "editor")
+
+;; *post-command-hook* : exit selection or fix?
+;; (thanks to rv-region.l)
+
+(defvar *transit-continue-command-list* nil)
+(defvar *transit-exit-command-list* nil)
+(defvar *transit-exit-command-regexp*
+  (compile-regexp (concat
+                   "\\(quit\\|self-insert-command"
+                   "\\|.*\\(region\\|selection\\|rectangle\\|mouse\\|newline\\|indent\\|tabify\\).*\\)")))
+(defvar *transit-fix-command-list*
+  (list 'mark-paragraph 'mark-page 'mark-defun
+        'mark-sexp 'mark-word 'mark-whole-buffer
+        'exchange-point-and-mark 'other-window))
+
+(defun transit-fix ()
+  (let ((com *this-command*))
+    (if (and (not (member com *transit-continue-command-list*))
+             (or (member com *transit-exit-command-list*)
+                 (string-match *transit-exit-command-regexp*
+                               (format nil "~S" com))))
+        (delete-hook '*post-command-hook* 'transit-fix)
+      (let ((m (mark t))
+            (p (point)))
+        (and m
+             (if (member com *transit-fix-command-list*)
+                 (save-excursion
+                   (save-restriction
+                     (narrow-to-region m p)
+                     (if (> m p)
+                         (progn (goto-char (point-max))
+                           (start-selection 2 nil)
+                           (selection-beginning-of-buffer))
+                       (progn (goto-char (point-min))
+                         (start-selection 2 nil)
+                         (selection-end-of-buffer)))))
+               (begin-selection)))))))
+
+;;
+;; standard functions replacement
+;;
+
+(defun self-insert-command (&optional (arg 1))
+  (interactive "*p")
+  (and abbrev-mode
+       (not (bobp))
+       (not (syntax-word-p *last-command-char*))
+       (syntax-word-p (preceding-char))
+       (expand-abbrev))
+  (if overwrite-mode
+      (overwrite-char *last-command-char* arg)
+    (insert *last-command-char* arg))
+  (and (interactive-p)
+       (not *executing-macro*)
+       (or (syntax-close-p *last-command-char*)
+           (syntax-close-tag-p *last-command-char*)
+           (syntax-math-p *last-command-char*))
+       (save-excursion
+         (forward-char -1)
+         (and (goto-matched-parenthesis)
+              (show-matched-parenthesis))))
+  (and auto-fill *auto-fill-hook
+       (funcall *auto-fill-hook *last-command-char*))
+  t)
+
+(defun set-mark-command ()
+  (interactive)
+  (if (eq *last-command* 'set-mark-command)
+      (progn
+        (set-mark (point))
+;        (start-selection 2 nil)
+        (add-hook '*post-command-hook* 'transit-fix)
+        (unless *executing-macro*
+          (message "Transient-mark-mode temporarily enabled")))
+    (progn (if (get-selection-type)
+               (progn
+                 (set-mark t)
+                 (stop-selection)
+                 (delete-hook '*post-command-hook* 'transit-fix)))
+      (set-mark)
+      (unless *executing-macro*
+        (message "Mark set"))))
+  t)
+
+(defun mouse-left-press ()
+  (interactive)
+  (setq *mouse-selection-begin* nil)
+  (let ((click (mod *last-mouse-click-count* 6)))
+    (if (= click 1)
+        (unless (drag-selection)
+          (stop-selection)
+          (if (eq (selected-window) *last-mouse-window*)
+              (progn
+                (goto-last-mouse-point)
+                (set-mark (point))
+                (setq *mouse-selection-begin* (point)
+                      *mouse-selection-end* (point)))
+            (progn
+              (set-window *last-mouse-window*)
+              (cancel-mouse-event))))
+      (multiple-value-bind (beg end)
+          (mouse-selection-start-end
+           (save-excursion (goto-last-mouse-point) (point)) click)
+        (when beg
+          (or (> beg end)
+              (rotatef beg end))
+          (setq *mouse-selection-begin* end)
+          (setq *mouse-selection-end* beg)
+          (set-mark end)
+          (goto-char end)
+          (start-selection 2 t)
+          (goto-char beg))))))
+
+(defun mouse-ctl-left-press ()
+  (interactive)
+  (unless (drag-selection)
+    (cond ((eq (selected-window) *last-mouse-window*)
+           (goto-last-mouse-point)
+           (set-mark (point))
+           (start-selection 3 t)
+           (set-goal-column (max 0 *last-mouse-column*)))
+          (t
+           (set-window *last-mouse-window*)
+           (cancel-mouse-event))))
+  t)
+
+(defun mouse-wheel-scroll (window n lines)
+  (setq *this-command* 'mouse-wheel-scroll)
+  (or lines
+      (setq lines (window-lines window)))
+  (with-selected-window
+    (set-window window)
+    (scroll-window (* n lines))
+    (if (get-selection-type)
+        (let ((m (mark t))
+              (p (point)))
+          (save-excursion
+            (save-restriction
+              (narrow-to-region m p)
+              (if (> m p)
+                  (progn (goto-char (point-max))
+                    (start-selection 2 nil)
+                    (selection-beginning-of-buffer))
+                (progn (goto-char (point-min))
+                  (start-selection 2 nil)
+                  (selection-end-of-buffer)))))))))
+(setq mouse-wheel-handler #'mouse-wheel-scroll)
+
+(defun end-of-buffer ()
+  (interactive)
+  (unless (get-selection-type)
+    (setq *last-command* *this-command*)
+    (set-mark-command))
+  (goto-char (point-max)))
+
+(defun beginning-of-buffer ()
+  (interactive)
+  (unless (get-selection-type)
+    (setq *last-command* *this-command*)
+    (set-mark-command))
+  (goto-char (point-min)))
+
+(defun perform-replace-orig (pattern replacement query regexp interactive-p noerror)
+  (let ((literal (null regexp))
+        (count 0)
+        (nodup nil)
+        (opoint (point))
+        (not-found t)
+        (def nil)
+        (last-match nil)
+        (last-match-char nil)
+        (undo-bound (or interactive-p query)))
+    (undo-boundary)
+    (when interactive-p
+      (if regexp
+          (setq *last-search-regexp* pattern
+                *last-replace-regexp* replacement)
+        (setq *last-search-string* pattern
+              *last-replace-string* replacement))
+      (when query
+        (toggle-ime nil)))
+    (if regexp
+        (setq pattern (compile-regexp pattern *case-fold-search*)))
+    (loop
+      (unless query
+        (long-operation
+          (setq count (+ count
+                         (replace-buffer pattern
+                                         replacement
+                                         :regexp regexp
+                                         :no-dup nodup
+                                         :last-match (cons last-match last-match-char)
+                                         :case-fold *case-fold-search*
+                                         :left-bound *word-search*
+                                         :right-bound *word-search*
+                                         :literal literal))))
+        (when not-found
+          (setq not-found (zerop count)))
+        (return))
+      (unless (scan-buffer pattern
+                           :regexp regexp
+                           :no-dup nodup
+                           :last-match (cons last-match last-match-char)
+                           :case-fold *case-fold-search*
+                           :left-bound *word-search*
+                           :right-bound *word-search*)
+        (return))
+      (if (and (eql (match-beginning 0) (match-end 0))
+               (eql last-match (match-beginning 0)))
+          (setq nodup t)
+        (progn
+          (setq not-found nil)
+          (show-match)
+          (unless (pos-visible-in-window-p (point))
+            (recenter))
+          (refresh-screen)
+          (message (if (eq def 'help)
+                       "(y)置換, (n)スキップ, (!)残り全部, (u)アンドゥ, (C-g)中止, (.)中止して戻る"
+                     "置換する?"))
+          (setq def (lookup-keymap *query-replace-map* (read-char *keyboard*) t))
+          (when (cond ((eq def 'act)
+                       t)
+                      ((eq def 'skip)
+                       (setq nodup t)
+                       nil)
+                      ((eq def 'automatic)
+                       (setq query nil)
+                       t)
+                      ((eq def 'undo)
+                       (and (plusp count)
+                            (undo)
+                            (setq count (1- count)))
+                       (setq nodup nil)
+                       nil)
+                      ((eq def 'quit-and-back)
+                       (goto-char opoint)
+                       (setq def 'quit)
+                       (return))
+                      ((eq def 'quit)
+                       (return))
+                      ((eq def 'recenter)
+                       (recenter)
+                       (setq nodup nil)
+                       nil)
+                      ((and (consp def)
+                            (eq (car def) 'throw))
+                       (throw (cdr def) count))
+                      (t (setq def 'help)
+                         (setq nodup nil)
+                         nil))
+            (setq last-match-char (unless (= (match-end 0) (point-min))
+                                    (char-before (match-end 0))))
+            (unless (replace-match replacement :literal literal)
+              (return))
+            (setq last-match (point))
+            (setq nodup (= (match-beginning 0) (match-end 0)))
+            (when undo-bound
+              (undo-boundary))
+            (setq count (1+ count)))))
+      (when (eobp)
+        (return)))
+    (hide-match)
+    (unless noerror
+      (and (eq def 'quit)
+           (quit))
+      (and not-found
+           (error "文字列が見つかりません")))
+    (when (and interactive-p
+               (null *executing-macro*))
+      (message "~d個置換しました" count))
+    count))
+
+(defun perform-replace (pattern replacement query regexp interactive-p noerror)
+  (if (get-selection-type)
+      (save-excursion
+        (save-restriction
+          (narrow-to-region (mark) (point))
+          (goto-char (point-min))
+          (perform-replace-orig pattern replacement query regexp interactive-p noerror)))
+    (perform-replace-orig pattern replacement query regexp interactive-p noerror)
+    ))
+

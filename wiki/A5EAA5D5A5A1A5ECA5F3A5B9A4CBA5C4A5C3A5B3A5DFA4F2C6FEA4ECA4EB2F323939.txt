@@ -1,0 +1,42 @@
+* defsetf [#rdbfba07]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[佐野]]
+-優先順位:   低
+-状態:       着手
+-カテゴリー: 新規項目
+-投稿日:     2008-03-20 (木) 19:16:30
+-バージョン: 
+
+** メッセージ [#yba951fe]
+ <chapter>
+ <title>defsetf</title>
+ <type>Macro</type>
+ <arguments>defsetf ACCESS-FN &rest FORMS</arguments>
+ <package>lisp</package>
+ <description>
+ (defsetf test (&optional (hash '*default-hash*) (key :default)) (store)
+   `(setf (gethash ,key ,hash) ,store))
+ => (setf test nil) ;;値には意味ないかも…
+ 
+ 
+  (macroexpand-1 '(setf (test h k) :toset))
+ => (setf (gethash k h) :toset)
+ 
+ (macroexpand-1 '(setf (test) 1))
+ => (setf (gethash :default *default-hash*) 1)
+ 
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>制御構造</section>
+ <file>setf.l</file>
+ </chapter>
+
+
+リハビリ兼ねて。
+
+使い方があるだけでだいたいどうでもよくなるよね。
+----
+- どーもです。 -- [[NANRI]] &new{2010-04-29 (木) 04:07:00};
+
+#comment

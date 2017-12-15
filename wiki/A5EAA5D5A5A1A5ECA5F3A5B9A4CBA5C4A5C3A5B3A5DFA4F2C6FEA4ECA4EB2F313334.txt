@@ -1,0 +1,90 @@
+* &#x2a;print-シリーズ [#q9622008]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-06-18 11:34:03 (土)
+-バージョン: 20050330
+
+**メッセージ [#q1b74d45]
+力尽きた…
+ <chapter>
+ <title>*print-pretty*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>lisp</package>
+ <description>
+ 式の表示を見やすくします。
+ 
+ 標準はtです。
+ 
+ (flet ((f (x) (princ x) (terpri)))
+   (let ((*print-pretty* t))
+     (f '('a #'b))  ;;tの時の表示
+     (setq *print-pretty* nil)
+     (f '('a #'b))));;nilの時の表示
+ =&gt; ('a #'b)
+    ((quote a) (function b))
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>*print-length*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>lisp</package>
+ <description>
+ 長いリストの表示を途中で打ち切ります。
+ 
+ (setq *print-length* nil) =&gt; nil
+ (princ '(a b c d e f g h i j))
+ =&gt;(a b c d e f g h i j)
+ 
+ (setq *print-length* 5) =&gt; 5
+ (princ '(a b c d e f g h i j))
+ =&gt;(a b c d e ...)
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>*print-circle*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>lisp</package>
+ <description>
+ 循環リストの表示を省略形にします
+ 
+ 標準はnilです。read-eval-printのループでの
+ 表示は常にtのようです。
+ 
+ (setq *print-circle* nil) =&gt; nil
+ (setq x (list 'a)) =&gt; (a)
+ (setf (cdr x) x) =&gt; #1=(a . #1#)
+ (princ x)
+ =&gt; (a a a ...
+ ;;無限に続くのでC-gで終了
+ (setq *print-circle* t) =&gt; t
+ (princ x)
+ #1=(a . #1#)
+ =&gt; #1=(a . #1#)
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file></file>
+ </chapter>
+
+----
+-取り込みました→[[refwiki:*print-circle*]], [[refwiki:*print-length*]], [[refwiki:*print-pretty*]] -- [[NANRI]] &new{2005-07-23 22:15:15 (土)};
+
+#comment

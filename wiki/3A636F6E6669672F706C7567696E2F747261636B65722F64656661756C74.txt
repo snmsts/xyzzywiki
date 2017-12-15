@@ -1,0 +1,41 @@
+#freeze
+* Trackerプラグイン: デフォルト設定 [#e429710c]
+trackerプラグインで設定を指定しなかった場合、この設定が使用されます。(例 "#tracker")
+
+----
+#ls(./)
+
+* fields [#xdd96f8e]
+|項目名  |見出し    |タイプ  |オプション|デフォルト|h
+|Proposer|投稿者    |page    |20        |lambda |
+|Category|カテゴリー|select  |          |          |
+|Severity|重要度    |select  |          |低        |
+|Status  |状態      |select  |          |提案      |
+|Version |バージョン|text    |10        |          |
+|Summary |サマリ    |title   |60        |          |
+|Messages|メッセージ|textarea|60,6      |          |
+
+* Severity [#e40d9699]
+|見出し|セルの書式         |h
+|緊急  |BGCOLOR(#ff8080):%s|
+|重要  |BGCOLOR(#ffcccc):%s|
+|普通  |BGCOLOR(#cccccc):%s|
+|低    |BGCOLOR(#ffffff):%s|
+
+* Status [#s7c80753]
+|見出し |セルの書式         |h
+|提案   |BGCOLOR(#ffccff):%s|
+|着手   |BGCOLOR(#ccccff):%s|
+|CVS待ち|BGCOLOR(#ffccff):%s|
+|完了   |BGCOLOR(#ccffcc):%s|
+|保留   |BGCOLOR(#ccddcc):%s|
+|却下   |BGCOLOR(#cccccc):%s|
+
+* Category [#hc7e9ab5]
+|見出し          |セルの書式         |h
+|ツッコミをいれる |BGCOLOR(#ffccff):%s|
+|typo            |BGCOLOR(#ccccff):%s|
+|新規項目        |BGCOLOR(#ccffcc):%s|
+|記述形式        |BGCOLOR(#ccffcc):%s|
+|利用環境        |BGCOLOR(#ccddcc):%s|
+|その他          |BGCOLOR(#cccccc):%s|

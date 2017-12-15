@@ -1,0 +1,187 @@
+#contents
+
+* はじめに [#ideb4c9b]
+なかださん作のcvs-modeについての説明です。
+cvsについての説明などはありません。
+cvsについて知りたければ
+
+-[[CVS入門:http://home.jp.freebsd.org/~kogane/cvs/cvs.html]]
+-[[CVS を使ってみよう！:http://shimaki-hp.hp.infoseek.co.jp/cvs/book1.html]]
+
+などをご覧ください。
+
+* 使用環境 [#z53fbcf5]
+-xyzzy 0.2.2.233, 0.2.234
+-cvs-mode 0.1.9
+-cvs cygwin版の 1.11.6
+-cvs WinCVS付属のcvs.exe
+
+で試しています。
+
+* インストール [#effe78f9]
+なかださんのサイトの[[アーカイブ:http://www.rubyist.net/~nobu/xyzzy/]]から最新版をダウンロードします。
+(2004/01/11時点での最新版は cvs-mode-0.1.9.tar.gz です。)
+
+site-lisp以下に
+
+- cvs.l
+- patch-mode.l
+
+をおいて.xyzzyに (require "cvs")と追加します。
+
+* ローカルで使用する [#g9860545]
+** 準備 [#u2d22b8b]
+特に難しいことはありません。あらかじめ、コマンドラインなどで、
+
+ cvs import
+ cvs checkout
+
+を済ませておけば問題なく使用できるはずです。
+
+** 実行してみる [#kfff7de3]
+checkout したファイルをxyzzyで開くとcvs-modeが有効になっているはずです。
+モードの表示が 
+ (LaTeX:1.2*)
+などのように (メジャーモード:ファイルのバージョン) という表記になっていればcvs-modeが有効になっています。
+
+ここで、ファイルに変更を加えて C-c v i と実行するとファイルをコミットできます。
+変更履歴を入力するバッファが開くので変更点を書いて C-c C-c と実行するとコミット完了です。
+
+新たにファイルを追加したい場合は、新たに追加するファイルで C-c v a とすると、そのファイルで、cvs-modeが有効になります。この状態でコミットすればファイルが追加されます。
+
+これだけで一応cvs-modeが使用できるはずです。
+
+そのほかの細かい使用方法は cvs-modeに添付されているReadme などをご覧ください。
+
+* cvsサーバを使用する(pserver) [#m769a344]
+使っていないのでわかりません。
+
+* cvsサーバを使用する(ssh) [#k659fba2]
+ssh認証を利用してxyzzyのcvs-modeを使う方法を書きます。
+ここでは ssh-agent もしくは pageant を使用して ssh認証を行います。
+
+pageantを利用するほうがお勧めです。
+
+ssh-agentを使う場合はcygwinの利用を前提としています。
+
+** puttyを利用する(こちらのほうがおすすめ) [#z8a742d2]
+*** putty一式の入手 [#u511fd5c]
+[[puttyごった煮版:http://yebisuya.dip.jp/Software/PuTTY/]]をダウンロードして、
+puttyのアーカイブ一式を入手してください。
+
+*** pageantで認証できるようにする [#y964d642]
+puttygenで鍵の生成し、サーバにpublic key をおきます。
+[[PuTTY で鍵交換方式による SSH 接続:http://www.kuins.kyoto-u.ac.jp/news/47/putty-gen.html]]の 1〜3を参照してください。
+
+*** Windowsの設定 [#o171cdab]
+Windowsの環境変数に
+ CVS_RSH=ssh
+というのを追加してください。
+これを追加しないとxyzzyでcvs-modeを使用したときに ssh ではなくて rsh で接続しようとしてしまうため、サーバへの接続がうまく行きません。
+
+*** 実行 [#p22548a2]
+pageantを起動して、private keyを登録します。
+パスフレーズをきかれるので入力してください。
+
+つぎにxyzzyを立ち上げ、cvsの管理下にあるファイルを開きます。
+
+確認のために、
+
++ C-x &
++ cvs -n update
+
+などと打ってみて、正しく結果が返るようならうまくいっています。
+ここで、接続に失敗したなどのメッセージが帰ってくる場合は設定に失敗しています。
+
+
+** ssh-agentを利用する [#k86577ea]
+
+*** ssh-agentで認証できるようにする [#r94c1cdd]
+以下の二つのサイトを参考にすればssh-agentの設定はできると思います。
+
+//-[[SSH でラクしよう:http://www.anarg.jp/~t-eguti/linux/ssh-agent.html]]
+-[[SSH でラクしよう>http://www-ana.ist.osaka-u.ac.jp/~t-eguti/linux/ssh-agent.html]]
+-[[ssh-agent で快適 ssh 生活:http://www.snowelm.com/~t/tips/20030625.ja.html]]
+
+ここをみて、ssh-agentでssh認証できるようにしておいてください。
+
+cygwin以外でもssh-agentでssh認証できるようにするために
+
+-[[win-ssh-askpass:http://www.ganaware.jp/S/win-ssh-askpass/]]
+
+をダウンロードしてcygwinでコンパイルしてください。
+アーカイブを解凍してmakeすればいいはずです。
+
+*** Windowsの設定 [#j9cf11c3]
+[[pageantの時>#content_1_11]]と同様です。
+
+Windowsの環境変数に
+ CVS_RSH=ssh
+というのを追加してください。
+
+
+*** 実行 [#nac461ec]
+まず、win-ssh-askpass をコンパイルしてできる、win-ssh-agent を実行してパスフレーズを打ち込みます。
+これで、xyzzyからもssh-agentでssh接続できるようになります。
+
+pageantのときと同様に、xyzzyを立ち上げ、cvsの管理下にあるファイルを開き、
+ちゃんと実行できるか確認してください。
+
+*** 注意点 [#g0b179e8]
+- win-ssh-agentを立ち上げたあとに xyzzy を立ち上げるようにしてください。
+-- そうしないと ssh関連の環境変数をxyzzyから参照できないので。
+
+* 既知のバグ [#e93b636e]
+-cvs::cvs-checkin-directory がうまく動きません。
+-- ひとつずつcommitする場合にはまったく問題はありません。
+-- こんなのでどうでしょう。miyamuko
+
+ --- cvs.l.orig	2002-01-10 02:26:02.000000000 +0900
+ +++ cvs.l	2004-03-12 23:13:00.953125000 +0900
+ @@ -307,11 +307,10 @@
+        (cvs-mode))))
+  
+  (defun revert-work-files-under (dir)
+ -  (let (name (len (length dir)))
+ -    (dolist (buf (buffer-list))
+ -      (and (setq name (get-buffer-file-name buf))
+ -	   (string= (substring name 0 len) dir)
+ -	   (revert-work-file buf)))))
+ +  (dolist (buf (buffer-list))
+ +    (and (setq name (get-buffer-file-name buf))
+ +         (path-equal (directory-namestring name) dir)
+ +         (revert-work-file buf))))
+  
+  (defun revert-work-files-sentinel (proc)
+    (set-buffer (process-buffer proc))
+ @@ -415,7 +414,7 @@
+  		(read-revision "Revision: " *commit-revision*)
+  	      *commit-revision*)))
+    (let ((comment (buffer-substring (point-min) (point-max)))
+ -	(buf file-buffer))
+ +	(buf *file-buffer*))
+      (pushnew comment *comment-history* :test #'string-equal)
+      (set-buffer-modified-p nil)
+      (commit buf rev comment :encoding (buffer-fileio-encoding))
+ @@ -439,7 +438,7 @@
+  		(revert-work-files-under (directory-namestring ".")))
+  	      (delete-buffer log))
+  	  (delete-file temp))
+ -      (and (setq buf (*execute-async* cmd :sentinel :revert))
+ +      (and (setq buf (*execute-async* cmd nil :sentinel :revert))
+  	   (interactive-p)
+  	   (switch-to-buffer-other-window buf)))))
+  
+ @@ -475,7 +474,7 @@
+  (defun log-init (buf rev comment)
+    (use-keymap *log-mode-map*)
+    (mapcar 'make-local-variable *log-local-variables*)
+ -  (setq file-buffer buf)
+ +  (setq *file-buffer* buf)
+    (setq *commit-revision* rev)
+    (setq *current-log-content* nil)
+    (set-buffer-eol-code *eol-lf*)
+
+----
+
+#comment

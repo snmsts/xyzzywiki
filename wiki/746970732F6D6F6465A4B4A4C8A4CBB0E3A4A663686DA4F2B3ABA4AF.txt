@@ -1,0 +1,25 @@
+なんとなく意味も無くささださんに捧げると良いのかと思いました。　
+
+佐野 2008/03/13
+
+ (defvar *mode-chm-assoc*
+   `(("Lisp Interaction" #1=,(merge-pathnames "reference.chm" (etc-path)))
+     ("Lisp" #1#)))
+ 
+ (defun mode-dependent-chm ()
+   (interactive)
+   (let ((asc (assoc mode-name *mode-chm-assoc* :test #'equal)))
+     (if (functionp (second asc))
+ 	(funcall (second asc) asc)
+       (ed::html-help (second asc)
+ 		     (funcall (or (assoc :topic (cddr asc))
+ 				  #'ed::get-winhelp-topic))))))
+ 
+ #|
+ 普通の人は以下のようにしておくと良いでしょう。
+ (global-set-key #\F1 'mode-dependent-chm)
+ 
+ 
+ kiaさんのjscript-modeではやりのchmを使いたい。
+ (push '("JScirpt" "~/jscref.chm") *mode-chm-assoc*)
+ |#

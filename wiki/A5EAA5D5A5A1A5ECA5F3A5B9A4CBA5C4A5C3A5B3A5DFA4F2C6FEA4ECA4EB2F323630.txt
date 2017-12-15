@@ -1,0 +1,98 @@
+* cond, with-open-file, with-open-stream [#v108bcae]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[anonymous]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: ツッコミをいれる
+-投稿日:     2007-02-10 (土) 19:28:02
+-バージョン: 
+
+** メッセージ [#d4a30c13]
+外部からの引用が消えて説明がなくなってしまった分をとりあえず書きました。
+
+ <chapter>
+ <title>cond</title>
+ <type>Macro</type>
+ <arguments>cond &amp;rest FORMS</arguments>
+ <package>lisp</package>
+ <description>
+ C 言語などの if ... else if ... のようなものです。
+ 
+ 構文は以下のようになっています。
+ 
+ (cond (&lt;テスト1&gt; &lt;式&gt;〜&lt;式&gt;)
+       (&lt;テスト2&gt; &lt;式&gt;〜&lt;式&gt;)
+         ...
+       (&lt;テストn&gt; &lt;式&gt;〜&lt;式&gt;))
+ 
+ テストが真になる最初の節の式を評価します。
+ 上の式は次と等価です。
+ 
+ (if &lt;テスト1&gt;
+      (progn &lt;式&gt;〜&lt;式&gt;)
+    (if &lt;テスト2&gt;
+         (progn &lt;式&gt;〜&lt;式&gt;)
+       ...
+       (if &lt;テストn&gt;
+ 	   (progn &lt;式&gt;〜&lt;式&gt;)
+ 	 nil)))
+ 
+ テストに t を指定するとデフォルトで実行される節を指定できます。
+ 
+ また特別な場合として、テストの後ろの式がない場合にはテストの結果が戻り値
+ となります。
+ </description>
+ <seealso>if</seealso>
+ <link></link>
+ <section>制御構造</section>
+ <file>evalmacs.l</file>
+ </chapter>
+
+ <chapter>
+ <title>with-open-stream</title>
+ <type>Macro</type>
+ <arguments>with-open-stream (VAR STREAM) &amp;body BODY</arguments>
+ <package>lisp</package>
+ <description>
+ 局所変数をストリームに束縛して本体を評価し、ストリームを閉じます。
+ 
+ 参考：
+   connect の例を参照のこと
+ </description>
+ <seealso>with-open-file</seealso>
+ <seealso>connect</seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>stream.l</file>
+ </chapter>
+
+ <chapter>
+ <title>with-open-file</title>
+ <type>Macro</type>
+ <arguments>with-open-file (STREAM FILENAME &amp;rest OPTIONS) &amp;body BODY</arguments>
+ <package>lisp</package>
+ <description>
+ 指定されたファイルからストリームを作成し、本体を評価します。
+ 
+   STREAM    : ストリームに束縛される変数
+   FILENAME  : ストリームを作成するファイル名
+   OPTIONS   : キーワード引数。open へ渡せるものと同じ
+   BODY	    : 実行する本体
+ 
+ 使用例：
+   (with-open-file (fp (merge-pathnames "lisp/henmi/c++-kwd.txt" (si:system-root)))
+     (let ((line nil))
+       (while (setq line (read-line fp nil nil nil))
+         (push line *kekka*))))
+ </description>
+ <seealso>with-open-stream</seealso>
+ <seealso>open</seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>stream.l</file>
+ </chapter>
+
+----
+- どーもです。 -- [[NANRI]] &new{2007-02-17 (土) 05:30:34};
+
+#comment

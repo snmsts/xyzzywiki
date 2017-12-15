@@ -1,0 +1,200 @@
+* いろいろ [#p60ac229]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-04-02 (日) 23:41:35
+-バージョン: 
+
+** メッセージ [#l6ae3687]
+いろいろ書いたものを上げておきます．
+
+ <chapter>
+ <title>open-stream-p</title>
+ <type>Function</type>
+ <arguments>streamp OBJECT</arguments>
+ <package>lisp</package>
+ <description>
+ OBJECTが開いたストリームか否かを返します。
+   t    OBJECTは開いたストリームです。
+   nil  OBJECTはストリームでないか、閉じています。
+ </description>
+ <seealso>streamp</seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ 
+ <chapter>
+ <title>file-visited-p</title>
+ <type>Function</type>
+ <arguments>file-visited-p &amp;optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ BUFFER がファイル名を持つとき t となります。
+ デフォルトでは BUFFER は 現在のバッファです。
+ </description>
+ <section>バッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>pipe-command</title>
+ <type>Function</type>
+ <arguments>pipe-command CMD</arguments>
+ <package>editor</package>
+ <description>
+ CMD を実行し、プロセスの終了を待って標準出力を *Shell output* バッファ
+ に出力します。[C-x @]
+ </description>
+ <seealso>execute-shell-command</seealso>
+ <section>プロセス</section>
+ <file>process.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filter-buffer</title>
+ <type>Function</type>
+ <arguments>filter-buffer COMMAND</arguments>
+ <package>editor</package>
+ <description>
+ バッファ全体の内容を標準入力につなげて COMMAND を実行します。[C-x #]
+ COMMAND の終了を待ち、終了するとバッファの内容は一旦全て消去され、
+ COMMAND の標準出力がバッファに出力されます。
+ </description>
+ <seealso>filter-region</seealso>
+ <section>プロセス</section>
+ <file>process.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filter-region</title>
+ <type>Function</type>
+ <arguments>filter-region COMMAND &amp;optional START END</arguments>
+ <package>editor</package>
+ <description>
+ リージョンの内容を標準入力につなげて COMMAND を実行します。[C-x l]
+ COMMAND の終了を待ち、終了するとリージョンの内容は一旦全て消去され、
+ COMMAND の標準出力がリージョンにに出力されます。
+ 
+ リージョンが指定されていないときは、COMMANDの結果を単にカーソル位置
+ に出力します。
+ </description>
+ <seealso>call-process</seealso>
+ <section>プロセス</section>
+ <file>process.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>command-output-send-input</title>
+ <type>Function</type>
+ <arguments>command-output-send-input &amp;optional EOL</arguments>
+ <package>editor</package>
+ <description>
+ 現在のバッファに関連付けられたプロセスに対して、マーカーと現在行の行末
+ の間の文字と EOL をつなげて送ります。 EOL のデフォルトは \n です。
+ 
+ マーカーは、プロセスが最後に出力したバッファの位置につけられています。
+ </description>
+ <seealso>command-output-alternate-send-input</seealso>
+ <seealso>marker-point</seealso>
+ <seealso>process-send-string</seealso>
+ <section>プロセス</section>
+ <file>process.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>command-output-alternate-send-input</title>
+ <type>Function</type>
+ <arguments>command-output-alternate-send-input</arguments>
+ <package>editor</package>
+ <description>
+ 現在のバッファに関連付けられたプロセスに対して、マーカーと現在行の行末
+ の間の文字と \r をつなげて送ります。
+ 
+ マーカーは、プロセスが最後に出力したバッファの位置につけられています。
+ </description>
+ <seealso>command-output-send-input</seealso>
+ <section>プロセス</section>
+ <file>process.l</file>
+ </chapter>
+ 
+ 
+ <chapter>
+ <title>command-output-mode</title>
+ <type>Function</type>
+ <arguments>&amp;optional </arguments>
+ <package>editor</package>
+ <description>
+ バッファを command-output-mode にします。
+ 自動保存とundo情報を記録しなくなります。
+ 
+ また、以下のように設定された *command-output-mode-map* がキーマップ
+ として使われます。
+   RET : command-output-send-input 
+   C-j : command-output-alternate-send-input
+ </description>
+ <seealso>command-output-send-input</seealso>
+ <seealso>command-output-alternate-send-input</seealso>
+ <section>プロセス</section>
+ <file>process.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>get-next-buffer</title>
+ <type>Function</type>
+ <arguments>get-next-buffer &amp;optional BUFFER REVERSE TAB-ORDER INTERNAL</arguments>
+ <package>editor</package>
+ <description>
+ BUFFER の次のバッファを返します。
+   
+   BUFFER   : 基準となるバッファを指定します。デフォルトは現在のバッファです。
+   REVERSE  : non-nil で逆順で返します。
+   TAB-ORDER: non-nil でタブバーの順序で返します。
+   INTERNAL : non-nil でバッファ名の先頭が空白のバッファも戻り値となり得ます。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*scroll-bar-step*</title>
+ <type>Variable</type>
+ <arguments>*scroll-bar-step*</arguments>
+ <package>editor</package>
+ <description>
+ スクロールバーについている▲・▼ボタンを押したときのスクロール量です。
+ デフォルトは 2 です。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>internal-time-units-per-second</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ get-internal-real-time で取得した値の、1秒あたりの量を表します。
+ Windowsの種類により、この値が変わるかどうかは不明です。
+ </description>
+ <seealso>get-internal-real-time</seealso>
+ <link></link>
+ <section>日付・時間</section>
+ <file></file>
+ </chapter>
+--------
+- どーもです。\n と \r の表現は難しいなぁと思ってます。ラインフィードとキャリッジリターンって分かってもらえますかねぇ -- [[NANRI]] &new{2006-04-03 (月) 23:30:36};
+- ラインフィード (\n)， キャリッジリターン (\r)  と書くのが妥協点といったところですかね． 自分も久しくその名前は聞いていませんでした． -- [[中野]] &new{2006-04-06 (木) 22:04:30};
+- エスケープシーケンスの説明で触れるべきかなと思い直しました。よってこのままで。 -- [[NANRI]] &new{2006-04-07 (金) 20:21:01};
+- 「l」と「|」が間違ってました(^^; 普段は大丈夫です? -- [[NANRI]] &new{2006-05-06 (土) 05:26:11};
+
+#comment

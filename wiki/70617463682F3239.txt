@@ -1,0 +1,29 @@
+* merge-tags.lでdirect-tag-jumpできないことがある [#taf105be]
+-ページ:     [[patch]]
+-投稿者:     [[lambda]]
+-優先順位:   低
+-状態:       提案
+-カテゴリー: 訂正
+-投稿日:     2008-03-19 (水) 17:34:30
+-バージョン: 
+
+** メッセージ [#ifec8e73]
+ --- merge-tags.l~	Sun Aug 26 17:12:40 2007
+ +++ merge-tags.l	Wed Mar 19 15:20:02 2008
+ @@ -340,6 +340,8 @@
+  	      (perform-replace "  +" " " nil t nil t)
+  	      (goto-char (point-min))
+  	      (perform-replace "\036" "\n" nil nil nil t)
+ +	      (goto-char (point-min))
+ +	      (perform-replace "^ +" "" nil t nil t)
+  	      ;; .XTAGS に書き出し
+  	      #+:debug (format *debug* "・writing ~A\n" (merge-pathnames (concat "." *tags-file-name*) dir))
+  	      (write-file (merge-pathnames (concat "." *tags-file-name*) dir))
+----
+- direct-tag-jump できないことを実証する手順は無いんですか？ --  &new{2008-03-21 (金) 22:58:24};
+- XTAGSを見て最終行にスペースのみの行があれば動かないと思います。追加した拡張の種類にもよるのかもしれません。 --  &new{2008-03-21 (金) 23:25:46};
+- 素のxyzzyにext-lisp-maketags.lだけを入れてsiteinit.lに(require "ext-lisp-maketags")とだけ書いて(si:system-root)にTAGSファイルを作成するとdirect-tag-jumpできないようです。ext-lisp-maketags.lの問題だったようです。それとは別にmerge-tags.lはnetinstallerからインストールできなくなっているようです。 --  &new{2008-03-25 (火) 11:23:41};
+- すみません。修正したのを上げておきます。 -- [[中野]] &new{2008-04-29 (火) 08:02:43};
+- ext-lisp-maketagsの修正でこのパッチは不要になったはず、だと思います。何か問題あれば、またお知らせください。 -- [[中野]] &new{2008-05-13 (火) 06:31:01};
+
+#comment

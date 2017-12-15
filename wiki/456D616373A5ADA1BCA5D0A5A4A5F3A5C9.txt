@@ -1,0 +1,92 @@
+#freeze
+#contents
+*Emacs風キーバインドに近づける [#h692669d]
+
+ファイル名は emacskey.l または rms.l ？？
+
+とりあえず必要最小限なものから。足りないものは追加してください。
+
+ ; key bind
+ (global-set-key #\C-/ 'undo)
+ (global-set-key #\M-v 'previous-page)
+ (global-set-key #\M-% 'replace-string)
+ (global-set-key #\C-M-% 'replace-regexp)
+ ;(global-set-key #\M-% 'query-replace)
+ ;(global-set-key #\C-M-% 'query-replace-regexp)
+ (global-set-key #\C-M-\\ 'indent-region)
+ (global-set-key '(#\C-x #\h) 'mark-page)
+ (global-set-key '(#\C-x #\u) 'undo)
+ (global-set-key '(#\C-x #\r #\d) 'delete-rectangle)
+ (global-set-key '(#\C-x #\r #\k) 'kill-rectangle)
+ (global-set-key '(#\C-x #\r #\o) 'open-rectangle)
+ (global-set-key '(#\C-x #\r #\t) 'string-rectangle)
+ (global-set-key '(#\C-x #\r #\y) 'yank-rectangle)
+ (global-set-key '(#\C-x #\r #\w) 'copy-rectangle)
+ (global-set-key #\Home 'beginning-of-buffer)
+ (global-set-key #\End 'end-of-buffer)
+ (global-set-key #\C-_ 'undo)
+ (global-set-key #\C-- 'negative-argument)
+ (global-set-key #\C-\\ 'toggle-ime)
+ (dolist (c '(#\C-0 #\C-1 #\C-2 #\C-3 #\C-4 #\C-5 #\C-6 #\C-7 #\C-8 #\C-9))
+   (global-set-key c 'digit-argument))
+ (global-set-key '(#\C-x #\n #\n) 'narrow-to-region)
+ (global-set-key '(#\C-x #\n #\w) 'widen)
+ (global-set-key #\M-: 'eval-expression)
+ (substitute-key-definition 'next-virtual-line 'next-line)
+ (substitute-key-definition 'previous-virtual-line 'previous-line)
+
+ ; インクリメンタルサーチ (C-s, C-r)
+ (require "isearch")
+
+ ; dynamic abbreviation
+ (require "dabbrev")
+ (global-set-key #\M-/ 'dabbrev-expand)
+
+ ; write-file
+ ; バッファーの名前や割り付けられているファイル名も新しく指定
+ ; されたファイルに変える
+ (define-key ctl-x-map #\C-w 'emacs-write-file)
+
+ ; C-x C-v
+ ; 廃棄するバッファのファイル名がミニバッファに表示
+ (setq *find-other-file-requires-file-name* t)
+
+ ; sort-lines
+ (defun sort-lines (start end)
+   (interactive "*r")
+   (filter-region "sort" start end))
+
+ ; ウィンドウを左右に分割
+ (define-key ctl-x-map #\3 'split-window-vertically)
+
+ ; ispell-word
+ (defun ispell-word()
+   (interactive "*")
+   (let ((end (progn
+                (skip-chars-forward "A-Za-z")
+                (point)))
+         (beg (progn
+                (skip-chars-backward "A-Za-z")
+                (point))))
+     (ispell-region beg end)))
+ (global-set-key #\M-$ 'ispell-word)
+
+ ; frame
+ (global-set-key '(#\C-x #\5 #\o) 'other-pseudo-frame)
+ (global-set-key '(#\C-x #\5 #\0) 'delete-pseudo-frame)
+ (global-set-key '(#\C-x #\5 #\2) 'new-pseudo-frame)
+
+ ; 文字コードの変更
+ (global-set-key '(#\C-x #\RET #\f) 'change-fileio-encoding)
+
+----
+//-おおこれは素晴らしい。ですがですね。ですがですね。最近、気が付いたのですが、#\C-x #\C-wにバインドされてる 'emacs-write-file って emacs のそれとは動作が違いますよね。xyzzy だとリジナルを消すんですよ。emacs だとオリジナルが残るんですよ。おかげで幾多のファイルが消えちゃました。口惜しい！ って事で自分で書いてみます。 --  &new{2005-07-10 21:41:20 (日)};
+//↑と思ったのですが、勘違いかも。再現せず。追って実験しまする。
+
+// set-buffer-file-coding-system に相当するのが、change-fileio-encoding だと思うのでが、もっと適切なのがあれば、修正お願いします。
+- meadow の el からここにコピペすると問題あるでしょうか？ --  &new{2006-05-13 (土) 20:2:53};
+- [[質問箱/172]]に移動しました。 -- [[佐野]] &new{2006-05-15 (月) 15:50:02};
+- M-% と C-M-% は query-replace(-regexp) がいいかと。 --  &new{2006-05-18 (木) 16:5:07};
+- 個人的には M-SPC で just-one-space をよく使うので... -- [[ふ]] &new{2006-06-04 (日 01:19:31};
+- 折り返しの有効時、emacs はカーソル移動が物理行で動きますので、next-virtual-line が nex-line となるようにしました。やり方がまずかったら訂正してください。 --  &new{2007-06-08 () 23:23:21};
+- コメントつけてみました。量が膨大なのでリンクだけ張っておきます。ttp://d.hatena.ne.jp/rarairou/20080306/1204817863 -- [[極薄装甲板]] &new{2008-04-06 (日) 00:14:09};

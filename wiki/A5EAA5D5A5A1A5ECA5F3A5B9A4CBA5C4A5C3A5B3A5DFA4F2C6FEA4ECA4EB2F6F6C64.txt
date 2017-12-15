@@ -1,0 +1,824 @@
+*old
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 
+-優先順位: 普通
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 
+-バージョン: 
+
+**メッセージ[[リファレンスにツッコミを入れる]]
+
+*ルール
+**基本ルール
+-思ったことは気楽に書いてみる。
+-リファレンスに取り込まれた時点で取り込まれたツッコミは消える。
+//--現時点ではリファレンスを公開した段階で山本が消します。
+//山本さんについてきます。状況が変わったらそれに即して書き直す（される）ので気にせずメス入れをしていただきたいです。 佐野 03/04/28
+**各セクションの使い方
+:ツッコミを入れる|うまく分類が出来ない要望などはここへ。
+:typo|誤植をつっこむところ。
+:これを調べた|リファレンスに無い項目を書く。山本さんに直接メールの方が良いかも。
+:記述形式|リファレンス記述形式について。
+**参考
+:本家|http://www1.odn.ne.jp/ymtz/reference.html
+:リファレンスの書式|http://www1.odn.ne.jp/ymtz/reference_format.html
+:リファレンスの使い方|http://hie.s64.xrea.com/xyzzy/note/use_reference.html
+**目次
+#contents
+*ツッコミを入れる。
+**intern , symbol-name
+-すみません、もう少し解説をお願いします。山本 2003/06/25
+-ごめんなさい。寝ぼけて書いていました。書き直します。（といっても今はアルコール入り） 佐野 2003/06/25
+機能的に真逆なのですが、symbol-nameからinternはなかなか推測できません。internはもう少し意味が広いと思いますが…。
+ (intern "hage")
+ =>hage
+ (symbol-name 'hage)
+ =>"hage"
+互いにseealsoで参照しあっているようになっていて欲しいと思いました。
+-どちらかというとmake-symbol⇔symbol-name、intern⇔uninternとは思いますが、近いので入れましょう。山本 2003/07/05
+**catch
+throwを投げるためのラベルを設定します。
+C++のtryに相当します。
+
+  C++  : catch  throw
+  Lisp : try    throw
+
+とありますが、catch と try の位置が逆のような気がします。
+throwの所も同様です。山本直 03/06/07
+-う、昔C++をやってたのが嘘のように忘れてますね。直しておきます。ありがとうございます。山本 2003/06/08
+
+**delete-menu
+  TAG-OR-POSITION-P : TAG-OR-POSITION に位置を指定する場合は、non-nil を
+                      指定します。
+とかでどうでしょう。 ひえ 2003/05/25
+----
+~nilの時どーなるのか言及したほうがいいかもと思いました。
+  TAG-OR-POSITION-P : TAG-OR-POSITIONの引数をTAGとして解釈するかPOSITIONとして解釈するかを決めます。
+           nil TAG-OR-POSITIONはTAG
+           non-nil TAG-OR-POSITIONはPOSITION
+こういうことであってます？　佐野 03/05/25
+-なるほど、そういうことだったんですね。ちょっと開眼しました。取り込んでおきます。山本 2003/05/25
+**homedirの決定方法。
+なんとなく調べたので置いとく。 2003-05-18
+~こういうのはいらないのかなぁ??　佐野~
+順に
+-iniファイル内の[init]homeDir
+-環境変数 XYZZYHOME
+-環境変数 HOME
+-環境変数 HOMEDRIVE + HOMEPATH
+-iniファイル内の[init]logDir
+-xyzzy.exeのpath
+
+~を見てvalidなものが有ったら決定。
+
+-取り込みました。リファレンスか解説か切り分けが難しい項目があると辛いですね。山本 2003/05/24
+-dialog-boxとかの説明を洗い直そうとか思ったのですけど、リファレンスとして書くのはすごく難しくてチュートリアルっぽくなっちゃいそうです。 佐野 2003/05/24
+-佐野さんがおっしゃっているように、ちょっと書こうとすると結局チュートリアルになってしまうんですよね。xyzzyのドキュメント化構想でも別に起こすしか方法はないと思います。メジャー・マイナーモードの書き方とか、ツールバー、メニューの作り方… 山本 2003/05/24
+-私も、今のリファレンスは man のような用途に限定して、<type>Tips</type> なものはそういう場所(?)においた方が使いやすい気がします。 ひえ 2003/05/25
+-何がどこにあるべきかというのが一番難しいところですよね…。チュートリアルのページを作るべきなのかなぁ…。 佐野　03/05/25
+-「チュートリアル」「リファレンス」「本当の初心者向け」ならば、大体網羅してそうですね。純粋なtipsは日々変わっていくものだと思うので、ドキュメント化するよりもwikiでやった方が良いように思います。先の3つについては、形式化する意義があると思います。山本 2003/05/25
+-何か形に”なりかけたら”チュートリアル/以下に引っ掛けようと思ってます。本当の初心者向けドキュメントは…僕はかけないなぁ…。 -- [[佐野]] SIZE(10){2003-05-26 (月) 23:37:31}
+
+#comment
+**項目の重複など
+reference.xml 2003.04.30 版のリリースお疲れ様です。二点ほど気付いた点を報告させていただきます。
+-list-archive, cadr, caddr, pre-selection-p が重複しているようです。
+-「パッケージの概要説明」の図の桁数がずれているようです。
+
+ひえ 2003/05/04
+-重複については申し訳ありません。直しておきました。パッケージの概要説明の方も別の文字を使ってずれないようにしました。ちなみに、パッケージの概要説明のところは分かり易く書いたつもりですが、分かり易くなったでしょうか。山本 2003/05/04
+-とりあえず変換作業を行ってから読ませていただこうと思っていたのですが、改めて読ませていただくと、とってもわかりやすくなっています。多分ここの部分でつまづく方は少なくないと思うので、結構感涙ものと思います。以前の説明で、なんとなくそういうことであろうとは思っていたのですが、3. 4. 辺りからが結構自分の頭の中ではあやしかったのです。~
+それにしても、前回のリファレンスと diff を取ってみると、「これ、ほんとに前回のものかしらん？」と思うほど修正されていますね。凄いです。 ひえ 2003/05/04
+**with-output-to-buffer と with-output-to-selected-buffer と with-input-from-selected-buffer
+　HTML版やHTML Help版で表示されなくて気づいたのですが、この3つの項にはsection要素が2つあります。DTDではsection要素は必ず1つ現れることになっているので、一方を削るべきだと思われます。おそらくバッファの方を削って、入出力の方を残したらよいのではないかなと思います。　NANRI　2003-05-03
+-確かに仰るとおりです。指摘された分について"入出力"にしました。 山本 2003/05/03
+**merge-pathnames
+ 13680 参考:パスワード関係の操作関数として以下のようなものがある
+とありますが、「パスワード」だとpasswordを連想してしまい一瞬「え！？」と思ってしまうので、他のところに合わせて「パス名」か「パス」にしてはいかがでしょう。　NANRI　2003-04-25
+-はい、修正しました。ありがとうございます。 山本 03/04/25
+**not-modified
+細かいですが、
+ set-buffer-modified-pのinteractive版です。
+の一文を、
+ (set-buffer-modified-p nil)のinteractive版です。
+に変更するのはどうでしょう。大久保 03/04/13
+-そのようにします。多分他にも同じようなのがあるとおもうので、随時ツッコンで下さい。 山本 03/04/14
+**create-shortcutとresolve-shortcut
+seealsoに入っていないので入っていて欲しいです。
+なんというかシステムとかファイルシステムと…悩ましいですね
+本気でしょーもないことしかいっていないなぁ…。(佐野 03/04/03
+-ここらへんはファイルシステムかなぁ、と。MLでも流しましたが、6月末にもう一回だすつもりなので、他にも要望があればどうぞ。山本 03/04/06
+
+**正規表現
+ネットに接続できない環境で正規表現を書こうとして難儀した記憶を思い出しました。
+ToyさんのData Libraryにあるようなものを収録していただけないでしょうか？ 佐野 03/04/01
+-Toyさんのとこの管理人の方に伺いを立ててみます。山本 03/04/01
+-よろしくお願いします。佐野　03/04/01
+-Toyさん本人からメールを頂いてしまいました(^^)許諾していただけました 山本 03/04/11 
+-おー。なんかすごくうれしいです。どうでもいいところで時計狂ってません？　佐野 03/04/10
+--脳内時計が１日ずれていたようです。(^^; 山本 03/04/14
+**si:getenvとgetenv
+余計なことかもしれませんが、おんなじものではなかろうかと。 佐野 03/03/29
+-修正しました。si:getenvだけを残しました。山本 03/03/30
+-package "user"から見える書き方に統一するということでしょうか？  佐野 03/03/30
+-そこまで考えてませんでした。「userはsystemをuseしてないからsi:が必要」とか説明が要りそうですね。
+取り敢えず、つける方向で進めたいと思います。 山本 03/03/30
+-了解です。同じような（exportがらみ)がどっかに有ったと思ったのですが…。まぁ新しいリファレンスを見てみます。とりあえずご苦労様でした　佐野 03/03/30
+
+*typo
+**tab-columns
+ 15679 <type>BufferLocal</type>
+（自分が）間違えているかもしれませんが、
+tab-columnsのtypeは、BufferLocalでなくFunctionのような気がします。
+
+ところで７月になったので、
+そろそろ新しいのリリースですかね。
+
+- あー、ありがとうございます。多分こんな間違いがごろごろしてそうです。他にもあれば指摘をお願いします。見直しは終わってませんが取り敢えず出してみます。山本 2003/07/05
+**set-buffer-fileio-engoding
+ 使用例：
+   (set-buffer-fileio-encoding *encoding-sjis*)
+   (set-buffer-fileio-encoding *encoding-euc*)
+   (set-buffer-fileio-encoding *encoding-jis*)
+   (set-buffer-fileio-encoding *encoding-utf-8*)
+
+eucとutf8が変です。
+
+ (set-buffer-fileio-encoding *encoding-euc-jp*)
+ (set-buffer-fileio-encoding *encoding-utf8*)
+-ありがとうございます。直しました。山本 2003/06/10
+
+**>=
+ 7289 隣り合った引数がすべて<=の関係ならt、そうでなければnilを返します。
+これもコピペみたい。>=だと思いますが。
+その下の行の使用例は、間違っていないんですけどね。
+-はい、直しました。ありがとうございます。山本 2003/06/08
+**nsubst,subst
+ 6051 使用例：
+ 6052  ;;; 階層のあるツリーをsubstしてみる。aはそのまま
+ 6053  (setq a '((1 2) ((1 3) (1 4))))       => ((1 2) ((1 3) (1 4)))
+ 6054  (subst 5 1 a)                         => ((5 2) ((5 3) (5 4)))
+ 6055  a                                     => ((5 2) ((5 3) (5 4)))
+substのを、そのままコピペしちゃったのかな？
+substになっています。動きも。
+nsubstだから、aはそのままではなく破壊的修正が行われているはずですが。
+-これはもろコピペです。恥ずかしいので直ぐ直しました。山本 2003/06/07
+
+ 6058 <seealso>nsubst-if</seealso>
+ 6059 <seealso>nsubst-if-not</seealso>
+今のところ、これらのノードはないようです。
+ 6037 <seealso>subst-if</seealso>
+ 6038 <seealso>subst-if-not</seealso>
+また、substのseealsoにあるこれらのノードも、
+今のところないようです。
+-ノードも追加してみます。山本 2003/06/07
+
+**syntax-math-p
+ 23518 <seealso>set-syntax-mat</seealso>
+set-syntax-math、だと思います。hが抜けてます。
+-直しました。山本 2003/06/02
+**beginning-of-buffer
+ 25068 <seealso>end-of-buffe</seealso>
+end-of-buffer。rが抜けてます。
+-直しました。山本 2003/06/02
+**lambda
+ 4777 <seealso>lambda-list-keywords</seealso>
+ 4778 <seealso>lambda-parameters-limit</seealso>
+どちらも今のところ、そういうノードはないみたいですが。
+-ここはばっさりと削除しました。山本 2003/06/02
+**declare
+ 10188 <seealso>declare</seealso>
+declareノードのseealsoがdeclareというのは意味不明。
+いらないか、specialの間違いでは。
+-確かに意味不明ですね。<seealso>special</seealso>に変更しておきました。 山本 2003/06/02
+**start-timer
+non-nil と nil が反対かもです。 ひえ 2003/05/30
+
+  タイマーを設定します。INTERVAL秒後に、FNがfuncallされます。
+  
+    ONE-SHOT-P : 継続して作動させるかどうかを指定します。
+          nil      継続して作動させます。
+          non-nil  1 回だけ作動させます。
+
+-修正しました。山本 2003/05/31
+**insert-popup-menu
+使用例が add-popup-menu になっています。
+
+  ;;; 右クリックメニューを標準のメニューに追加してみる。
+  (insert-popup-menu *app-menu* 2 *app-popup-menu* "編集2(&D)")
+  => #<menu 103225680>
+
+とか。 ひえ 2003/05/30
+
+-修正しました。山本 2003/05/31
+
+**まとめて38個
+
+word-toolsで文章の構成をした結果38個ほどtypoがありました。
+
+タイトル別で書くのはちょっと大変なので diff -u の結果をそのまま貼らせてもらいます。
+
+ --- reference.xml.bak	Sun Apr 27 22:26:04 2003
+ +++ reference.xml	Thu May 29 14:41:37 2003
+ @@ -1167,7 +1167,7 @@
+  <description>
+  取得しておいたウィンドウの状態に戻します。
+  
+ -  CONF：current-window-confiurationで取得したウィンドウの状態
+ +  CONF：current-window-configurationで取得したウィンドウの状態
+  </description>
+  <section>ウィンドウ</section>
+  <seealso>current-window-configuration</seealso>
+ @@ -1184,7 +1184,7 @@
+  TEMPORARYがnon nilならば、次のキー入力で反転表示が元に戻ります。
+  </description>
+  <section>リージョン</section>
+ -<seealso>clear-reverse-regioin</seealso>
+ +<seealso>clear-reverse-region</seealso>
+  <file>builtin.l</file>
+  </chapter>
+  
+ @@ -1609,7 +1609,7 @@
+  <description>
+  set-text-attributeで付けた領域の属性を変更します。
+  属性は引き継がれません。
+ -例えば、set-text-attributeでは:underlint tとしてから、
+ +例えば、set-text-attributeでは:underline tとしてから、
+  modify-text-attributeで:strike-out tとしても、
+  下線と取り消し線の両方が表示される訳ではありません。
+  
+ @@ -1851,7 +1851,7 @@
+          ~~      Tilde（チルダ指示）
+          ~改行   改行とそれに続く空白文字を無視する
+          ~T      Tabulate（タブ指示）
+ -        ~*      次のargumetを無視
+ +        ~*      次のargumentを無視
+          ~?      Indirection（間接指示）
+          ~D      10進数
+          ~B      Binary（2進指示）
+ @@ -2137,7 +2137,7 @@
+  --- 原文 ---
+  Description: similar to shiftf except that the value accessed by the 
+  form place1 is not discarded. Instead it is assigned to the location 
+ -accessed by the form placen. Therefore, the list of place forms is 
+ +accessed by the form place. Therefore, the list of place forms is
+  treated like a circular register that is rotated by one position. 
+  Returns nil As in the case of setf and psetf, the ANSI standard 
+  specifies that one can rotatef more than one value to a place which has 
+ @@ -2633,7 +2633,7 @@
+  *standard-input*から読み込まれるようになります。
+  
+  使用例：
+ -  ;;; *sratch*の内容を*Output*に吐き出す。
+ +  ;;; *scratch*の内容を*Output*に吐き出す。
+    (with-output-to-buffer ((switch-to-buffer "*Output*"))
+      (with-input-from-buffer ((switch-to-buffer "*scratch*"))
+        (while (setq line (read-line *standard-input* nil))
+ @@ -2920,7 +2920,7 @@
+  <package>editor</package>
+  <description>
+  変数NAMEがバッファ毎に異なる値を持つようにします。関連する関数として、
+ -defvar/make-local-variablel等がありますが、それぞれ機能が異なります。
+ +defvar/make-local-variable等がありますが、それぞれ機能が異なります。
+  defvar-localはdefvarと異なり、スペシャル変数とはならないので注意が必要です。
+  
+    defvar              : スペシャル変数を作る。
+ @@ -3479,7 +3479,7 @@
+  指定された値でブロックから脱出します。
+  catchしてくれるブロックがないと例外が発生します。
+  
+ -  (retun RESULT) = (return-from nil RESULT)
+ +  (retune RESULT) = (return-from nil RESULT)
+  
+  使用例：
+    ;;; ループからの脱出の場合
+ @@ -3675,7 +3675,7 @@
+  でも捕まえられますよね?
+  それと同様に
+  
+ -  (error 'devision-by-zero)
+ +  (error 'division-by-zero)
+  
+  は、
+  
+ @@ -4501,7 +4501,7 @@
+      (end-test result1 result2 ... resultm) 
+     declaration1
+         ...
+ -   declarationn)
+ +   declaration)
+  
+  (do ((&lt;変数1&gt; &lt;初期値1&gt; &lt;ステップ1&gt;)
+       (&lt;変数2&gt; &lt;初期値2&gt; &lt;ステップ2&gt;)
+ @@ -5257,7 +5257,7 @@
+  <arguments>OBJECT</arguments>
+  <package>lisp</package>
+  <description>
+ -OBJECTがintergerならt、それ以外ならnilを返します。
+ +OBJECTがintegerならt、それ以外ならnilを返します。
+  
+    (integerp x) == (typep x 'integer)
+  </description>
+ @@ -5271,7 +5271,7 @@
+  <arguments>OBJECT</arguments>
+  <package>lisp</package>
+  <description>
+ -OBJECTがratioかintergerならt、それ以外ならnilを返します。
+ +OBJECTがratioかintegerならt、それ以外ならnilを返します。
+  
+    (rationalp x) == (typep x 'rational)
+  </description>
+ @@ -9555,7 +9555,7 @@
+  <arguments>&amp;optional BUFFER</arguments>
+  <package>editor</package>
+  <description>
+ -最も最近(?)表示されていたバッファに切替えます。
+ +最近(?)表示されていたバッファに切替えます。
+  </description>
+  <section>バッファ</section>
+  <file>builtin.l</file>
+ @@ -10217,7 +10217,7 @@
+  ブロックから脱出します。
+  --- 原文 ---
+  Description: used to terminate the evaluation of the block construct with 
+ -name name. The name argument is not evaluated and must be a symbol. When 
+ +name. The name argument is not evaluated and must be a symbol. When
+  return-from is encountered the result-form is evaluated if present and 
+  evaluation of the block is terminated. The block returns the value returned 
+  by the result-form or nil if no result-form is present. If name is nil, 
+ @@ -10829,7 +10829,7 @@
+  its arguments.
+  
+  --- 意訳 ---
+ -mapcanはFUNCTIONによって返された値が（non-desctructiveな関数listではなく、
+ +mapcanはFUNCTIONによって返された値が（non-destructiveな関数listではなく、
+  destructiveな関数nconcによって）結合されることを除いて、mapcarに良く似て
+  いる。そのため、mapcanはその定義から引数を破壊することになっている。
+  
+ @@ -11378,7 +11378,7 @@
+    (bar)
+    -&gt; ERROR: Wrong number of arguments.
+    (defun capitalize-backwards ()
+ -      "This fuction makes the last letter of a word upper-case."
+ +      "This function makes the last letter of a word upper-case."
+        (interactive)
+        (backward-word 1)
+        (forward-word 1)
+ @@ -11678,7 +11678,7 @@
+  
+          *kill-ring*
+          ┌─────┐  ─┐
+ -        │"defun"   ←─── kill-reigonした内容
+ +        │"defun"   ←─── kill-regionした内容
+          ├──↓──┤    │
+          │"length"  │    │
+          ├──↓──┤    ├最大*kill-ring-max*個
+ @@ -11861,7 +11861,7 @@
+      #\C-SPC     ; #\C-@
+  </description>
+  <seealso>global-set-key</seealso>
+ -<seealso>defin-key</seealso>
+ +<seealso>define-key</seealso>
+  <section>キーマップ</section>
+  <file></file>
+  </chapter>
+ @@ -12047,7 +12047,7 @@
+  (Emacs により)デフォルトのものが与えられるとともに、正しくない (訳注：条
+  件に合わない)名前は受け入れられなくなります (Emacs は `[No Match]' と文
+  句を言い、プロンプトを出し、再び名前を求めます)。 TAB, SPC, RET は、関数 
+ -completing-read に従い名前の commpletion を行ないます。 
+ +completing-read に従い名前の completion を行ないます。
+  
+  以下のテーブルにおいて、"completion" とマークされたコード文字は completion 
+  を行ないます。 "existing" とマークされたものは(既存の)名前を要求します。 
+ @@ -12057,7 +12057,7 @@
+  a 
+  
+    関数名(i.e., fboundp である(訳注：fboundp を満たす)シンボル)。
+ -  existing, competion, prompt
+ +  existing, completion, prompt
+    b
+    バッファ名。existing, completion, prompt
+    B
+ @@ -12119,7 +12119,7 @@
+    (x におけるように)フォームを読み込んだ後、評価し、その結果を関数に
+    渡します。 prompt
+    (defun foo1 ()                    ;foo1 はアーギュメントを取らず、
+ -      (interective)                 ;2 word 先に移動させるだけ。
+ +      (interactive)                 ;2 word 先に移動させるだけ。
+        (forward-word 2))
+    =&gt; foo1
+    (defun foo2 (n)                   ;foo2 はアーギュメントを 1つ取り、
+ @@ -13082,7 +13082,7 @@
+  
+  使用例：
+    ;;; 行頭が(とマッチするか?
+ -  (deefun rrr ()
+ +  (defun rrr ()
+      (interactive)
+      (if (looking-at "^(")
+        (message "ok") (message "bad")))
+ @@ -14002,7 +14002,7 @@
+  <package>lisp</package>
+  <description>
+  フォームがnilの間だけ順番に評価します。
+ -フォームが一つでもnilでなければ、そこで評価を中断してフォームを値を返し
+ +フォームが一つでもnilでなければ、そこで評価を中断してフォームの値を返し
+  て終了します。全てのフォームがnilならば、nilを返します。
+  
+    ;;; exp1 がnilなら、そこで実行を中止しnilを返す。
+ @@ -14178,7 +14178,7 @@
+  <package>editor</package>
+  <description>
+  narrow-to-regionする前の状態を保存します。ポイントやバッファの位置は保存
+ -しません。ポイントやバッファの位置を保存したい場合には、save-excrusionを
+ +しません。ポイントやバッファの位置を保存したい場合には、save-excursionを
+  使用します。
+  
+  特定の処理の前後でrestrictionの状態とポイントの両方を保存したい場合には、
+ @@ -14593,7 +14593,7 @@
+  <chapter>
+  <title>string-left-trim</title>
+  <type>Function</type>
+ -<arguments>charcter-bag string</arguments>
+ +<arguments>character-bag string</arguments>
+  <package>lisp</package>
+  <description>
+  文字列の先頭から指定した文字群を削除します。
+ @@ -15596,7 +15596,7 @@
+  docstring は、この関数用のドキュメンテーションです。これは(通常)この関数
+  の関数定義中のものと同じストリングになります。 
+  
+ -interective が non-nil の場合、この関数はインタラクティブに呼ばれます。 
+ +interactive が non-nil の場合、この関数はインタラクティブに呼ばれます。
+  (ここでは)完全な interactive specification を与える必要はありません。 
+  macro が non-nil の場合、この関数は(実は)マクロです。 
+  
+ @@ -15657,7 +15657,7 @@
+  <description>
+  セレクションの開始位置と終了位置を引数にして関数を呼び出します。
+  
+ -  FN : 呼び出す関数を指定します。呼び出し時には開始位置を終了位置を渡し
+ +  FN : 呼び出す関数を指定します。呼び出し時には開始位置と終了位置を渡し
+         ますので、そのような関数のI/Fにしておかなければなりません。
+  
+  使用例：
+ @@ -16191,7 +16191,7 @@
+  <section>システム</section>
+  <seealso>get-system-directory</seealso>
+  <seealso>get-special-folder-location</seealso>
+ -<file>buitin.l</file>
+ +<file>builtin.l</file>
+  </chapter>
+  
+  <chapter>
+ @@ -16209,7 +16209,7 @@
+  <section>システム</section>
+  <seealso>get-windows-directory</seealso>
+  <seealso>get-special-folder-location</seealso>
+ -<file>buitin.l</file>
+ +<file>builtin.l</file>
+  </chapter>
+  
+  <chapter>
+ @@ -16236,7 +16236,7 @@
+  <section>システム</section>
+  <seealso>get-windows-directory</seealso>
+  <seealso>get-system-directory</seealso>
+ -<file>buitin.l</file>
+ +<file>builtin.l</file>
+  </chapter>
+  
+  <chapter>
+ @@ -17855,7 +17855,7 @@
+  <arguments></arguments>
+  <package></package>
+  <description>
+ -キーワードファイルは*keyowrd-load-path*もしくはetc-pathから検索
+ +キーワードファイルは*keyword-load-path*もしくはetc-pathから検索
+  をします。$XYZZY/etc配下のファイルを参照して下さい。
+  
+  形式：
+ @@ -18684,7 +18684,7 @@
+  <package>editor</package>
+  <description>
+  set-syntax-comment-columnの補助的な設定をします。
+ -set-synxtax-optionに*syntax-option-comment-column-char*を指定した場合に
+ +set-syntax-optionに*syntax-option-comment-column-char*を指定した場合に
+  のコメント開始用のキャラクタを設定します。
+  詳細はset-syntax-optionを参照して下さい。
+  </description>
+ @@ -21282,7 +21282,7 @@
+  <arguments>first-error &amp;optional ARG WRAP</arguments>
+  <package>editor</package>
+  <description>
+ -grep後の*complilation*バッファ上で実行すると、該当行へジャンプ可能です。
+ +grep後の*compilation*バッファ上で実行すると、該当行へジャンプ可能です。
+  以後は、next-error(F11)を押すことで次々と該当行へジャンプ可能です。
+  各種コンパイラの出力結果に応じてジャンプすることも可能です。
+  また、コンパイラのエラー出力が標準に対応していなくても、
+ @@ -22035,7 +22035,7 @@
+  <package>editor</package>
+  <description>
+  *selection-ring*の先頭の要素を貼り付けます。
+ -*selectin-ring*へはcopy-selectionもしくはkill-selectionで追加します。
+ +*selection-ring*へはcopy-selectionもしくはkill-selectionで追加します。
+  デフォルトでは'F9'に割り付けられています。
+  </description>
+  <seealso>kill-selection</seealso>
+ @@ -22553,7 +22553,7 @@
+  現在のパラグラフの最後までkillします。
+  </description>
+  <seealso>kill-region</seealso>
+ -<seealso>backward-kill-paragrah</seealso>
+ +<seealso>backward-kill-paragraph</seealso>
+  <link></link>
+  <section>リージョン</section>
+  <file>paragrph.l</file>
+ @@ -23216,7 +23216,7 @@
+  ように使用するぐらいでしょうか。
+  
+  使用例：
+ -  ;;; goal-columを大事にして編集してみる。
+ +  ;;; goal-columnを大事にして編集してみる。
+    (let ((g (goal-column)))
+      (save-excursion ... )
+      (set-goal-column g))
+ @@ -23308,7 +23308,7 @@
+  <package>editor</package>
+  <description>
+  空白文字を後方にスキップします。
+ -シンタックステーブル上でwhitesapceとして規定されている文字を後方に
+ +シンタックステーブル上でwhitespaceとして規定されている文字を後方に
+  スキップします。他にも影響する要素があるようですが詳細は不明。
+  </description>
+  <seealso>skip-white-forward</seealso>
+ @@ -23324,7 +23324,7 @@
+  <package>editor</package>
+  <description>
+  空白文字を前方にスキップします
+ -シンタックステーブル上でwhitesapceとして規定されている文字を前方に
+ +シンタックステーブル上でwhitespaceとして規定されている文字を前方に
+  スキップします。他にも影響する要素があるようですが詳細は不明。
+  </description>
+  <seealso>skip-white-backward</seealso>
+
+-ありがとうございます。反映しておきます。山本 2003/05/31
+-これらは多分文脈から見て正しいと思われるので、大文字にして区別がつくようにしました。
+ 1)accessed by the form placeN. Therefore, the list of place forms is]
+ 2)   declarationN)
+ 3)name NAME. The name argument is not evaluated and must be a symbol. When
+-これはWORDでも判断できなそうなとこなので別のものに修正しました。山本 2003/05/31
+ 1)  (retun RESULT) = (return-from nil RESULT)
+**sort
+
+ sortは安定であることは保証されないません。
+                       ^^^^^^^^^^^^^^^^^^
+-まとめて指摘していただいてありがとうございます。修正しました。山本 2003/05/28
+**find
+
+ 使用例：
+   ;;; リストから'aを削除してみる。
+   (find 'a '(e c a b))
+   => a
+
+削除はしないですよね。
+-コピペしまくりというのがバレバレですね。修正しました。山本 2003/05/28
+**call-process
+
+ :SHOW           : （詳細不明）
+
+たぶんこんな感じだと思います。
+
+ :SHOW           : 外部プログラムの実行時の大きさを指定します。
+                   :minimize  最小化
+                   :maximize  最大化
+                   上記以外   通常のウィンドウ
+-なるほど、取り込みました。山本 2003/05/28
+-:hide 非表示   もありますね。
+-:no-active 非アクティブ   もですね。
+-指定しない場合は通常のウィンドウで表示される。
+calc.exeのように指定しても無視されるものもある。
+-どうしましょうか。call-processは他にもありそうなので、ソースを見て判断した方がいいでしょうか？山本 2003/06/02
+**defmacro
+ 795 <seealso>macroexpand, ``'(backquote)</seealso>
+項目を","で分けていますが、
+一つ一つ<seealso>-</seealso>するはずでは
+-修正しました。山本 2003/05/28
+**<!-- book ...
+はじめの
+ 19 <!--
+ 20 book
+ 21   └ chapter
+ ...
+のところで、
+typeツリーにKeyword,Accessor,Symbolがないです（もしかして、わざと？）。
+また、sectionツリーの「シーケンス」は「Sequence」だと思います
+（<section>Sequence</section>となっているから）。
+-あー、無いのは間違いです。それと、シーケンス⇒Sequenceに直しました。山本 2003/05/24
+**with-output-to-temp-buffer
+ 14089 同じ名前のバッファが会った場合には、そのバッファの内容は破棄されます。
+「会った」でなく「あった」（「有った」でもいいけど）だと思いますが。
+-直しました。山本 2003/05/24
+**パッケージとは
+ <seealso>パッケージとは</seealso>
+と色々な場所にありますが、そんなtitleはありませんし、
+<seealso>パッケージ</seealso>
+が正しいのでは。
+-直しました。山本 2003/05/24
+**コマンドによりヒストリを変更する
+ 16795          ; 変更されたかもしれなから戻しておく
+「しれないから」だと思います。
+--直しました。山本 2003/05/24
+**bufferp
+ 12891 <title>bufferp</title>]
+最後に]がついています……。
+-直しました。山本 2003/05/24
+**set-default
+ 10703   (setq-default (car '(a b c)) 23)
+-多分qが余計。そういえば行番号でのツッコミって意味ありますか？既に手を入れる時点では変わっていそうですし。　佐野 2003-04-28
+--無いよりはいいかなと思って自分はつけてましたが、よくよく考えるとあんまり意味無いかもしれませんね。　NANRI　2003-04-28
+--遅れました。qが余計ですね。このままではエラーになってしまいますね。行番号よりはtitleを書いてもらった方が確実です。山本 2003/05/02
+**import
+ 8830 シンボルのリストを指定して、その全てのシンボルをパッケージe内でパッケー
+                                                                ~
+'e'って特に意味が無いような気がします。　NANRI　2003-04-25
+-なんか手が滑ってはいってしまったような感じですね。直しました。山本 03/04/25
+**or
+ (or exp1 exp2 exp3 ...)
+ exp1 がnilなら、そこで実行を中止しnilを返す。
+ exp2 がnilなら、そこで実行を中止しnilを返す。
+ ...
+ 最後に実行したexpの値を返す。
+
+とありますが、
+ exp1がnot-nilなら、そこで実行を中止しそのexpの値を返す。
+ ...
+では？
+-間違いまくりですね。直しておきます。 山本 2003/04/25
+**cadr
+　reference.xmlのcadrの項にて
+ 4124 cadrを返します。
+ 4125 
+ 4126   (caddr x) = (car (cdr x))
+         ~~~~~
+
+dがひとつ多い気がします。NANRI 03-04-02
+-ありがとうございます。修正しました。山本 03/04/02
+**read-char
+15259にある
+EOR->EOFですね。　佐野　03/04/06
+-取り込みました。EORって何？ 山本
+**simple-string
+ 5319 formatやconcatを使って文字列を操作する文にはsimple-stringのままです。
+“操作する分には” or “操作する場合は”でしょうか? honami 03/04/20
+-“操作する場合には”に直しました。ありがとうございます。山本 03/04/20
+**:regexp
+arguments要素のデータはdescriptionの内容ではないでしょうか．honami 03/04/20
+-ありがとうございます。本文が<arguments>の中に入ってたのを<description>に移しました。山本 03/04/20
+
+*これを調べた
+**pop-to-buffer
+ <chapter>
+ <title>pop-to-buffer</title>
+ <type>Function</type>
+ <arguments>pop-to-buffer BUFFER &amp;optional POPUP-WINDOWS VERT-P</arguments>
+ <package>editor</package>
+ <description>
+ 指定されたバッファを表示します。POPUP-WINDOWS が指定された場合画面を分割
+ してバッファを表示します。ウィンドウが既に分割されていたら、新たに分割せ
+ ずにそのウィンドウに移動し表示します。
+ 
+ 表示幅が指定された場合には、縦分割が指定されていない場合、モード行を表示
+ している状態で、およそ指定された数値分の行数が表示できる大きさのウィンド
+ ウができます。
+ 縦分割が指定された場合には、上下ではなく左右に分割し、行番号を表示してい
+ ない状態で、およそ指定された数値分の列数が表示できる大きさのウインドウが
+ できます。
+ 
+   BUFFER        : バッファ、または、バッファの名前を指定します。
+   POPUP-WINDOWS : 分割する行数／列数を指定します。
+         t             ニ分割します。
+         整数          指定行数／列数で分割します。
+         nil           ウィンドウが分割されていない場合でも新たに
+                       分割しません。
+   VERT-P        : 縦方向に分割します。
+         non-nil       左右にニ分割します。
+         nil           上下にニ分割します。
+ 
+ 使用例：
+   ;;; den8の場合
+   (defvar *den8-summary-window-ratio* 1/4)
+ 
+   (defun den8-viewer ()
+     (let ((view (switch-to-buffer "*Den8 View*")))     ; Viewを作る
+       (let ((sum (switch-to-buffer "*Den8 Summary*"))) ; Summaryを作る
+            &lt;初期化・省略&gt; ))
+     (delete-other-windows)        ; 自分以外の全部のウインドウを消す
+     (den8-popup-summary-buffer))  ; ２分割して、上下にサマリと内容を表示
+ 
+   (defun den8-popup-summary-buffer ()
+     (pop-to-buffer den8-summary-buffer
+        (truncate (* (screen-height) *den8-summary-window-ratio*))))
+ </description>
+ <seealso>split-window</seealso>
+ <section>ウィンドウ</section>
+ <file>window.l</file>
+ </chapter>
+-vert-p の記述追加等です。大久保 03/05/02
+-取り込みました。山本 2003/05/02
+**with-output-to-temp-buffer
+ <chapter>
+ <title>with-output-to-temp-buffer</title>
+ <type>Macro</type>
+ <arguments>with-output-to-temp-buffer (BUFNAME &amp;optional (POPUP t) VERT-P) &amp;rest BODY</arguments>
+ <package>editor</package>
+ <description>
+ 指定されたバッファを作成し、標準出力をそのバッファにリダイレクトします。
+ 同じ名前のバッファが会った場合には、そのバッファの内容は破棄されます。
+ 単に処理結果だけを書き込むような場合に便利です。
+ 
+   BUFNAME : バッファの名前を指定します。
+   POPUP   : バッファを分割表示する際の行数／列数を指定します。
+         t       ニ分割します。
+         整数    指定行数／列数で分割します。
+         nil     バッファを分割表示しません。
+   VERT-P  : バッファの分割方法を指定します。
+             POPUP が nil の場合は意味を持ちません。
+         non-nil 左右にバッファを分割します。
+         nil     上下にバッファを分割します。
+ 
+ 使用例：
+   ;;; *Help*を作ってそこに書き出してみる。
+   (with-output-to-temp-buffer ("*Help*")
+      (format t "foo~%")
+      (format t "bar~%"))
+ 
+ 互換性：
+    muleにもCommon Lispにもありません。
+ </description>
+ <seealso>with-output-to-buffer</seealso>
+ <seealso>pop-to-buffer</seealso>
+ <section>バッファ</section>
+ <file>misc.l</file>
+ </chapter>
+-vert-p の記述追加等です。大久保 03/05/02
+-取り込みました。山本 2003/05/02
+**file-newer-than-file-p
+ <chapter>
+ <title>file-newer-than-file-p</title>
+ <type>Function</type>
+ <arguments>file1 file2</arguments>
+ <package>editor</package>
+ <description>
+ ファイルの最終更新日を比較します。
+ 
+ 返り値は以下のとおりです。
+ 
+  t   file1の方が新しい、もしくはfile2が無効。
+  nil file2の方が新しい、もしくはfile1が無効。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>builtin.l</file>
+ </chapter>
+-ぜんっぜんきづかんかった。リファレンスに載ってないものもそこそこありますねぇ。ツッコミに感謝（佐野 2003-04-25
+-自分も全然知りませんでした。取り込みました。 山本 03/04/25
+**si:md5
+ <chapter>
+ <title>si:md5</title>
+ <type>Function</type>
+ <arguments>input-string-or-stream</arguments>
+ <package>system</package>
+ <description>
+ MD5ハッシュ値を得ます。
+ 
+   INPUT-STRING-OR-STREAM : 入力の文字列または入力ストリームを指定します。
+ 
+ 使用例：  
+   (si:md5 "ほげほげ")
+   => "11e100e3eb6e6171d9681ba6641794e3"
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>その他</section>
+ <file>builtin.l</file>
+ </chapter>
+-こんな感じ？ 佐野 03/04/06
+-取り込みました。 山本 03/04/11
+*記述形式
+**<arguments> の記述形式
+ with-output-to-temp-buffer (BUFNAME &amp;optional (POPUP t) VERT-P) &amp;rest BODY
+の形式と、
+ with-output-to-temp-buffer ((BUFNAME &amp;optional (POPUP t) VERT-P) &amp;rest BODY)
+の形式のどちらでいきましょう？ 大久保 03/05/02
+-正直なところ自分には決め手がないんですが。上がdescribe-function系で、下がldoc系かと思いますが、何となく上の方が呼び出しの形式に近そうで良いように思いますが、どうでしょう。山本 2003/05/02
+-単なる決め事でどちらに揃えていくかだけだと思うので、上の形式で書こうと思います。大久保 03/05/02
+-了解しました。山本 2003/05/03
+*変換など
+**ActivePerlv5.8 + XML::DOM
+なんかPPMからなくなってしまったので http://theoryx5.uwinnipeg.ca/ppms/ のを入れました。 03/04/01
+-ありがとうございます。おかげさまで無事 reference.chm やらいろいろ生成できました。大久保 03/04/02

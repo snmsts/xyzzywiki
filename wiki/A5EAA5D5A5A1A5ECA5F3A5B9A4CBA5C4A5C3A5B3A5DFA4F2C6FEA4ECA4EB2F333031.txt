@@ -1,0 +1,30 @@
+* fix-selection-point [#nbc85c9b]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[lambda]]
+-優先順位:   普通
+-状態:       着手
+-カテゴリー: 新規項目
+-投稿日:     2008-06-27 (金) 19:41:44
+-バージョン: 
+
+** メッセージ [#n5d0101d]
+selection指定後、この関数を使うとselectionを維持しながら
+キャレットを移動させることができるようです。
+----
+- どーもです。 -- [[NANRI]] &new{2010-04-29 (木) 04:50:22};
+  <chapter>
+  <title>fix-selection-point</title>
+  <type>Function</type>
+  <arguments>fix-selection-point</arguments>
+  <package>editor</package>
+  <description>
+  selection指定後、この関数を使うとselectionを維持しながらキャレットを移動
+  させることができるようになります。
+  </description>
+  <seealso></seealso>
+  <link></link>
+  <section>ポジション</section>
+  <file>builtin.l</file>
+  </chapter>
+
+#comment

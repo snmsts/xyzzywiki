@@ -1,0 +1,64 @@
+[[tips]]
+
+**概要 [#j2e70b2b]
+
+xyzzyの[[NetInstaller/配布パッケージ一覧]]を元にサイトを最新のものにします。
+
+**使い方 [#t9a0857e]
+
+下のLispソースを.xyzzy、あるいは~/.netinst/config.l に貼り付けてxyzzyを再起動します。そして、
+
+ M-x netinstaller
+
+と入力した後に、*NetInstaller Site*バッファでNを押してください。最新のものに置き換わります。　
+
+**Lisp [#df9ea1fe]
+
+ (defun ni::add-site-from-wiki ()
+   (interactive)
+   (let ((s (ni::http-get-url "http://xyzzy.s53.xrea.com/wiki/index.php?cmd=source&page=NetInstaller%2F%C7%DB%C9%DB%A5%D1%A5%C3%A5%B1%A1%BC%A5%B8%B0%EC%CD%F72")))
+     (ni::load-site-data)
+     (mapcar
+      (lambda (x) (ignore-errors (ni::site-add x)))
+      (set-difference
+       (remove-if
+        'null 
+        (mapcar (lambda (i)
+ 		 (and (string-match "^:[^|]+|\\(http:.*\\)$" i)
+ 		      (apply #'concat
+ 			     (mapcar (lambda (x)
+ 				       (let ((tmp (split-string x #\;)))
+ 					 (if (equal (car tmp) "amp")
+ 					     (apply #'concat "&" (cdr tmp))
+ 					   (car tmp))))
+ 				     (split-string (match-string 1) #\&)))))
+ 	       (let (out)
+ 		 (while
+ 		     (handler-case
+ 			 (progn
+ 			   (push (read-line s) out)
+ 			   t)
+ 			 (quit (c)
+ 			   (return-from ni::add-site-from-wiki))
+ 			 (error (c)
+ 			   nil)))
+ 		 (nreverse out))))
+       (mapcar (lambda (x) (cdr (assoc "src" x :test 'equal))) ni::*site-data*)
+       :test 'equal))) t)
+  ;;ここがキーバインド
+ (define-key ni::*site-map* #\N 'ni::add-site-from-wiki)
+----
+-readme.txt とかには書いてありませんけど、M-x netinstaller を実行したときに ~/.netinst/config.l をロードするので、個人的にはそこに書くのをお勧めしたいです。 -- [[NANRI]] &new{2004-07-31 (土) 01:34:26};
+-NANRIさんの意見を元に使い方を更新しました。 -- [[稲原]] &new{2004-08-01 (日) 00:41:41};
+-~/.netinst/config.l  --  &new{2005-02-14 21:47:32 (月)};
+- ページ構成を修正した結果出た不具合の修正 -- [[佐野]] &new{2006-03-17 (金) 05:39:44};
+- &を想定していなかったので適当に対応 -- [[佐野]] &new{2006-05-30 (火) 00:33:33};
+- サイト一覧を取得できなくなってる気がするんですが気のせいでしょうか -- [[５５５]] &new{2006-12-04 (月) 09:53:19};
+- 駄目なところがひとつでもあると止まる仕様だからなぁ -- [[佐野]] &new{2006-12-04 (月) 10:13:26};
+- くるっじ。これで大丈夫かな -- [[佐野]] &new{2006-12-04 (月) 10:14:30};
+- お、モーマンタイに動きましたー。修正お疲れ様です＆ありがとうございます。 -- [[５５５]] &new{2006-12-08 (金) 03:50:16};
+- quit で中止できるようにしてみました。 -- [[中野]] &new{2006-12-08 (金) 23:57:33};
+- .xyzzyとかじゃなく、siteinit.lに書いてみてもOKでした。 --  &new{2007-10-23 (火) 18:58:39};
+- Google Chromeでコードをコピペすると\の文字コードがおかしいので要注意！！ --  &new{2008-09-07 (日) 15:33:04};
+- [[NetInstaller/配布パッケージ一覧2]] を使用するように変更しました
+- 一覧ページをHTMLで取得して動かなくなってたので、ソースを取得するように修正しときました。

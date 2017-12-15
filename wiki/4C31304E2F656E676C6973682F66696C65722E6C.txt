@@ -1,0 +1,945 @@
+[[L10N/english]]
+
+ filer.l:47:  '(("すべてのﾌｧｲﾙ" "*")
+-All files --  &new{2005-03-05 20:06:43 (土)};
+
+#comment
+ filer.l:48:    ("ﾄﾞｷｭﾒﾝﾄ" "*.doc" "*.txt" "*.man" "*readme*")
+-Documents files --  &new{2005-03-05 20:07:12 (土)};
+
+#comment
+ filer.l:49:    ("C/C++" "*.c" "*.h" "*.cpp" "*.cxx" "*.cc" "*.inl")
+-C/C++ files --  &new{2005-03-05 20:07:12 (土)};
+
+#comment
+ filer.l:50:    ("Lisp" "*.l" "*.el" "*.lsp" "*.lisp")
+-Lisp files --  &new{2005-03-05 20:07:12 (土)};
+
+#comment
+ filer.l:51:    ("Visual Basic" "*.bas" "*.frm" "*.vbp")
+-Visual Basic files --  &new{2005-03-05 20:07:12 (土)};
+
+#comment
+ filer.l:52:    ("実行ﾌｧｲﾙ" "*.exe" "*.com" "*.bat" "*.pif")
+-Executable files --  &new{2005-03-05 20:08:24 (土)};
+
+#comment
+ filer.l:53:    ("ｱｰｶｲﾌﾞ" . ("*.lzh" "*.zip" "*.arj" "*.tar" "*.bz2" "*.gz"
+-Archives --  &new{2005-03-05 20:11:24 (土)};
+
+#comment
+ filer.l:56:    ("ﾊﾞｯｸｱｯﾌﾟ" "*~" "*.bak")
+-Backup files --  &new{2005-03-05 20:09:19 (土)};
+
+#comment
+ filer.l:57:    ("自動ｾｰﾌﾞ" "#*#")))
+-Autosave files --  &new{2005-03-05 20:12:00 (土)};
+
+#comment
+ filer.l:224:    (:caption "ﾊﾟｽﾏｽｸ")
+-Path Mask --  &new{2005-03-05 20:17:09 (土)};
+
+#comment
+ filer.l:225:    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:228:     (:static nil "ﾏｽｸ(&M):" #x50020000 7 97 24 8)
+-&Mask --  &new{2005-03-05 20:18:54 (土)};
+
+#comment
+ filer.l:230:     (:button IDOK "OK" #x50010001 162 7 50 14)
+-OK --  &new{2005-03-05 20:18:54 (土)};
+
+#comment
+ filer.l:231:     (:button both "両方の窓(&B)" #x50010000 162 24 50 14)
+-&Both windows --  &new{2005-03-05 20:19:48 (土)};
+
+#comment
+ filer.l:232:     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 162 41 50 14))))
+-Cancel --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:236:      (let ((default '("ﾃﾞﾌｫﾙﾄ")))
+-Default --  &new{2005-03-05 20:20:21 (土)};
+
+#comment
+ filer.l:256:    (:caption "まとめてﾏｰｸ")
+-Mark with wildcard search --  &new{2005-03-05 20:23:45 (土)};
+-Mark mask --  &new{2005-03-05 20:25:57 (土)};
+
+#comment
+ filer.l:257:    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:260:     (:static nil "ﾏｽｸ(&M):" #x50020000 7 97 24 8)
+-&Mask --  &new{2005-03-05 20:28:21 (土)};
+
+#comment
+ filer.l:262:     (:button IDOK "OK" #x50010001 162 7 50 14)
+-OK --  &new{2005-03-05 20:18:54 (土)};
+
+#comment
+ filer.l:263:     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 162 24 50 14))))
+-Cancel --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:279:    (:caption "ﾃﾞｨﾚｸﾄﾘ移動")
+-Jump to the directory --  &new{2005-03-05 20:27:52 (土)};
+
+#comment
+ filer.l:280:    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:283:     (:static nil "ﾊﾟｽ(&P):" #x50020000 7 97 24 8)
+-&Path --  &new{2005-03-05 20:28:50 (土)};
+
+#comment
+ filer.l:285:     (:button IDOK "OK" #x50010001 162 7 50 14)
+-OK --  &new{2005-03-05 20:18:54 (土)};
+
+#comment
+ filer.l:286:     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 162 24 50 14))))
+-Cancel --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:291:		  `((list ("ｶﾚﾝﾄﾃﾞｨﾚｸﾄﾘ" . ,(default-directory))
+-Current directory --  &new{2005-03-05 20:29:47 (土)};
+
+#comment
+ filer.l:325:	    (:caption "同名ﾌｧｲﾙの確認")
+-Treatment of the same name files --  &new{2005-03-05 20:47:09 (土)};
+
+#comment
+ filer.l:326:	    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:329:	     (:button yes "する(&Y)" #x50000009 15 20 37 10)
+-&Yes --  &new{2005-03-05 20:30:24 (土)};
+
+#comment
+ filer.l:330:	     (:button no "しない(&S)" #x50000009 15 32 42 10)
+-No(&S) --  &new{2005-03-05 20:31:23 (土)};
+
+#comment
+ filer.l:331:	     (:button newer "日付が新しければ(&N)" #x50000009 15 44 84 10)
+-&Newer --  &new{2005-03-05 20:32:00 (土)};
+
+#comment
+ filer.l:332:	     (:button all "いちいち聞くな(&A)" #x50010003 15 67 66 10)
+-&All --  &new{2005-03-05 20:33:07 (土)};
+
+#comment
+ filer.l:335:	     (:static nil "ｻｲｽﾞ:" #x50020080 13 105 17 8)
+-Size :  --  &new{2005-03-05 20:33:48 (土)};
+
+#comment
+ filer.l:337:	     (:static nil "更新日時:" #x50020080 113 105 30 8)
+-Modified Time :  --  &new{2005-03-05 20:35:56 (土)};
+
+#comment
+ filer.l:341:	     (:static nil "ｻｲｽﾞ:" #x50020080 13 135 17 8)
+-Size :  --  &new{2005-03-05 20:33:48 (土)};
+
+#comment
+ filer.l:343:	     (:static nil "更新日時:" #x50020080 113 135 30 8)
+-Modified Time :  --  &new{2005-03-05 20:35:56 (土)};
+
+#comment
+ filer.l:345:	     (:button IDOK "OK" #x50010001 177 7 50 14)
+-OK --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:346:	     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 177 26 50 14)))
+-Cancel --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:348:	   (cons 'text (concat "同じ名前のﾌｧｲﾙがすでに存在します。"
+-The same name file is existing.  --  &new{2005-03-05 20:53:44 (土)};
+
+#comment
+ filer.l:349:			       op "する?"))
+-? --  &new{2005-03-05 20:52:14 (土)};
+
+#comment
+ filer.l:350:	   (cons 'from1 (concat op "元:"))
+- from :  --  &new{2005-03-05 20:36:49 (土)};
+
+#comment
+ filer.l:354:	   (cons 'to1 (concat op "先:"))
+- to :  --  &new{2005-03-05 20:48:21 (土)};
+
+#comment
+ filer.l:379:		    (:caption "書き込み禁止ﾌｧｲﾙの確認")
+-Treatment of read-only files --  &new{2005-03-05 20:18:54 (土)};
+
+#comment
+ filer.l:380:		    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:382:		     (:static nil "書込み禁止ﾌｧｲﾙです。強制的に上書きしますか?" #x50020000 7 7 146 8)
+-The file is read-only. Do you force to overwrite? --  &new{2005-03-05 20:18:54 (土)};
+-他のところもなんですが、疑問文でも Do you は省いていいかなという気がします。この場合なら "Overwrite anyway?" という感じで。 --  &new{2005-10-09 21:36:58 (日)};
+
+#comment
+ filer.l:385:		     (:button IDOK "はい(&Y)" #x50010000 153 7 55 14)
+-&Yes --  &new{2005-03-05 20:18:54 (土)};
+
+#comment
+ filer.l:386:		     (:button IDCANCEL "いいえ(&N)" #x50010001 153 26 55 14)
+-&No --  &new{2005-03-05 20:18:54 (土)};
+
+#comment
+ filer.l:387:		     (:button all "すべて上書き(&A)" #x50010000 153 45 55 14)))
+-Overwrite &all --  &new{2005-03-05 20:18:54 (土)};
+
+#comment
+ filer.l:389:			(cons 'to (concat op "先:")))
+-to :  --  &new{2005-03-05 20:18:54 (土)};
+
+#comment
+ filer.l:414:      (message "~A から ~A へｺﾋﾟｰ中..." from-file to-file)
+-Copying from ~A to ~A ... --  &new{2005-03-05 20:55:08 (土)};
+
+#comment
+ filer.l:422:	    (filer-ask-same-name-file from-file to-file "ｺﾋﾟｰ"))
+-Copy --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:428:	  (setq iad (filer-ask-read-only-file to-file "ｺﾋﾟｰ"))
+-Copy --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:457:	  (message "~A から ~A へ移動中..." file to-file)
+-Moving from ~A to ~A ... --  &new{2005-03-05 20:56:38 (土)};
+
+#comment
+ filer.l:465:		  (filer-ask-same-name-file file to-file "移動"))
+-Move --  &new{2005-03-05 20:57:19 (土)};
+
+#comment
+ filer.l:477:		     (setq iad (filer-ask-read-only-file to-file "移動"))
+-Move --  &new{2005-03-05 21:08:37 (土)};
+
+#comment
+ filer.l:506:			      (yes-or-no-p "選択されたﾌｧｲﾙを~%~A~%に~Aしますかい?"
+-Operation : Selected files~%Target: ~A~%~A? --  &new{2005-03-05 21:01:55 (土)};
+-- 単語の順番の制約が厳しい(^^; --  &new{2005-03-05 21:03:07 (土)};
+
+#comment
+ filer.l:507:					   to (if mv "移動" "ｺﾋﾟｰ"))))
+-Move --  &new{2005-03-05 20:55:44 (土)};
+-Copy --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:510:    (message "done.")))
+-done. --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:521:		    (:caption "別名でｺﾋﾟｰ")
+-Copy as another name --  &new{2005-03-05 21:04:09 (土)};
+
+#comment
+ filer.l:522:		    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:524:		     (:static nil "新しいﾌｧｲﾙ名(&N):" #x50020000 7 35 52 8)
+-&New file name :  --  &new{2005-03-05 21:04:51 (土)};
+
+#comment
+ filer.l:526:		     (:button IDOK "OK" #x50010001 152 7 50 14)
+-OK --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:527:		     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 152 24 50 14)
+-Cancel --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:528:		     (:static nil "元のﾌｧｲﾙ名(&O):" #x50020000 7 7 48 8)
+-&Old file name --  &new{2005-03-05 21:05:58 (土)};
+
+#comment
+ filer.l:530:		  (list (cons 'new (concat name "~"))
+#comment
+ filer.l:532:		  '((new :non-null "新しいﾌｧｲﾙ名を入力して" :enable (IDOK))))
+-Input new file name. --  &new{2005-03-05 21:06:55 (土)};
+
+#comment
+ filer.l:541:	(error "ﾃﾞｨﾚｸﾄﾘはまだできてない"))
+-Copying directory is not supported yet. --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:550:	  (message "done."))))))
+-done. --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:564:	     (message "ｼｮｰﾄｶｯﾄの作成中: ~A..." file)
+-Creating shortcut file : ~A ... --  &new{2005-03-05 21:09:58 (土)};
+
+#comment
+ filer.l:570:		    (:caption "ﾌｧｲﾙ削除の確認")
+-Remove files --  &new{2005-03-05 21:10:38 (土)};
+-Delete files --  &new{2005-03-05 21:11:13 (土)};
+
+#comment
+ filer.l:571:		    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:573:		     (:button IDCANCEL "いいえ(&N)" #x50010000 161 23 50 14)
+-&No --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:574:		     (:button all "ねこそぎ(&A)" #x50010000 161 39 50 14)
+-&All --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:575:		     (:button quit "中止(&Q)" #x50010000 161 55 50 14)
+-&Quit --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:576:		     (:static nil "書込み禁止ﾌｧｲﾙです。強制的に削除しますか?" #x50020000 7 7 144 8)
+-The file is read-only. Do you force to delete? --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:577:		     (:static nil "削除するﾌｧｲﾙ:" #x50020080 7 24 44 8)
+-Files to delete :  --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:579:		     (:button IDOK "はい(&Y)" #x50010001 161 7 50 14)))
+-&Yes --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:602:				(yes-or-no-p "ﾃﾞｨﾚｸﾄﾘ~%~A~%を削除しますか?" file))
+-Do you delete directory~%~A ? --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:612:		   (message "~A を削除中..." file)
+-removing ~A ... --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:628:		    (:caption "削除の確認")
+-Delete files --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:629:		    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:631:		     (:button IDOK "はい(&Y)" #x50010001 197 7 50 14)
+-&Yes --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:632:		     (:button IDCANCEL "いいえ(&N)" #x50010000 197 24 50 14)
+-&No --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:633:		     (:static IDC_STATIC "以下のﾌｧｲﾙを削除しますか?" #x50020000 7 7 85 8)
+-Do you delete the files listing under? --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:645:		   (yes-or-no-p "選択されたﾌｧｲﾙを削除しまっせ")))
+-Do you delete the selected files? --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:654:	(message "done.")))))
+-done. --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:672:    (:caption "ﾌｧｲﾙの属性")
+-File attribute --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:673:    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:675:     (:button nil "ﾌｧｲﾙの属性(&B)" #x50000007 7 7 74 83)
+-File attri&bute --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:676:     (:button readonly "読み取り専用(&R)" #x50010006 14 19 65 10)
+-&Read-only --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:677:     (:button hidden "隠しﾌｧｲﾙ(&H)" #x50010006 14 33 53 10)
+-&Hidden --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:678:     (:button archive "ｱｰｶｲﾌﾞ(&A)" #x50010006 14 47 47 10)
+-&Archive --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:679:     (:button system "ｼｽﾃﾑ(&S)" #x50010006 14 61 42 10)
+-&System --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:680:     (:button compressed "圧縮(&C)" #x50010006 14 75 38 10)
+-&Compress --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:681:     (:button nil "更新日時(&M)" #x50000007 86 7 127 83)
+-&Modified time --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:682:     (:button date-nil "変更しない(&N)" #x50030009 93 20 62 10)
+-&Not change --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:683:     (:button date-now "現在時刻(&W)" #x50000009 93 34 59 10)
+-No&w --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:684:     (:button date-0 "今日の&0時" #x50000009 93 48 53 10)
+-Today's &0 o'clock --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:685:     (:button date-12 "今日の&12時" #x50000009 93 62 56 10)
+-Today's &12 o'clock --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:686:     (:button date-spec "時刻指定(&P)" #x50000009 93 76 51 10)
+-S&pecifying time --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:688:     (:button subdir "ｻﾌﾞﾃﾞｨﾚｸﾄﾘのﾌｧｲﾙも置き換える(&D)" #x50030003 7 96 118 10)
+-Also subdir --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:689:     (:button IDOK "OK" #x50010001 218 7 50 14)
+-OK --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:690:     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 218 24 50 14))))
+-Cancel --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:787:	    (message "done.")))))))
+-done. --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:793:		      (:caption "ﾃﾞｨﾚｸﾄﾘの作成")
+-Make directory --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:794:		      (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:796:		       (:static IDC_STATIC "作成するﾃﾞｨﾚｸﾄﾘ(&N):" #x50020000 7 38 60 8)
+-New dirctory --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:798:		       (:button move "新しいﾃﾞｨﾚｸﾄﾘに移動(&M)" #x50010003 7 70 87 10)
+-&Move new dirctory after making --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:799:		       (:button IDOK "OK" #x50010001 174 7 50 14)
+-OK --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:800:		       (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 174 24 50 14)
+-Cancel --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:801:		       (:static IDC_STATIC "ｶﾚﾝﾄﾃﾞｨﾚｸﾄﾘ(&C):" #x50020000 7 7 50 8)
+-&Current dirctory --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:822:		    (yes-or-no-p "ｱｰｶｲﾌﾞﾌｧｲﾙ~%~A~%を~%~A~%に解凍しますか?"
+-Do you extract the archive file~%~A~%to ~A ? --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:833:		    (:caption "ﾌｧｲﾙの圧縮")
+-Compressing files --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:834:		    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:836:		     (:static nil "ﾌｧｲﾙ名(&N):" #x50020000 7 64 34 8)
+-File &name --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:838:		     (:button IDOK "OK" #x50010001 194 7 50 14)
+-OK --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:839:		     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 194 24 50 14)
+-Cancel --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:840:		     (:static nil "作成するﾃﾞｨﾚｸﾄﾘ(&D):" #x50020000 8 7 60 8)
+-New &directory :  --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:842:		     (:button ref "参照..." #x50010000 169 17 22 14)
+-Refer... --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:843:		     (:static nil "基準ﾃﾞｨﾚｸﾄﾘ(&B):" #x50020000 7 35 48 8)
+-&Base directory --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:845:		     (:button baseref "参照..." #x50010000 169 45 22 14)))
+-Refer... --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:849:		  '((name :non-null "ｱｰｶｲﾌﾞﾌｧｲﾙ名を入力してください" :enable (IDOK))
+-Input the archive file name. --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:850:		    (ref :related dir :directory-name-dialog (:title "参照"))
+-Refer --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:851:		    (baseref :related base :directory-name-dialog (:title "参照"))))
+-Refer --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:903:	   (error "複数ファイルは指定でけん"))
+-Please select only one file. --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:913:		    (:caption ,(concat (file-namestring file) "の中身"))
+- contents --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:914:		    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:917:		     (:button IDOK "開く" #x50010001 158 216 50 14)
+-Open --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:918:		     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 216 216 50 14)))
+-Cancel --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:941:	      (yes-or-no-p "~A~%を実行しますか?" file))
+-Do you execute~%~A ? --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:953:		    (:caption "名前の変更")
+-Rename file --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:954:		    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:956:		     (:static nil "新しいﾌｧｲﾙ名(&N):" #x50020000 7 35 52 8)
+-&New file name :  --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:958:		     (:button IDOK "OK" #x50010001 152 7 50 14)
+-OK --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:959:		     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 152 24 50 14)
+-Cancel --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:960:		     (:static nil "元のﾌｧｲﾙ名(&O):" #x50020000 7 7 48 8)
+-&Old file name :  --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:964:		  '((new :non-null "新しいﾌｧｲﾙ名を入力して" :enable (IDOK))))
+-Input new file name. --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:978:			(:caption "一気にﾘﾈｰﾑ")
+-Rename with regexp --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:979:			(:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:981:			 (:static nil "変更前ﾌｧｲﾙ名(正規表現)(&P):" #x50020000 7 7 86 8)
+-&Pre-rename files (regexp) --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:983:			 (:static nil "変更後ﾌｧｲﾙ名(&R):" #x50020000 7 37 55 8)
+-&Renamed files --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:985:			 (:button IDOK "OK" #x50010001 132 7 50 14)
+-OK --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:986:			 (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 132 24 50 14)))
+-Cancel --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:1008:			  (:caption "よろし?")
+-OK? --  &new{2005-03-05 21:11:45 (土)};
+
+#comment
+ filer.l:1009:			  (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:1012:			   (:button IDOK "OK" #x50010001 178 7 50 14)
+-OK --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:1013:			   (:button reinput "もいっかい(&R)" #x50010000 178 24 50 14)
+-&Reinput --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:1014:			   (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 178 41 50 14)))
+-Cancel --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:1052:	      (message "~A から ~A へﾘﾈｰﾑ..." (car x) (cdr x))
+-Renaming from ~A to ~A ... --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:1072:		    (:caption "ﾌｧｲﾙの検索")
+-File search --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:1073:		    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:1075:		     (:static nil "ﾌｧｲﾙ名(&F):" #x50020000 7 28 34 8)
+-&File name :  --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:1077:		     (:button IDOK "OK" #x50010001 194 7 50 14)
+-OK --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:1078:		     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 194 24 50 14)
+-Cancel --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:1079:		     (:button ref "参照(&R)..." #x50010000 194 41 50 14)
+-Refer(&R)... --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:1080:		     (:static nil "探す場所(&D):" #x50020000 7 11 39 8)
+-Target &directory :  --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:1085:		  '((ref :related dir :directory-name-dialog (:title "参照"))
+-Refer --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:1086:		    (name :non-null "ﾌｧｲﾙ名を入力して" :enable (IDOK))))
+-Input file name. --  &new{2005-03-05 20:55:44 (土)};
+
+#comment
+ filer.l:1088:      (message "検索中...")
+-Searching ...
+
+#comment
+ filer.l:1101:				 (:caption "検索結果")
+-Serch result
+
+#comment
+ filer.l:1102:				 (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:1117:		 (error "~{~A~^, ~}:~%見つかりません" pattern))))))))
+-~{~A~^, ~}:~%is not found.
+
+#comment
+ filer.l:1122:		    (:caption "ﾌｧｲﾙを探すよ")
+-Search file
+
+#comment
+ filer.l:1123:		    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:1125:		     (:static nil "ﾌｧｲﾙ名(&F):" #x50020000 7 7 34 8)
+- &File name : 
+
+#comment
+ filer.l:1127:		     (:button IDOK "OK" #x50010001 174 7 50 14)
+- OK
+
+#comment
+ filer.l:1128:		     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 174 24 50 14)))
+-Cancel --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:1130:		  '((name :non-null "ﾌｧｲﾙ名を入力して" :enable (IDOK))))
+- Input file name.
+
+#comment
+ filer.l:1140:		   (yes-or-no-p "選択されたﾌｧｲﾙのｼｮｰﾄｶｯﾄをﾃﾞｽｸﾄｯﾌﾟに作成しますか?")))
+- Do you create the shortcut file of selected files in the desktop?
+
+#comment
+ filer.l:1142:	(message "ｼｮｰﾄｶｯﾄの作成中: ~A..." file)
+- Creating shortcut file : ~A ...
+
+#comment
+ filer.l:1152:		   (yes-or-no-p "選択されたﾌｧｲﾙのｼｮｰﾄｶｯﾄを~%~A~%に作成しますか?"
+- Do you create the shortcut file of selected files in ~%~A ?
+
+#comment
+ filer.l:1156:	(message "ｼｮｰﾄｶｯﾄの作成中: ~A..." file)
+- Creating shortcut file : ~A ...
+
+#comment
+ filer.l:1164:		    (:caption "ﾌｧｲﾙ名")
+- File name
+
+#comment
+ filer.l:1165:		    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:1167:		     (:static nil "ﾌｧｲﾙ名(&F):" #x50020000 7 7 34 8)
+- &File name : 
+
+#comment
+ filer.l:1169:		     (:button IDOK "OK" #x50010001 174 7 50 14)
+- OK
+
+#comment
+ filer.l:1170:		     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 174 24 50 14)))
+-Cancel --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:1172:		  '((name :non-null "ﾌｧｲﾙ名を入力して" :enable (IDOK))))
+- Input file name.
+
+#comment
+ filer.l:1186:		       (yes-or-no-p "~A~%をﾛｰﾄﾞしますか?" (car files))
+- Do you load~%~A?
+
+#comment
+ filer.l:1187:		     (yes-or-no-p "選択されたﾌｧｲﾙをﾛｰﾄﾞしますか?"))))
+- Do you load selected files?
+
+#comment
+ filer.l:1196:		      (:caption "ﾌｧｲﾙのｿｰﾄ")
+- File sorting
+
+#comment
+ filer.l:1197:		      (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:1199:		       (:button nil "ｿｰﾄ方法" #x50000007 7 7 70 78)
+- Sort method
+
+#comment
+ filer.l:1200:		       (:button name "名前(&N)" #x50030009 13 21 39 10)
+- &Name
+
+#comment
+ filer.l:1201:		       (:button size "ｻｲｽﾞ(&S)" #x50000009 13 37 39 10)
+- &Size
+
+#comment
+ filer.l:1202:		       (:button date "更新日時(&D)" #x50000009 13 53 53 10)
+- &Date
+
+#comment
+ filer.l:1203:		       (:button ext "拡張子(&E)" #x50000009 13 69 45 10)
+- File &extensions
+
+#comment
+ filer.l:1204:		       (:button reverse "降順でｿｰﾄ(&R)" #x50030003 7 91 63 10)
+- &Riverse
+
+#comment
+ filer.l:1205:		       (:button icase "大文字小文字を区別する(&C)" #x50010003 7 104 105 10)
+- &Case-sensitive
+
+#comment
+ filer.l:1206:		       (:button idir "ﾃﾞｨﾚｸﾄﾘを特別扱いしない(&I)" #x50010003 7 117 101 10)
+- Don't accord directory special treatment(&I)
+
+#comment
+ filer.l:1207:		       (:button num "数値を考慮する(&U)" #x50010003 7 130 78 10)
+- Parse n&umber
+
+#comment
+ filer.l:1208:		       (:button IDOK "OK" #x50010001 86 7 50 14)
+-OK
+
+#comment
+ filer.l:1209:		       (:button both "両方の窓(&B)" #x50010000 86 24 50 14)
+-&Both window
+
+#comment
+ filer.l:1210:		       (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 86 41 50 14)))
+-Cancel --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:1238:      (error "比較するファイルを指定して"))
+-Select files to compare.
+
+#comment
+ filer.l:1239:    (msgbox "~A~%~A~%~%~:[ちゃう~;同じ~]"
+-~A~%~A~%~%~:[different~;same~]
+
+#comment
+ filer.l:1267:			(:caption "送っちゃうよ")
+-Send files
+
+#comment
+ filer.l:1268:			(:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:1271:			 (:button IDOK "送る" #x50030001 128 7 52 14)
+- Send
+
+#comment
+ filer.l:1272:			 (:button IDCANCEL "送らない" #x50030000 128 27 52 14)))
+- Not send
+
+#comment
+ filer.l:1300:		      (:caption "送っちゃうよ")
+- Send files
+
+#comment
+ filer.l:1301:		      (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:1304:		       (:button IDOK "送る" #x50030001 128 7 52 14)
+- Send
+
+#comment
+ filer.l:1305:		       (:button IDCANCEL "送らない" #x50030000 128 27 52 14)))
+- Not send
+
+#comment
+ filer.l:1356:		       (:caption "Grep")
+- Grep
+
+#comment
+ filer.l:1357:		       (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:1359:			(:static nil "ﾊﾟﾀｰﾝ(&P):" #x50020000 7 10 38 8)
+- &Pattern
+
+#comment
+ filer.l:1361:			(:static file-static "ﾌｧｲﾙ名(&F):" #x50020000 7 27 40 8)
+- &File name
+
+#comment
+ filer.l:1363:			(:button case-fold "大文字小文字を区別する(&C)" #x50010006 51 44 105 10)
+- &Case-sensitive
+
+#comment
+ filer.l:1364:			(:button word "単語単位で検索する(&W)" #x50010003 51 57 92 10)
+- &Word by word
+
+#comment
+ filer.l:1365:			(:button regexp "正規表現(&E)" #x50010003 51 70 58 10)
+- Reg&exp
+
+#comment
+ filer.l:1366:			(:button escseq "ｴｽｹｰﾌﾟｼｰｹﾝｽを理解しろ(&Y)" #x50010003 51 83 106 10)
+-Parse the escape sequence(&Y)
+
+#comment
+ filer.l:1367:			(:button subdir "ついでにｻﾌﾞﾃﾞｨﾚｸﾄﾘも(&U)" #x50010003 51 96 95 10)
+-Also subdir(&U)
+
+#comment
+ filer.l:1368:			(:button async "非同期でgrep(&A)" #x50010003 51 109 65 10)
+-&Asynchronous grep
+
+#comment
+ filer.l:1369:			(:button name "ファイル名だけ出力(&O)" #x50010003 51 122 87 10)
+-&Output only file names
+
+#comment
+ filer.l:1370:			(:button IDOK "検索(&S)" #x50010001 214 7 50 14)
+-&Search
+
+#comment
+ filer.l:1371:			(:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 214 24 50 14)))
+-Cancel --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:1379:			  (:caption "Gresreg")
+-Gresreg
+
+#comment
+ filer.l:1380:			  (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-05 20:18:23 (土)};
+
+#comment
+ filer.l:1382:			   (:static nil "検索(&S):" #x50020000 7 10 32 8)
+-&Search --  &new{2005-03-05 21:27:32 (土)};
+
+#comment
+ filer.l:1384:			   (:static nil "置換(&R):" #x50020000 7 27 36 8)
+-&Replace --  &new{2005-03-05 21:28:42 (土)};
+
+#comment
+ filer.l:1386:			   (:static file-static "ﾌｧｲﾙ名(&F):" #x50020000 7 44 41 8)
+-&File name : 
+
+#comment
+ filer.l:1388:			   (:button case-fold "大文字小文字を区別する(&C)" #x50010006 50 60 113 10)
+- &Case-sensitive
+
+#comment
+ filer.l:1389:			   (:button word "単語単位で検索する(&W)" #x50010003 50 73 100 10)
+- &Word by word
+
+#comment
+ filer.l:1390:			   (:button regexp "正規表現(&E)" #x50010003 50 86 62 10)
+-Use regexp(&E) --  &new{2005-03-05 23:06:26 (土)};
+
+#comment
+ filer.l:1391:			   (:button escseq "ｴｽｹｰﾌﾟｼｰｹﾝｽを理解しろ(&Y)" #x50010003 50 99 105 10)
+-Parse the escape sequence(&Y) --  &new{2005-03-05 23:04:54 (土)};
+
+#comment
+ filer.l:1392:			   (:button subdir "ついでにｻﾌﾞﾃﾞｨﾚｸﾄﾘも(&U)" #x50010003 50 112 103 10)
+-Also subdir(&U) --  &new{2005-03-05 23:02:43 (土)};
+
+#comment
+ filer.l:1393:			   (:button save "勝手にｾｰﾌﾞしろ(&V)" #x50010003 50 125 79 10)
+-Save after replace(&V) --  &new{2005-03-05 23:00:55 (土)};
+
+#comment
+ filer.l:1394:			   (:button query "確認あり(&Q)" #x50010001 214 7 50 14)
+-&Query --  &new{2005-03-05 22:59:53 (土)};
+
+#comment
+ filer.l:1395:			   (:button all "全て置換(&A)" #x50010000 214 24 50 14)
+-&ALL --  &new{2005-03-05 22:22:28 (土)};
+
+#comment
+ filer.l:1396:			   (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 214 42 50 14)
+-Cancel --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:1397:			   (:button ref "参照(&N)..." #x50010000 214 59 50 14)))
+-Refer(&N)... --  &new{2005-03-05 22:05:18 (土)};
+
+#comment
+ filer.l:1405:		       (yes-or-no-p "~A~%をｺﾝﾊﾟｲﾙしますか?" (car files))
+-Do you compile~%~A? --  &new{2005-03-05 21:13:12 (土)};
+
+#comment
+ filer.l:1406:		     (yes-or-no-p "選択されたﾌｧｲﾙをｺﾝﾊﾟｲﾙしますか?"))))
+-Do you compile the selected files? --  &new{2005-03-05 21:14:17 (土)};
+
+#comment

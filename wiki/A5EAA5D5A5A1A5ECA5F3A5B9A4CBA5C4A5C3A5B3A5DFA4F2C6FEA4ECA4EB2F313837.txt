@@ -1,0 +1,186 @@
+* text-attribute関連 [#k16b6b7d]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[Nomura]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-12-31 (土) 08:54:10
+-バージョン: 
+
+** メッセージ [#ff54467a]
+set-text-attributeなどで:prefixは使い方不明となっていますが、文字を指定するとその文字が行頭の行番号の部分（一の位）に表示されるようです。
+
+ <chapter>
+ <title>modify-text-attributes-if-not</title>
+ <type>Function</type>
+ <arguments>modify-text-attributes-if-not TEST &amp;key :foreground :background :bold :underline :strike-out :prefix :extend :start :end :key</arguments>
+ <package>editor</package>
+ <description>
+ テキスト属性のうち、タグが TEST を満たさないものすべてについて、属性を変更します。
+ 属性は引き継がれません。
+ 範囲を指定した場合、開始点が範囲に含まれるもののみ変更されます。
+ 
+   :bold        ボールドで表示するかどうか
+   :underline   下線付きで表示するかどうか
+   :strike-out  取り消し線を表示するかどうか
+   :foreground  文字色を整数で指定
+   :background  背景色を整数で指定
+   :prefix      行番号部分に表示する文字
+   :extend      行末の改行文字以降も変えるかどうか
+   :start       検索開始位置
+   :end         検索終了位置
+   :key         TEST に渡す前にタグに適用する関数
+ </description>
+ <seealso>modify-text-attributes</seealso>
+ <seealso>modify-text-attributes-if</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>modify-text-attributes-if</title>
+ <type>Function</type>
+ <arguments>modify-text-attributes-if TEST &amp;key :foreground :background :bold :underline :strike-out :prefix :extend :start :end :key</arguments>
+ <package>editor</package>
+ <description>
+ テキスト属性のうち、タグが TEST を満たすものすべてについて、属性を変更します。
+ 属性は引き継がれません。
+ 範囲を指定した場合、開始点が範囲に含まれるもののみ変更されます。
+ 
+   :bold        ボールドで表示するかどうか
+   :underline   下線付きで表示するかどうか
+   :strike-out  取り消し線を表示するかどうか
+   :foreground  文字色を整数で指定
+   :background  背景色を整数で指定
+   :prefix      行番号部分に表示する文字
+   :extend      行末の改行文字以降も変えるかどうか
+   :start       検索開始位置
+   :end         検索終了位置
+   :key         TEST に渡す前にタグに適用する関数
+ </description>
+ <seealso>modify-text-attributes-if-not</seealso>
+ <seealso>modify-text-attributes</seealso>
+ <seealso>set-text-attribute</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>delete-text-attributes-if-not</title>
+ <type>Function</type>
+ <arguments>delete-text-attributes-if-not TEST &amp;key :key</arguments>
+ <package>editor</package>
+ <description>
+ テキスト属性のうち、タグが TEST を満たさないものをすべて削除します。
+ </description>
+ <seealso>delete-text-attributes-if</seealso>
+ <seealso>delete-text-attributes</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>delete-text-attributes-if</title>
+ <type>Function</type>
+ <arguments>delete-text-attributes-if TEST &amp;key :key</arguments>
+ <package>editor</package>
+ <description>
+ テキスト属性のうち、タグが TEST を満たすものをすべて削除します。
+ </description>
+ <seealso>delete-text-attributes-if-not</seealso>
+ <seealso>delete-text-attributes</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>delete-text-attribute-point</title>
+ <type>Function</type>
+ <arguments>delete-text-attribute-point POINT</arguments>
+ <package>editor</package>
+ <description>
+ POINT の位置のテキスト属性を削除します。
+ テキスト属性のうち POINT の位置を範囲に含むものを削除します。
+ </description>
+ <seealso>delete-text-attributes</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>find-text-attribute-if-not</title>
+ <type>Function</type>
+ <arguments>find-text-attribute-if-not TEST &amp;key :start :end :from-end :key</arguments>
+ <package>editor</package>
+ <description>
+ テキスト属性のうち、タグが TEST を満たさないものを探し、最初に見つかったものを返します。
+ 多値で、テキスト属性の開始位置・終了位置・タグを返します。
+ 
+   :start     検索開始位置（デフォルトでは point-min?）
+   :end       検索終了位置（デフォルトでは point-max?）
+   :from-end  後ろから検索するかどうか
+   :key       TEST に渡す前にタグに適用する関数
+ </description>
+ <seealso>find-text-attribute-if</seealso>
+ <seealso>find-text-attribute</seealso>
+ <seealso>set-text-attribute</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>find-text-attribute-if</title>
+ <type>Function</type>
+ <arguments>find-text-attribute-if TEST &amp;key :start :end :from-end :key</arguments>
+ <package>editor</package>
+ <description>
+ テキスト属性のうち、タグが TEST を満たすものを探し、最初に見つかったものを返します。
+ 多値で、テキスト属性の開始位置・終了位置・タグを返します。
+ 
+   :start     検索開始位置（デフォルトでは point-min?）
+   :end       検索終了位置（デフォルトでは point-max?）
+   :from-end  後ろから検索するかどうか
+   :key       TEST に渡す前にタグに適用する関数
+ </description>
+ <seealso>find-text-attribute-if-not</seealso>
+ <seealso>find-text-attribute</seealso>
+ <seealso>set-text-attribute</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>list-text-attributes</title>
+ <type>Function</type>
+ <arguments>list-text-attributes &amp;optional START END</arguments>
+ <package>editor</package>
+ <description>
+ バッファ中のテキスト属性をすべて探し、リストにして返します。
+ 範囲を指定した場合、その範囲中に一部でも含まれるものをリストにします。
+ 
+   START : 検索範囲の開始点
+   END   : 検索範囲の終了点
+ </description>
+ <seealso>find-text-attribute</seealso>
+ <seealso>set-text-attribute</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+
+--------
+- どーもです。 -- [[NANRI]] &new{2006-01-09 (月) 20:04:23};
+- 取り込みました。→[[refwiki:list-text-attributes]], [[refwiki:find-text-attribute-if]], [[refwiki:find-text-attribute-if-not]], [[refwiki:delete-text-attribute-point]], [[refwiki:delete-text-attributes-if]], [[refwiki:delete-text-attributes-if-not]], [[refwiki:modify-text-attributes-if]], [[refwiki:modify-text-attributes-if-not]] -- [[NANRI]] &new{2006-02-13 (月) 23:09:13};
+
+#comment
+
+
+トップ

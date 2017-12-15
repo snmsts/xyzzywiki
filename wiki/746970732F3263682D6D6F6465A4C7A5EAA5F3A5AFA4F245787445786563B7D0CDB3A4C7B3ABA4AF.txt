@@ -1,0 +1,55 @@
+2004-04-12 shintak
+
+もともとOpenJane用に作られたExtExec http://www.geocities.co.jp/SiliconValley-Sunnyvale/6234/#ExtExec を2ch-modeで使えるようにする。
+
+リンク上でただRETを押せば拡張子によって最適なアプリにURLを渡してくれる。
+たとえば書庫ファイルはダウンローダに渡したり、画像はnonoViewer http://www.geocities.co.jp/SiliconValley-Sunnyvale/6234/#nonoViewer でグロ画像かどうかをチェックしたりといったことが簡単にできるようになる。
+
+ ;;; リンクはExtExec経由で開く
+ (setq *extexec-path* "C:/TOOLS/ExtExec/ExtExec.exe")
+ (defun open-browser (url)
+   (interactive)
+   (setq command (concat *extexec-path* " " url))
+   (call-process command))
+-ちょっとひどすぎる。独自の拡張子別判別くらい、xyzzy自身で簡単に出来ますけど。そもそも、letを使ってくださいな。 --  &new{2004-04-12 (月) 14:18:18};
+ (defvar *extexec-path* "C:/TOOLS/ExtExec/ExtExec.exe")
+ (defun open-browser (url)
+   (interactive)
+   (call-process (concat *extexec-path* " " url)))
+;;適当に、ExtExec不要バージョン
+ (defvar *extexec-alist*
+   '(("\\.\\(jpe?g\\|gif\\|png\\|bmp\\)$" .
+      (lambda (url) (call-process (concat "viewer " url))))))
+ 
+ (defun open-browser (url)
+   (interactive)
+   (dolist (x *extexec-alist*)
+     (when (string-matchp (car x) url)
+       (return (funcall (cdr x) url)))))
+-添削ありがとうございます。ExtExecを使ったのは、関連づけに関する設定を外部アプリに任せることでコードサイズが抑えられること、また、lispコードを再評価せずに関連づけが変更できるのをメリットだと判断したからです。 -- [[shintak]] &new{2004-04-12 (月) 15:14:09};
+- ExtExec不要バージョンをもうひとつ。(interactive)いらない、パッケージの明示、assoc-ifを使いたかった、*extexec-alist*の最後にかならずマッチする条件を入れてshell-executeを使うようにの辺りが変更点。
+ (in-package "2ch")
+ (defvar *extexec-alist*
+   '(("\\.\\(jpe?g\\|gif\\|png\\|bmp\\)$" . (lambda (url) (call-process (concat "viewer " url))))
+     (".*" . (lambda (url) (shell-execute url t)))
+     ))
+ (defun open-browser (url)
+   (funcall (cdr (assoc-if #'(lambda (x)
+                               (string-matchp x url))
+                           *extexec-alist*))
+            url))
+-ExtExec不要バージョンを書いたものですが、ああ、そうだ、(interactive)はいりませんでした。しかし、string-matchが(string-match string regexp)の文法なら(assoc-ifでなく）assocでいけるのにね。substitute-stringなどを見ると、そちらの文法の方が良いような気もしますが、emacs-lispから来た代物だから仕方ないのか。 --  &new{2004-04-14 (水) 09:33:56};
+-自分にとってはassoc-ifの方がなんとなく使いやすいんでassoc-ifを使ってしまいます。assocでもいけますけど、無理やりっぽいかな。
+ (defun open-browser (url)
+   (funcall (cdr (assoc url *extexec-alist* :test #'(lambda (x y)
+                                                      (string-matchp y x))))
+            url))
+-マウスでクリックしたときの動作ってかえられないですか？ -- [[七個]] &new{2004-04-16 (金) 14:09:59};
+-変えられます。(define-key *thread-map* #\LBtnUp '2ch-mouse-left-press)スレッドでは、これでしょうか（たぶん） --  &new{2004-04-19 (月) 09:18:51};
+-上のコードを使って画像ファイルをSusieに開かせようとしたのですが、Susieったら「C:\Program Files\xyzzy\http:\2ch-dc-ita…」を開こうとして困っています。何か私の設定がいけないのでしょうか？ --  &new{2004-06-05 (土) 21:49:59};
+--SusieがWeb上のファイルを直接開けないからだと思います。 --  &new{2004-06-06 (日) 03:15:48};
+---Susieの「開く」ダイアログボックスで直接URLを指定してやるとちゃんと開けるんですが… --  &new{2004-06-06 (日) 08:03:33};
+---試しにviewerにnonoViewerを指定すると、ちゃんと開くことができました。おっしゃる通りSusieには無理なようです。お騒がせしました。 --  &new{2004-06-06 (日) 13:09:59};
+
+
+#comment

@@ -1,0 +1,53 @@
+ミニバッファでTAB補完する際に、ディレクトリへのショートカットが~
+展開されないのが不満だったので、ぐちゃぐちゃっとlispを書いてみました。~
+ディレクトリ以外のショートカットを展開したい場合は[[tips/.lnkを展開する]]で。
+
+
+ ;; ディレクトリへの.lnkを展開する。
+ ;; c:/dir.lnk     TAB -> c:/hogehoge/
+ ;; c:/dir.lnk/abc TAB -> c:/hogehoge/abc
+ ;; c:/dir/abc     TAB -> c:/hogehoge/abc
+ ;; また dir[.lnk]/abc/dir2[.lnk]/test と書いても展開可能。
+ (defun my-minibuffer-complete (&optional word)
+   (interactive "*p")
+   (let ((str (buffer-substring (point-min) (point-max))))
+     (do ((i 0 (+ i 1))) ((> i (length str)) t)
+       (let ((sbstr (substring str 0 i)))
+         (if (string-matchp "\\.lnk$" sbstr)
+             (let ((sh (ignore-errors (resolve-shortcut sbstr))))
+               (if (ignore-errors (file-directory-p sh))
+                   (progn
+                     (setf str (substitute-string str sbstr sh))
+                     (setf i (length sh)))))
+           (if (string-match "[\\/]$" sbstr)
+               (progn
+                 (setf sbstr (string-right-trim "\\/" sbstr))
+                 (let ((sh (ignore-errors (resolve-shortcut (concat sbstr ".lnk")))))
+                   (if (ignore-errors (file-directory-p sh))
+                       (progn
+                         (setf str (substitute-string str sbstr sh))
+                         (setf i (length sh))))))))))
+     (delete-region (point-min) (point-max))
+     (insert str))
+   ; ここから下はdefaultのminibuffer-completeの動作
+   (do-completion (point-min) (point-max)
+                  (minibuffer-completion-type)
+                  (minibuffer-completion-list)
+                  word
+                  *last-command-char*
+                  *minibuffer-popup-completion-list*)
+   (setq *this-command* 'minibuffer-complete))
+ 
+ (defun my-minibuffer-complete-word ()
+   (interactive "*")
+   (my-minibuffer-complete t))
+ 
+ ;; 既存のと入れ替える
+ (define-key minibuffer-local-completion-map #\TAB 'my-minibuffer-complete)
+ (define-key minibuffer-local-must-match-map #\TAB 'my-minibuffer-complete)
+ (define-key minibuffer-local-completion-map #\SPC 'my-minibuffer-complete-word)
+ (define-key minibuffer-local-must-match-map #\SPC 'my-minibuffer-complete-word)
+
+
+----
+#comment

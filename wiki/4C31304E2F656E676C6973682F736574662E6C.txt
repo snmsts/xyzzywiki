@@ -1,0 +1,29 @@
+[[L10N/english]]
+
+ setf.l:26:	(error "格納変数がありません"))
+#comment
+ setf.l:61:	   (error "~Sのsetfメソッドはありません" form))
+#comment
+ setf.l:66:	       (error "~Sのsetfメソッドはありません" form))
+#comment
+ setf.l:88:	       (error "~Sのsetfメソッドはありません" form))
+#comment
+ setf.l:91:	   (error "setfフォームを展開できません: ~S." form)))))
+#comment
+ setf.l:97:      (error "複数の格納変数があります"))
+#comment
+ setf.l:173:	(error "~S: 不正なsetfフォームです" al))
+- Invalid setf form. --  &new{2005-12-27 (火) 14:29:39};
+- ~S: Invalid setf form. --  &new{2005-12-27 (火) 14:32:21};
+
+#comment
+ setf.l:180:	 (error "~S: 不正なsetfフォームです" args))
+#comment
+ setf.l:189:	 (error "~S: 不正なpsetfフォームです" args))
+#comment
+ setf.l:203:	     (error "~S: 不正なpsetfフォームです" args))
+#comment
+ setf.l:439:    (error "~Sのsetfメソッドを取得できません" fn))
+#comment
+ setf.l:454:	   (error "~Sのsetfメソッドを取得できません" fn)))))
+#comment

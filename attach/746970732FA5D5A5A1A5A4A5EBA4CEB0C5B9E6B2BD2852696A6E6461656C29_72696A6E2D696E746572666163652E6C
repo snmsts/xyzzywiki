@@ -1,0 +1,33 @@
+(require "rijn")
+
+(defvar-local *buffer-needs-encryption* nil)
+(defun save-buffer-with-encryption ()
+  (when *buffer-needs-encryption*
+    (write-file-and-encrypt (get-buffer-file-name) *buffer-encryption-key*)
+    (set-buffer-modified-p nil)))
+
+(defvar *encrypted-file-list* nil)
+(pushnew (merge-pathnames "passwords" (get-special-folder-location :personal))
+	 *encrypted-file-list*
+	 :test 'path-equal)
+
+(defun file-encrypted-p (filename)
+  (dolist (pattern *encrypted-file-list*)
+    (when (string-matchp pattern filename)
+      (return-from file-encrypted-p t))))
+
+(defun find-file-with-decryption (filename)
+  (let ((exist-p (file-exist-p filename)))
+    (when exist-p
+      (setq filename (truename filename)))
+    (unless (file-encrypted-p filename)
+      (return-from find-encrypted-file nil))
+    (if exist-p
+	(read-encrypt-file filename)
+      (set-buffer (create-new-buffer (file-namestring filename))))
+    (setq *buffer-needs-encryption* t))
+  (set-buffer-file-name filename)
+  (selected-buffer))
+
+(add-hook '*before-save-buffer-hook* 'save-buffer-with-encryption)
+(add-hook '*before-find-file-hook* 'find-file-with-decryption)

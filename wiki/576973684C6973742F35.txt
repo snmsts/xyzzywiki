@@ -1,0 +1,78 @@
+* uniquify 
+-ページ: [[WishList]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2003-10-16 (木) 00:39:18
+
+** メッセージ 
+移植してほしいっす。
+
+[[MeadowMemo:uniquify]]
+
+誰か続きを
+ (add-hook '*find-file-hooks*
+ 	  #'(lambda ()
+ 	      (interactive)
+ 	      (let* ((selbuf (selected-buffer))
+ 		     (selbufname  (file-namestring (get-buffer-file-name selbuf)))
+ 		     bufname
+ 		     )
+ 		(dolist (buffer (buffer-list))
+ 		  (setq bufname (get-buffer-file-name buffer))
+ 		  (unless (or
+ 			   (eq selbuf buffer)
+ 			   (eq bufname nil))
+ 		    (when (string= selbufname (file-namestring bufname))
+ 		      (rename-buffer (format nil "~A <~A>" selbufname
+ 					     (or
+ 					      (car (last (pathname-directory (get-buffer-file-name selbuf))))
+ 					      (concat (pathname-device (get-buffer-file-name selbuf)) ":"))))
+ 		      ))))))
+
+
+**コード
+ (defvar *uniquify-name-style* 'post-forward-angle-brackets)
+ 
+ (defun uniquify ()
+   (if *uniquify-name-style*
+       (let ((me (selected-buffer)) (mepath (get-buffer-file-name)))
+         (and mepath
+              (string-match "<[0-9]+>$" (buffer-name me))
+              (dolist (you (buffer-list))
+                (set-buffer you)
+                (and (null (eq me (selected-buffer)))
+                     (get-buffer-file-name)
+                     (string= (file-namestring mepath) (buffer-name (selected-buffer)))
+                     (let ((mename "") (youname ""))
+                       (dolist
+                           (x (mapcar
+                               #'(lambda (a b) (cons a b))
+                               (cdr (reverse (split-string mepath #\/)))
+                               (cdr (reverse (split-string (get-buffer-file-name) #\/)))))
+                         (setq mename (concat mename "/" (car x))
+                               youname (concat youname "/" (cdr x)))
+                         (if (string/= (car x) (cdr x))
+                             (return t)))
+                       (uniquify-rename-buffer youname)
+                       (save-excursion
+                         (set-buffer me)
+                         (uniquify-rename-buffer mename)))))))))
+ 
+ (defun uniquify-rename-buffer (str)
+   (setq str (substring str 1))
+   (rename-buffer
+    (case *uniquify-name-style*
+      (forward (concat str "/" (file-namestring (get-buffer-file-name))))
+      (reverse (concat (file-namestring (get-buffer-file-name)) "\\"
+                       (format nil "~{\\~A~}" (reverse (split-string str #\/)))))
+      (post-forward (concat (file-namestring (get-buffer-file-name)) "|" str))
+      (post-forward-angle-brackets
+       (concat (file-namestring (get-buffer-file-name)) "<" str ">")))))
+ 
+ (add-hook '*find-file-hooks* 'uniquify)
+適当に作ってみたんですが、バグってるかも。
+移植したわけじゃないです。
+これ、*find-file-hooks*でやってるけど、もっといいフックないのかしら。*create-buffer-hook*？
+----
+
+#comment

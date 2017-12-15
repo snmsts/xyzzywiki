@@ -1,0 +1,39 @@
+#freeze
+***[[Menu>MenuBar]] [#c3fc291c]
+SIZE(16){''[[はじめ>xyzzyとは]]''}~
+SIZE(6){●}SIZE(12){　[[QuickTour]]}~
+SIZE(6){●}SIZE(12){　[[FAQ(外部:QandA)>http://xyzzy.s53.xrea.com/qanda/wiki.cgi?w=%3Csection%3E%B0%EC%C8%CC%BE%F0%CA%F3%3C%2Fsection%3E&a=show]]}~
+SIZE(6){●}SIZE(12){　[[質問箱]]}~
+SIZE(6){●}SIZE(12){　[[用語集]]}~
+SIZE(6){●}SIZE(12){　[[参考リンクとか要望とか(初めてのxyzzy)>初めてのxyzzy]]}~
+
+SIZE(16){''[[拡張lisp]]''}~
+SIZE(6){●}SIZE(12){　''NetInstaller''}~
+SIZE(12){　[[インストール方法>QuickTour/ext/NetInstaller]]}~
+SIZE(12){　[[パッケージ一覧>NetInstaller/配布パッケージ一覧]]}~
+SIZE(12){　[[質問とか要望とか>NetInstaller]]}~
+SIZE(6){●}SIZE(12){　''[[プログラミングに>xyzzyでプログラミング]]''}~
+SIZE(6){●}SIZE(12){　''[[ゲームとか>Games]]''}~
+SIZE(6){●}SIZE(12){　''[[lispリファレンス>リファレンス]]''}~
+SIZE(6){●}SIZE(12){　''[[いろいろ(外部:Ext lib)>http://xyzzy.s53.xrea.com/extlib/apart/FrontPage]]''}~
+SIZE(12){　[[Extlib にツッコミを入れる]]}~
+
+SIZE(16){''[[運用とか>Wikiの使い方について]]''}~
+SIZE(6){●}SIZE(12){　[[Memo]]}~
+SIZE(6){●}SIZE(12){　[[tips]]}~
+SIZE(6){●}SIZE(12){　[[trash]]}~
+SIZE(6){●}SIZE(12){　[[TipsDirectory]]}~
+SIZE(6){●}SIZE(12){　[[アンケート>アンケート一覧]]}~
+SIZE(6){●}SIZE(12){　[[ニュース>アップデート・投稿]]}~
+SIZE(6){●}SIZE(12){　[[QandA にツッコミを入れる]]}~
+SIZE(6){●}SIZE(12){　[[雑談]]}~
+#counter
+#online
+----
+SIZE(6){●}SIZE(12){　[[履歴]]}~
+#recent(10)
+#popular(10)
+
+//常に表示されるメニューバーです。
+// [[edit:http://設置場所/pukiwiki.php?cmd=edit&page=MenuBar]]
+//を記述しておくとMenuBarを気軽に修正できるようになって便利かも。

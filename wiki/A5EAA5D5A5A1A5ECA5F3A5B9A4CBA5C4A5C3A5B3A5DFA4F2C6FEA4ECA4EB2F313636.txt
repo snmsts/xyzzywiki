@@ -1,0 +1,159 @@
+*cmds.l ポジション関係 [#a376ea5c]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-10-28 10:19:01 (金)
+-バージョン: 20050929
+
+**メッセージ [#oac97bf0]
+cmds.l の中でポジションに関係しそうなものを集めました。
+
+ <chapter>
+ <title>what-cursor-position</title>
+ <type>Function</type>
+ <arguments>what-cursor-position</arguments>
+ <package>editor</package>
+ <description>
+ カーソル位置の情報をステータスバーに表示します。[C-x =]
+ カーソル位置の文字の内部コード値、UNICODE値、
+ カーソル位置のバッファにおける位置、
+ 桁数などが表示されます。
+ 
+ 使用例:
+   "w"の位置で情報を見る
+   Char: w (0x77 / U+0077 / 0x77[us-ascii])  point=46 of 518(8%)  column 7
+ 
+   "カ"の位置で情報を見る
+   Char: カ (0x834a / U+30ab / 0x252b[jisx0208])  point=152 of 395(38%)  column 0
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>exchange-point-and-mark</title>
+ <type>Function</type>
+ <arguments>exchange-point-and-mark</arguments>
+ <package>editor</package>
+ <description>
+ カーソルとマークの位置を入れ替えます。[C-x C-x]
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>point-marker</title>
+ <type>Function</type>
+ <arguments>point-marker</arguments>
+ <package>editor</package>
+ <description>
+ 新しいマーカーを作成し、現在のカーソル位置にセットして返します。
+ </description>
+ <seealso>set-marker</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>beginning-of-virtual-line</title>
+ <type>Function</type>
+ <arguments>beginning-of-virtual-line</arguments>
+ <package>editor</package>
+ <description>
+ 表示行の行頭に移動します。
+ goto-virtual-bol の interactive 版です。
+ </description>
+ <seealso>goto-virtual-bol</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>end-of-virtual-line</title>
+ <type>Function</type>
+ <arguments>end-of-virtual-line</arguments>
+ <package>editor</package>
+ <description>
+ 表示行の行末に移動します。
+ goto-virtual-eol の interactive 版です。
+ </description>
+ <seealso>goto-virtual-eol</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>previous-word</title>
+ <type>Function</type>
+ <arguments>previous-word &amp;optional (ARG 1)</arguments>
+ <package>editor</package>
+ <description>
+ カーソルを後方の単語の先頭に移動します。
+ </description>
+ <seealso>backward-word</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>next-word</title>
+ <type>Function</type>
+ <arguments>next-word &amp;optional (ARG 1)</arguments>
+ <package>editor</package>
+ <description>
+ カーソルを前方の単語の先頭に移動します。
+ </description>
+ <seealso>forward-word</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>backward-virtual-line</title>
+ <type>Function</type>
+ <arguments>backward-virtual-line &amp;optional (N 1)</arguments>
+ <package>editor</package>
+ <description>
+ 表示行で N 行後方へ移動します。
+ </description>
+ <seealso>forward-virtual-line</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>backward-line</title>
+ <type>Function</type>
+ <arguments>backward-line &amp;optional (N 1)</arguments>
+ <package>editor</package>
+ <description>
+ N 行後方へ移動します。
+ </description>
+ <seealso>forward-line</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>cmds.l</file>
+ </chapter>
+
+----
+-どーもです。こーゆー対になっているものが抜けていたとは…… -- [[NANRI]] &new{2005-10-28 21:21:20 (金)};
+-exchange-point-and-markは「ポイントとマークの位置を入れ替えます」では？ --  &new{2005-10-31 04:34:38 (月)};
+-「カーソルとマーク」のつもりでした。修正しました。 --  &new{2005-10-31 08:13:34 (月)};
+- キーバインドの記述をいくつか追加しました。 --  &new{2005-11-13 (日) 21:23:43};
+- 取り込みました。 -- [[NANRI]] &new{2005-12-12 (月) 02:29:44};
+
+#comment

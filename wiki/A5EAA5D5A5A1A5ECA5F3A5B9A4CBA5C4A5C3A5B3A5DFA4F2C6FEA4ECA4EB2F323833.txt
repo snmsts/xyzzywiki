@@ -1,0 +1,51 @@
+* proclaim, declaim [#baeb7428]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[lambda]]
+-優先順位:   低
+-状態:       着手
+-カテゴリー: 新規項目
+-投稿日:     2007-05-15 (火) 11:53:29
+-バージョン: 
+
+** メッセージ [#hab9f500]
+ <chapter>
+ <title>declaim</title>
+ <type>Macro</type>
+ <arguments>declaim &amp;rest DECL-SPECS</arguments>
+ <package>lisp</package>
+ <description>
+ 変数をスペシャル変数にします。proclaim のマクロ版です。
+ </description>
+ <seealso>declare</seealso>
+ <seealso>proclaim</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file>typespec.l</file>
+ </chapter>
+
+ <chapter>
+ <title>proclaim</title>
+ <type>Function</type>
+ <arguments>proclaim DECL-SPEC</arguments>
+ <package>lisp</package>
+ <description>
+ 変数をスペシャル変数にします。
+ declare との違いは、関数であるため引数が評価されることと、効果が大域的で
+ ある点です。
+ 
+ 以下の形で使用します。
+ 
+   (proclaim '(special var1 var2...))
+ 
+ xyzzy では special 以外の指定をしても効果はありません。
+ </description>
+ <seealso>declaim</seealso>
+ <seealso>declare</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file>typespec.l</file>
+ </chapter>
+
+----
+
+#comment

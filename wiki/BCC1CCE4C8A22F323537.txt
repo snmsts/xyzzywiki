@@ -1,0 +1,32 @@
+* 濁点に対するhiragana-to-katakana-selectionの挙動が一定しない [#b9472d19]
+-ページ: [[質問箱]]
+-投稿者: [[Kongmu]]
+-状態: 提案
+-投稿日: 2009-03-03 (火) 05:27:24
+
+** メッセージ [#vc7c8ef3]
+セレクションに濁点が含まれる場合のhiragana-to-katakana-selection(右クリック⇒変換⇒ひらがな -> カタカナ)の挙動が次の様にバラバラになるのですが，これを統一する方法はないのでしょうか? 
+
+し
+⇒シ
+
+しだ
+⇒シタﾞ
+
+だし
+⇒ダｼ
+
+でだし
+⇒デタﾞｼ
+
+
+----
+- hiragana-to-katakana-selectionは標準のxyzzyにはありませんので挙動はよく分かりませんが、ひらがな→カタカナ変換ということであれば以下でいかがでしょうか。 --  &new{2009-03-04 (水) 12:38:03};
+ (defun map-hiragana-to-katakana-selection ()
+   (interactive "*")
+   (map-hiragana-to-half-width-selection)
+   (map-kana-to-full-width-katakana-selection))
+
+- すみません。完全にデフォルトのxyzzyにあるものと勘違いしてました。hiragana-to-katakana-selectionは[http://www1.bbiq.jp/rohinomiya/products/index2.html#xyzzy 「add-popup-conv-menu.l」]に含まれるものでした。教えて戴いたmap-hiragana-to-katakana-selectionで上手いこと行ったので，これを使って行きます。有難うございました。
+
+#comment

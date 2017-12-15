@@ -1,0 +1,30 @@
+* ldoc2で(in-package :editor) なども探すようにする [#te76b054]
+-ページ:     [[patch]]
+-投稿者:     [[lambda]]
+-優先順位:   低
+-状態:       提案
+-カテゴリー: 訂正
+-投稿日:     2008-02-25 (月) 20:04:28
+-バージョン: 
+
+** メッセージ [#e46af825]
+ (defun ldoc-find-package ()
+   "Find current package"
+   (let* ((goal-column (goal-column))
+ 	 (ret (save-excursion
+ 		(scan-buffer "(in-package[ \t\n]+?[\":]\\([^\":]+?\\)\"?)" ; !
+ 			     :regexp t :reverse t)
+ 		(find-package (match-string 1)))))
+     (set-goal-column goal-column)
+     ret))
+----
+- ldoc 使ってませんが、S式なんだから read した方がいいのではないかなとか思いました。未検証です。 -- [[NANRI]] &new{2008-02-26 (火) 20:58:49};
+ (defun ldoc-find-package ()
+   "Find current package"
+   (let ((goal-column (goal-column))
+         (ret (save-excursion
+                (scan-buffer "(in-package[ \t\n]" :regexp t :reverse t)
+                (find-package (second (read-from-string (buffer-substring (point) (progn (goto-matched-parenthesis) (1+ (point))))))))))
+     (set-goal-column goal-column)
+     ret))
+#comment

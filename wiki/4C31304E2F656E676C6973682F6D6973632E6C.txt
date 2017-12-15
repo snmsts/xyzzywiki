@@ -1,0 +1,27 @@
+[[L10N/english]]
+
+ misc.l:367:    (warn "Global IMEは使用できません")))
+-Cannot use Global IME.
+
+#comment
+ misc.l:384:      (error "オートロードが失敗しました"))
+-Missed autoloading.
+-Autoloading failed. --  &new{2005-03-11 00:10:21 (金)};
+
+#comment
+ misc.l:409:      (error "オートロードが失敗しました"))
+-Missed autoloading.
+
+#comment
+ misc.l:495:      :datum "ファイルが見つかりません"
+-The file is not found.
+
+#comment
+ misc.l:517:  (ed:interactive "sLoad library: ")
+-sLoad library: 
+
+#comment
+ misc.l:527:	     :datum "ファイルが見つかりません"
+-The file is not found.
+
+#comment

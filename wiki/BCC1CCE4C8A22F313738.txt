@@ -1,0 +1,40 @@
+* basic-modeでの list-function [#dddeda44]
+-ページ: [[質問箱]]
+-投稿者: [[taka_m]]
+-状態: 完了
+-投稿日: 2006-07-14 (金) 17:26:57
+
+** メッセージ [#bc95cb42]
+xyzzyを初めて使ってみました｡
+操作にちょっとクセがありそうですが、
+とても魅力あるエディタです。
+さて本題ですが、basic-modeで list-function を使うと、
+プロパティプロシージャをうまく抽出してくれません。
+
+例えば、以下のプロシージャがあるとすると、
+ Public Property Get prpX() As Integer
+ 
+ End Property
+ Public Property Let prpX(ByVal iNewValue As Integer)
+ 
+ End Property
+
+list-function 一覧では、
+　Get
+　Let
+しか表示されないです。
+
+どこか修正すればなおるのでしょうか？
+なにぶんxyzzy初心者なのでどこを見たらよいのか分らないです。
+どなたかお判りになりましたらお教え下さい。
+よろしくお願いします。
+----
+- Basicはよく分かりませんので、どこかに悪影響が出るかもしれませんが、こんな感じでいかがでしょう。 -- [[NANRI]] &new{2006-07-15 (土) 01:20:36};
+ (require "basic-mode")
+ (in-package "editor")
+ (setq *basic-beginning-of-defun-regexp*
+       (compile-regexp (concat *basic-beginning-of-defun-noname-regexp* "\\([A-Za-z0-9_][^()]*\\)") t))
+ (in-package "user")
+- .xyzzy に追加して起動したら、 Get ｐｒｐX の形で表示されました。ありがとうございました。 -- [[taka_m]] &new{2006-07-15 (土) 08:06:37};
+
+#comment

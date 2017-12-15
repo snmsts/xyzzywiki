@@ -1,0 +1,40 @@
+* xml-parser-modoki について [#efdfd139]
+-ページ: [[質問箱]]
+-投稿者: [[pocari]]
+-状態: 完了
+-投稿日: 2003-11-09 (日) 14:36:49
+
+** メッセージ [#r6aa63da]
+ちょっとここに書くものかどうか迷いましたが、どこにかけばいいか分からなかったので、
+
+xmlpm-parse-fileでパースした時に
+ <hoge boo='boo-value'/>
+のような 「’」でくくられたものが取れなかったので、直してみました。
+
+  --- d:\tools\xyzzy\site-lisp\xml-parser-modoki.l	Sun Oct 26 02:48:20 2003
+  +++ d:\tools\xyzzy\site-lisp\xml-parser-modoki.l~	Sun Nov 09 14:18:26 2003
+  @@ -27,7 +27,7 @@
+   ;   "\\([a-zA-Z_][a-zA-Z0-9.-_:]*\\)=\"\\([^\"]*\\)\""))
+   (defvar *xmlpm-tag-options-regexp*
+     (compile-regexp
+  -   "\\([^ \t\n\r]+\\)=\"\\([^\"]*\\)\""))
+  +   "\\([^ \t\n\r=]*\\)[ \t\n\r]*=[ \t\n\r]*\\(\\(\"\\([^\"]*\\)\"\\)\\|\\('\\([^']*\\)'\\)\\)"))
+   
+   (defvar *xmlpm-special-chars-alist* '(
+   				      ("&lt;" . "<")
+  @@ -132,7 +132,8 @@
+         (narrow-to-region beg end)
+         (while (scan-buffer *xmlpm-tag-options-regexp* :regexp t :tail t)
+   	(let ((key (match-string 1))
+  -	      (val (match-string 2)))
+  +	      (val (or (match-string 4)
+  +		       (match-string 6))))
+   	  (push (cons key (xmlpm-decode-special-chars val)) opts))))
+       (goto-char end)
+       (list name opts)
+  
+----
+-patchに移動してよいでしょうか？ -- [[佐野]] &new{2005-06-13 17:27:39 (月)};
+- 0.0.0.4で取り込まれたようです。 -- [[NANRI]] &new{2005-11-28 (月) 21:31:36};
+
+#comment

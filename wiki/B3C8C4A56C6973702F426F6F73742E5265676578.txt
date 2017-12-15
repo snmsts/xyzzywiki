@@ -1,0 +1,44 @@
+[[拡張lisp]]
+
+bregex.dll を介して Boost C++ Libraries の Regex を使います。
+
+*最新版 [#r8b15a16]
+-http://raido.sakura.ne.jp/southly/xyzzy/site-lisp/bregex-20070217.lzh
+
+BoostはVersion 1.33.1を使用~
+Visual C++ 2005 Express Editionでコンパイル~
+
+*参考 [#r572ad88]
+-[[Boost.Regex:http://www.boost.org/libs/regex/doc/index.html]]
+-[[Boost.Regex(jp):http://boost.cppll.jp/HEAD/libs/regex/doc/]]
+-[[boost::regexでの正規表現>http://homepage3.nifty.com/kaku-chan/boost/regex/chapter_003.html]]
+
+*動作報告 [#sed11da2]
+OSの情報を添えるとよいかも。
+**動かない or 動いた [#u1f8e9a8]
+作った人の環境はWinXP Home sp2 + xyzzy 0.2.2.235
+- WinXP Home sp2 + xyzzy 0.2.2.235で動作しました。 --  &new{2007-02-17 (土) 22:27:49};
+
+#comment
+**動作がおかしい or ちゃんと動いてる [#g128f2f3]
+Win9xでは日本語は無理かもと思ってます。
+#comment
+*その他 [#x52df303]
+- scan-bufferのようなことをするにはバッファ全体の文字列を引数に渡すしかないのでしょうか？ --  &new{2007-02-21 (水) 18:30:25};
+- そういうものです。(buffer-substring(point-min)(point-max))とか？ -- [[佐野]] &new{2007-02-21 (水) 19:05:35};
+- どうもです。ループで回す場合その後マッチしたpointに移動して(buffer-substring(point)(point-max))とか速度的には問題ないんですかね？C言語なんかでプログラミングするときもそういうものなんでしょうか？ --  &new{2007-02-21 (水) 20:39:34};
+- [[サンプル>http://homepage3.nifty.com/kaku-chan/boost/regex/chapter_002.html#1]]をみると1行ずつ取得しているような感じですね。 --  &new{2007-02-21 (水) 21:03:02};
+- 正規表現と通常の文字列を組み合わせて改行・スペースを無視して検索することはできるのでしょうか？ --  &new{2007-02-21 (水) 21:28:02};
+-- 何をしたいのかよく分かりませんが、bregex.dllでは正規表現のオプションは決めうちなので、無理なんじゃないでしょうか。Boost.Regex自体にできるかどうかは知りません。マニュアルを参照してください。 -- [[NANRI]] &new{2007-02-22 (木) 04:19:29};
+-- マニュアルはまだ見ていないのですが、やりたいことはパターン「^hoge」で検索した場合に、
+ hoge
+ 
+ ho
+ ge
+ 
+ ho ge
+のいずれにもヒットするようにしたいということです。そのうち調べてみます。--  &new{2007-02-22 (木) 07:11:49};
+- 速度を問題にしたいのなら実測してください。 -- [[NANRI]] &new{2007-02-22 (木) 04:19:55};
+-- まだ、あまり試していないのでそのうち試してみます。 --  &new{2007-02-22 (木) 07:21:08};
+
+#comment

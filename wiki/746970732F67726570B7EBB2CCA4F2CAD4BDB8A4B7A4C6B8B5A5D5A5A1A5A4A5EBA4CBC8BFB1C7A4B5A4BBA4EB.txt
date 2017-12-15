@@ -1,0 +1,123 @@
+#freeze
+[[tips]]
+
+#ref(egrep20051127.l)
+
+最新版をhttp://homepage2.nifty.com/kimagurenixyzzy/egrep.htmlに移動しました。
+
+こんな感じ
+#ref(sample.png);
+
+----
+** インストール [#dda4937a]
++ egrep20051127.l をコピーして~/site-lispに egrep.l という名前で保存する。 
++ 必要に応じてバイトコンパイルする。 
++ .xyzzy または siteinit.l に以下の記述を追加する。 
+ (require "egrep")
++ 他の箇所で (require "grepd") を記述していない場合には、(require "grepd") も記述して下さい。
+
+** 使い方 [#o527dbec]
+- M-x egrep-dialog の後、検索対象を選択して検索ボタンを押すと *e(re)grep* バッファを出力する　※バッファを対象にする場合は grep 関係バッファは除外する。絞り込みは grep 関係バッファを対象に、テキスト単位で行う
+- *e(re)grep* バッファで C-c e s するとカーソル行またはセレクションをマーク
+- C-c e u でカーソル行またはセレクションのマークを解除
+- 行頭で RET（または SPC）するとその行をマーク（またはマークを解除）
+- C-c e a でバッファ全体をマーク（またはマークを解除）
+- C-c e r で *e(re)grep* バッファの置換を行う（C-u C-c e r で検索方法などの設定をして置換）　※ *e(re)grep* バッファのファイル・バッファ名は置換対象から除外し、置換した行をマークする
+
+※egrep-query-replace の際、「エスケープシーケンスを理解しろ」をyesにしてパターン「\n」で改行を検索することはできなくなっていますが、これは *e(re)grep* バッファのファイル・バッファ名を置換対象から除外するための仕様となっています。
+- *e(re)grep* バッファを編集して C-c e e するとマークした箇所の編集内容が元のファイルに反映される（セーブまではしない）
+----
+2005-11-27 (日) 12:37:51
+
+- ^.*$ で正規表現で grep するとフリーズするバグを修正
+- 検索結果を別フレームに表示する機能を追加
+- ダイアログからディレクトリを指定する機能を追加
+- grep 結果をファイル名順にソートするように変更
+
+2005-05-28 19:57:34 (土)
+
+- 非同期でegrep のとき egrep 終了時を undo の起点とするように変更
+- grep-mode.l と併用する場合の設定例を変更
+- その他細かい変更
+
+2005-05-22 20:37:03 (日)
+
+- egrep-query-replace の時、検索方法などを細かく設定できる機能を追加
+- インストールの説明の追加
+
+2005-05-22 01:32:59 (日)
+
+ダイアログで検索対象の指定が出来るように変更
+
+2005-05-21 18:07:35 (土)
+
+- HATTORI Masashi さんの namazu.l に対応（*NAMAZU SEARCH* バッファを選択して、「絞り込み検索対象バッファ」で「カレントバッファ」を選択して下さい）
+- perform-replace を変更するのをやめて、独自に *e(re)grep* バッファで置換をする機能を追加
+- その他細かい変更
+
+2004-11-14 (日) 12:55:59
+
+e(re)grep バッファで置換をするときに、置換した行をマークするように変更しました。
+600行以下で、search.l 中の関数 perform-replace を上書きしているので、不安な方は600行以下を削除して下さい。
+
+2004-11-08 (月) 22:36:36
+
+あまりに出来が悪かったので書き直してみました。
+
+2004-11-06 (土) 08:34:40
+
+キーバインドを少し追加しました。
+
+2004-11-05 (金) 22:22:12
+
+さらに少しだけ修正。
+
+2004-11-04 (木) 22:32:17
+
+少しだけ修正しました。
+
+----
+
+-*egrep* バッファは編集するバッファなので、(setq kept-undo-information 1000)　ぐらい設定して undo できるようにするのはどうでしょう。また、私的には C-a, C-e がデフォルトで潰れるのが痛かったりします。 -- [[OHKUBO]] &new{2004-11-05 (金) 02:16:02};
+-ご指摘ありがとうございます。いつもお世話になってます。m(__)m　以前の egrep.l 中では (setq kept-undo-information nil) はしていなかったのですが、*grep-hook*・*grepd-hook* を走らせていたので、これらの hook に引っ掛けて (setq kept-undo-information nil) とする処理をしている場合に undo ができなくなっていたのではなかろうかと思います。そこで、egrep.l 中の *grep-hook*・*grepd-hook* を *egrep-hook*・*egrepd-hook* に変更し、これらを走らせたあとに (setq kept-undo-information 1000) と記述して undo ができるようにしてみました。また、デフォルトのキーバインドを変更してみました。-- [[作った（？）人]] &new{2004-11-05 (金) 22:19:14};
+-ぐはっ。ご指摘の通り undo 情報を記録していないのは grep-mode による副作用でした。hook 用シンボル名の変更、キーバインド変更ともに、私が寝ぼけながらよく考えずに書いてしまったことによって改悪していただいてしまったと後悔しています。お恥ずかしい。 -- [[OHKUBO]] &new{2004-11-05 (金) 23:49:07};
+-行頭で #\RET (or #\SPC) を押下した場合には egrep-toggle-mark (適当な名前をつけました) するようなコマンドを #\RET (or #\SPC) に割り当てると使いやすくなるかな、と思いました。 -- [[OHKUBO]] &new{2004-11-05 (金) 23:58:15};
+-やっつけ仕事的にキーバインドを追加してみました。それと、egrep-dialog では俺仕様的に「ｷｬﾝｾﾙ」ボタンを「閉じる」ボタンに変更し、それを押すと設定を保存するようになっているのでご注意ください。 -- [[作った（？）人]] &new{2004-11-06 (土) 08:33:43};
+-perform-replace に対してどういった変更を行ったんでしょうか？ --  &new{2004-11-16 (火) 20:58:55};
+-上に書いた通り、e(re)grep バッファで置換をするときに、置換した行をマークするように perform-replace を変更しました。e(re)grep バッファ以外で置換するときの動作は変わっていません（詳しくは egrep.l の600行以下の perform-replace と、search.l 中の perform-replace とを比較してみてください）。 -- [[作った（？）人]] &new{2004-11-16 (火) 22:45:11};
+
+// #comment
+
+----
+
+*** nazoking さんの [[grep-mode.l>http://nazoking.s31.xrea.com:8080/k/grep-mode.l]] と併用する場合の設定例 [#ub876b47]
+（行単位の AND 検索（絞込み検索）は grep-mode.l を利用して下さい）
+
+ (in-package "editor") ;;; siteinit.l に記述する場合（適当ですが一応動くみたいです）
+ (export 'grep-mode)
+ (autoload 'grep-mode "grep-mode" t)
+ (add-hook '*grep-hook* 'grep-mode)
+ (add-hook '*grepd-hook* 'grep-mode)
+ (add-hook '*ggrep-hook* 'grep-mode)
+ (add-hook '*ggrepd-hook* 'grep-mode)
+ (add-hook '*egrep-hook* 'grep-mode)
+ (add-hook '*egrepd-hook* 'grep-mode)
+ (in-package "user")
+
+- grep-mode.l 中に以下の関数を追加し、(toggle-read-only t) を (grep-mode-read-only) に差し替える（やっぱりこれは書いた方がいいかもしれないです（他の grep バッファで read-only にする場合））
+ (defun grep-mode-read-only ()
+   (unless (or (equal (buffer-name (selected-buffer)) "*egrep*")
+ 	      (equal (buffer-name (selected-buffer)) "*eregrep*"))
+     (toggle-read-only t)))
+
+- d などにキーを割り当ててしまうと、*e(re)grep* バッファの編集ができなくなってしまうので、(defun grep-mode () 中のキーバインドを
+ ;(define-key keymap #\RET 'first-error)
+ (define-key keymap #\C-q 'grep-mode-close)
+ (define-key keymap #\C-k 'grep-delete-wholeline)
+ (define-key keymap #\C-w 'grep-and-dialog)
+みたいにするといいかもしれません。
+
+- egrep に限らずフルパス名で表示させるとファイル名などがハイライトされなくなるので (defun grep-mode () 中の　(setq regexp-keyword-list の部分は以下に差し替えた方がいいような気がします。
+ (setq regexp-keyword-list
+ 	(compile-regexp-keyword-list
+ 	 '( ("^\\(.+?\\):\\([1-9][0-9]*\\):" t :string t))))

@@ -1,0 +1,87 @@
+お金の無い人のために
+MSから無料でダウンロードできるツールでコンパイルする方法。たぶんWin2000以降。
+*用意するもの [#t0907ad5]
+**xyzzyソース [#u10cfebe]
+src-0.2.2.234.tar.bz2
+**Microsoft Visual C++ Toolkit 2003 [#t68f4034]
+http://msdn.microsoft.com/visualc/vctoolkit2003/
+**Windows Server 2003 SP1 Platform SDK [#c6bf2712]
+http://www.microsoft.com/downloads/details.aspx?familyid=D8EECD75-1FC4-49E5-BC66-9DA2B03D9B92&displaylang=en
+
+CDイメージでなくてもお好きなものを。
+インストールオプションはフルインストールにした。CoreSDKだけでは一部ヘッダが無いとかでエラーになった。
+どれが本当に必要なのかは不明。
+**unicode [#z25d0f4e]
+00READMEに説明のあるコードテーブル。
+ftp.unicode.orgのファイルはGB2312.TXTだけがダウンロードできなかった。がコンパイルはできる。
+
+*準備 [#v4d072f3]
+PATH,INCLUDE,LIB環境変数を設定。途中でエラーになったのでbin/win64などのパスを追加した。
+
+標準パスではこんな感じ
+ Set PATH=C:\Program Files\Microsoft Visual C++ Toolkit 2003\bin;%PATH%
+ Set INCLUDE=C:\Program Files\Microsoft Visual C++ Toolkit 2003\include;%INCLUDE%
+ Set LIB=C:\Program Files\Microsoft Visual C++ Toolkit 2003\lib;%LIB%
+ 
+ Set PATH=C:\Program Files\Microsoft Platform SDK\Bin;%PATH%
+ Set INCLUDE=C:\Program Files\Microsoft Platform SDK\Include;%INCLUDE%
+ Set LIB=C:\Program Files\Microsoft Platform SDK\Lib;%LIB%
+ 
+ Set PATH=%PATH%;C:\Program Files\Microsoft Platform SDK\Bin\win64
+ Set INCLUDE=%INCLUDE%;C:\Program Files\Microsoft Platform SDK\Include\mfc
+
+setargv.objがないというリンクエラーになるのでSDKのソースをコンパイルしておく。
+
+ cd "C:\Program Files\Microsoft Platform SDK\src\crt"
+ cl /I. /c /Fo..\..\lib\setargv.obj -D_CRTBLD setargv.c
+
+*コンパイル [#pa13dbe1]
+あとはソースファイル中の00READMEに従う。
+
+----
+-ご参考までにどうぞ。http://blog.drry.jp/2005/05/25/2325このネタ自前でも書いていたのですがお蔵入りです。 GB2312.txtはどうにかできんか考えておきます。 -- [[佐野]] &new{2005-09-08 21:49:49 (木)};
+ (let* (str
+        (opath (merge-pathnames "src/unicode" (si:system-root)))
+        (ofile (merge-pathnames "GB2312.TXT" opath)))
+   (require "wip/ftp")
+   ;ftp://xcin.linux.org.tw/pub/xcin/i18n/charset/GB2312.gz
+   (setq str
+ 	(with-output-to-string (os)
+ 	  (with-ftp-stream (ftp "xcin.linux.org.tw")
+ 	    (ftp-login ftp "anonymous" "wantGB2312.gz@xyzzy.example.com")
+ 	    (unless (ftp-cd ftp "/pub/xcin/i18n/charset/")
+ 	      (error "Could not CWD"))
+ 	    (ftp-get ftp "GB2312.gz" os))))
+   (setq str
+ 	(with-output-to-string (os)
+ 	  (with-input-from-string (is str)
+ 	    (si:inflate-stream is os))))
+   (create-directory opath :if-exists :skip)
+   (with-open-file (fp ofile :direction :output :encoding :binary)
+     (dolist (i (split-string str "\n"))
+       (when (string-match "^<U\\([0-9A-F]\\{4\\}\\)>     /x\\([0-9a-f]\\{2\\}\\)/x\\([0-9a-f]\\{2\\}\\)     \\(.*\\)$"
+ 			  i)
+ 	(format fp "0x~:@(~A~)~:@(~A~)\t0x~A\t# ~A~%"
+ 		(match-string 2)
+ 		(match-string 3)
+ 		(match-string 1)
+ 		(match-string 4)))
+       )
+     ))
+-いいんかねこんなんで… -- [[佐野]] &new{2005-09-08 23:23:23 (木)};
+-http://tcl.apache.org/sources/tcl/tools/encoding/gb2312.txt ならそのまま使えそうです -- [[miyamuko]] &new{2005-09-09 19:24:30 (金)};
+-リンク先を参考にsetargv.objのコンパイルを加えました -- [[た。]] &new{2005-09-14 15:35:17 (水)};
+- エクスプレスでプロジェクトからビルドする方法書いてほしいです。 うまくいかない＾＾； --  &new{2006-06-11 (日) 01:34:44};
+- 部分的にビルドに必要なソースをmake内で先にコンパイルしたプログラムから生成するといった普通に統合環境を使っているとまず使わないテクニックを使っているので素直にnmakeを使った方が良いと思います。 -- [[佐野]] &new{2006-06-11 (日) 07:06:38};
+- そうなんっすよね。。そこうまくできんかと、、 --  &new{2006-06-16 (金) 15:16:06};
+- あと、gb2312.txtリンク先のなくなってるんでGoogleの先頭で見つかるファイルを自分で形式変えればコンパイルできるます。 --  &new{2006-06-16 (金) 15:17:23};
+- ってか配布している人いるみたいだからここに添付してもよいのかな?＜gb2312.txt --  &new{2006-06-16 (金) 15:18:30};
+- VisualStudio2005Professinalの統合環境からのビルド方法をご存知の方。すみません。ビルド方法を教えてください。 -- [[やる気のないこと山の如しな人??]] &new{2006-06-21 (水) 10:12:15};
+- nmake をいれてぼーっと待ちましょう。 --  &new{2006-06-21 (水) 12:29:22};
+- [[patch/13]] に、Microsoft Visual C++ 2005 Express Edition でのビルド方法があります。これでうまくいくのでは…。 --  &new{2006-06-21 (水) 20:12:44};
+- ↑ですから、MicrosoftVisuaiStusio200の統合環境でリビルドできる方法を聞いているのです。 -- [[やる気のないこと山の如しな人??]] &new{2006-06-22 (木) 20:02:07};
+- ですから、やんわりと、そういう情報はなさそうだから、堪えられない方がご自分で調べて情報公開して下さいと書かれているのです。 --  &new{2006-06-22 (木) 21:52:37};
+- あなたはどこまでやって、何を残していますか？ --  &new{2006-06-22 (木) 21:57:08};
+- 一応メイクファイルプロジェクトを利用して統合環境でビルドできました。  -- [[06-06-11の人]] &new{2006-06-25 (日) 02:58:56};
+
+#comment

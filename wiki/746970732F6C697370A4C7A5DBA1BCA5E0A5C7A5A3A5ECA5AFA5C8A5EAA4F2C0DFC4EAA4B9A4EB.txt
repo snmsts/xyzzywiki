@@ -1,0 +1,128 @@
+#freeze
+[[tips]]
+
+USBメモリなどで持ち運ぶ場合に。
+
+xyzzy.ini を利用して設定します。&br;
+ホームディレクトリは (si:system-root) に固定しています。&br;
+(si:system-root) に .save-homedir というファイルを作成して homedir、config-path の変更があるかどうかをチェックします。&br;
+siteinit.l に書く必要があると思います。
+
+~*set-homedir-force-delete-dump-file* が nil だとダンプファイルを2回生成することはなくなりますが、ダンプファイルに (user-homedir-pathname) の値が含まれる場合に、その値が (si:system-root) と異なる場合があります。
+
+ ;; ホームディレクトリを設定する。
+ ;; (user-config-path) が違っている場合には、元のiniファイル・historyファイルをコピーする
+ 
+ (defvar *set-homedir-force-delete-dump-file* t
+   "ダンプファイルを強制的に削除するか否か")
+ 
+ (defvar *set-homedir-before-kill-xyzzy-hook* nil
+   "kill-xyzzy の前に実行する hook")
+ 
+ (defun set-homedir-delete-file (file)
+   (delete-file file
+ 	       :if-does-not-exist :skip
+ 	       :if-access-denied :skip))
+ 
+ (defun set-homedir ()
+   (let* ((homedir (remove-trail-slash (si:system-root)))
+ 	 (config-path (user-config-path))
+ 	 (save-file (merge-pathnames ".save-homedir" homedir))
+ 	 old-homedir old-config-path homedir-equalp config-path-equalp old-path-exist-p)
+     (with-open-file (s
+ 		     save-file
+ 		     :direction :input
+ 		     :if-does-not-exist :create)
+       (setq old-homedir (read-line s nil)
+ 	    old-config-path (read-line s nil)))
+     (and (> (length old-homedir) 0)
+ 	 (> (length old-config-path) 0)
+ 	 (setq old-path-exist-p t
+ 	       homedir-equalp (path-equal old-homedir homedir)
+ 	       config-path-equalp (path-equal old-config-path config-path)))
+     (unless (and homedir-equalp config-path-equalp)
+       (with-open-file (s
+ 		       save-file
+ 		       :direction :output
+ 		       :if-exists :overwrite
+ 		       :if-does-not-exist :create)
+ 	(format s "~A~%~A" homedir config-path)))
+     (save-excursion
+       (let ((ini-file (merge-pathnames "xyzzy.ini" config-path))
+ 	    (history-file (merge-pathnames ".xyzzy.history" config-path))
+ 	    (tmpbuf (create-new-buffer "*ser-homedir-tmp*"))
+ 	    old-ini-p)
+ 	(set-buffer tmpbuf)
+ 	(and old-path-exist-p
+ 	     (not config-path-equalp)
+ 	     (string-matchp (regexp-quote old-homedir) old-config-path)
+ 	     (let* ((old-config-path-1 (merge-pathnames
+ 					(string-trim "/" (substring old-config-path (match-end 0)))
+ 					homedir))
+ 		    (old-ini-file (merge-pathnames "xyzzy.ini" old-config-path-1))
+ 		    (old-history-file (merge-pathnames ".xyzzy.history" old-config-path-1)))
+ 	       (and (file-exist-p old-ini-file)
+ 		    (not (path-equal old-ini-file ini-file))
+ 		    (setq old-ini-p t)
+ 		    (insert-file-contents old-ini-file))
+ 	       (and (file-exist-p old-history-file)
+ 		    (not (path-equal old-history-file history-file))
+ 		    (progn
+ 		      (set-homedir-delete-file history-file)
+ 		      (copy-file old-history-file history-file
+ 				 :if-access-denied :skip)))))
+ 	(cond ((and (or old-ini-p (not homedir-equalp)) (file-exist-p ini-file))
+ 	       (unless old-ini-p
+ 		 (insert-file-contents ini-file))
+ 	       (goto-char (point-min))
+ 	       (while (scan-buffer (compile-regexp "^\\(\\[init\\]\\|homeDir=\\)"))
+ 		 (delete-region (point)
+ 				(progn (goto-eol) (forward-char) (point))))
+ 	       (goto-char (point-max))
+ 	       (unless (bolp)
+ 		 (insert "\n"))
+ 	       (insert (format nil "[init]~%homeDir=\"~A\"~%" homedir))
+ 	       (write-file ini-file)
+ 	       (delete-buffer tmpbuf)
+ 	       (and old-path-exist-p
+ 		    (not homedir-equalp)
+ 		    (or *set-homedir-force-delete-dump-file* (xyzzy-dumped-p))
+ 		    (set-homedir-delete-file (si:dump-image-path)))
+ 	       (call-process (merge-pathnames "xyzzy.exe" homedir))
+ 	       (while (= (count-xyzzy-instance) 1)
+ 		 (sit-for 0.1))
+ 	       (run-hooks '*set-homedir-before-kill-xyzzy-hook*)
+ 	       (kill-xyzzy))
+ 	      (t (delete-buffer tmpbuf)))))))
+ (add-hook '*pre-startup-hook* 'set-homedir)
+
+----
+- スペシャル変数に (si:system-root) などの値が設定してあると、再ダンプしないとその値が変わらないことがあるので、ホームディレクトリに変更があった場合は再ダンプするようにしました。 -- [[書いた人]] &new{2007-01-03 (水) 19:36:12};
+- スペシャル変数に (user-homedir-pathname) が設定してあると、その値が更新されないようです。 -- [[書いた人]] &new{2007-01-03 (水) 22:07:07};
+- 多分直しました。ダンプファイルを2回生成することがあるので、古いPCだとつらいかも。 -- [[書いた人]] &new{2007-01-04 (木) 06:13:26};
+- (user-homedir-pathname)をdumpされる部分に書くのはまずいです。~/を使って回避できますができていないものがありますか？ -- [[佐野]] &new{2007-01-04 (木) 10:25:25};
+- いくつかの拡張に (user-homedir-pathname) が使われているようです。おっしゃるように~/ に書き替えるか、.xyzzy などで設定し直せばいいようですが。 -- [[書いた人]] &new{2007-01-04 (木) 11:29:28};
+- そうだったかもしれません。あとコメント欄が変ですね。 -- [[佐野]] &new{2007-01-04 (木) 12:16:05};
+- ちゃっとみてみて思ったのですがずいぶんと大変な書きかたをしていると思いました -- [[佐野]] &new{2007-01-04 (木) 12:26:44};
+-- historyはcopy-fileで -- [[佐野]] &new{2007-01-04 (木) 12:33:00};
+-- find-file->backupを黙らす->save-bufferはcreate-new-buffer->insert-file-contents->write-fileの方がすっきりするかと。 -- [[佐野]] &new{2007-01-04 (木) 12:38:22};
+- …ついでにコメント欄を多分直しました。 -- [[佐野]] &new{2007-01-04 (木) 12:39:25};
+- どうもです。とりあえず書き直してみました。無駄やおかしなところがたくさんあると思いますので、気の向いた方は適当に修正して下さい。 -- [[書いた人]] &new{2007-01-04 (木) 13:32:03};
+- 色々直してとりあえず動いているようです。 -- [[書いた人]] &new{2007-01-04 (木) 16:12:49};
+- まだおかしなところがあったので修正。 -- [[書いた人]] &new{2007-01-04 (木) 18:41:43};
+- 無駄なところをできるだけなくしてみました。 -- [[書いた人]] &new{2007-01-04 (木) 20:18:46};
+- ループでまわさなくてもダンプファイルを削除できるようなので修正。 -- [[書いた人]] &new{2007-01-05 (金) 06:41:46};
+- *kill-xyzzy-hook* で *scratch* を保存する設定をしている場合に、*scratch* の中身がクリアされてしまうようなので、*kill-xyzzy-hook* を無効にする機能をつけてみました。 -- [[書いた人]] &new{2007-01-06 (土) 06:42:03};
+- と思ったのですが、*kill-xyzzy-hook* を全て無効にするとまずいような気がするので、こちら（[[tips/scratchの中身って消さなくてもいいじゃん]]）を導入している場合には、 scratch を保存する部分を例えば以下のように変更して
+ ;; *scratch* を終了時に保存
+ (defun save-scratch ()
+   (let ((buffer (find-buffer "*scratch*")))
+     (when buffer
+       (save-excursion
+ 	(set-buffer buffer)
+ 	(write-file "~/scratch")))))
+ (add-hook '*kill-xyzzy-hook* 'save-scratch)
+さらに siteinit.l に以下を追加してください。
+ (add-hook '*set-homedir-before-kill-xyzzy-hook*
+ 	  #'(lambda () (delete-hook '*kill-xyzzy-hook* 'save-scratch)))
+~-- [[書いた人]] &new{2007-01-06 (土) 09:10:49};

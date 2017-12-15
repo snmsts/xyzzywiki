@@ -1,0 +1,30 @@
+* get-alternate-file-buffer [#i398eafd]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-08-19 (土) 22:41:14
+-バージョン: 
+
+** メッセージ [#q76b6318]
+ <chapter>
+ <title>get-alternate-file-buffer</title>
+ <type>Function</type>
+ <arguments>get-alternate-file-buffer FILENAME &amp;key (:test #'equalp)</arguments>
+ <package>editor</package>
+ <description>
+ ファイル名の別名が FILENAME であるようなバッファを返します。
+ </description>
+ <seealso>get-buffer-alternate-file-name</seealso>
+ <seealso>set-buffer-alternate-file-name</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>buffer.l</file>
+ </chapter>
+
+--------
+- どーもです。 -- [[NANRI]] &new{2006-08-20 (日) 01:02:17};
+
+#comment

@@ -1,0 +1,27 @@
+*paren [#c719e5d2]
+#contents
+
+**概要 [#oc066259]
+parenとは、対応する括弧"()"や鍵括弧"{}"を強調表示する機能のことです。括弧がいくつも並んでいるようなコードが断然見やすくなります。
+
+- [[paren>http://kitaj.no-ip.com/xyzzy/index.html#paren]]
+-- [[xyzzyはすごいぜ>http://kitaj.no-ip.com/xyzzy/]]
+- [[parentag>http://web.archive.org/web/20100624030528/http://osuneko.at.infoseek.co.jp/xyzzy/xyzzy.html]]
+-- [[雄猫のがらくた置き場>http://web.archive.org/web/20100624030528/http://osuneko.at.infoseek.co.jp/xyzzy/xyzzy.html]]
+- [[paren.lの改造版(silog - script/paren)>http://white.s151.xrea.com/wiki/index.php?script%2Fparen]]
+-- [[silog - FrontPage>http://white.s151.xrea.com/wiki/]]
+
+-"()"の強調
+#ref(paren1.png)
+
+-"{}"の強調
+#ref(paren2.png)
+
+**インストール [#s5a37c44]
+NetInstallerを使ってインストールすれば、使用することができます。
+
+**関連情報 [#p61d906f]
+-[[QuickTour/ext/paren (parenを導入しよう)>QuickTour/ext/paren]]
+
+**コメント [#j184f923]
+#comment

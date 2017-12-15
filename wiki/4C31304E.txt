@@ -1,0 +1,82 @@
+[[FrontPage]]
+
+*ローカリゼーションなわけですが [#a3c277dd]
+さしあたってとりあえず非日本人の為にメッセージの英訳をしませんか？~
+xyzzy-lisp使いが増えていろいろとおいしいかも知れませんよ。((責任もてないけど))~
+
+*method [#uf6eac18]
+winapiを使う方法は現段階では利用不可能になりました。でも完全には捨てていません。~
+未来につなげます~
+
+**動かし方 [#c44d5a02]
+-netinstallerを利用（佐野のからダウンロードできます）するか~
+locale*.lzhを解凍して中身をsite-lispにぶちまけます。
+-ダンプします。(ctrl+shiftを押しながら再起動です）
+-デフォルトで英語になります。
+-localeモジュールを使いつつ日本語に戻したい場合はsite-lisp/.localeに(setq *locale* 1041)と記述して再ダンプしてください。(んな人いるのか？）
+
+*助力を望みたいところ [#db9a425c]
+日本語で直接埋め込まれているメッセージに対して名前を付けその英訳を作らないといけません。~
+lispディレクトリ下を概算で数えてみたら１２００くらい…。~
+組み込みで300位~
+訳だけ手伝えるという方は以下のページで手伝ってください。~
+[[./english]]
+**作業 [#ba6eff34]
+-lispディレクトリ内の日本語のメッセージを探します。
+-(locale 'メッセージ名)の形に置き換えます。
+-add-locale-objectにて日本語と英語のリソースを並べます。
+
+*ローカリゼーションの補助関数 [#i553e005]
+カレントバッファで1041に登録済みの文字列を(locale '....) と置換する
+ (defun l10n-replace-string-to-locale ()
+   (interactive)
+   (let ((alist (cdr (assoc 1041 ed::*locale-objects*)))
+ 	tmp str bpoint epoint)
+   (while (scan-buffer "\"\\([^\"\n]*\\)\"" :regexp t :no-dup t)
+     (setq bpoint (match-beginning 0)
+ 	  epoint (match-end 0)
+ 	  str (match-string 1)
+ 	  tmp (find-if #'(lambda (x) (equal x str)) alist :key #'cdr))
+     (when tmp
+       (goto-char bpoint)
+       (delete-region bpoint epoint)
+       (insert (format nil "(locale '~A)" (car tmp)))))))
+
+
+*拡張lispのローカリゼーション [#mefdd9b6]
+たくさんの人が公開している拡張lispをローカライズします．
+もし，本体に取り込まれるようなことがあれば削除してください．
+** buf2html [#q49852cb]
+[ファイル(F)] [HTML形式で名前を付けて保存(&H)...] をローカライズします
+NetInstallerでbuf2htmlをいれて，siteinit.l内で (require "locale") (require "ni/setup") (ni-autoload) 以下のコードの順で書くと，*locale*の値にしたがってメニューが変わります． 
+  (in-package "editor")
+  (defvar buf2html-save-as-menu-text "HTML形式で名前を付けて保存(&H)...")
+  (if (and (boundp '*locale*)
+  	 (eq t *locale*))
+      (setq buf2html-save-as-menu-text "Save As &HTML..."))
+  
+  (defun buf2html-insert-menu-items (&key menu position head-sep tail-sep)
+    "buf2html: HTML形式で名前を付けて保存ダイアログをメニューに追加"
+    (if (and (not (menup menu)) (menup *app-menu*))
+        (setq menu (get-menu *app-menu* 'ed::file)))
+    (when (menup menu)
+      (buf2html-delete-menu menu)
+      (unless (and (numberp position) (integerp position) (not (minusp position))
+                   (get-menu menu position t))
+        (setq position -1)
+        (while (get-menu menu (incf position) t)))
+      (decf position)
+      (if (and head-sep
+               (not (minusp position))
+               (get-menu menu position t))
+  	(insert-menu-separator menu (incf position) 'buf2html-sep))
+      (insert-menu-item menu (incf position) 'buf2html-save-as-dialog
+  		      buf2html-save-as-menu-text
+                        'buf2html-save-as-dialog)
+      (if (and tail-sep
+               (get-menu menu (incf position) t))
+          (insert-menu-separator menu position 'buf2html-sep))))
+  (in-package "user")
+
+*意見動作確認他お願いします。 [#g7a5cf9c]
+#pcomment(L10N/Comment,10,reply)

@@ -1,0 +1,48 @@
+*  *scroll-margin* [#m5ccee77]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[lambda]]
+-優先順位:   低
+-状態:       提案
+-カテゴリー: 新規項目
+-投稿日:     2011-01-22 (土) 08:19:37
+-バージョン: 
+
+** メッセージ [#tbe775ff]
+ <chapter>
+ <title>*scroll-margin*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ バッファの上下端からキャレットが何行目に入ればスクロールするかを保持。バッファローカルな変数。
+ 共通設定-いろいろ-スクロールマージン でデフォルト値指定。
+ 
+ 2ch-modeではデフォルト5に設定されています。
+ config.lに以下のように指定すれば変更できます。
+ (setq *board-scroll-margin* 0)
+ (setq *thread-scroll-margin* 0)
+ (setq *menu-scroll-margin* 0)
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file></file>
+ </chapter>
+
+----
+- 調べてみましたが、*scroll-margin*をバッファーローカル変数にしているのは2ch-modeｆで、通常はバッファローカル変数ではないようです。あと、表示に関することなのでバッファというよりもウィンドウかなと思います。 -- [[NANRI]] &new{2011-02-26 (土) 21:30:01};
+ <chapter>
+ <title>*scroll-margin*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ スクロールマージンを行数で設定できます。
+ [共通設定] - [いろいろ] - [スクロールマージン] で指定できます。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file></file>
+ </chapter>
+#comment

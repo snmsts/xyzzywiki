@@ -1,0 +1,226 @@
+#freeze
+**javascript-mode [#v76bcf2d]
+すいません良くわかりません。特徴、導入方、tips等書き加えてもらえれば幸いです。
+その際このメッセージはついでに消していただけれれば…佐野
+
+~ありがとうございました。 -- ビスポ
+----
+- 有難うございました。凄い良く出来ていて重宝してます。 -- [[mjt]] &new{2006-01-16 (月) 9:23:46};
+- すばらしい！ -- [[おかゆん]] &new{2006-07-27 (木) 12:37:12};
+- TAB を入力できなくなりますが、どうすればいいですか。 -- [[MO]] &new{2006-11-09 (木) 1:41:05};
+- tipsにTABの入力について記述を追加しました -- [[atea]] &new{2006-11-19 (日) 19:18:17;
+- tag jumpできるようにしたのですが、uploadできません。 -- [[amefura]] &new{2007-02-19(月) 21:20:21};
+- spamの踏み台にされるので添付機能は非公開にしてしまいました。さてどうしましょうか… -- [[野]] &new{2007-02-19 (月) 23:11:08};
+- ここのページにあるパッチは両方とも適用してよいのでしょうか？カーソルを移動するとキーワード色分けが解除されてしまうのですが… -- [[とおりすがり]] &new{2007-04-24 (火) 23:16:07};
+- 変数の色分けの色が変わっているだけだど思うので大丈夫かと -- [[amefura]]  &new{2007-04-5 (水) 14:28:34};
+- パッチの当て方がわかりません。そのままコピペして追記でしょうか。それとも+の箇所を追加して-箇所を消す、ということでしょうか？ -- [[極薄装甲板]] &new{2008-01-21 (月) 22:43:20};
+- 適当なこと書きすぎたので消した…。unixにdiffとかpatchというソフトがあってそれを使うと良かと思います。探しにくいですかね。 -- [[佐野]] &new{2008-01-22 (火) 00:04:45};
+- 当たっているのかわかりませんがとりあえず patch < patch1.txt　とかしてみました。ありがとございます。 -- [[極薄装甲板]] &new{2008-01-22 (火) 20:46:49};
+- 後ろに{のない forの後のエンターでインデントがずれるのを直す件のパッチ置きました -- [[もみみ]] &new{2008-04-16 (水) 15:01:50};
+- TABが行の前頭に普通のtabにして、英字の後ろにTABを押すと、候補機能にしたほうが助かります。AB入力が非常に多いですから、。。。 -- [[mo]] &new{2009-06-20 (土) 13:03:17};
+- TABに補完とインデントの両方の機能を持たせる修正が見つかりました。
+ ;----------------------------------------------------
+ ; modification of TAB function for javascript-mode.
+ ;----------------------------------------------------
+ (let ((keymap (make-sparse-keymap)))
+   (define-key keymap #\TAB 'my-dabbrev-expand)
+   (add-hook '*create-buffer-hook*
+     #'(lambda (buffer)
+         (set-minor-mode-map keymap buffer))))
+   (defun my-dabbrev-expand()
+     "dabbrev-expand"
+     (interactive)
+     (if (string-matchp "[0-9A-Z#$%&+._-]" (string (preceding-char)))
+         (dabbrev-expand)
+       (funcall mode-specific-indent-command)))
+~ -- [[mo]] &new{2009-06-20 (土) 13:30:19};
+// spam 削除、ついでにコード整形 2009-06-25 13:17 bowbow99
+- my-dabbrev-expand がほかのモードにも反映されてしまいます。keymap->*javascript-mode-ap* で大丈夫でしょうか？ -- [[名無し]];
+
+//#hr
+*** 導入 [#p13e397b]
+&ref(jsmode.lzh);をダウンロードする。
+
+解凍して2つのファイルをxyzzyのインストールフォルダ配下に置く。
+ xyzzy
+     +-etc
+     |   +-javascript+DOM
+     |
+     +-site-lisp
+         +-javascript-mode.l
+
+バイトコンパイルする。
+ M-x: byte-compile-file [Enter]
+ Byte compile file: /xyzzy/site-lisp/javascript-mode.l [Enter]
+
+初期設定ファイル(.xyzzy)に記述を追加する。
+ (load-library "javascript-mode")
+ (push '("\\.js$" . javascript-mode) *auto-mode-alist*)
+
+.jsファイルを開いてキーワードに色が付いていれば準備完了。
+
+***特徴 [#c70940f3]
+-<< TAB >> で入力補完します。<< . >> を打つとすぐに Property などの候補を表示します。
+-"var ...;" で宣言された変数の名前を収集して入力補完候補のリストに加えることができます。
+-<< C-x j >> で任意の function ブロックにジャンプできます。
+-<< C-x t >> でテンプレートを挿入できます。
+-<< C-/ >> でセレクションまたはリージョンまたはキャレットの前後をコメントアウトできます。コントブロック内で実行した場合はコメント解除します。
+
+***tips / キーワードに色が付かない[#d2f10402]
+site-lisp/siteinit.l で load-library するとキーワードに色が付かない。&br;
+javascript-mode.l を修正するとうまくいく。&br;
+修正が終わったらダンプファイル xyzzy.wxp を削除してもう一度起動する。
+
+みずぴー日記 - JavaScript-modeでキーワードに色が付かない&br;
+http://d.hatena.ne.jp/mzp/20051124/1132817771
+
+上記を参考にして javascript-mode.l を修正する。
+
+ site-lisp/siteinit.l
+
+    (load-library "javascript-mode")
+    (push '("\\.js$" . javascript-mode) *auto-mode-alist*)
+
+ site-lisp/javascript-mode.l
+
+    Index: javascript-mode.l
+    ===================================================================
+    @@ -156,9 +156,9 @@
+       "The assoc-array literal for the function javascript-dot-notation.")
+
+     (defvar *javascript-keyword-hash-list* nil)
+    -(and *javascript-keyword-file* (null *javascript-keyword-hash-list*)
+    -        (setq *javascript-keyword-hash-list*
+    -                  (load-keyword-file *javascript-keyword-file*)))
+    +;(and *javascript-keyword-file* (null *javascript-keyword-hash-list*)
+    +;       (setq *javascript-keyword-hash-list*
+    +;                 (load-keyword-file *javascript-keyword-file*)))
+
+     (defvar *javascript-mode-syntax-table* nil)
+     (unless *javascript-mode-syntax-table*
+    @@ -239,6 +239,9 @@
+       (setq paragraph-separate paragraph-start)
+       (make-local-variable 'indent-tabs-mode)
+       (setq indent-tabs-mode *javascript-indent-tabs-mode*)
+    +     (and *javascript-keyword-file* (null *javascript-keyword-hash-list*)
+    +        (setq *javascript-keyword-hash-list*
+    +           (load-keyword-file *javascript-keyword-file*)))
+       (when *javascript-keyword-hash-list*
+            (make-local-variable 'keyword-hash-table)
+            (setq keyword-hash-table *javascript-keyword-hash-list*))
+
+***tips / TABが入力できない [#oe686a63]
+&lt;&lt; TAB &gt;&gt;が入力補完に割り当てられているのでそのままではTAB文字を入力できない&r;
+&lt;&lt; C-q Tab &gt;&gt;とすればTAB文字を入力することができる。
+
+入門xyzzy「付録B その他の情報」のP403に記述がある。
+
+トップ
+
+*** tag jump できるように [#a6371508]
+- list-function,tag-jumpできるように修正
+- それと、javascript-goto-functionが動いていなかったのを修正
+  --- javascript-mode.l        Wed Mar 02 19:48:08 2005
+  +++ tag-jump\javascript-mode.l       Mon Feb 19 20:56:44 2007
+  @@ -210,19 +210,29 @@
+                                                                ))
+     "The regexp-keyword-list of javascript-mode (in an xyzzy fashion.)")
+
+  +;;list-function
+  +(defun javascript-build-summary-of-functions ()
+  +  (let ((result nil))
+  +    (save-excursion
+  +      (goto-char (point-min))
+  +      (while (scan-buffer *javascript-function-re* :regexp t :case-fold t :tal t)
+  +            (push (list (current-line-number) (match-string 1)) result)))
+  +    (nreverse result)))
+  +;list-function end
+  +
+   ;;; __mode__
+   (defun javascript-mode ()
+     "Major mode for editing JavaScript (ECMA-357).
+   feat:
+   - Integrated completion of keywords, Object's props and methods, and variable.
+  -  Try just hitting TAB if you were fed up with entering a whole *camel* thing like
+  -  document.getElementsByTagName.
+  +Try just hitting TAB if you were fed up with entering a whole *camel* things ike
+  +document.getElementsByTagName.
+   - Hitting comma immediately pops up the completion list of appropriate props nd
+  -  methods.
+  +methods.
+   - Jump function, means a function to jump to the function, is available. (C-xj)
+   - Template function is available, that seems pretty good for a for statement.(C-x t)
+   - Getting along with comment blocks. It senses the target in a context, regio or
+  -  selection or caret, which one should be enclosed with /* and */."
+  +selection or caret, which one should be enclosed with /* and */."
+     (interactive)
+     (kill-all-local-variables)
+     (setq mode-name "javascript")
+  @@ -231,6 +241,14 @@
+     (use-keymap *javascript-mode-map*)
+     (make-local-variable 'mode-specific-indent-command)
+     (setq mode-specific-indent-command 'javascript-indent-line)
+  +;;tag-jump list-function
+  +  (make-local-variable 'tags-find-target)
+  +  (setq tags-find-target #'tags-find-target-simple)
+  +  (make-local-variable 'tags-find-point)
+  +  (setq tags-find-point #'tags-find-javascript-point)
+  +  (make-local-variable 'build-summary-function)
+  +  (setq build-summary-function 'javascript-build-summary-of-functions)
+  +;;
+     (make-local-variable 'c-indent-level)
+     (setq c-indent-level *javascript-indent-level*)
+     (make-local-variable 'paragraph-start)
+  @@ -252,6 +270,28 @@
+     (setq comment-column 0)
+     (run-hooks '*javascript-mode-hook*))
+
+  +;;tag-jump
+  +(defun tags-find-javascript-point (class name functionp point)
+  +  (goto-char (- point *jump-tag-limit*))
+  +  (and (scan-buffer (concat "^[ \t]*function[ \t]+"
+  +                                                    (regexp-quote name))
+  +                                    :regexp t :limit (+ point *jump-tag-limit))
+  +       (point)))
+  +
+  +(pushnew '(javascript-maketags "*.js") *maketags-list* :key #'car)
+  +(defun javascript-maketags (file count)
+  +  (goto-char (point-min))
+  +  (while (scan-buffer "^[ \t]*\\(function\\)[ \t]+" :regexp t :tail t)
+  +    (do-events)
+  +    (let ((type (match-string 1))
+  +              (opoint (point)))
+  +      (skip-chars-forward "A-Za-z0-9_")
+  +      (unless (= opoint (point))
+  +            (format t " ~A ~A ~D  " (buffer-substring opoint (point)) file opint)
+  +            (setq count (1+ count)))))
+  +  count)
+  +;;end tag-jump
+  +
+   (defun javascript-init-hook ()
+     "When openning file, javascript-mode tries to build its completion list fro
+   the keyword-hash-list. Also, unless no-var-completion ain't be true, it shoul
+  @@ -452,7 +492,8 @@
+               (when (looking-at *javascript-function-re*)
+                 (pushnew (cons (match-string 1) (current-line-number)) tmp1)
+                 (scan-buffer "{")
+  -              (forward-sexp))))
+  +              ;;(forward-sexp)
+  +              )))
+       (setq tmp (completing-read "Go to function: " tmp1 :default "" :must-mucht))
+       (goto-line (cdr (assoc-if
+                                 #'(lambda (x) (string-equal x tmp))
+patchを始めて使ったので間違っているかもしれませんので確認をどなたかお願いします。
+
+*** for(i=0;i<10;i++)などの後のエンターでインデントがずれるのを直す [#h84852ca]
+
+ --- javascript-mode.org.l     2005-03-02 19:48:08.843750000 +0900
+ +++ javascript-mode.l 2008-04-16 14:46:25.540250000 +0900
+ @@ -233,6 +233,7 @@
+    (setq mode-specific-indent-command 'javascript-indent-line)
+    (make-local-variable 'c-indent-level)
+    (setq c-indent-level *javascript-indent-level*)
+ +  (setq c-continued-statement-offset *javascript-indent-level*)
+    (make-local-variable 'paragraph-start)
+    (setq paragraph-start "^$\\|\f")
+    (make-local-variable 'paragraph-separate)

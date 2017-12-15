@@ -1,0 +1,8 @@
+[[tips/cscriptのエラーメッセージ]]
+
+oneclickinstallerでいれったrubyでのエラーは
+こんな感じでfirst-error,next-errorでけるようになった。 05/12/04
+
+ (push (list (compile-regexp "^\tfrom \\(.:[^:]+\\):\\([0-9]+\\)") 1 2) *error-regexp-list*)
+----
+#comment

@@ -1,0 +1,57 @@
+* region-end, region-beginning [#bd3c0c3b]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[anonymous]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: 新規項目
+-投稿日:     2007-02-23 (金) 09:20:46
+-バージョン: 
+
+** メッセージ [#n8b30bd1]
+ <chapter>
+ <title>region-end</title>
+ <type>Function</type>
+ <arguments>region-end</arguments>
+ <package>editor</package>
+ <description>
+ リージョンの終端のポイントを返します。
+ 
+   ; markやpointとの関係
+   (= (region-end) (max (mark) (point)))
+   =&gt;t
+ </description>
+ <seealso>region-beginning</seealso>
+ <seealso>selection-point</seealso>
+ <seealso>mark</seealso>
+ <seealso>point</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>region-beginning</title>
+ <type>Function</type>
+ <arguments>region-beginning</arguments>
+ <package>editor</package>
+ <description>
+ リージョンの開始のポイントを返します。
+ 
+   ; markやpointとの関係
+   (= (region-beginning) (min (mark) (point)))
+   =&gt;t
+ </description>
+ <seealso>region-end</seealso>
+ <seealso>selection-mark</seealso>
+ <seealso>mark</seealso>
+ <seealso>point</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+- どーもです。若干追記しました。 -- [[NANRI]] &new{2007-02-24 (土) 02:22:59};
+- seealso 追加しました。 --  &new{2007-02-25 (日) 22:29:19};
+
+#comment

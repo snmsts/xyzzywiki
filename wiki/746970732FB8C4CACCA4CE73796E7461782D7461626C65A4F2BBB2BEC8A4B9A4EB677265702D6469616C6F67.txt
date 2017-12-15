@@ -1,0 +1,50 @@
+#freeze
+[[tips]]
+http://pc8.2ch.net/test/read.cgi/win/1103400818/927 より
+たぶん大丈夫。
+ (in-package "editor")
+ ; from grepd.l
+ (defun scan-files-1 (file pattern buffer scanner)
+   (let ((file-buffer (get-file-buffer file)))
+     (if file-buffer
+         (set-buffer file-buffer)
+       (progn
+         (set-buffer buffer)
+         (erase-buffer buffer)
+         (ignore-errors (insert-file-contents file)
+                        (find-file-process-params-1 (find-file-scan-params) file)
+                        )))
+     (save-excursion
+       (goto-char (point-min))
+       (message "scanning (~A)" file)
+       (cond (*grep-name-only*
+              (when (funcall scanner)
+                (princ file)
+                (terpri)
+                t))
+             (t
+              (grep-scan-file file scanner))))))
+ 
+ ; from files.l
+ (defun find-file-process-params-1 (params filename)
+   (let ((auto-mode nil))
+     (declare (special auto-mode))
+     (when (and (symbolp *find-file-auto-mode-function*)
+                (fboundp *find-file-auto-mode-function*))
+       (funcall *find-file-auto-mode-function*)
+       (setq auto-mode t))
+     (mapc #'(lambda (x)
+               (let ((f (cdr (assoc (car x) *auto-mode-parameter-alist*
+                                    :test #'string-equal))))
+                 (when f
+                   (unless (and auto-mode (get f 'find-file-auto-mode))
+                     (when (and (funcall f (cdr x))
+                                (get f 'find-file-auto-mode))
+                       (setq auto-mode t))))))
+           params)
+     (unless auto-mode
+       (dolist (x *auto-mode-alist*)
+         (when (string-matchp (car x) filename)
+           (funcall (cdr x))
+           (return))))))
+ (in-package "user")

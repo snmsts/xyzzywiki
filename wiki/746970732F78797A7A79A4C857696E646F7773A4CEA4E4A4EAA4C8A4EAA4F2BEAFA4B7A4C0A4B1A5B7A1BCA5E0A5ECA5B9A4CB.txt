@@ -1,0 +1,109 @@
+[[tips]]
+
+***tips/xyzzyとWindowsのやりとりを少しだけシームレスに [#z140761d]
+
+xyzzyもエクスプローラもよく使うので少し書いてみました。以下のような機能があります。
+
++フォルダをドラッグ＆ドロップするとファイラを起動
++[送る]で任意のフォルダをgrep
++バッファバーのコンテキストメニューからエクスプローラを表示
+
+2番目の機能を使用する前に、SendToの中に"xyzzycli.exe -f files+-grep"というショートカットを作っておくこと。
+
+ ;;; ------------------------------------------------------------------------
+ ;;; xyzzyとWindowsのやりとりを少しだけシームレスに
+ ;;; 2005-12-14版
+ 
+ (provide "files+")
+ (in-package "editor")
+ (require "grepd")
+ (export '(files+-grep))
+ 
+ ;;; ------------------------------------------------------------------------
+ ;;; 機能：フォルダをドラッグ＆ドロップするとファイラを起動
+ ;;; 注意：*drag-and-drop-hook*を置き換えてるのは他の拡張Lispに影響がある
+ ;;;       可能性有り
+ (defun files+-open-directory (filename)
+   (when (and (file-directory-p filename)
+              (not *files+-grep*))
+     ; 経験的に待ちを入れる
+     (sit-for 0.01)
+     ; とりあえずプライマリだけ設定しなおしてファイラで開く。
+     (setq *filer-primary-directory* filename)
+     (message "files+-open-directory: ~A" filename)
+     (filer filename t "files+" t)
+     (error "files+-open-directory: done")))
+ (add-hook '*before-find-file-hook* 'files+-open-directory)
+ 
+ (defun files+-drag-and-drop-hook (window files)
+   ; プライマリとセカンダリの設定だけして
+   ; 実際のファイラのオープンはfiles+-open-directoryに任せる。
+   (when (and (car files)
+              (cadr files)
+              (file-directory-p (car files))
+              (file-directory-p (cadr files)))
+     (setq *filer-primary-directory* (car files))
+     (setq *filer-secondary-directory* (cadr files)))
+   (default-drag-and-drop-hook window files))
+ (setq *drag-and-drop-hook* #'files+-drag-and-drop-hook)
+ 
+ ;;; ------------------------------------------------------------------------
+ ;;; 機能：[送る]で任意のフォルダをgrep
+ ;;; 注意：使用する前に、SendToの中に"xyzzycli.exe -f files+-grep"という
+ ;;;       ショートカットを作っておくこと
+ (defvar *files+-grep* nil)
+ (defvar *files+-grep-temp-buffer-name* " *files+-grep*")
+ 
+ (defun files+-grep ()
+   ; コマンドラインではフラグだけを立てて
+   ; 実際のgrepはfiles+-grep-directoryに任せる。
+   (setq *files+-grep* t))
+ 
+ (defun files+-grep-directory (filename)
+   (when (and (file-directory-p filename)
+              *files+-grep*)
+     (message "files+-grep-directory: ~A" filename)
+     (setq *files+-grep* nil)
+     (let (*grep-directory-name-hook* text)
+       (setq *grep-directory-name-hook* #'(lambda () filename))
+       (if (get-selection-type)
+           ; セレクションがあればその内容でgrepする。
+           (grep-dialog)
+         (progn
+           ; セレクションがなければクリップボードの内容でgrep
+           ; ただし、作業用のバッファにセレクションを作ってgrep-dialogする。
+           (if (find-buffer *files+-grep-temp-buffer-name*)
+               (delete-buffer *files+-grep-temp-buffer-name*))
+           (get-buffer-create *files+-grep-temp-buffer-name*)
+           (with-output-to-buffer (*files+-grep-temp-buffer-name*)
+             (setup-temp-buffer *files+-grep-temp-buffer-name*)
+             (set-buffer *files+-grep-temp-buffer-name*)
+             (format t "~A" (get-clipboard-data))
+             (selection-whole-buffer)
+             (grep-dialog))
+           (delete-buffer *files+-grep-temp-buffer-name*))))
+     (error "files+-grep-directory: done")))
+ (add-hook '*before-find-file-hook* 'files+-grep-directory)
+ 
+ ;;; ------------------------------------------------------------------------
+ ;;; 機能：バッファバーのコンテキストメニューからエクスプローラを表示
+ ;;; 注意：*buffer-bar-context-menu*を直接書き換えてるのは手抜き
+ (setq *buffer-bar-context-menu*
+       (define-popup-menu
+         (:item 'close "フォルダ(&F)"
+          #'(lambda ()
+              (interactive)
+              (let (dir)
+                (if (setq dir (get-short-path-name (map-slash-to-backslash (default-directory))))
+                    (execute-shell-command (concat "start " dir))))))))
+- 以前から書きたいなぁ、と思ったものを久しぶりに書いて見ました。 -- [[山本]] &new{2005-12-14 (水) 21:39:35};
+ (create-shortcut (merge-pathnames "xyzzycli.exe" (si:system-root))
+ 		 (get-special-folder-location :send-to)
+ 		 :arguments "-f files+-grep")
+- ショートカットもついでにさくっと…名前はリネームするしかないんかなぁ… -- [[佐野]] &new{2005-12-14 (水) 22:36:17};
+- 確かにcreate-shortcutを使えばいいんですね、使わせてもらいます。名前が微妙な感じになるのはいまいちですね。 -- [[山本]] &new{2005-12-14 (水) 22:49:55};
+
+ (*create-shortcut (merge-pathnames "xyzzycli.exe" (si:system-root))
+ 		  (merge-pathnames "hoge.lnk" (get-special-folder-location :send-to))
+ 		  :arguments "-f files+-grep")
+- NANRIさんに教えてもらいました。これなら自由自在です。 -- [[佐野]] &new{2005-12-15 (木) 01:07:00};

@@ -1,0 +1,39 @@
+* nsubst [#u35b4398]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[anonymous]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: ツッコミをいれる
+-投稿日:     2007-02-12 (月) 07:36:25
+-バージョン: 
+
+** メッセージ [#m082fd24]
+使用例の記述が間違っているようです。
+ <chapter>
+ <title>nsubst</title>
+ <type>Function</type>
+ <arguments>nsubst NEW OLD TREE &amp;key :test :test-not :key</arguments>
+ <package>lisp</package>
+ <description>
+ TREE の中で OLD を NEW に置き換えたTREEを返します。
+ 引数 TREE は破壊されます。
+ 
+ 使用例：
+   ;;; 階層のあるツリーをnsubstしてみる。aは破壊される。
+   (setq a '((1 2) ((1 3) (1 4))))       =&gt; ((1 2) ((1 3) (1 4)))
+   (nsubst 5 1 a)                        =&gt; ((5 2) ((5 3) (5 4)))
+   a                                     =&gt; ((5 2) ((5 3) (5 4)))
+ </description>
+ <seealso>subst</seealso>
+ <seealso>nsublis</seealso>
+ <seealso>nsubst-if</seealso>
+ <seealso>nsubst-if-not</seealso>
+ <section>リスト</section>
+ <file>builtin.l</file>
+ </chapter>
+----
+- どーもです。[[昔>リファレンスにツッコミを入れる/old#content_1_23]]直してあった雰囲気ですが、何かの拍子に戻っていたんでしょうね。それはともかくリテラルのリストを破壊するのはお行儀が悪いな。使用例は変えたほうがいいかも。 -- [[NANRI]] &new{2007-02-17 (土) 05:28:35};
+- 破壊的というのは少しわかりづらいですね。感覚的にsetf,setqする必要があるってのは分かるんですが。[[この辺>tips/ディレクトリを比較]]でも問題になっていましたが、わかりやすい説明みたいなものがあるといいですね（当方説明できる知識なし(^^;)）。 --  &new{2007-02-17 (土) 17:08:45};
+-- 「破壊」という表現が使い物にならないということを端的に表現していると思うんですけどね。現状は広井さんところを見てくださいって感じですね。 -- [[NANRI]] &new{2007-05-03 (木) 04:10:38};
+
+#comment

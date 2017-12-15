@@ -1,0 +1,147 @@
+#freeze
+[[QuickTour]]
+
+#contents
+
+*KaTeX(花鳥)の導入 [#q0ed28ba]
+できないっていう人を良く見かけるので書いておきます。
+書いている人は KaTeX を使っていませんので、紹介とかは無理です。
+//(KaTeXの簡単な紹介をここに)
+*KaTeX のダウンロード [#p6f48605]
+NetInstallerでやってください。[[雄猫のがらくた置き場>http://osuneko.at.infoseek.co.jp/]]の「KaTeX(花鳥)」をインストールします。
+#ref(001.png,nolink)
+$XYZZY/site-lisp/katex/ 以下に展開されているはずなので、ファイルを確認します。((NetInstallerでダウンロードしなかった人は同じファイル構成になるように手動でファイルを置いてください。))
+manifest.txt(($XYZZY/site-lisp/katex/manifest.txt)) に KaTeX のファイルの一覧が記述されています。
+また、KaTeX を使うためには「Emacslisp移植キット」が必須なので、アーカイブに同梱されています。
+「Emacslisp移植キット」のファイルは elisp.l・emacs.l・emacs.txt の3つです。
+
+続いて readme.txt(($XYZZY/site-lisp/katex/readme.txt)) に目を通しましょう。
+重要なのは「現在分かっている使えない機能」の辺りです。頭に入れておきましょう。
+
+ 現在分かっている使えない機能は、
+ 
+  ・プロセス関係(対応予定なし)
+    プリントアウト(これは考え中)
+    xdvi上で文字列サーチ
+    lpq起動
+
+*KaTeX の設定 [#h8a2f457]
+**準備段階1 [#b2352cef]
+KaTeX の設定を行うためにロードパスを設定する必要があります。~/.xyzzy に以下のように記述してください。
+ ;;; ロードパスに KaTeX のあるディレクトリを追加
+ (pushnew (merge-pathnames "site-lisp/katex" (si:system-root)) *load-path* :test #'equal)
+この設定を反映させるために xyzzy を再起動します。((設定を反映させればいいので、分かる人は分かっている方法で設定を反映させてください。))
+
+**準備段階2 [#m0a7ec03]
+elisp パッケージを有効にします。
+KaTeX のファイルは elisp パッケージがあることを前提に記述してあるので、elisp パッケージが無いといろいろできません。
+elisp パッケージを有効にするには ~/.xyzzy に以下のように記述します。
+ ;;; elispパッケージを有効にする
+ (require "elisp")
+この設定を反映させるために xyzzy を再起動します。((設定を反映させればいいので、分かる人は...以下略))
+
+もしここでエラーがでるようなら、ロードパスの設定が正しく行われていないか、ファイルが足りていません。
+再度確認してください。
+まず無いとは思いますが、elisp.l・emacs.l がアーカイブに無いという場合は、同じく[[雄猫のがらくた置き場>http://osuneko.at.infoseek.co.jp/]]で公開してある「[[Emacslisp移植キット>http://osuneko.at.infoseek.co.jp/xyzzy/xyzzy.html#emacs-lisp]]」をダウンロードして、同じディレクトリに置いてください。
+
+&color(blue){KaTeX の場合、 siteinit.l に記述するとトラブルが多いというような印象があるので、~/.xyzzy に記述する方法のみ紹介しています。siteinit.l で設定したい人は独力で何とかしてください。};
+
+**KaTeX のバイトコンパイル [#m42bd2be]
+よほどのことがない限り KaTeX はバイトコンパイルして使ったほうがいいです。
+バイトコンパイルの手順は katexins.l(($XYZZY/site-lisp/katex/katexins.l))の冒頭のコメントに記述してあります。
+
++ katexins.l をロードする。
+--M-x load-library[RET] katexins[RET]
++ バイトコンパイルを実行する。
+--M-x elisp::katex-byte-compile[RET]
+
+ここで、ステータスバーに「Compiling ...」とか何とか表示されると思います。
+コンパイルが終わるまでぼーっと待ちます。
+
+**KaTeX の設定 [#j73644e9]
+.texファイルを読み込んだとき、KaTeXモードになるように以下のように記述します。
+ ;;; 拡張子と関数の関連付け
+ (pushnew '("\\.tex$" . elisp::katex-mode) *auto-mode-alist* :test #'equal)
+ ;;; オートロード
+ (autoload 'elisp::katex-mode "katex" t)
+この設定を反映させると .tex ファイルを開いた時や M-x elisp::katex-mode とした時に KaTeX-mode になります。
+
+#ref(002.png,nolink)
+CENTER:(モード行が「かてふ」になり、KaTeXメニューが追加されています)
+
+お好みで以下の設定を追加してください。
+
+M-x elisp::katex-mode は長すぎるという人
+ ;;; ショートカット
+ (defun user::katex-mode ()
+   (interactive)
+   (elisp::katex-mode))
+
+勝手に改行すんなという人
+ ;;; 自動改行なし
+ (add-hook 'elisp::katex-mode-hook
+           #'(lambda ()
+               (auto-fill-mode nil)))
+
+**まとめ [#nd64c554]
+設定はここまでで以下のようになっていると思います。
+ ;;; ロードパスに KaTeX のあるディレクトリを追加
+ (pushnew (merge-pathnames "site-lisp/katex" (si:system-root)) *load-path* :test #'equal)
+ ;;; elispパッケージを有効にする
+ (require "elisp")
+ ;;; 拡張子と関数の関連付け
+ (pushnew '("\\.tex$" . elisp::katex-mode) *auto-mode-alist* :test #'equal)
+ ;;; オートロード
+ (autoload 'elisp::katex-mode "katex" t)
+ 
+ ;;; ショートカット
+ (defun user::katex-mode ()
+   (interactive)
+   (elisp::katex-mode))
+ ;;; 自動改行なし
+ (add-hook 'elisp::katex-mode-hook
+           #'(lambda ()
+               (auto-fill-mode nil)))
+
+設定ファイルのサンプルを用意しました。コメントを一桁ずつ解除していくと、上記の手順で設定が行えます。参考にしてください。
+#ref(sample.xyzzy)
+
+あとは install.txt(($XYZZY/site-lisp/katex/install.txt))の５・６・７を読んで設定を行ってください。
+
+*KaHTML の設定 [#j73htme9]
+KaTeXには、同じマークアップ言語であるHTML（正確には違うらしい）を編集するためのkahtmlというのも同梱してあります。exbrowserdllとbrowserexと併用することで非常に便利なHTML編集環境を作ることが出来ます。
+
+[[ななしの人の部屋:http://www.osk.3web.ne.jp/~usitukai/warez/ni/packages.l]](http://www.osk.3web.ne.jp/~usitukai/warez/ni/packages.l)
+
+からexbrowserdllを、
+
+[[雑記帖:http://ohkubo.s53.xrea.com/xyzzy/packages.l]]
+（http://ohkubo.s53.xrea.com/xyzzy/packages.l）
+
+よりbrowserexをそれぞれnetinstallerでインストールします。（ただ、私の環境では、UNLHA32.DLLがインストールされ、xyzzyから認識されているにもかかわらず、なぜかexbrowserのlzh書庫が解凍されなかったので、
+C:\xyzzy\site-lisp\archive内のbrowser_.lzhを解凍し、xyzzy.exeと同じ場所にBrowser.dllをコピーするという作業が必要になりました。）KaTeXがインストールされていれば、kahtmlのインストール作業は不要です。
+
+後は、たとえば.xyzzyなどの初期設定ファイルに
+
+ ;;; kahtmlをロード
+ (push '("\\.s?html?$" . elisp::kahtml-mode) *auto-mode-alist*)
+ (autoload 'elisp::kahtml-mode "kahtml" t) ; "Yet Another HTML mode"
+ 
+ ; 自動改行をやめる
+ (add-hook 'elisp::kahtml-mode-hook
+ 	  #'(lambda ()
+ 	      (auto-fill-mode nil) ; 自動改行をやめる
+ 	      (run-hooks '*text-mode-hook*) ; *text-mode-hook* を走らせる
+ 	      ))
+
+とでも書いておきます。メニューバーの[BX]→[ブラウザで表示]と選ぶと、HTML編集画面の左欄で、編集中のHTMLをブラウザでプレビューすることが出来ます。メニューバーの[表示]→[ツールバー]→[Browser]にチェックを入れ、ツールバーを表示させておくと便利でしょう。
+
+// 9月9日稲原追記
+// とりあえずタイトルをつけてみましたが、もっとよさそうなタイトルが思いついたら
+// 適宜変更してください。
+* もっと詳しい情報 [#r1b643f9]
+
+さらに詳しい情報を知りたい場合には、Tohmaさんの[[xyzzyののページ:http://leaf.dyndns.org/lumber/xyzzy.html]]を参照してください。
+xyzzyのインストール方法からはじまり、KaTeXと一緒に使うと便利な拡張Lispについて記述されたPDFファイルが公開されています。実際に.xyzzyやsiteinit.lの設定例もありますので参考になると思います。
+
+また、xyzzyでTeXを扱う際の総合的なTips集として、[[TeX Wikiのxyzzyの項:http://oku.edu.mie-u.ac.jp/~okumura/texwiki/?xyzzy]]も参考になると思います。（KaTeXも扱ってます。）

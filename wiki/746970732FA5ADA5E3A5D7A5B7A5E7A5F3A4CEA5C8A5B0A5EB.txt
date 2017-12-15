@@ -1,0 +1,31 @@
+ ;#ohkuboさんのtopmost
+ ;  http://members.tripod.co.jp/ohkubo/xyzzy/#topmost 
+ ;に激似な気がします。よくわからんのだけど。
+ (require "api");3/25以降のでお願い。
+ (in-package "win-user")
+ (defvar *show-caption* t)
+ (defun toggle-caption (&optional (arg nil sv))
+   (ed:interactive)
+   (if sv
+       (setq *show-caption* arg)
+     (setq *show-caption* (not *show-caption*)))
+   (SetWindowLong
+    (ed:get-window-handle)
+    GWL_STYLE
+    (-
+     (logior
+      (GetWindowLong
+       (ed:get-window-handle)
+       GWL_STYLE)
+      WS_CAPTION)
+     (if *show-caption* 0 WS_CAPTION)))
+   (SetWindowPos
+    (ed:get-window-handle) 0 0 0 0 0
+    (+ SWP_NOMOVE
+       SWP_NOSIZE
+       SWP_NOZORDER
+       SWP_FRAMECHANGED))
+   *show-caption*)
+ (in-package "user")
+
+#comment

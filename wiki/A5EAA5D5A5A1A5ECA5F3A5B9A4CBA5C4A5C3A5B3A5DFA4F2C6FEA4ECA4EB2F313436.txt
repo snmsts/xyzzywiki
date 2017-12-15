@@ -1,0 +1,39 @@
+*&#x2a;minor-mode-alist* [#w0760371]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-08-27 22:26:58 (土)
+-バージョン: 
+
+**メッセージ [#h0c23366]
+ <chapter>
+ <title>*minor-mode-alist*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ マイナモードがオンのときにモードラインに表示する文字列の連想リストです。
+ 各要素の car はシンボル、 cdr は文字列かシンボルです。
+ 
+ car に指定したシンボルの値が non-nil であって、 cdr が文字列かまたは値が
+ 文字列であるようなシンボルならば、その文字列がモードラインに表示されます。
+ 
+ 使用例：
+   (pushnew '(edict-mode . "Edict") *minor-mode-alist* :key #'car)
+ 
+   (pushnew '(async-grep-mode . async-grep-status)
+            *minor-mode-alist* :key #'car)
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>モード</section>
+ <file></file>
+ </chapter>
+----
+-ありがとうございます。 -- [[NANRI]] &new{2005-08-28 12:59:07 (日)};
+-取り込みました。→[[refwiki:*minor-mode-alist*]] -- [[NANRI]] &new{2005-10-23 00:40:18 (日)};
+
+#comment

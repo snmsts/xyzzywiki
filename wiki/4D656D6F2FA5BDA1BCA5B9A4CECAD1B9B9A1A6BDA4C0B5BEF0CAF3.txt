@@ -1,0 +1,32 @@
+#freeze
+[[Memo]]
+*概要 [#b834de9f]
+本体のソースの変更・修正に関する情報をまとめるためのページです。
+*本体をビルドする [#lb3b4862]
+-[[Memo/ソースからビルドしてみる]]
+-[[Memo/ソースからビルドしてみる2]]
+-[[Microsoft Visual C++ 2005 Express Edition で xyzzy をビルドする>patch/13]]
+-[[Memo/ソースからビルドしてみる3]]
+-[[Optimized xyzzy 0.2.2.234:http://blog.drry.jp/2005/05/25/2325]]
+-[[デバッグ用のxyzzyにアタッチして、ステップ実行:http://raido.sakura.ne.jp/southly/xyzzy/step.html]]
+-[[xyzzyにbuiltin関数を追加する:http://raido.sakura.ne.jp/southly/xyzzy/add_builtin.html]]
+*本体を修正 [#qf7ff764]
+-[[start-timer の継続処理で初回だけ二度連続実行される不具合修正>patch/21]]
+-[[戻り値が double, float の C 関数を呼ぶとクラッシュする>patch/25]]
+-[[xml-http-request: UTF8 以外では文字化けする問題の修正:http://fixdap.com/p/xyzzy/2662/]]
+-[[Dualディスプレイ時のツールチップ付近のバグ調査:http://fixdap.com/p/xyzzy/6346/]]
+-[[xyzzy-ml:09198]] format の ~R
+-[[xyzzy-ml:09204]] formatの動作
+*本体に機能を追加 [#z987527b]
+-[[USBメモリからの使用を前提に改造:http://blog.2310.net/contents/individual/000047.php]]
+-[[関数 make-process にキーパラメータ :show を追加する>patch/12]]
+-[[builtin関数syntax-match-charの追加>patch/23]]
+-[[前後フィードバック機能のサポート:http://fixdap.com/p/xyzzy/7376/]]
+--前後フィードバック機能のサポート([[patch/27]])
+-[[find-file でのパス展開:http://d.hatena.ne.jp/miyamuko/20051125/p1]]
+-[[Altを離してもメニューがへこまないようにする:http://d.hatena.ne.jp/miyamuko/20051019/p1]]
+-[[ole-create-enumerator:http://d.hatena.ne.jp/miyamuko/20050913/p1]]
+-[[xyzzy-ml:08959]] ツールバーのアイコンをカラフルに
+-[[namespace のインデント:http://d.hatena.ne.jp/syaA/20090917#p1]]
+-[[structure の print-function:http://d.hatena.ne.jp/bowbow99/20090828/1251471307]]
+//#comment

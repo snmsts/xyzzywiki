@@ -1,0 +1,42 @@
+* howm-wrap ではビューアは起動しない？ [#uc9d2148]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2005-01-24 (月) 23:02:45
+
+** メッセージ [#obf20beb]
+howm-wrap において以下のようなgotoリンクを記述しても本家のように画像ビューアが起動することなく，xyzzy で画像ファイルを開いてしまいます。
+
+  >>> ~/SamplePhoto.jpg
+
+howm-init.l に
+
+  (setq howm-view-external-viewer-assoc
+      '(
+        ("[.]jpg$" . "explorer %s")))
+
+と書いてみてもダメでした。
+環境はWindws XP(SP1),xyzzy 0.2.2.233, howm-wrap 1.1.0.3です。
+howm-wrap では画像やその他ファイルを関連づけされているアプリケーションで開くことは出来ないでしょうか？
+
+
+解決策？？
+
+ (defun action-lock-graphic (regexp arg-pos &optional hilit-pos)
+   (action-lock-general #'shell-execute regexp arg-pos hilit-pos))
+
+ (let ((copyrules action-lock-default-rules))
+   (setq action-lock-default-rules (append copyrules 
+   (list (action-lock-graphic "\\([^> \r\n]*png\\)" 1)))))
+
+こんなのをhowm-init.lに追加してみたらどうでしょう。ファイル名の上に
+カーソルを置いてリターンすると関連付け、＞＞＞の上でリターンすると
+xyzzy内で開くようになると思います。pngにしか対応してませんが、正規表現の
+部分はどうして欲しいのか分からないので適宜変えてください、ということに
+しておきます。結果をお知らせください。
+action-lock.lcファイルがある場合は削除してみてください。--Deecay
+
+----
+-関連付けされている外部アプリケーションで開く、および xyzzy 内で開くことを正しく行えました！正規表現部分を変えてもどのファイルでも対応できています。ありがとうございました。 --  &new{2005-08-14 02:40:45 (日)};
+
+#comment

@@ -1,0 +1,6 @@
+[[L10N/english]]
+
+ life.l:252:  (message "C-gを押せば終わる")
+- If you want to quit, push C-g.
+
+#comment

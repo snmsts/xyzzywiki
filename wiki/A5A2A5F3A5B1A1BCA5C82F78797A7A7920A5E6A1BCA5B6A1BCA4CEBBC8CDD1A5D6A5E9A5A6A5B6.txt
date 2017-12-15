@@ -1,0 +1,20 @@
+[[アンケート一覧]]
+
+使用頻度の高いものは？
+
+#vote([[xyzzy+www-mode>http://www7a.biglobe.ne.jp/~hat/xyzzy/www-mode.html]][1],[[Internet Explorer>http://www.microsoft.com/japan/windows/ie/default.mspx]][3],[[Firefox>http://www.mozilla-japan.org/products/firefox/]][48],[[Opera>http://jp.opera.com/]][21],[[bura>http://www.geocities.jp/tabbrowser/]][2],[[Sleipnir>http://www20.pos.to/~sleipnir/]][5],[[Sleipnir2>http://www.fenrir.co.jp/sleipnir2/]][4],[[Sylera>http://www.zawameki.net/sylera/]][3])
+
+----
+「通常使用するブラウザ」に設定しているのは？
+
+#vote([[Internet Explorer>http://www.microsoft.com/japan/windows/ie/default.mspx]][13],[[Firefox>http://www.mozilla-japan.org/products/firefox/]][43],Opera Ver6.x-8.x[1],[[Opera Ver9.x>http://jp.opera.com/]][14],[[bura>http://www.geocities.jp/tabbrowser/]][2],[[Sleipnir>http://www20.pos.to/~sleipnir/]][4],[[Sleipnir2>http://www.fenrir.co.jp/sleipnir2/]][3],[[Sylera>http://www.zawameki.net/sylera/]][2])
+
+----
+- xyzzyのHTTPアクセスのProxy設定とブラウザの設定とをリンクするライブラリを作成しています。御協力を御願いします。 -- [[nYamamoto]] &new{2007-01-10 (水) 02:21:29};
+- Sleipnirを使ってます。追加いただけるとうれしいです。 --  &new{2007-01-12 (金) 09:13:20};
+- Firefox2ですけどもFirefoxに入れちゃって構わない？ --  &new{2007-01-12 (金) 09:42:23};
+- Donut系が無い…。orz --  &new{2008-07-16 (水) 08:17:51};
+- Opera10.6はどこに入ればよい？ -- [[1196]] &new{2010-09-01 (水) 14:08:47};
+- Opera9.5はどこまで入ればよい？ -- [[1196]] &new{2010-09-01 (水) 14:10:32};
+
+#comment

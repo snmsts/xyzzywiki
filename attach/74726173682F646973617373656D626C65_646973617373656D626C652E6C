@@ -1,0 +1,403 @@
+;;; disassemble.l
+
+;; (require 'compile)
+
+(defconstant *disasm-byte-code-const-zero* 40000)
+(defconstant *disasm-byte-code-alist*
+  '((1 . constant)
+    (2 . global-set)
+    (3 . global-ref)
+    (4 . lexical-set)
+    (5 . lexical-ref)
+    (8 . local-set)
+    (9 . local-ref)
+    (10 . make-closure)
+    (11 . discard)
+    (12 . goto)
+    (13 . if-nil-goto)
+    (14 . if-non-nil-goto)
+    (15 . if-nil-goto-and-pop)
+    (16 . if-non-nil-goto-and-pop)
+    (17 . go)
+    (18 . return)
+    (19 . adjust-stack)
+    (20 . call-0)
+    (21 . call-1)
+    (22 . call-2)
+    (23 . call-3)
+    (24 . call-4)
+    (25 . call-n)
+    (26 . global-set-discard)
+    (27 . lexical-set-discard)
+    (28 . local-set-discard)
+    (29 . lexical-bind)
+    (30 . block)
+    (31 . special)
+    (32 . tagbody)
+    (33 . unwind-protect)
+    (34 . catch)
+    (35 . throw)
+    (36 . save-excursion)
+    (37 . save-restriction)
+    (38 . save-window-excursion)
+    (39 . function-symbol)
+    (42 . multiple-value-set)
+    (43 . list-multiple-value)
+    (44 . call-multiple-value)
+    (45 . save-multiple-value)
+    (80 . const-t)
+    (81 . const-nil)
+;;;    (40000 . const-zero)
+    (33255 . funcall)
+    (33256 . set)
+    (33257 . symbol-value)
+    (33258 . boundp)
+    (33259 . constantp)
+    (33260 . specialp)
+    (33261 . make-constant)
+    (33262 . make-special)
+    (33263 . fset)
+    (33264 . values-list)
+    (33265 . values)
+    (33266 . null)
+    (33267 . symbolp)
+    (33268 . atom)
+    (33269 . consp)
+    (33270 . eq)
+    (33271 . eql)
+    (33272 . equal)
+    (33273 . equalp)
+    (33274 . car)
+    (33275 . cdr)
+    (33276 . cons)
+    (33277 . endp)
+    (33278 . nth)
+    (33279 . nthcdr)
+    (33280 . list-1)
+    (33281 . list-2)
+    (33282 . list-n)
+    (33283 . rplaca)
+    (33284 . rplacd)
+    (33285 . elt)
+    (33286 . set-elt)
+    (33287 . length)
+    (33288 . reverse)
+    (33289 . nreverse)
+    (33290 . svref)
+    (33291 . svset)
+    (33294 . char)
+    (33295 . set-char)
+    (33296 . schar)
+    (33297 . set-schar)
+    (33298 . string=)
+    (33299 . string-equal)
+    (33300 . zerop)
+    (33301 . plusp)
+    (33302 . minusp)
+    (33303 . oddp)
+    (33304 . evenp)
+    (33305 . =)
+    (33306 . /=)
+    (33307 . <)
+    (33308 . >)
+    (33309 . <=)
+    (33310 . >=)
+    (33311 . max)
+    (33312 . min)
+    (33313 . +)
+    (33314 . -)
+    (33315 . nagate)
+    (33316 . *)
+    (33317 . /)
+    (33318 . abs)
+    (33319 . char=)
+    (33320 . char/=)
+    (33321 . char<)
+    (33322 . char>)
+    (33323 . char<=)
+    (33324 . char>=)
+    (33325 . char-equal)
+    (33326 . char-not-equal)
+    (33327 . char-lessp)
+    (33328 . char-greaterp)
+    (33329 . char-not-greaterp)
+    (33330 . char-not-lessp)
+    (33331 . char-code)
+    (33332 . code-char)
+    (33536 . bobp)
+    (33537 . eobp)
+    (33538 . bolp)
+    (33539 . eolp)
+    (33540 . goto-bol)
+    (33541 . goto-eol)
+    (33542 . forward-char)
+    (33543 . forward-line)
+    (33544 . goto-line)
+    (33545 . goto-column)
+    (33546 . current-column)
+    (33547 . following-char)
+    (33548 . preceding-char)
+    (33549 . point)
+    (33550 . goto-char)
+    (33551 . looking-for)
+    (33552 . looking-at)
+    (33553 . skip-chars-forward)
+    (33554 . skip-chars-backward)
+    (33555 . point-min)
+    (33556 . point-max)
+    (33557 . skip-syntax-spec-forward)
+    (33558 . skip-syntax-spec-backward)
+    (33559 . interactive-p)
+    (33560 . get-selection-type)
+    (33561 . selection-mark)
+    (33562 . stop-selection)
+    (33563 . pre-selection-p)
+    (33564 . continue-pre-selection)
+    (33565 . delete-region)
+    (33566 . buffer-substring)
+    (33567 . selection-point)
+    (33568 . virtual-bolp)
+    (33569 . virtual-eolp)
+    (33570 . goto-virtual-bol)
+    (33571 . goto-virtual-eol)
+    (33572 . forward-virtual-line)
+    (33573 . goto-virtual-line)
+    (33574 . goto-virtual-column)
+    (33575 . current-virtual-column))
+  )
+
+
+(defstruct (disasm-bytecode
+	    (:constructor (make-bytecode-struct
+			   (string constants frame arglist
+				   &aux (nframe (length frame)))))
+	    (:conc-name disasm-bc))
+  (string nil :type string)
+  (constants nil :type vector)
+  (nframe nil :type integer)
+  (frame nil :type list)
+  (arglist nil :type list)
+  )
+
+(defun disasm-make-bcstruct (body arglist)
+  (let ((args (remove-if (lambda (x)
+			   (member x lambda-list-keywords :test #'eq))
+			 arglist)))
+    (do ((x (- (char-code (char (cadr body) 0))
+	       (length args))
+	    (1- x))
+	 (locvars))
+	((zerop x)
+	 (make-bytecode-struct (cadr body)
+			       (caddr body)
+			       (nreconc args locvars)
+			       arglist))
+      (push (intern (format nil "LOCALVAR-~d" x)) locvars))))
+
+(defun disasm-bcref (bc index)
+  (char-code (char (disasm-bcstring bc) index)))
+
+(defun disasm-bc-constref (bc index)
+  (svref (disasm-bcconstants bc) (disasm-bcref bc index)))
+
+(defun disasm-bc-frameref (bc index)
+  (let ((v (nth (disasm-bcref bc index) (disasm-bcframe bc))))
+    (if (consp v) (car v) v)))
+
+
+(defvar *disasm-signal-unknown-opcode* t) ; ほぼデバッグ用
+
+(defun disasm-make-opcode (index insn code &rest args)
+  (list* index insn args))
+
+
+;; tag
+(mapc (lambda (sym)
+	(setf (get sym 'disasm-function)
+	      (lambda (x insn code bc)
+		(values (disasm-make-opcode x insn code
+					    (disasm-bcref bc (1+ x)))
+			1))))
+      '(goto if-nil-goto if-non-nil-goto
+	if-nil-goto-and-pop if-non-nil-goto-and-pop
+	adjust-stack funcall
+	values list-n catch
+	multiple-value-set function-symbol
+	save-excursion save-restriction save-window-excursion))
+
+;; frame
+(mapc (lambda (sym)
+	(setf (get sym 'disasm-function)
+	      (lambda (x insn code bc)
+		(values (disasm-make-opcode x insn code
+					    (disasm-bc-frameref bc (1+ x)))
+			1))))
+      '(local-set local-ref local-set-discard))
+
+;; constant
+(mapc (lambda (sym)
+	(setf (get sym 'disasm-function)
+	      (lambda (x insn code bc)
+		(values (disasm-make-opcode x insn code
+					    (disasm-bc-constref bc (1+ x)))
+			1))))
+      '(lexical-set lexical-ref lexical-set-discard
+	global-set global-ref global-set-discard
+	constant call-0 call-1 call-2 call-3 call-4
+	make-closure return go function-symbol))
+
+;; tag; constant
+(mapc (lambda (sym)
+	(setf (get sym 'disasm-function)
+	      (lambda (x insn code bc)
+		(values (disasm-make-opcode x insn code
+					    (disasm-bcref bc (1+ x))
+					    (disasm-bc-constref bc (+ x 2)))
+			2))))
+      '(call-n block))
+
+;; tag; length; (tag; constant)*length
+(mapc (lambda (sym)
+	(setf (get sym 'disasm-function)
+	      (lambda (x insn code bc)
+		(let ((tag (disasm-bcref bc (incf x)))
+		      (length (disasm-bcref bc (incf x)))
+		      (tags))
+		  (dotimes (y length
+			      (values (disasm-make-opcode x insn code
+							  tag (nreverse tags))
+				      (* 2 (1+ length))))
+		    (push (list (disasm-bcref bc (incf x))
+				(disasm-bc-constref bc (incf x))
+				tags)))))))
+      '(tagbody))
+
+;; tag; tag
+(mapc (lambda (sym)
+	(setf (get sym 'disasm-function)
+	      (lambda (x insn code bc)
+		(values (disasm-make-opcode x insn code
+					    (disasm-bcref bc (1+ x))
+					    (disasm-bcref bc (+ x 2)))
+			2))))
+      '(unwind-protect))
+
+;; tag; length; constant*length
+(mapc (lambda (sym)
+	(setf (get sym 'disasm-function)
+	      (lambda (x insn code bc)
+		(let ((tag (disasm-bcref bc (incf x)))
+		      (length (disasm-bcref bc (incf x)))
+		      (vars))
+		  (dotimes (y length
+			      (values (disasm-make-opcode x insn code
+							  tag (nreverse vars))
+				      (+ length 2)))
+		    (push (disasm-bc-constref bc (incf x))
+			  vars))))))
+      '(special lexical-bind))
+
+
+(defun disasm-parse-bytecode (bc)
+  (do ((x 3 (1+ x))
+       (l (length (disasm-bcstring bc)))
+       (result))
+      ((>= x l)
+       ;; return value
+       (cons `((stack-frame-max ,(disasm-bcnframe bc))
+	       (stack-depth-max ,(disasm-bcref bc 1))
+	       (arglist ,@(disasm-bcarglist bc))
+	       (constants ,(disasm-bcconstants bc)))
+	     (nreverse (cons (list x 'RET) result))
+	     ))
+    (push
+     (let ((code (disasm-bcref bc x)))
+       (cond
+	;; label
+	((zerop code)
+	 (disasm-make-opcode x 'LABEL 0))
+	;; const (-1024--1024)
+	((<= (- *disasm-byte-code-const-zero* 1024)
+	     code
+	     (+ *disasm-byte-code-const-zero* 1024))
+	 (disasm-make-opcode x 'CONSTANT code
+			     (- code *disasm-byte-code-const-zero*)))
+	(t
+	 (let ((insn (cdr (assoc code *disasm-byte-code-alist*))))
+	   (let ((f (get insn 'disasm-function)))
+	     (cond (f (multiple-value-bind (list offset)
+			  (funcall f x insn code bc)
+			(incf x offset)
+			list))
+		   (insn (disasm-make-opcode x insn code))
+		   (t
+		    (if *disasm-signal-unknown-opcode*
+			(progn
+			  (msgbox "Unknown opecode found: ~D"
+				  code)
+			  (return-from disasm-parse-bytecode))
+		      (disasm-make-opcode x nil code)))))))
+	))
+     result)))
+
+(defun disasm-function-to-bclist (f)
+  ;; いろいろなエラーチェックとか
+  (when (symbolp f)
+    ;; symbol -> function
+    (cond ((macro-function f)
+	   ;; マクロはバイトコードにならない
+	   (error "マクロは disassemble できません: ~A" f))
+	  ((fboundp f)
+	   (setq f (symbol-function f)))
+	  (t
+	   (error "関数定義がありません: ~S" f))))
+  (cond ((si:*builtin-function-p f)
+	 (error "ビルトイン関数は disassemble できません: ~A" f))
+	((functionp f)
+	 ) ; ok
+	(t
+	 (error "関数ではありません: ~S" f)))
+  (unless (compiled-function-p f)
+    (setq f (compile nil f)))
+  (let* ((form (and (si:*closurep f) (si:closure-body f)))
+	 ;; form = (lambda ARGLIST . BODY)
+	 (arglist (cadr form))
+	 (body (cddr form)))
+    (while (or (eq (safe-caar body) 'interactive)
+	       (eq (safe-caar body) 'declare))
+      (setq body (cdr body)))
+    (unless (consp body)
+      (error "disassemble できませんでした: ~S" f))
+    ;; いろいろなエラーチェックとか終了
+    (if (eq (safe-caar body) 'si:*byte-code)
+	;; body = ((si:*byte-code ...))
+	(values (disasm-parse-bytecode
+		 (disasm-make-bcstruct (car body) arglist))
+		t)
+      ;; constant, projection の場合。バイトコードにならないらしい
+      (values `((arglist ,arglist) (return-value ,(car body))) nil))))
+
+(defun disassemble (f)
+  (interactive "aDisassemble: ")
+  (multiple-value-bind (list bc-p)
+      (disasm-function-to-bclist f)
+    (with-output-to-temp-buffer ("*Disassemble*")
+      (if (symbolp f)
+	  (format t "Function ~A:~&" f)
+	(format t "Anonymous function:~&"))
+      (if bc-p
+	  (progn
+	    (let ((head (car list)))
+	      (format t "stack frame max:~20T~D~&" (cadar head))
+	      (format t "stack depth max:~20T~D~&" (cadadr head))
+	      (format t "argument list:~20T~A~&" (cdaddr head)))
+	    (format t "~50~~&")
+	    (dolist (code (cdr list))
+	      (format t "~4D: ~A~32T~{~S~^, ~}~&"
+		      (car code) (cadr code) (cddr code))))
+	(progn
+	  (format t "argument list:~20T~A~&" (cadar list))
+	  (format t "return value:~20T~A~&" (cadadr list))))
+      )))
+
+;;; disassemble.l ends here

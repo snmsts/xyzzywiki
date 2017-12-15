@@ -1,0 +1,68 @@
+* convert-encoding-from-internal [#h3384865]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-04-21 (金) 14:07:09
+-バージョン: 20060329
+
+** メッセージ [#v4790503]
+ <chapter>
+ <title>convert-encoding-to-internal</title>
+ <type>Function</type>
+ <arguments>convert-encoding-to-internal ENCODING INPUT-STRING-OR-STREAM &amp;optional OUTPUT-STREAM</arguments>
+ <package>editor</package>
+ <description>
+ 与えられた文字列やストリームをENCODINGから内部コードに変換します。
+ 
+ 　ENCODING               : 入力ストリームのエンコーディング
+                            encoding.lに大量に定義してある
+                            *encoding-euc-jp*などやdetect-char-encodingの
+                            戻り値を利用するのも良いでしょう
+   INPUT-STRING-OR-STREAM : 変換する文字列またはストリーム
+   OUTPUT-STREAM          : 出力するストリーム
+ 
+ 戻り値は以下の通りです。
+ 
+   文字列 OUTPUT-STREAMがnilの時(指定しないときもnilとみなされます)
+   t      ストリームに出力したとき
+ </description>
+ <seealso>convert-encoding-from-internal</seealso>
+ <seealso>detect-char-encoding</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>convert-encoding-from-internal</title>
+ <type>Function</type>
+ <arguments>convert-encoding-from-internal ENCODING INPUT-STRING-OR-STREAM &amp;optional OUTPUT-STREAM</arguments>
+ <package>editor</package>
+ <description>
+ 与えられた文字列やストリームを内部コードからENCODINGに変換します。
+ 
+ 　ENCODING               : 出力ストリームのエンコーディング
+                            encoding.lに大量に定義してある*encoding-euc-jp*など
+   INPUT-STRING-OR-STREAM : 変換する文字列またはストリーム
+   OUTPUT-STREAM          : 出力するストリーム
+ 
+ 戻り値は以下の通りです。
+ 
+   文字列 OUTPUT-STREAMがnilの時(指定しないときもnilとみなされます)
+   t      ストリームに出力したとき
+ </description>
+ <seealso>convert-encoding-to-internal</seealso>
+ <seealso>detect-char-encoding</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>builtin.l</file>
+ </chapter>
+
+--------
+- セクションはその他？ -- [[佐野]] &new{2006-04-21 (金) 14:16:30};
+- どーもです。セクションは「エンコーディング」を新設したほうがいいと思います。エンコーディングを示す変数がたくさんあるので。 -- [[NANRI]] &new{2006-04-21 (金) 23:56:03};
+
+#comment

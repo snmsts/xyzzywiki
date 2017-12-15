@@ -1,0 +1,40 @@
+*read-sexp
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2003-09-25 (木) 12:48:36
+-バージョン: 030705
+
+**メッセージ
+addref-functionが便利だと実感しました。
+
+ <chapter>
+ <title>read-sexp</title>
+ <type>Function</type>
+ <arguments>read-sexp PROMPT</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーがS式を入力するのを待ちます。
+ ユーザーの入力したS式と文字数を多値で返します。
+ 
+ 使用例：
+   ;;; ミニバッファからS式を入力する。
+   (read-sexp "sexp: ")
+   =&gt; (+ 3 3)
+   =&gt; 7
+ 
+ </description>
+ <seealso>read-integer</seealso>
+ <seealso>read-string</seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-反映しました。addrefも多人数編集できるようになったら、取り敢えず項目を起こすのには便利かもしれませんね。 -- [[山本]] SIZE(10){2003-10-02 (木) 19:13:33}
+
+#comment

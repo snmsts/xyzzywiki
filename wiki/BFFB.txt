@@ -1,0 +1,86 @@
+[[tips]]
+
+秀丸風に選択範囲をインデント・アンインデントする機能を提供します。
+
+「秀丸風インデント」とは，
+-１行以上に渡って選択されているときに TAB キーを押せば，それらの行の行頭に TAB を挿入してインデントする。
+-インデント終了後，インデントした行が選択状態になる。
+-選択範囲が一行未満のときに TAB キーを押すと，選択範囲をタブ文字1つで置き換える。
+-選択がなされていないときに TAB キーを押せば，単にタブを挿入する。
+
+「秀丸風アンインデント」とは，
+-何かが選択されているときに Shift+TAB を押せば，それらを含む全ての行を，TAB幅の分だけアンインデントする。（ただしタブ文字とスペース以外は消去しない。）
+-アンインデント終了後，アンインデントした行が選択状態になる。
+-選択がなされていないときに Shift+TAB を押しても何もしない。
+
+ (defun indent-selected-lines ()
+   (interactive "*")
+   (let ((start-line-number nil) (end-line-number nil) (do-indent-flag nil))
+     (selection-start-end (start end)
+ 
+       (goto-char start)
+       (if (and (bolp) (> start end)) (backward-char 1))
+       (setq start-line-number (current-line-number))
+ 
+       (goto-char end)
+       (if (and (bolp) (< start end)) (backward-char 1))
+       (setq end-line-number (current-line-number))
+ 
+       (if (> start-line-number end-line-number)
+         (rotatef start-line-number end-line-number)
+       )
+ 
+       (if (/= (progn (goto-char start) (current-line-number)) (progn (goto-char end) (current-line-number)) ) 
+         (progn 
+           (setq do-indent-flag t)
+           (shift-region start end)
+           (goto-line start-line-number)
+           (start-selection 1 t)
+           (while (<= (current-line-number) end-line-number)
+             (selection-next-virtual-line)
+           )
+         )
+         (delete-region start end)
+       )
+     )
+ 
+     (if (null do-indent-flag) (insert "\t"))
+   )
+ )
+ 
+ (defun unindent-selected-lines ()
+   (interactive "*")
+   (let ((start-line-number nil) (end-line-number nil))
+     (selection-start-end (start end)
+       (goto-char start)
+       (if (and (bolp) (> start end)) (backward-char 1))
+       (setq start-line-number (current-line-number))
+ 
+       (goto-char end)
+       (if (and (bolp) (< start end)) (backward-char 1))
+       (setq end-line-number (current-line-number))
+ 
+       (if (> start-line-number end-line-number)
+         (rotatef start-line-number end-line-number)
+       )
+ 
+       (unshift-region start end)
+ 
+       (goto-line start-line-number)
+       (start-selection 1 t)
+       (while (<= (current-line-number) end-line-number)
+          (selection-next-virtual-line)
+       )
+     )
+   )
+ )
+ 
+ ;キー設定 
+ (global-set-key #\TAB 'indent-selected-lines)
+ (set-extended-key-translate-table exkey-S-tab #\F20)
+ (global-set-key #\F20 'unindent-selected-lines)
+- ちょこっと欲しかった機能です♪ありがとうございますm(_ _)m --  &new{2006-11-30 (木) 16:05:24};
+- いつも便利に使っています、一点気になった点を・・・。selection-whole-bufferをしてから選択(アン)インデントを実行をすると固まってしまい、C-gを押すまで動きません。 --  &new{2008-01-14 (月) 11:04:42};
+- 選択範囲にEOFが含まれると固まるみたいですね？ --  &new{2008-03-14 (金) 08:05:16};
+
+#comment

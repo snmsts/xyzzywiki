@@ -1,0 +1,44 @@
+*パッケージ名のついていない項目 [#l138cc45]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2003-11-10 (月) 12:03:59
+-バージョン: 
+
+**メッセージ [#yf46dff2]
+userからは見えないけれどsiがついていない項目が
+ base64-decode
+ base64-encode
+ make-chunk
+ make-string-chunk
+ quoted-printable-decode
+ unpack-string
+ uudecode 
+ uuencode
+これだけだと思いますが抜けがあったらすみません…。
+
+そしてedがついていない項目
+ find-file-internal
+ get-selection-start-end
+ toggle-mode
+調べるのに作ったプログラム
+ (dolist (i (xml2xxx::xml))
+   (and
+    (caddr (assoc "title" i :test 'string=))
+    (not (fboundp (intern (caddr (assoc "title" i :test 'string=)))))
+    (fboundp (intern (caddr (assoc "title" i :test 'string=)) 'ed))
+    (message "~s" (caddr (assoc "title" i :test 'string=)))
+    (print (caddr (assoc "title" i :test 'string=)))))
+
+----
+-取り込みました。(not (fboundp (intern (caddr (assoc "title" i :test 'string=)))))は、userパッケージの除外するということでしょうか。 -- [[山本]] &new{2003-12-06 (土) 18:31:57};
+-そういうつもりで書きました。 -- [[佐野]] &new{2003-12-06 (土) 21:24:43};
+-指摘した項目はすべて変更済みのようですがdabbrev-popupにedがついていないようです。 -- [[佐野]] &new{2004-11-27 (土) 13:01:10};
+-エントリの再利用で申し訳ないですが着手から提案に変更させてもらいました。 -- [[佐野]] &new{2004-11-27 (土) 13:03:04};
+-dabbrev-popup は export されてます。（dabbrev.l:10） user パッケージから見えないように感じられるのは autoload だから（defs.l:258）ではないでしょうか？ -- [[NANRI]] &new{2004-11-29 (月) 18:29:13};
+-本当だ…。ごめんなさい。 -- [[佐野]] &new{2004-11-29 (月) 21:51:11};
+
+#comment

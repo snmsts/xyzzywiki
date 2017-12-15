@@ -1,0 +1,69 @@
+* call-processの:error [#b9bab4c6]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[t]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-03-26 (日) 11:00:37
+-バージョン: 
+
+** メッセージ [#w5115006]
+call-processの:errorが詳細不明となっていますが、標準エラー出力を受け取るファイルを指定するのではないでしょうか？
+
+
+--------
+- どーもです。調べておきます。 -- [[NANRI]] &new{2006-03-26 (日) 21:24:06};
+- 調べました -- [[中野]] &new{2006-04-02 (日) 23:46:40};
+
+#comment
+
+
+--------
+ <chapter>
+ <title>call-process</title>
+ <type>Function</type>
+ <arguments>call-process COMMAND-LINE &amp;key :environ :no-std-handles :input :output :error :exec-directory :show :wait</arguments>
+ <package>editor</package>
+ <description>
+ 外部プログラムを実行します。完全にxyzzyの外部でプログラムを実行します。
+ 
+   COMMAND-LINE    : 実行するコマンドをオプション付で指定します。
+   :environ        : 設定する環境変数を連想リスト形式で渡します。
+                     (("HOME" . "C:/applications/xyzzy/")
+                      ("TOPDIR" . "C:/spool/"))
+   :no-std-handles : t の場合， :input :output :error の指定を無視します．
+   :input          : 標準入力を使用する外部プログラムであれば入力ファイル名
+                     を指定します。
+   :output         : 標準出力を使用する外部プログラムであれば出力ファイル名
+                     を指定します。
+   :error          : 標準エラー出力を使用する外部プログラムであれば出力ファ
+                     イル名を指定します．指定しないときは，標準出力に出力し
+                     ます．
+   :exec-directory : 実行するディレクトリを指定します。
+   :show           : 外部プログラムの実行時の表示を指定します。
+                     :show      通常のウィンドウ
+                     :no-active 非アクティブ
+                     :minimize  最小化
+                     :maximize  最大化
+                     :hide      非表示
+                     上記以外   通常のウィンドウ
+   :wait           : 外部プログラムが終了するのを待ち合わせます。
+ 
+ 実行したプロセスを取得したいときは make-process を使います．
+ 
+ 使用例：
+   ;;; notepad.exeの終了を待ち合わせてみる。
+   (call-process "notepad" :wait t)
+ </description>
+ <seealso>execute-shell-command</seealso>
+ <seealso>make-process</seealso>
+ <section>プロセス</section>
+ <file>builtin.l</file>
+ </chapter>
+
+------
+- どーもです。:no-std-handles がいまいちよく分からなかったんですがそんな感じなんですね。 -- [[NANRI]] &new{2006-04-03 (月) 23:26:58};
+
+#comment
+#

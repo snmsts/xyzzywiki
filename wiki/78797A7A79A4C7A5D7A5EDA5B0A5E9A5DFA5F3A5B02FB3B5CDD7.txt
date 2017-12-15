@@ -1,0 +1,27 @@
+*概要 [#ze96e73e]
+#contents
+
+**xyzzyとは [#v5072b29]
+>xyzzy は、亀井哲弥さん作の Windows 上で動作する Common Lisp にほぼ準拠したインタプリタを内蔵した Emacs 風味の日本語テキストエディタです。
+
+RIGHT:[[xyzzy QandA 一般情報>http://hie.s64.xrea.com/xyzzy/qanda/html/generalinfo.html]]より引用
+
+**キーの表記 [#y3028943]
+>
+|キー|意味|h
+|C-x     | Ctrl と x の同時押し|
+|C-c C-f | Ctrl と c の同時押しの後、Ctrl と f の同時押し|
+|M-x     | ESC の後 x または Alt と x の同時押し|
+
+**拡張lisp(拡張ライブラリ) [#cdc0a3bc]
+>
+xyzzyは[[拡張lisp]]で様々な機能を追加することができます。拡張lispは、以下のように「名前(標準のキーバインド(("M-x describe-bindings" で調べることができる)))」や、「"M-x"の後に名前」といった形で表記されます。
+ open-filer(C-c C-f)
+ M-x open-filer
+例えば、拡張機能であるファイラーを起動するには、"M-x"でミニバッファ(ウィンドウの一番下に開く入力欄)で、名前を入力するか、または "C-c C-f"のようにキー入力します。ミニバッファでは、タブキーを押すことで、以下のように拡張Lispの名前を入力補完をすることもできます。
+#ref(minibuffer.png)
+
+いろいろキー操作して訳が分からなくなってしまったら、とりあえず"C-g" を押していけばキャンセルできるみたいです。
+
+**コメント [#x4d3af8d]
+#comment

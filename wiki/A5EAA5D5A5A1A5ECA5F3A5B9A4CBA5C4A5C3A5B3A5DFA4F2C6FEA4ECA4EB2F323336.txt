@@ -1,0 +1,56 @@
+* autoload [#i4acd804]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-09-24 (日) 17:26:05
+-バージョン: 
+
+** メッセージ [#s4656a3e]
+mule の説明から xyzzy に該当するところを抜き出して書き足してみました。
+
+ <chapter>
+ <title>autoload</title>
+ <type>Function</type>
+ <arguments>autoload FN FILE &amp;optional COMMANDP MACROP</arguments>
+ <package>lisp</package>
+ <description>
+ 関数が呼び出された時点でファイルをロードするよう宣言します。
+ 
+   FN       : 関数シンボルを指定します。
+   FILE     : ロードするファイルを指定します。
+   COMMANDP : 実行するときに interactive に実行するかどうかを指定します。
+   MACROP   : マクロかどうかを指定します。
+ 
+ FN が既に関数として定義されている場合はなにもしません。
+ 定義されていない場合は新たに関数を作って FN の一時的な定義とします。この
+ 関数は初めて FN が呼ばれたときに実行され、指定されたファイル FILE から本
+ 来呼び出されるべき FN の定義をロードします。もし FILE 中に FN の定義が存
+ 在しなければエラーとなります。
+ 
+ 関数を呼び出す側からは、元々そのファイルがロードされていたかのように実行
+ を続けます。めったに使わない関数を autoload で宣言しておくとメモリ消費
+ 量を節約できます。また、起動時にファイルをロードしないので起動が速くなり
+ ます。
+ 
+ 使用例：
+   ;;; defs.lより
+   (autoload 'search-dialog "dialogs" t)
+   (autoload 'replace-dialog "dialogs" t)
+   (autoload 'count-matches-dialog "dialogs" t)
+   (autoload 'goto-line-dialog "dialogs" t)
+   (autoload 'open-file-dialog "dialogs" t)
+ </description>
+ <seealso>mc-autoload</seealso>
+ <seealso>autoload-function-p</seealso>
+ <seealso>各種ロード関係の関数の違い</seealso>
+ <section>関数</section>
+ <file>misc.l</file>
+ </chapter>
+
+--------
+- どーもです。 -- [[NANRI]] &new{2006-09-24 (日) 22:24:12};
+
+#comment

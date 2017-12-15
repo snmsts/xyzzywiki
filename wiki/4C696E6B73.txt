@@ -1,0 +1,10 @@
+#freeze
+[[FrontPage]]
+
+まぁなんでもいいんだけどさ
+
+-[[本家>http://www.jsdlab.co.jp/~kamei/]]
+
+-[[M.Hiroi xyzzy Lisp Programming>http://www.geocities.jp/m_hiroi/index.html]]
+
+Emacsといっしょとかいわれても、Windowsしかさわってないからわからない。

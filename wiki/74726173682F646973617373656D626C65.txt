@@ -1,0 +1,33 @@
+バイトコードを逆アセンブルします。
+M-x disassemble から関数名を入力すると *Disassemble* バッファに結果を出力します。
+
+例えば
+ (defun fib (n)
+   (if (< n 3) 1
+     (+ (fib (1- n)) (fib (- n 2)))))
+を disassemble すると次のような出力が得られます。
+
+ Function fib:
+ stack frame max:    1
+ stack depth max:    3
+ argument list:      (n)
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    3: local-ref                 n
+    5: CONSTANT                  3
+    6: <
+    7: if-nil-goto-and-pop       12
+    9: CONSTANT                  1
+   10: goto                      25
+   12: local-ref                 n
+   14: CONSTANT                  1
+   15: -
+   16: call-1                    fib
+   18: local-ref                 n
+   20: CONSTANT                  2
+   21: -
+   22: call-1                    fib
+   24: +
+   25: RET
+
+----
+#comment

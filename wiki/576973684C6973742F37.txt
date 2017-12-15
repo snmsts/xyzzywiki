@@ -1,0 +1,21 @@
+* wiki-mode [#gec8b890]
+-ページ: [[WishList]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2003-10-16 (木) 00:41:18
+
+** メッセージ [#l893c041]
+wiki の更新を xyzzy からしたいっす。
+
+同じことはみんな考えているようです↓。
+
+-[[WiLiKi:WiLiKi:EmacsClient]]
+-[[EmacsWiki:WikiRemote]]
+-[[RWiki:rwiki-mode]]
+-[[howmWiki:WikiClient:http://howm.sourceforge.jp/cgi-bin/hiki/hiki.cgi?WikiClient]]
+
+----
+-WiLiKiをちょっといじってみたのですが移植失敗^^; どなたか出来てる方います？上のどれでも。 -- [[Kuboon]] &new{2004-06-14 (月) 17:34:19};
+-pukiwiki用なら http://www5d.biglobe.ne.jp/~lostland/ndiary/topics/200404_1.html#d04_t2 -- [[ar19]] &new{2004-11-18 (木) 18:51:56};
+
+#comment

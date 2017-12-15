@@ -1,0 +1,21 @@
+* スクリプトから前置引数を渡す [#u9568d25]
+-ページ: [[質問箱]]
+-投稿者: [[七篠]]
+-状態: 完了
+-投稿日: 2010-12-02 (木) 13:36:36
+
+** メッセージ [#g68132a3]
+スクリプトから C-u (universal-argument) を押した状態で comment-out-region を呼び出した状態を起こしたく、下記のように記述してみたのですが上手くいきません。
+
+ (universal-argument 'comment-out-region)
+
+スクリプトで前置引数を渡すにはどのようにすればいいのでしょうか？
+----
+- 普通は前置引数は引数として渡せばいいのですが、comment-out-regionは特殊で以下のようにすればよいです。 --  &new{2010-12-02 (木) 23:48:16};
+ (defun foo (beg end)
+   (interactive "r")
+   (let ((*prefix-args* 'universal-argument))
+     (comment-out-region beg end 4)))
+- 上手くいきました。　ありがとうございます！ -- [[七篠]] &new{2010-12-03 (金) 10:38:22};
+
+#comment

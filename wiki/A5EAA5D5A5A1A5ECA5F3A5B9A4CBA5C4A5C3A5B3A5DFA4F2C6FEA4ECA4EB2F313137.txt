@@ -1,0 +1,67 @@
+*special-form-p [#p5e48a7c]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-04-25 21:52:36 (月)
+-バージョン: 
+
+**メッセージ [#icf84062]
+特殊形式一覧のところが何か違うなとおもったので。
+
+ <chapter>
+ <title>special-form-p</title>
+ <type>Function</type>
+ <arguments>special-form-p SYMBOL</arguments>
+ <package>lisp</package>
+ <description>
+ シンボルが特殊形式かどうかを返します。
+ 
+   SYMBOL : 判定するシンボル
+ 
+ 返り値
+   nil      シンボルは特殊形式ではない。
+   non-nil  シンボルは特殊形式
+ 
+   ; 特殊形式を書き出してみる
+   (do-all-symbols (i "end")
+     (and (special-form-p i)
+          (format t "~A~%" i)))
+   interactive
+   save-restriction
+   save-excursion
+   save-window-excursion
+   *byte-code
+   macrolet
+   setq
+   throw
+   return-from
+   progn
+   let*
+   go
+   labels
+   if
+   multiple-value-call
+   unwind-protect
+   multiple-value-setq
+   catch
+   tagbody
+   eval-when
+   let
+   multiple-value-bind
+   block
+   function
+   quote
+   multiple-value-prog1
+   flet
+   =&gt;"end"
+ </description>
+ <section>変数と定数</section>
+ <file>builtin.l</file>
+ </chapter>
+----
+-取り込みます→[[refwiki:special-form-p]] -- [[NANRI]] &new{2005-06-11 23:12:39 (土)};
+
+#comment

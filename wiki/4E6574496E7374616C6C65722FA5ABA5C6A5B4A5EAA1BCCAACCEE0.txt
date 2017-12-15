@@ -1,0 +1,96 @@
+*[[NetInstaller]]/カテゴリー分類 [#k0441bbd]
+
+パッケージのカテゴリー分類を以下のように考えているのですが、どうでしょうか？（服部）
+
+----
+-Administration
+-Development
+-Documentation
+-Editing
+-File Systems
+-COLOR(ff0000){Formatting}
+-Games
+-Graphics/Sound
+-Libraries
+-Lisp
+-Miscellaneous
+-Network
+-COLOR(ff0000){Resource}
+-Shells
+-TeX
+-Text Processing
+-Utilities
+----
+-Formattingというのもあったほうがいいかも。 -- [[HS]] SIZE(10){2003-06-13 (金) 08:29:43}
+-ぱっとみ分類が良くわかんないです。最終的にはリスト配布者に委ねられるんだろうと思うけれど…。アドミニストレーションとファイルシステムとフォーマッティングに何が入るのかいまいち。 -- [[佐野]] SIZE(10){2003-06-14 (土) 00:20:59}
+-それぞれのカテゴリで代表的な ni 対応 lisp を併記してみると分かりやすくなるんじゃないでしょうか -- [[fonami]] SIZE(10){2003-06-14 (土) 00:33:12}
+-いいですね。差し支えなさそうならやってみましょう。 -- [[佐野]] SIZE(10){2003-06-14 (土) 02:06:45}
+-Editing は、php-mode だとか，html+-mode だとかということですか？ -- [[ひえ]] SIZE(10){2003-06-14 (土) 10:01:09}
+-すみません。とりあえず叩き台として出しただけで、細かいことを考えていませんでした。 -- [[服部]] SIZE(10){2003-06-15 (日) 14:23:10}
+-Cygwinの分類やDebianの分類も参考になるかもしれませんね -- [[anon]] &new{2004-07-10 (土) 00:37:18};
+
+#comment
+
+** 分類例 [#i5861b6c]
+
+こんな感じ？適当に追加，削除，移動してくださいませ。 ひえ 2003/06/14
+
+-Administration ： (xyzzy の)管理用？
+  NetInstaller(?) ...
+
+-Development ： ソフトウエア開発関連
+  java-scrapbook / JavaTinyConsole ...
+
+-Documentation
+  ref2doc / refer-for / reference.chm /  reference.xml ...
+
+-Editing ： さまざまな種類のテキストに特化した編集用モード
+  csv-mode / html+-mode / php-mode ...
+
+-File Systems
+  du-d / favorites(?) / find-library(?) ...
+
+-Formatting ： ？？？
+
+
+-Games ： 種々雑多なゲーム
+  kamegame
+
+-Graphics/Sound ： グラフィック/サウンド関連
+  今のところ該当無し？
+
+-Libraries ： (他のライブラリから参照されるライブラリ？)
+  Browser_Gecko.dll / win-window / xml-parser-modoki ...
+
+-Lisp ： Lisp プログラミング関連
+  encap / kakko-ex / watch ...
+
+-Miscellaneous ： その他色々
+  translate / layered-window ...
+
+-Network ： ネットワーク関連
+  2ch-mode / browserex / irc-mode / KaMail / www-mode ...
+
+-Shells ： 各種シェル（なわけない？）
+  今のところ該当無し？
+
+-TeX ： TeX 関連
+  techex ...
+
+-Text Processing ： テキスト処理/検索 関連
+  auto-time-stamp-bottom / complete-path / migemo / word-tools ...
+
+-Utilities ： (他のライブラリに補助的な機能を追加するライブラリ？)
+
+----
+-代表的なものだけにしてみました。Utilities, Formatting あたりがよくわかっていません。Miscellaneous と  Utilities は一つで良いような気もしますがどうでしょう？ -- [[ひえ]] SIZE(10){2003-06-14 (土) 21:19:13}
+-Miscellaneousって分類不可能入れでは無いでしょうか。そしてひえさんの書いたMiscellaneousがUtilitiesに行くような気がしてきた。 -- [[佐野]] SIZE(10){2003-06-14 (土) 22:55:08}
+-kamemaru.ico見たいなもののためにresourceっていうのはいかがでしょう。 -- [[佐野]] SIZE(10){2003-06-14 (土) 22:55:40}
+-とりあえずまぎらわしいので，１行コメントから「ユーティリティ」な部分を削除しました。Miscellaneous は多分そういうことだと思うのですが，Utilities はもしかしたら他のライブラリを補助するような，それ単体では動作しないもの，例えば 2ch-memo.l のようなものかも。resource もいいかもしれませんね。以前 ML に流れてた lisp.ico とか。 -- [[ひえ]] SIZE(10){2003-06-14 (土) 23:49:26}
+-ところで、パッケージの属するカテゴリーは１つにしますか？それとも複数のカテゴリーに属する方がいいでしょうか。 -- [[服部]] SIZE(10){2003-06-15 (日) 14:32:32}
+-一つのパッケージが複数のカテゴリに属する方が自然な気がしますが、あんまし使うシーンを思い浮かばない… -- [[山本]] SIZE(10){2003-06-15 (日) 22:08:01}
+-複数のカテゴリに属することができた方が，うれしいと思うことがある気がします。 -- [[ひえ]] SIZE(10){2003-06-16 (月) 21:36:41}
+-とりあえず作ってみました。分類が微妙なところは適当に。 -- [[服部]] SIZE(10){2003-07-06 (日) 05:42:54}
+-どうやってみるのか少し探してしまいました。サイト表示のところで"c"ですね。良い感じです。 -- [[佐野]] SIZE(10){2003-07-07 (月) 03:45:42}
+
+#comment

@@ -1,0 +1,26 @@
+*キーワードパラメータの扱いの件 [#hd28e152]
+
+-ページ: [[patch]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 提案
+-カテゴリー: その他
+-投稿日: 2005-07-07 20:14:22 (木)
+-バージョン: 
+
+**メッセージ [#v505220b]
+ --- addref.l~	Sun Nov 28 02:01:42 2004
+ +++ addref.l	Thu Jul  7 20:09:50 2005
+ @@ -583,7 +583,7 @@
+  			     ((member sexp lambda-list-keywords)
+  			      (format t "~a" sexp))
+  			     ((keywordp sexp)
+ -			      (format t ":~:@(~a~)" sexp))
+ +			      (format t ":~a" sexp))
+  			     (t
+  			      (format t "~:@(~a~)" sexp))))
+  		     (print-list (args prefix)
+
+----
+
+#comment

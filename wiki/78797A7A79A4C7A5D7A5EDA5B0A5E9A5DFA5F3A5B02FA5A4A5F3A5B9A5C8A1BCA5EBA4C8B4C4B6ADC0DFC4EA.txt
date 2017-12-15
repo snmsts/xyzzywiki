@@ -1,0 +1,61 @@
+*xyzzyのインストールと環境設定 [#a69a8448]
+#contents
+
+**インストール [#i08a0259]
+[[○○○やる気のないぺぇじ>http://www.jsdlab.co.jp/~kamei/]]の、xyzzyをクリックするとアーカイブをダウンロードすることができます。インストールはこれを適当なフォルダに展開するだけです。
+
+**環境変数 XYZZYHOME の設定 [#x28f2ffa]
+[[.xyzzy>用語集/.xyzzy]]ファイルを置いたフォルダを、環境変数 XYZZYHOME に設定します。
+
++「マイ コンピュータ」を右クリックし、ポップアップメニューからプロパティを選択する
++「システムのプロパティ」から、「環境設定タブ」を選択する
++「環境変数」ボタンを押して「環境変数」パネルを開く
++「ユーザー環境変数」((システム環境変数に設定した場合はWindowsを再起動する))で環境変数 XYZZYHOME を新規作成する
+
+#ref(xyzzyhome.png)
+
+**.xyzzy ファイルの作成 [#w35cd341]
+''.xyzzy''([[用語集/.xyzzy]])ファイルを、先ほどXYZZYHOMEに指定した場所に、テキストエディタなどで新規作成します。xyzzyで''.xyzzy''ファイルを作成する場合はなんの問題もありませんが、メモ帳(Notepad)を使用する場合は以下の点に注意してください。
+--メモ帳(Notepad)で''.xyzzy''のようにファイル名がドットで始まるドットファイルをで保存する場合、
+名前を付けて保存でファイル名を""で囲んだ「".xyzzy"」にする。
+
+ ;;選択時はWindows風に
+ (load-library "winkey")
+ ;;全選択を C-a に割り当てる
+ (global-set-key #\C-a 'selection-whole-buffer)
+ 
+ ;;Java
+ (require "java")
+ (setq java-indent-level 4)
+ ;;インデントをタブで指定 
+ (setq ed::*java-indent-tabs-mode* t) 
+ 
+ ;;ネットインストーラー
+ ;;あとで紹介しているNetInstallerをインストールすること
+ (require "ni/setup")
+ ;;ネットインストーラーの自動設定を利用する
+ (ni-autoload)
+
+上記の''.xyzzy''ファイルでは、キーバインドをすこしWindows風にしています([[xyzzy QandA>http://hie.s64.xrea.com/xyzzy/qanda/html/index.html]]の[[セレクションがある場合に，Windows 風なキーバインドにできますか？>http://hie.s64.xrea.com/xyzzy/qanda/html/apart/qanda-00164.html]]を参照)。あとはJava用のインデントとネットインストーラーの設定をしています。慣れてきたら、少しずつ自分用に設定を変更、追加してみてください。
+
+**インデントの設定(java-mode) [#e60554e1]
+.xyzzyファイルに記入します。
+ ;;インデントレベルの設定
+ (setq java-indent-level 4)
+ ;;インデントをタブで指定 
+ (setq ed::*java-indent-tabs-mode* t) 
+
+-[[java-mode でのインデントの設定方法がわからないのですが…。>http://hie.s64.xrea.com/xyzzy/qanda/html/editmode.html#78]]
+-[[しょぼしょぼすくりぷと インデントの設定>http://www.afis.to/~start/xyzzy/programing/indent.html]]
+--[[emacs インデント生成スクリプト /しょぼしょぼすくりぷと xyzzy for programer>http://www.afis.to/~start/xyzzy/programing/xyzzy_index_maker.html]]
+
+**アンインストール [#r835baf1]
+もしアンインストールする場合は、xyzzyを展開したフォルダ、環境変数 XYZZYHOME、.xyzzyファイルなどを削除します。
+
+**関連情報 [#v638a31c]
+-[[QuickTour/置き場所を決める]]
+-[[QuickTour/共通設定]]
+-[[質問箱/91]]
+
+**コメント [#n07d96b1]
+#comment

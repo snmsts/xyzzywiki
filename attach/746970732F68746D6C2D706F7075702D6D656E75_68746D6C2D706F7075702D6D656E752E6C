@@ -1,0 +1,214 @@
+;; -*- Mode: Lisp -*-
+;;
+;; html-popup-menu
+;; ---------------
+;;
+;; 必要なもの：html+-mode
+;; インストール方法
+;;   1. このプログラムを ~/site-lisp/ にコピーする。
+;;   2. ~/.xyzzy か ~/site-lisp/siteinit.l に以下の記述を追加する
+;;      (add-hook 'ed::*html+-mode-hook* #'(lambda () (require "html-popup-menu")))
+;;   3. xyzzyを再起動（siteinit.lに記述した場合はダンプファイルを再作成）する。
+;;   4. 適当なhtmlファイルの真ん中あたりで Ctrl + ] または Ctrl + Shift + ]  を押す。
+
+
+(provide "html-popup-menu")
+(in-package "editor")
+
+(define-key *html+-mode-map* #\C-] 'popup-elements-menu)
+(define-key *html+-mode-map* #\C-} 'popup-uplevel-menu)
+
+;------------------
+;-- 設定など
+;------------------
+
+;-- クリップボードメニューを使う
+(defvar *html-popup-menu-use-clipboard* t)
+;-- キルリングを使う
+(defvar *html-popup-menu-use-killring* nil)
+;-- 勝手にインデントする
+(defvar *html-popup-menu-do-indent* t)
+
+;------------------
+
+;-- バッファ全体のポップアップメニューを出す
+(defun popup-elements-menu ()
+  (interactive)
+  (track-popup-menu (make-elements-menu)))
+
+;-- ひとつ上のタグのポップアップメニューを出す
+(defun popup-uplevel-menu ()
+  (interactive)
+  (track-popup-menu (make-uplevel-menu)))
+
+;-- ひとつ上のタグのポップアップメニューを作る
+;-- Mon, 28 Feb 2005 17:30:06 +0900
+(defun make-uplevel-menu ()
+  (save-excursion
+    (multiple-value-bind (rtn ptA tagname)
+        (uplevel-tag)
+      (when rtn
+        (make-tag-edit-menu ptA tagname)))))
+
+;-- バッファ全体のポップアップメニューを作る
+;-- Mon, 28 Feb 2005 16:30:15 +0900
+(defun make-elements-menu ()
+  (save-excursion
+    (let ((menu (create-popup-menu nil))
+          (uplv nil))
+      (loop
+        (multiple-value-bind (fg ptA tagname)
+            (uplevel-tag)
+          (setf uplv fg)
+          (when uplv
+            (let ((ptZ (multiple-value-bind (rtn pt) (find-close-tag ptA tagname) pt)))
+              (goto-char (point-end-of-tag ptA))
+              (skip-chars-forward " \t")
+              (scan-buffer "[^<]\\{,10\\}" :regexp t)
+              (when (string-match "[^ \t\n]+" (match-string 0))
+                (add-popup-menu menu (make-text-edit-menu (point-end-of-tag ptA) ptZ) (concat (match-string 0) "...")))
+              (goto-char ptA)
+              (while (scan-buffer ">" :tail t)
+                (if (not (parse-point-syntax)) (return)))
+              (add-popup-menu menu (make-tag-edit-menu ptA tagname) (abbreviate-display-string (buffer-substring ptA (point)) 20 nil))
+              (goto-char ptA))))
+        (when (not uplv) (return)))
+      menu)))
+
+;-- 要素用ポップアップメニューを作成
+;-- Mon, 28 Feb 2005 17:49:23 +0900
+(defun make-text-edit-menu (ptA ptZ)
+  (interactive)
+  (let ((menu (create-popup-menu)))
+    (add-menu-item menu nil "タグの挿入 (&P)" #'(lambda () (interactive) (html-insert-pair-tag ptA ptZ)))
+    (add-menu-item menu nil "コメントアウト (&O)" #'(lambda () (interactive) (html-commentout-region ptA ptZ)))
+    (add-menu-separator menu nil)
+    (when *html-popup-menu-use-clipboard*
+      (add-menu-item menu nil "クリップボード置換 (&R)" #'(lambda () (interactive) (delete-region ptA ptZ) (paste-from-clipboard)) :clipboard)
+      (add-menu-item menu nil "クリップボードへ切り取り (&T)" #'(lambda () (interactive) (kill-region-to-clipboard ptA ptZ)))
+      (add-menu-item menu nil "クリップボードへコピー (&C)" #'(lambda () (interactive) (copy-region-to-clipboard ptA ptZ))))
+    (when *html-popup-menu-use-killring*
+      (add-menu-item menu nil "kill-ring置換 (&Y)" #'(lambda () (interactive) (delete-region ptA ptZ) (yank)) #'(lambda () (unless *kill-ring* :disable)))
+      (add-menu-item menu nil "kill-ring へ切り取り (&X)" #'(lambda () (interactive) (kill-region ptA ptZ)))
+      (add-menu-item menu nil "kill-ring へコピー (&L)" #'(lambda () (interactive) (copy-region-as-kill))))
+    (add-menu-item menu nil "最初へ (&<)" #'(lambda () (interactive) (goto-char ptA)))
+    (add-menu-item menu nil "最後へ (&>)" #'(lambda () (interactive) (goto-char ptZ)))
+    (add-menu-item menu nil "削除 (&D)" #'(lambda () (interactive) (delete-region ptA ptZ)))
+    (add-menu-item menu nil "選択する (&S)" #'(lambda () (interactive) (goto-char ptA) (start-selection 2 nil) (goto-char ptZ)))
+    (add-menu-item menu nil "ナローイング (&N)" #'(lambda () (interactive) (narrow-to-region ptA ptZ)))
+    menu))
+
+;-- タグ用ポップアップメニューの作成
+;-- Mon, 28 Feb 2005 16:30:15 +0900
+(defun make-tag-edit-menu (ptA tag)
+  (interactive)
+  (let* ((ptZ (multiple-value-bind (rtn pt) (find-close-tag ptA tag) pt))
+         (menu (make-text-edit-menu ptA (point-end-of-tag ptZ)))
+         (add -1))
+    (insert-menu-item menu (incf add) nil "タグ削除 (&K)" #'(lambda() (interactive) (delete-pair-tag ptA ptZ)))
+    (insert-menu-item menu (incf add) nil "タグ変更 (&E)" #'(lambda() (interactive) (edit-tag ptA ptZ)))
+    (insert-menu-item menu (incf add) nil "インデント (&I)" #'(lambda() (interactive) (html-indent-region ptA ptZ)))
+    (insert-menu-item menu (incf add) nil "整合性チェック (&M)" #'(lambda () (interactive) (when (not (eq ptA ptZ)) (goto-char (point-end-of-tag ptZ)) (html+-check-match-tag))))
+    (insert-menu-separator menu (incf add))
+    menu))
+
+;-- 閉じタグを探す
+;-- Mon, 28 Feb 2005 16:30:15 +0900
+;--  1: 閉じているかどうか
+;--  2: 閉じていたら閉じタグの開始位置、閉じていなかったら開始タグの開始位置
+(defun find-close-tag (ptA tag)
+  (let ((lev 0) ptRet)
+    (save-excursion
+      (goto-char ptA) (goto-char (point-end-of-tag)) (backward-char)
+      (while
+          (and (<= 0 lev)
+               (scan-buffer (concat "<\\(/?\\)\\(" tag "\\)") :regexp t :reverse nil :tail nil :case-fold t :no-dup t))
+;        (message-box (format nil "~A" (match-string 0)))
+        (cond ((parse-point-syntax))
+              ((equal (match-string 1) "/")
+               (if (= lev 0)
+                   (return-from find-close-tag (values t (point))))
+               (decf lev))
+              ((match-string 2)
+               (incf lev)))))
+    (values nil (point))))
+
+;-- タグを対で削除
+;-- Mon, 28 Feb 2005 16:30:15 +0900
+(defun delete-pair-tag (ptA ptZ)
+  (interactive)
+  (save-excursion
+    (let ((ed (make-marker)))
+      (when (not (eq ptA ptZ))
+        (goto-char ptZ)
+        (html+-delete-following-tag)
+        (delete-empty-line)
+        (set-marker ed))
+      (goto-char ptA)
+      (html+-delete-following-tag)
+      (delete-empty-line)
+      (when *html-popup-menu-do-indent*
+        (html-indent-region (point) (marker-point ed)))
+      )))
+
+;-- 指定された範囲をインデント（行の途中でもその行はインデントされる）
+;-- Mon, 28 Feb 2005 16:30:15 +0900
+(defun html-indent-region (from to)
+  (save-excursion
+    (when (and (integerp from) (integerp to))
+      (goto-char from) (goto-bol)
+      (while (<= (point) to)
+        (html+-indent-line)
+        (forward-line)))))
+
+;-- タグの編集
+;-- Mon, 28 Feb 2005 16:30:15 +0900
+(defun edit-tag (ptA ptZ)
+  (interactive)
+  (save-excursion
+    (when (and (integerp ptA) (integerp ptZ))
+      (let ((starttag (buffer-substring ptA (point-end-of-tag ptA))))
+        (setf starttag (string-trim "<>" (read-string "Tag: " :default starttag)))
+        (when (not (eq ptA ptZ))
+          (setf endtag (substitute-string starttag " .*" ""))
+          (goto-char ptZ)
+          (html+-delete-following-tag)
+          (insert (concat "</" endtag ">")))
+        (goto-char ptA)
+        (html+-delete-following-tag)
+        (insert (concat "<" starttag ">"))
+        ))))
+
+;-- タグの挿入
+;-- Tue, 01 Mar 2005 10:20:46 +0900
+(defun html-insert-pair-tag (ptA ptZ)
+  (interactive)
+  (when (and (integerp ptA) (integerp ptZ))
+    (save-excursion
+      (let* ((startTag (string-trim "<>" (read-string "Tag: ")))
+             (endTag (substitute-string startTag " .*" "")))
+        (when (not (eq ptA ptZ))
+          (goto-char ptZ) (insert (concat "</" endTag ">")))
+        (goto-char ptA) (insert (concat "<" startTag ">"))
+        ))))
+
+;-- 行が空であれば削除
+;-- Mon, 28 Feb 2005 16:30:15 +0900
+(defun delete-empty-line (&optional pt)
+  (if (not (integerp pt)) (setf pt (point)))
+  (save-excursion
+    (let ((st (progn (goto-bol) (point)))
+          (ed (progn (goto-eol) (point))))
+      (when (string-match "^[ 	]+$" (buffer-substring st ed))
+        (delete-region st (+ ed 1))))))
+
+;-- コメントアウトする
+;-- Mon, 28 Feb 2005 16:30:15 +0900
+(defun html-commentout-region (from to)
+  (interactive)
+  (when (and (integerp from) (integerp to))
+    (save-excursion
+      (goto-char to) (insert " -->")
+      (goto-char from) (insert "<!-- "))))
+
+

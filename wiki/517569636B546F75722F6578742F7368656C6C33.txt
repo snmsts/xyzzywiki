@@ -1,0 +1,59 @@
+#freeze
+#contents
+
+*shell3を導入しよう [#u8b292ae]
+
+**前口上 [#qe2b0388]
+
+xyzzyでは、''C-x c''でコマンドプロンプトが表示されますよね。また、
+
+ M-x shell
+
+とすると、xyzzyの中に、コマンドプロンプトの中身をバッファとして表示してくれます。ちなみに、別にコマンドプロンプトではなくて、別のシェルを選択する事もできるようです。例えば、
+
+ (setq *eshell* "bash -i")
+
+とすると、M-x shellの時に（インストールしてあれば）bashが起動するようにできます。
+
+ところでこのshellの時、普通のバッファと同じようにC-nとか、あるいはC-pとか入力すると、（まぁ当たり前と言えば当たり前だけど）普通にそれぞれ上の行、下の行にカーソルが移動します。
+これはこれで素敵なのですが、シェルの履歴を辿りたい時にはちょっと不便です。（仮にシェルにbashやtcshを使っていても履歴を辿れません）
+
+今回紹介するshell3は履歴を辿れるようにしてくれます。また、ファイル名の補完なども行えるようになります。
+
+**インストールする [#yef9525b]
+
+[[服部さんのページ>http://www7a.biglobe.ne.jp/~hat/]]のページからダウンロードできます。左側のMiscのリンクを参照してください。
+
+ダウンロードしたら、$XYZZY/site-lispへ移動させましょう。
+
+**設定する [#t811e8ea]
+
+.xyzzyやsiteinit.lに、
+
+ (require "shell3")
+
+と記入してください。
+
+**shell3の使い方 [#a7aab439]
+
+再起動すればC-nや、C-pを押した時に履歴を辿れるようになっているはずです。他にも、C-rとTABが便利です。
+
+キーバインドを変更したい人は、shell3.lの113〜119行目に、
+
+ (define-key *shell-mode-map* #\TAB 'shell-complete)
+ (define-key *shell-mode-map* #\Up 'shell-history-previous)
+ (define-key *shell-mode-map* #\C-p 'shell-history-previous)
+ (define-key *shell-mode-map* #\Down 'shell-history-next)
+ (define-key *shell-mode-map* #\C-n 'shell-history-next)
+ (define-key *shell-mode-map* #\C-a 'shell-goto-bol)
+ (define-key *shell-mode-map* #\C-r 'shell-history-search-backward)
+
+という記述があるので、変更したものを、.xyzzyやsiteinit.lに書き加えます。例えば、HOMEキーでコマンドの行頭に移動させたい時には、.xyzzyやsiteinit.lに、
+
+ (define-key *shell-mode-map* #\Home 'shell-goto-bol)
+
+とすればOKです。
+
+**終了 [#k4722000]
+
+shell3は余り自分が使う事が無いので、これ以上ネタもなく終了です。一応、xyzzyは M-x shell以外にも、C-x & (execute-subprocess)でミニバッファからコマンドを入力できたり、C-x @ (pipe-command)でカレントバッファを標準出力にする（=コマンドの結果をバッファに出してくれる）などもあります。

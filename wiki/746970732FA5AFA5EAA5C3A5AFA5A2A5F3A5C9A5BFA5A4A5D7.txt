@@ -1,0 +1,62 @@
+ ;; Click したとこにカーソルを持っていく
+ (defun click-n-type ()
+   (interactive)
+   (mouse-left-press)
+   (when (< (current-line-number) *last-mouse-line*)
+     (dotimes (i (- *last-mouse-line* (current-line-number)))
+       (insert "\n")))
+   (clear-undo-boundary)
+   (when (< (current-column) *last-mouse-column*)
+     (dotimes (i (- *last-mouse-column* (current-column)))
+       (insert " ")))
+   (clear-undo-boundary))
+ 
+ ;; 左クリックで実行
+ (global-set-key #\LBtnDown 'click-n-type)
+ ;; Ctrlキー同時押しがいい人
+ ;(global-set-key #\C-LBtnDown 'click-n-type)
+-dotimesのところをもっと華麗に処理できないですかね。columnはindent-toを使う方法がありますけど対象性が崩れるのがいやなんで。 -- [[作者]] SIZE(10){2003-05-26 (月) 19:08:37}
+-なんか失敗今度こそ。 -- [[佐野]] SIZE(10){2003-05-26 (月) 22:36:08}
+ (defun click-n-type ()
+   (interactive)
+   (mouse-left-press)
+   (mapcar #'(lambda (len elem)
+ 	      (when (plusp len) (insert (make-sequence 'string len :initial-element elem)))
+ 	      (clear-undo-boundary))  
+ 	  (list (- *last-mouse-line* (current-line-number))
+ 	      	(- *last-mouse-column* (current-column)))
+ 	  '(#\LFD #\SPC)))
+-かっこいい。勉強になりました。 -- [[作者]] SIZE(10){2003-05-27 (火) 06:21:47}
+
+----
+-あのう (current-line-number) は (current-virtual-line-number) にした方が良くないでしょうか？折り返しがONのとき改行がヘンテコに入ることがあります。 -- [[使用者]] &new{2005-06-06 14:25:35 (月)};
+-折り返しも考えるならこんな感じでしょうか。 -- [[NANRI]] &new{2005-06-07 01:42:12 (火)};
+ (defun click-n-type ()
+   (interactive)
+   (mouse-left-press)
+   (mapcar #'(lambda (len elem)
+               (when (eolp) (insert (make-sequence 'string len :initial-element elem)))
+               (clear-undo-boundary))
+           (list (- *last-mouse-line* (current-virtual-line-number))
+                 (- *last-mouse-column* (current-virtual-column)))
+           '(#\LFD #\SPC)))
+
+-こんな感じはどうでしょ？
+ (defun click-n-type ()
+   (interactive)
+   (mouse-left-press)
+   (let ((line (- *last-mouse-line* (current-virtual-line-number) 1)))
+     (when (<= 0 line)
+       (goto-char (point-max))
+       (insert #\LFD))
+     (mapcar #'(lambda (len elem)
+                 (when (plusp len)
+                   (insert (make-sequence 'string len :initial-element elem)))
+                 ;(clear-undo-boundary)
+                 )
+             (list line (- *last-mouse-column* (current-column)))
+             '(#\LFD #\SPC))))
+-ちょっと修正しました。  2005-08-25
+-二度手間っぽいとこを修正しました。 2005-9-13
+
+#comment

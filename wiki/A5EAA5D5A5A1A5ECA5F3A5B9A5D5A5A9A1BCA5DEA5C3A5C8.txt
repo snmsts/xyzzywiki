@@ -1,0 +1,167 @@
+[[リファレンス]]
+
+*重要なお知らせ [#k1ea176c]
+
+以前のxyzzyリファレンスのライセンスは不明確でしたが、現在はxyzzy本体と同じMITライセンスでの配布しています。xyzzy本体とxyzzyリファレンスを同梱した形での配布の際に全く問題が発生しないようにするのが目的です。
+
+具体的なライセンスの条文は以下のものを予定しています。
+
+ Copyright (c) 2007 The Xyzzy Documentation Project
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a 
+ copy of this software and associated documentation files (the "Software"), 
+ to deal in the Software without restriction, including without 
+ limitation the rights to use, copy, modify, merge, publish, distribute, 
+ sublicense, and/or sell copies of the Software, and to permit persons to 
+ whom the Software is furnished to do so, subject to the following 
+ conditions:
+ 
+ The above copyright notice and this permission notice shall be included 
+ in all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+以降、新規項目を投稿される方はMITライセンスでの配布を納得した上で投稿していただきますようにお願いします。
+
+この件についてのご意見・ご質問はNANRI（southly@gmail.com）までお寄せください。
+
+よろしくお願いします。
+
+*書き始める前に [#l3be6ee8]
+
+&color(#FF0000){ここで「追加したい項目がある場合の書き方」として書いているものは決して強制するものではありません。 これは作成チームが書くにあたって決めている「ルール」です。 新たに記述したい人が、本質的で無い部分（形式や書式等）について悩むことが無いようにその指針を示しているに過ぎません。 「これが書き方に沿っているのか？」ということで悩まないようにお願いします。};
+
+&color(#FF0000){「機能を完全に記述し尽くさないと送ってはいけないか？」という訳ではなく、機能が端的に説明されていれば、一行だけのものでも有り難いです。};
+
+addref.l を使って記述していただけると、まとめるほうとしても楽です。(by NANRI)
+*項目の要素 [#u4f82097]
+一つの項目は以下の要素から構成されます。必ず記述しなくてはいけない要素、複数記述しても良い要素があります。
+
+-[[title>#title]]　必ず記述します。
+-[[type>#type]]　必ず記述します。
+-[[arguments>#arguments]]　関数又はフォームであれば記述します。
+-[[package>#package]]　シンボルであれば記述します。
+-[[description>#description]]　必ず記述します。
+-[[seealso>#seealso]]　必要であれば一つ以上記述します。
+-[[link>#link]]　必要であれば一つ以上記述します。
+-[[section>#section]]　必ず記述します。
+-[[file>#file]]　必要であれば一つだけ記述します。
+
+**title[#title]
+項目のタイトルを記述します。関数や変数であればそのものを記述しましょう。 Tipsの場合には、日本語で端的に示す言葉を書きましょう。
+-&color(#007700){userパッケージはsystemパッケージをuseしていないので、systemパッケージからexportしているシンボルには頭に"si:"を付ける必要があります。 例えば、si:system-rootなど。 現状ではリファレンスが混乱しないように、"si:"を付ける（userパッケージから見たときの表現）方向で行きたいと思います。};
+**type[#type]
+
+項目の種類を記述します。
+
+-Function
+-Variable
+-Macro
+-Misc
+-Keyword
+-Special Form
+-BufferLocal
+-Tips
+
+-&color(#007700){どれにも入らないようであれば、Tipsに入れるようにしましょう。};
+**arguments[#arguments]
+
+関数やフォームの呼出形式を記述します。
+
+-&color(#007700){describe-functionで表示される形式（つまり、関数そのものを先頭に記述する形式）にしましょう。};
+
+**package[#package]
+
+シンボルが属するパッケージを記述します。
+
+-win-user
+-winapi
+-foreign
+-lisp
+-system
+-keyword
+-user
+-editor
+
+-&color(#007700){基本的にユーザ拡張のパッケージは含めないので以上のパッケージで十分でしょう。};
+**description[#description]
+以下は記述例です。
+|>|<chapter>&br;<title>insert-file-contents</title>&br;<type>Function</type>&br;<arguments>insert-file-contents&nbsp;FILENAME&nbsp;&optional&nbsp;VISIT-P&nbsp;OFFSET&nbsp;SIZE</arguments>&br;<package>editor</package>|
+|<description>|&color(#007700){【関数の機能の説明】};|
+|ファイルの内容をカーソル位置に挿入します。|&color(#007700){<description>の次行の行頭から書き始めます。文章の場合には装飾目的では行頭に空白はいれません。};|
+|&nbsp;||
+|&nbsp;&nbsp;FILENAME&nbsp;:&nbsp;挿入するファイル名|&color(#007700){【引数の説明】};|
+|&nbsp;&nbsp;VISIT-P&nbsp;&nbsp;:&nbsp;ファイルを挿入後の動作を指定し|&color(#007700){引数の説明を入れる場合には、空行を一行入れます。};|
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;変更フラグ・アンドゥ情報の|&color(#007700){引数の説明は、行頭に半角空白を2文字入れます。};|
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nil&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;特に何もしません。|&color(#007700){引数と説明の間には、コロン};&color(#FF0000){&nbsp;"&nbsp;:&nbsp;"&nbsp;};&color(#007700){で区切ります。説明が縦に並ぶようにします。};|
+|&nbsp;&nbsp;OFFSET&nbsp;&nbsp;&nbsp;:&nbsp;挿入するオフセット|&color(#007700){引数の許容値の説明は、行頭に半角空白を8文字入れます。};|
+|&nbsp;&nbsp;SIZE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;挿入する長さ||
+||&color(#007700){【戻り値の説明】};|
+|戻り値は以下のとおりです。|&color(#007700){戻り値の説明を入れる場合には、空行を一行入れます。};|
+||&color(#007700){戻り値の説明は行頭から書き始めます。};|
+|&nbsp;&nbsp;t&nbsp;&nbsp;&nbsp;ファイルの挿入に成功|&color(#007700){戻り値の説明は、行頭に半角空白を2文字入れます。};|
+|&nbsp;&nbsp;nil&nbsp;ファイルの挿入に失敗|&color(#007700){戻り値と説明の間は、空白で区切るものとします。説明が縦に並ぶようにします。};|
+|&nbsp;||
+|使用例：|&color(#007700){【使用例の説明】};|
+|&nbsp;&nbsp;;;;&nbsp;簡単なテンプレートの挿入例|&color(#007700){使用例を示す場合には、行頭から};&color(#FF0000){&nbsp;"使用例："};&nbsp;&color(#007700){とします。};|
+|&nbsp;&nbsp;;;;&nbsp;site-lisp/template.lを用意しておくこ|&color(#007700){例が一目見て分からないような場合には、説明を必ず入れます。};|
+|&nbsp;&nbsp;(defun&nbsp;insert-template&nbsp;()|&color(#007700){説明の先頭には};&color(#FF0000){&nbsp;";;;};&nbsp;"&nbsp;&color(#007700){を入れます。};|
+|&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;(get-buffer-file-name)|&color(#007700){使用例は全体を半角空白2文字でインデントします。};|
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(not&nbsp;(file-exist-p&nbsp;(get-buffer-fil|&color(#007700){出来る限り戻り値を};&color(#FF0000){&nbsp;"=>};&nbsp;"&nbsp;&color(#007700){として示します。};|
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(insert-file-contents&nbsp;(merge-pathn|&color(#007700){例外の発生を示すような例も};&color(#FF0000){&nbsp;"=>};&nbsp;"&nbsp;&color(#007700){として示します。};|
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(message&nbsp;"template&nbsp;inserted")))|&color(#007700){複数の例を書く場合には、空行で区切ります。};|
+|&nbsp;&nbsp;=>&nbsp;insert-template|&color(#007700){場合によっては、一覧性を考慮してS式と};&color(#FF0000){&nbsp;"=>"};&nbsp;&color(#007700){を同一行に書きます。};|
+|&nbsp;&nbsp;(add-hook&nbsp;'*lisp-mode-hook*&nbsp;'insert-templ|&color(#007700){※例は長くなりがちです。急所を突くような例にしましょう(^^;;;};|
+|&nbsp;&nbsp;=>&nbsp;(insert-template&nbsp;lisp-load-keyword-|&color(#007700){</description>の前に空行は不要です。};|
+|>|</description>&br;<seealso></seealso>&br;<link></link>&br;<section>バッファ</section>&br;<file>builtin.l</file>&br;</chapter>|
+
+-&color(#007700){ですます調を使いましょう。気にするのは文章の終わりだけで良いです。};
+-&color(#007700){基本的に全角の英数字は使わないようにしましょう。};
+-&color(#007700){出来ればタブは使わない方が良いと思いますが、出来てません。};
+-&color(#007700){半角文字と全角文字の間に半角スペースを入れましょう。でも、出来てません。};
+-&color(#007700){可能な限り、引数と戻り値の説明を入れたいけど、くたびれたら省略しましょう。};
+-「返り値」でなく「戻り値」に統一しましょう。
+-&color(#007700){分からないところは正直に。「？」とか「詳細不明」などと書いておきましょう。誰かが補強してくる可能性があります。};
+-&color(#007700){余裕があれば、初心者がはまりそうなところや迷いそうなところに助言をしましょう};
+-&color(#007700){気になることがあれば、"参考："とか"編者補足："とかいうのを追加しましょう。};
+-&color(#007700){"使用例："はxyzzy/lisp/***.lの中から選び出してもいいと思います。};
+-&color(#007700){標準的なキーバインドを一番初めの文章の後ろに記述しましょう。例：[C-x C-f]};
+-&color(#007700){折り返しはできる限りして下さい。ちなみに、山本は72でやってますが、これが64だろうが80だろうがそれほど構わないと思います。使用例については対象外とします。};
+-&color(#007700){対話的な場合は「カーソルを移動」が好ましい気がしますが、対話的でなければ「ポイントを移動」が適切な気がします。すいません、あまり使い分けてないような気がします。};
+-&color(#007700){変数の説明する場合に、ユーザに設定させる場合と、たまたまその変数で値を管理している場合があると思います。前者であれば「hogeを設定します」で、後者であれば「hogeを管理します」ではないかと思います。ただ、現状では体言止めも多いので、あいまいさがなければ体言止めで構わないと思います。};
+-例の中では "=>" になっていますが、XML 中には > が書けないので実際には "=&amp;gt;" となります。(by NANRI)
+**seealso[#seealso]
+一緒に見ておくべき項目を書いておきます。
+-&color(#007700){その関数が直接使用している関数、変数、および、逆の意味を持つ、データ型を判定するもの、あたりまで書きましょう。 そういうものが一つもなければ、類似する機能を書きましょう。};
+**link[#link]
+リンクがあればここに記述します。
+-&color(#007700){今はこれを使った項目は無いと思いますが、適切なものがあれば入れましょう。};
+-リファレンス外の参考になる記述です。xyzzy-ML のログや、Hiroiさんのページなどはここに記述します。(by NANRI)
+**section[#section]
+機能の種類によって分類します。
+
+|データ型|シンボル|ハッシュ|エラー|シンタックス|メニュー|
+|変数と定数|数値|配列|ウィンドウ|キーマップ|ファイラ|
+|制御構造|文字|チャンク|バッファ|テキスト|ポジション|
+|パッケージ|文字列|評価|ミニバッファ|検索・正規表現|プロセス|
+|関数|シーケンス|入出力|リージョン|ダイアログ|システム|
+|マクロ|リスト|ファイルシステム|モード|日付・時間|その他|
+
+-&color(#007700){今は上記のように分けていますが、うまく分類できない項目が出てくるのはしょうがないと思います。 その場合にはそれほど遠くないところに分類しましょう。};
+-&color(#007700){バッファ上で文字列を挿入するものは「文字列」とし、 バッファ上でリージョンを使って変換するものは「リージョン」などのようにします。 「両方に一致したら？」あまり迷わずにどちらか一方にして下さい。 現状も適切でないものばかりです。};
+-&color(#007700){フック変数は、それの呼出元の機能のsectionに入れましょう。 現状で今は全てのフック変数が「変数と定数」に入れてしまっており、あまり良くないと思ってます。};
+-&color(#007700){「リスト」か？「シーケンス」か？というのは、別に厳密でなくとも。};
+-どのファイルで定義されているかなどが参考になると思います。分からなかったらその他に入れておきましょう。(by NANRI)
+**file[#file]
+
+関数や変数を定義しているファイル名を記述します。
+
+-&color(#007700){将来的にはタグジャンプするようにしたいです。};
+-&color(#007700){別に無くともほとんど困らないです。};
+-<section>の記述の参考になるのでできるだけ書きましょう。xyzzy.exe のソース内で定義されている変数などは、その旨を <description> 辺りに書いてあると嬉しいです。(by NANRI)

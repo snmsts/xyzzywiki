@@ -1,0 +1,94 @@
+* 特定の行を表示から消す [#i9826741]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 投稿者反応待ち
+-投稿日: 2005-10-11 23:54:04 (火)
+
+** メッセージ [#u08f9f68]
+テキストの編集中、一時的に消したい部分を表示だけ消す事は出来ますか？
+データそのものが消えると困るけど、表示上は邪魔なので消えて欲しい場合があるんですが、Redo・Undoを使うと間違って本当に消してしまいそうになります。
+
+----
+-invisible 属性がないみたいだから難しいんじゃないでしょうか。背景色と文字色を同じにすれば見えなくはなりますが。 --  &new{2005-10-12 05:48:51 (水)};
+-そういうのが欲しいとは思っていたのでリージョンを隠したり元に戻したりするコマンドを書いてみたんですが、いろいろと問題ありそうです。行単位でやることにすればやや簡単になるかも(でも行の途中から隠すことはできなくなります)。 --  &new{2005-10-12 12:02:12 (水)};
+-C-x n (narrow-to-region)じゃダメですか？ 現在の位置のみの監視なら *pre-command-hook* で出来ますけど、これじゃあ不十分でしょうし… --  &new{2005-10-12 12:50:43 (水)};
+-foldingってほしいっすよねぇ。 --  &new{2005-10-12 19:32:55 (水)};
+-なんかこんなの書いてみました。おそらくまだかなり問題アリですが晒してみます。
+ (defstruct (invisible-region (:conc-name ivr-)) marker string)
+ (defun ivr-point (hr) (marker-point (ivr-marker hr)))
+ (defun ivr-buffer (hr) (marker-buffer (ivr-marker hr)))
+ (defun ivr-make (m s) (make-invisible-region :marker m :string s))
+ 
+ (defun ivr-region (beg end)
+   (prog1
+       (ivr-make
+        (set-marker (make-marker) beg)
+        (buffer-substring beg end))
+     (delete-region beg end)))
+ 
+ (defun ivr-insert (ivr &optional move)
+   (let ((m (point-marker)))
+     (goto-marker (ivr-marker ivr))
+     (insert (ivr-string ivr))
+     (or move (goto-marker m))))
+ 
+ (defvar-local *invisible-regions* nil)
+ 
+ (defun partition (pred list)
+   (let (in out)
+     (dolist (e list (values in out))
+       (if (funcall pred e)
+           (push e in)
+         (push e out)))))
+ 
+ (defun hide-region (beg end)
+   (interactive "r")
+   (if (< end beg) (rotatef beg end))
+   (unless (interactive-p)
+     (setq beg (max beg (point-min))
+           end (min end (point-max))))
+   (let ((mk (set-marker (make-marker) end))
+         (modp (buffer-modified-p)))
+     (show-ivr-in-region beg end)
+     (push (ivr-region beg (marker-point mk)) *invisible-regions*)
+     (unless modp (not-modified))))
+ 
+ (defun show-ivr-in-region (beg end)
+   (interactive "r")
+   (if (< end beg) (rotatef beg end))
+   (unless (interactive-p)
+     (setq beg (max beg (point-min))
+           end (min end (point-max))))
+   (multiple-value-bind (in out)
+       (partition (lambda (ivr) (<= beg (ivr-point ivr) end)) *invisible-regions*)
+     (let ((modp (buffer-modified-p)))
+       (unwind-protect
+           (while in
+             (ivr-insert (car in))
+             (setq in (cdr in)))
+         (setq *invisible-regions* (nunion in out))
+         (unless modp (not-modified))))))
+ 
+ (defun show-all-ivr () (interactive) (show-ivr-in-region (point-min) (point-max)))
+ 
+ (defun ivr-save-buffer (&rest args)
+   (when *invisible-regions*
+     (let ((pmin (point-min))
+           (pmax (point-max))
+           p)
+       (widen)
+       (show-all-ivr)
+       (setq p (point))
+       (write-file (get-buffer-file-name) t)
+       (not-modified)
+       (message "~D行" (read-file (get-buffer-file-name) nil t))
+       (goto-char p)
+       (narrow-to-region pmin pmax)
+       t)))
+ 
+ (add-hook 'ed::*before-save-buffer-hook* 'ivr-save-buffer))
+ (define-key spec-map '(#\M-C-h) 'hide-region)
+ (define-key spec-map '(#\M-C-s) 'show-ivr-in-region)
+ (define-key spec-map '(#\M-C-a) 'show-all-ivr)
+
+#comment

@@ -1,0 +1,53 @@
+* reference.chmで全文検索したい＆Full-text search=Noの理由について [#i0c5973d]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[324]]
+-優先順位:   普通
+-状態:       提案
+-カテゴリー: ツッコミをいれる
+-投稿日:     2008/02/12(火曜) 03:52:33
+-バージョン: 2007.07.29
+
+** メッセージ [#e316f894]
+reference.chmで、全文検索したいのですが可能でしょうか？
+
+他のソフトウェアに付属する.chmでは、全文検索ができるのですが、
+reference.chm もそのようにしたいということです。
+
+＃ pkwk_mail_notify(): Failed とかでてトラッカーから追加できなかったので手動で更新
+
+** reference.chm での全文検索の方法 [#zce45cbb]
+
+こちらは、解決しました。
+
+netinstaller の 「xy-reference」よりインストールした xy-reference.l に下記の変更を加えました。
+
+ Full-text search=No
+を
+ Full-text search=Yes
+
+上記にしreference.chmを生成することで、全文検索できるようになりました。
+reference.chm に「検索(&S)」タブが表示されるようになりました。
+
+xy-reference.l に対する patch です。
+
+ --- ../test/xy-reference.org.l  2007-05-16 02:01:20.000000000 +0900
+ +++ xy-reference.l      2008-02-11 20:50:55.000000000 +0900
+ @@ -1129,7 +1129,7 @@
+  Contents file=reference.hhc
+  Default topic=intro.html
+  Display compile progress=No
+ -Full-text search=No
+ +Full-text search=Yes
+  Index file=reference.hhk
+  Title=xyzzy Reference\n\n[FILES]\n~{~A~%~}"
+           (directory "." :wild "*.html"))
+
+----
+reference.chmについてはすでに解決したのですが、
+意図的に、
+ Full-text search=No
+となっていた理由についてお聞きできれば、と思います。
+- ちゃんと覚えているわけではないのですが、サイズが膨らむ割に全文検索の使い勝手が悪いという意見があり、周囲にリサーチしても全文検索は無しでもOKということでしたので、全文検索無しでのリリースに切り替わりました。2006年6月辺りのことです。どうしても欲しい場合は自分で作るかツッコミが入るだろうというスタンスで現在に至っています。 -- [[NANRI]] &new{2008-02-12 (火) 21:07:06};
+- うーん。変数でいじれるようにはしておかないとだめですね。 -- [[佐野]] &new{2008-02-15 (金) 00:43:35};
+
+#comment

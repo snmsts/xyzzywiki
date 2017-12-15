@@ -1,0 +1,18 @@
+#freeze
+* SKK (Simple Kana to Kanji conversion program) [#gb50783b]
+-ページ: [[WishList]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2003-10-16 (木) 00:43:40
+
+** メッセージ [#gc9ad6f7]
+正直アホな MS-IME には愛想がつきました。
+
+http://openlab.jp/skk/index-j.html
+
+http://homepage3.nifty.com/monjya/skkime.jis.html
+
+
+----
+-一応こんなのありますね。http://member.nifty.ne.jp/seiya-suda/skk.html --  &new{2004-03-03 (水) 09:26:08};
+-さらに、改良された方がいらっしゃいます。現状で不満の無いレベルで動いています。感謝。  http://www.geocities.jp/kiaswebsite/xyzzy/skk.html -- [[た]] &new{2005-09-27 17:25:41 (火)};

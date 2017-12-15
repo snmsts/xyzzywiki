@@ -1,0 +1,102 @@
+[[L10N/english]]
+
+ kbdmacro.l:21:    (error "キーボードマクロの定義中です"))
+-In defining the keyboard macro.
+
+#comment
+ kbdmacro.l:29:    (error "キーボードマクロは定義していません"))
+-No keyboard macros are defined.
+
+#comment
+ kbdmacro.l:39:    (error "キーボードマクロはすでに実行中です"))
+-In executing the keyboard macro.
+
+#comment
+ kbdmacro.l:41:    (error "キーボードマクロの定義中です"))
+-In defining the keyboard macro.
+
+#comment
+ kbdmacro.l:43:    (error "キーボードマクロは未定義です"))
+-No keyboard macros are defined.
+
+#comment
+ kbdmacro.l:49:  (interactive "sマクロにつける名前を入れて: ")
+-sInput the name of the keyboard macro : 
+
+#comment
+ kbdmacro.l:51:    (error "キーボードマクロは定義されていません"))
+-No keyboard macros are defined.
+
+#comment
+ kbdmacro.l:53:    (error "名前を入れてって言ったっしょ"))
+-No name of the keyboard macro.
+
+#comment
+ kbdmacro.l:58:	  (error "~aはキーボードマクロでないものが定義されています" name))
+-The objects other than keyboard macros is defined in ~a.
+
+#comment
+ kbdmacro.l:59:	(unless (y-or-n-p "~aのキーボードマクロ定義を置き換えますか?" name)
+-Do you overwrite the keyboard macro in ~a?
+
+#comment
+ kbdmacro.l:66:    (error "~aはコマンドが定義されていません" command))
+-No commands are defined in ~a.
+
+#comment
+ kbdmacro.l:69:      (error "~aはキーボードマクロでないものが定義されています" command))
+-The objects other than keyboard macros is defined in ~a.
+
+#comment
+ kbdmacro.l:81:	   (:caption "ｷｰﾎﾞｰﾄﾞﾏｸﾛの保存")
+-Save keyboard macros
+
+#comment
+ kbdmacro.l:82:	   (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif 
+
+#comment
+ kbdmacro.l:85:	    (:button IDOK "OK" #x50010001 130 7 50 14)
+-OK
+
+#comment
+ kbdmacro.l:86:	    (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 130 24 50 14)))
+-Cancel
+
+#comment
+ kbdmacro.l:101:	 (:caption "ｷｰﾎﾞｰﾄﾞﾏｸﾛの読み込み")
+-Load keyboard macros
+
+#comment
+ kbdmacro.l:102:	 (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif 
+
+#comment
+ kbdmacro.l:105:	  (:button load "読み込み(&L)" #x50010001 130 7 50 14)
+-&Load
+
+#comment
+ kbdmacro.l:106:	  (:button exec "実行(&E)" #x50010000 130 24 50 14)
+-&Execute
+
+#comment
+ kbdmacro.l:107:	  (:button remove "削除(&D)" #x50010000 130 41 50 14)
+-&Delete
+
+#comment
+ kbdmacro.l:108:	  (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 130 58 50 14)))
+-Cancel
+
+#comment
+ kbdmacro.l:123:  (let ((filename (file-name-dialog :title "ｷｰﾎﾞｰﾄﾞﾏｸﾛを保存"
+-Save keyboard macros
+
+#comment
+ kbdmacro.l:124:				    :filter '(("Lispﾌｧｲﾙ(*.l)" . "*.l")
+-Lisp files(*.l)
+
+#comment
+ kbdmacro.l:125:					      ("すべてのﾌｧｲﾙ(*.*)" . "*.*")))))
+-All files(*.*)
+
+#comment

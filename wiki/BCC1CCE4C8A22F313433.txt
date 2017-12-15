@@ -1,0 +1,87 @@
+* トラブルシューティング：障害のスクリプトを探す方法 [#o129fef6]
+-ページ: [[質問箱]]
+-投稿者: [[起動しなくなった人]]
+-状態: 完了
+-投稿日: 2006-01-27 (金) 13:39:53
+
+** メッセージ [#o68f51e0]
+xyzzy0.2.2.235がタンプを作るときに「関数requireが定義されていない」とか、ほざいているので・・・
+
+障害になっているスクリプトを探す方法などなどを教えてください。
+
+
+----
+- 凡ミスの香りがしますが順々に行きましょう。siteinit.lを無効にしてみてダンプすると大丈夫ですか？ -- [[佐野]] &new{2006-01-27 (金) 14:04:21};
+- siteinit.lwo -- [[起動しなくなった人]] &new{2006-01-28 (土) 12:56:13};
+- siteinit.lをリネームしてsiteinit.lcを削除したら、いちようダンプできて起動できるみたいです。さて次は何を調べましょうかぁ？ -- [[起動しなくなった人]] &new{2006-01-28 (土) 13:01:32};
+- そうなると駄目なsiteinit.lが見られるならかなりやりやすいのですが、見えない状態での助言となるとバイトコンパイル無しで最初は全体をコメントアウトしてダンプ（操作手順が増えるだけなのでこの段でsiteinit.lのバイトコンパイルはあまり良くない）、次に前半半分をコメントから元に戻してダンプ次に大丈夫なら後半半分の半分へ、で駄目なら後半は疑いが晴れているのでコメントから出して前半をコメントにして再開といった感じで範囲を狭めていくのがいいと思います。 -- [[佐野]] &new{2006-01-28 (土) 13:17:27};
+- siteinit.lをはっつけてもらえると嬉しいです。左上の編集ボタンを押すとこのページ全体を編集できるのでそれで… -- [[佐野]] &new{2006-01-28 (土) 13:20:52};
+- siteinit.lをコメントアウトしながらいろいじっていたら、(requite "xml/xtemplate")を書き足すと微妙になるらしいことが判明。 -- [[起動しなくなった人]] &new{2006-01-28 (土) 13:26:22};
+-とりあえず現状のsiteinit.lです。(requite "xml/xtemplate")のコメントアウトを外すとダンプができなくなります。
+
+ ;;; -*- Mode: Lisp -*-
+ ;(load-library "gates")
+ 
+ ;; xml-mode
+ (require "xml/xml-mode")
+ (require "xml/xhtml")
+ (require "xml/svg")
+ (require "xml/xslt")
+ (require "xml/xsl-fo")
+ (require "xml/mathml")
+ (require "xml/xlink")
+ (require "xml/relaxng")
+ (require "xml/smartdoc")
+ (require "xml/xyzref")
+ (require "xml/xi")
+ ;(requite "xml/xtemplate")
+ (use-package 'xml)
+ 
+ ;; mof-mode
+ (require "mof-mode")
+ (pushnew '("\\.\\(mof\\|mfl\\)$" . mof-mode) *auto-mode-alist* :test 'equal)
+ 
+ ;; bat-mode
+ (in-package "editor")
+ (export 'bat-mode)
+ (autoload 'bat-mode "bat-mode" t)
+ (pushnew '("\\.bat$" . bat-mode) *auto-mode-alist* :test 'equal)
+ (in-package "user")
+ 
+ ;; css+-mode
+ (in-package "editor")
+ (export 'css+-mode)
+ (autoload 'css+-mode "css+-mode" t)
+ (pushnew '("\\.css$" . css+-mode) *auto-mode-alist* :test 'equal)
+ (in-package "user")
+ 
+ ;; CSV-mode
+ (in-package "editor")
+ (export '(csv-mode tsv-mode))
+ (autoload 'csv-mode "csv-mode" t)
+ (autoload 'tsv-mode "csv-mode" t)
+ (pushnew '("\\.csv$" . csv-mode) *auto-mode-alist* :test 'equal)
+ (pushnew '("\\.tsv$" . csv-mode) *auto-mode-alist* :test 'equal)
+ (in-package "user")
+ 
+ ;; cygwin-mount
+ (require "cygwin-mount")
+ (cygwin-mount-activate)
+ 
+ ;;罫線モード
+ (require "box-fixation-mode")
+ 
+ ;;;;; NetInstaller 
+ (require "ni/setup")
+ ;; 自動設定を利用する
+ (ni-autoload)
+ ;; PROXYを通す場合
+ ;(setq ni::*http-proxy-host* "proxy.host")  ; PROXY のホスト
+ ;(setq ni::*http-proxy-port* 8080)          ; PROXY のポート
+ (load-library "compile_dump") ; sitelispのコンパイルとダンプファイルの削除
+超初心者なのでお手柔らかに。  -- [[起動しなくなった人]]  
+&new{2006-01-28 (土) 16:06:00};
+- これって "requite"→"require"なのでは・・・ --  &new{2006-01-28 (土) 18:26:23};
+- 回答ありがとうございます。ご指摘の内容を見直してみました。とりあえずダンプできるようになったみたいです。わたしはこんな単純なことに何日費やしたんだか分からない（ぉぃ）ぐらいの迷宮でした。皆様のおかげで何とか脱出できました。 -- [[起動しなくなった人]] &new{2006-01-29 (日) 05:19:45};
+
+#comment

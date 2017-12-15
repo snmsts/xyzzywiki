@@ -1,0 +1,33 @@
+* file-name-nondirectory(emacs.l) [#o715926f]
+
+-ページ: [[patch]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 提案
+-カテゴリー: 訂正
+-投稿日: 2007-02-10 (土) 01:17:19
+-バージョン: 
+
+** メッセージ [#z86bd0c6]
+4行目はdirでなくfileだと思います。
+ (defun file-name-nondirectory (filename)
+   (let ((letter "")
+ 	(file (substring filename (string-match "[^/]*$" filename))))
+     (when (string-match "^[A-Z]:" file)
+       (setq letter (substring file 0 2))
+       (setq file (substring file 2))) ;remove drive letter
+     (if (string= file "")
+ 	nil
+       (concat letter file))))
+--------
+- こうだと思うんだけど。 --  &new{2007-02-10 (土) 15:09:11};
+ (defun file-name-nondirectory (filename)
+   (substring filename (string-match "[^/]*$" filename)))
+- むしろこうじゃないですかね？ --  &new{2007-02-10 (土) 17:09:18};
+ (defun file-name-nondirectory (filename)
+   (file-namestring filename))
+- それともこうとか。 --  &new{2007-02-10 (土) 17:26:49};
+ (setf (symbol-function 'file-name-nondirectory) #'file-namestring)
+- これは、2007-02-10 (土) 15:09:11 のものが正しいようです。 file-namestring だと、filename に「c:」などを入れた場合に、デフォルトディレクトリを返してしまうなどの問題があるからです（file-name-nondirectory と file-namestring はおそらく少し挙動が違う）。 --  &new{2007-06-23 (土) 18:59:07};
+
+#comment

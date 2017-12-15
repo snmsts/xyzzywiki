@@ -1,0 +1,29 @@
+*コメントアウト [#y64e7fe3]
+#contents
+
+**概要 [#jb9f881e]
+選択範囲やリージョンをコメントアウトします。
+
+//**設定 [#y6a5b185]
+// (defvar *one-line-comment-alist*
+//  '(
+//    (awk-mode   . ("#"))
+//    (css-mode   . ("/* " " */"))
+//    (html+-mode . ("<!-- " " -->"))
+//    (lisp-mode  . (";"))
+//    (lisp-interaction-mode . (";"))
+//    (perl-mode  . ("#"))
+//    (php-mode   . ("//"))
+//    (sql-mode   . ("--"))
+//    #java-modeを追加
+//    (java-mode   . ("//"))
+//    ))
+
+**関連情報 [#xaa6116b]
+-[[comment>http://www.geocities.jp/kiaswebsite/xyzzy/comment.html]]
+-[[comment.l と 1 行コメントトグルを合わせて使う>http://hie.s64.xrea.com/xyzzy/note/edit.html#comment-out-selection-or-one-line]]
+-[[短縮入力 ShortInput.l>http://www1.bbiq.jp/rohinomiya/software.html#xyzzy]]
+-[[複数のモードに対応したコメントアウト用マクロ(コメントアウト用マクロ for xyzzy)>http://www.shido.info/xyzzy/xyzzy-comment.html]]
+
+**コメント [#ea3fd05d]
+#comment

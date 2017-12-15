@@ -1,0 +1,11 @@
+* livedoor-mode [#s86b261d]
+-ページ: [[WishList]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2005-11-08 11:53:48 (火)
+
+** メッセージ [#u50c1e0a]
+hatena-diary-modeみたくlivedoor blogで書き込めるモードがあったらうれしいなぁ，なんていう贅沢な要望です。
+----
+
+#comment

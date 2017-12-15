@@ -1,0 +1,78 @@
+*read-registry [#f34b2a7e]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-08-07 02:48:22 (日)
+-バージョン: 20050330
+
+**メッセージ [#g235eff3]
+ROOTとレジストリとの対応を調べました。~
+適当です。
+
+ :current-user HKEY_CURRENT_USER
+ :classes-root HKEY_CLASSES_ROOT
+ :local-machine HKEY_LOCAL_MACHINE
+ :users HKEY_USERS
+----
+-WriteRegistryの使用例でのコメントはHKCU\\Software\\Free Software\\XyzzyですかねHKCTってなんだろう？ -- [[佐野]] &new{2005-08-11 01:27:15 (木)};
+-どもです。こんな感じですかね。 -- [[NANRI]] &new{2005-08-11 23:06:19 (木)};
+ <chapter>
+ <title>read-registry</title>
+ <type>Function</type>
+ <arguments>read-registry SECTION KEY &amp;optional ROOT</arguments>
+ <package>editor</package>
+ <description>
+ レジストリから読み込みます。
+ 
+   SECTION : セクションを指定します。
+   KEY     : キーを指定します。
+   ROOT    : ルートキーを指定します。
+      nil             HKEY_CURRENT_USER\Software\Free Software\Xyzzy
+      :current-user   HKEY_CURRENT_USER
+      :classes-root   HKEY_CLASSES_ROOT
+      :local-machine  HKEY_LOCAL_MACHINE
+      :users          HKEY_USERS
+ 
+ 使用例：
+   ;;; HKEY_CURRENT_USER/software/Microsoft/devstudio/5.0/Recent File List/project1 の値を読む
+   (read-registry "software\\Microsoft\\devstudio\\5.0\\Recent File List" "project1"  :current-user)
+ </description>
+ <section>システム</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ 
+ <chapter>
+ <title>write-registry</title>
+ <type>Function</type>
+ <arguments>write-registry SECTION KEY VALUE</arguments>
+ <package>editor</package>
+ <description>
+ レジストリに書き込みます。
+ 
+   SECTION : セクションを指定します。
+   KEY     : キーを指定します。
+   VALUE   : 値を指定します。
+ 
+ 使用例：
+   ;;; HKEY_CURRENT_USER\Software\Free Software\Xyzzy の下にデータを書き込む
+   (write-registry "software\\chombo\\altime" "aaa" 64)
+ 
+   以下のように書き込まれます。
+ -----
+ REGEDIT4
+ 
+ [HKEY_CURRENT_USER\Software\Free Software\Xyzzy\software\chombo\altime]
+ "aaa"=dword:00000040
+ -----
+ </description>
+ <seealso>read-registry</seealso>
+ <section>システム</section>
+ <file>builtin.l</file>
+ </chapter>
+-取り込みました。→[[refwiki:write-registry]], [[refwiki:read-registry]] -- [[NANRI]] &new{2005-09-04 20:27:30 (日)};
+
+#comment

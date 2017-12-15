@@ -1,0 +1,30 @@
+* dolist[#q314bf3e]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[774]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: typo
+-投稿日:     2007-04-24 (火) 19:45:14
+-バージョン: 
+
+** メッセージ [#if668be5]
+resultの後ろの括弧が一つ多いと思います。
+
+ 使用例：
+   (let ((result nil))
+     (dolist (item '("Lois" "Charley" "David") (nreverse result))
+       (push (length item) result))))
+   => (4 7 5)
+
+↓
+
+ 使用例：
+   (let ((result nil))
+     (dolist (item '("Lois" "Charley" "David") (nreverse result))
+       (push (length item) result)))
+   => (4 7 5)
+
+----
+- どーもです。直しました。 -- [[NANRI]] &new{2007-05-03 (木) 04:50:25};
+
+#comment

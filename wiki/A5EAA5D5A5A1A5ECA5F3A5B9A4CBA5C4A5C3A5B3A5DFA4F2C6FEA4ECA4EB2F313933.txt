@@ -1,0 +1,34 @@
+* gentemp [#tb9e7362]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-03-21 (火) 01:22:56
+-バージョン: 20051220
+
+** メッセージ [#j8af1a49]
+ <chapter>
+ <title>gentemp</title>
+ <type>Function</type>
+ <arguments>gentemp &amp;optional (PREFIX t) (PACKAGE *package*)</arguments>
+ <package>lisp</package>
+ <description>
+ intern されたシンボルを生成します
+ PACKAGE に intern された PREFIX と内部カウンタをつなげたシンボルを返します
+ 
+ 必ず衝突しないシンボルを生成します。
+ </description>
+ <seealso>gensym</seealso>
+ <seealso>intern</seealso>
+ <link></link>
+ <section>シンボル</section>
+ <file>evalmacs.l</file>
+ </chapter>
+
+使い道が思いつかない…
+--------
+- どーもです。 -- [[NANRI]] &new{2006-03-21 (火) 14:08:19};
+
+#comment

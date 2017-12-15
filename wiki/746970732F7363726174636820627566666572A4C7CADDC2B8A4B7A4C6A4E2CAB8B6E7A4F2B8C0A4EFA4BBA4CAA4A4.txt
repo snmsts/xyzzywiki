@@ -1,0 +1,13 @@
+
+いつものくせで *scratch* バッファで C-x C-s してしまって、
+うざいダイアログに悩んでいる人むけ。
+
+ (add-hook '*save-buffer-no-filenames-hook*
+           #'(lambda ()
+               (if (equal (buffer-name (selected-buffer))
+                          "*scratch*")
+                   t
+                 nil)))
+
+----
+#comment

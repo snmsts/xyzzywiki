@@ -1,0 +1,43 @@
+* string [#bf02a20c]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-06-01 (木) 16:42:48
+-バージョン: 
+
+** メッセージ [#f3809895]
+stringで変換できるものの説明と例を追加しました。
+ <chapter>
+ <title>string</title>
+ <type>Function</type>
+ <arguments>string X</arguments>
+ <package>lisp</package>
+ <description>
+ Xが文字列ならそれを返します。シンボルならその名前を返します。
+ 文字や文字のベクタなら、それらの文字からなる文字列を返します。
+ 
+ 使用例：
+   (string "foo")
+   =&gt; "foo"
+   (string 'bar)
+   =&gt; "bar"
+   (string #\a)
+   =&gt; "a"
+   (string (make-vector 3 :initial-contents '(#\a #\b #\c)))
+   =&gt; "abc"
+ </description>
+ <seealso>symbol-name</seealso>
+ <seealso>make-sequence</seealso>
+ <seealso>format</seealso>
+ <seealso>coerce</seealso>
+ <section>文字列</section>
+ <file>builtin.l</file>
+ </chapter>
+
+--------
+- どーもです。 -- [[NANRI]] &new{2006-06-03 (土) 00:22:08};
+
+#comment

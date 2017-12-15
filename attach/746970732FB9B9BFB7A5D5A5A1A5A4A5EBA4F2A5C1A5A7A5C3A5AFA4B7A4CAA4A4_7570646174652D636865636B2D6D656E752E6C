@@ -1,0 +1,106 @@
+#|text
+■機能・動作
+メニューに「更新時に尋ねる」を追加します．
+チェックをはずすと，その xyzzy で開いているファイルが他のプログラムで
+更新された場合，確認せずに更新後のファイルを読み込みなおします．
+チェックが入っていない場合は，個別に verify-visited-file-modtime を指定していても，
+こちらの設定が優先されます．チェックが入っていない場合はverify-visited-file-modtime
+の値やダイアログの応答で再読み込みするかどうかが決まります．
+verify-visited-file-modtime の値に変更は加えないので，一旦チェックをはずしても再び
+つければ前の状態と同じです．
+
+■インストール
+(require "update-check-menu") 
+と.xyzzy か siteinit.l に記述してください．
+必要な人はバイトコンパイルしてください．
+
+■注意
+verify-buffers-file-modtime を上書きします．
+
+|#
+
+(provide "update-check-menu")
+(require "session-ext")
+
+(export '(*ask-updated-buffer*
+          toggle-verify-buffers))
+
+(in-package "editor")
+
+(defvar *ask-updated-buffer* t "ファイルが更新されたときに尋ねる？")
+
+(defun toggle-verify-buffers ()
+  (interactive)
+  (if *ask-updated-buffer*
+      (progn
+        (setq *ask-updated-buffer* nil)
+        (message "Automatically uploading"))
+    (progn
+      (setq *ask-updated-buffer* t)
+      (message "Manually uploading"))))
+
+
+(defun menubar-verify-buffers ()
+  (if *ask-updated-buffer*  :check))
+
+(defvar *update-check-menu-string* "更新時に尋ねる(&A)...")
+(if (and (boundp '*locale*)
+         (eq t *locale*))
+    (setq *update-check-menu-string* "&Ask updating..."))
+    
+
+;; menu
+(defun ask-verify-buffer-update-menu ()
+  (let ((edit (get-menu *app-menu* 'ed::edit)))
+    (when edit
+      (unless (get-menu-position edit 'ask-updated-buffer)
+        (insert-menu-item edit 3 'ask-updated-buffer *update-check-menu-string*
+                          'toggle-verify-buffers
+                          'menubar-verify-buffers)
+        (insert-menu-separator edit 4 'ask-updated-buffer-sep)))))
+
+(if *app-menu*
+    (ask-verify-buffer-update-menu)
+  (add-hook '*init-app-menus-hook* 'ask-verify-buffer-update-menu))
+
+;; ファイルが更新されているかのチェック．
+;; *.l は自動でロードする
+(defun verify-buffers-file-modtime ()
+  "ファイルの更新チェック"
+  (let ((no-query nil) filename)
+    (with-set-buffer
+      (dolist (buffer (buffer-list) t)
+        (setq filename (get-buffer-file-name buffer))
+        (or (null filename)
+            (null (buffer-local-value buffer 'verify-visited-file-modtime))
+            (verify-visited-file-modtime buffer)
+            (save-excursion
+              (set-buffer buffer)
+              (when (cond ((null *ask-updated-buffer*) t)
+                          ((eq no-query :yes) t)
+                          ((eq no-query :no) nil)
+                          ((eq verify-visited-file-modtime ':auto) t)
+                          (t
+                           (refresh-screen)
+                           (case (message-box
+                                  (format nil "~A\n\nSomeone updated this file. Would you read again?"
+                                          (get-buffer-file-name buffer))
+                                  nil '(:yes-no-cancel :question :button1)
+                                  :button4 "Update Automatically(&A)")
+                             (:yes t)
+                             (:no nil)
+                             (:button4 (setq no-query :yes) t)
+                             (t (setq no-query :no) nil))))
+                (update-visited-file-modtime)
+                (revert-buffer)
+                (if (and (null *ask-updated-buffer*)
+                         (string-match ".*\\.l$" filename))
+                    (if (file-exist-p (concat filename "c"))
+                        (load-file (concat filename "c"))
+                      (load-file filename))))))))))
+
+;; sessionに保存
+(defun save-auto-update-status (s)
+  (write `(setf ed::*ask-updated-buffer* ,*ask-updated-buffer*) :stream s :escape t))
+
+(add-hook '*save-session-hook* 'save-auto-update-status)

@@ -1,0 +1,72 @@
+*yank の file [#e20b8da0]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-08-16 23:17:49 (火)
+-バージョン: 
+
+**メッセージ [#f264df9f]
+yank の file の項目が rectangl.l になっているようですが、 region.l ではないでしょうか。
+----
+-どうもありがとうございます。バージョンの変化で変わったんでしょうかね…歴史的経緯とか良くわかんないのですが…。 -- [[佐野]] &new{2005-08-17 02:26:34 (水)};
+
+ (let ((funclist nil))
+   (with-open-file (fp (merge-pathnames "lisp/XTAGS" (si:system-root)))
+     (let ((line nil))
+       (while (setq line (read-line fp nil nil nil))
+ 	(push (split-string (substring line 1) #\C-_) funclist)
+ 	)))
+   (format t "~24A ~10A ~A~%" "関数名" "実際" "リファレンス")
+   (dolist (i (xml2xxx::xml))
+     (let ((title (caddr (assoc "title" i :test 'equal)))
+ 	  (file (caddr (assoc "file" i :test 'equal)))
+ 	  found
+ 	  )
+       
+       (setq title
+ 	    (if (string-match ":\\(.*\\)$" title)
+ 		(match-string 1)
+ 	      title))
+       (and file
+ 	   (setq found (cadr (assoc title funclist :test 'equal)))
+ 	   (not (equal found file))
+ 	   (format t "~24A ~10A ~A~%" title found file)
+ 	   ))))
+結果
+                   関数名       実際 リファレンス
+       *dabbrevs-no-undo*     defs.l dabbrev.l
+                       1+   number.l builtin.l
+                       1-   number.l builtin.l
+            insert-buffer   buffer.l builtin.l
+  insert-buffer-substring   buffer.l builtin.l
+            make-sequence sequence.l builtin.l
+                  maphash     hash.l builtin.l
+              next-buffer   buffer.l builtin.l
+          previous-buffer   buffer.l builtin.l
+                    prog1 evalmacs.l builtin.l
+             undefine-key   keymap.l builtin.l
+ with-hash-table-iterator     hash.l cmu_loop.l
+                     yank   region.l rectangl.l
+-リファレンスに書かれてから細分化されたような気がします。 -- [[佐野]] &new{2005-08-17 02:29:35 (水)};
+-どーもです。暇を見つけて修正しておきます。 -- [[NANRI@盆休み明け>NANRI]] &new{2005-08-18 21:07:46 (木)};
+- 050818時点のrefwikiの内容で調べた結果。
+                   関数名       実際 リファレンス
+       *dabbrevs-no-undo*     defs.l dabbrev.l
+                       1+   number.l builtin.l
+                       1-   number.l builtin.l
+       get-clipboard-data  builtin.l select.l
+            make-sequence sequence.l builtin.l
+        minibuffer-window  builtin.l minibuf.l
+      minibuffer-window-p  builtin.l minibuf.l
+                    prog1 evalmacs.l builtin.l
+                run-hooks  builtin.l misc.l
+ verify-visited-file-modtime  builtin.l buffer.l
+verify-visited-file-modtimeは今のところバッファローカル変数の説明なので食い違っていますけど、この機会にまじめに書きましょう。~
+ところで、佐野さんの $XYZZY/lisp/XTAGS には builtin function が入っていないのですね。個人的には入った方が便利なので、$XYZZY/lisp/XTAGS を作る時だけ xlispfns.l を使って入るようにしています。 -- [[NANRI]]
+-個々に追加された話題がなんか99っぽかったので99に移しました。 -- [[佐野]] &new{2005-08-22 05:49:24 (月)};
+-verify-visited-file-modtimeは内容の追記もしたので別扱いにするとして、他は全部直しました。→[[refwiki:run-hooks]], [[refwiki:minibuffer-window-p]], [[refwiki:minibuffer-window]], [[refwiki:get-clipboard-data]], [[refwiki:1-]], [[refwiki:1+]], [[refwiki:*dabbrevs-no-undo*]], [[refwiki:make-sequence]], [[refwiki:prog1]], [[refwiki:insert-buffer]], [[refwiki:insert-buffer-substring]], [[refwiki:make-sequence]], [[refwiki:maphash]], [[refwiki:next-buffer]], [[refwiki:previous-buffer]], [[refwiki:undefine-key]], [[refwiki:with-hash-table-iterator]], [[refwiki:yank]] -- [[NANRI]] &new{2005-08-23 23:31:28 (火)};
+
+#comment

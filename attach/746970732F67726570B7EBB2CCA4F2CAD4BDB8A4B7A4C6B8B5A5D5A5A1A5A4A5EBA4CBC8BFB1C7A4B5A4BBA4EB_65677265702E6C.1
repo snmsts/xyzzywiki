@@ -1,0 +1,445 @@
+;;; -*- Mode: Lisp; Package: EDITOR -*-
+;;;
+;;; egrep.l
+;;;
+;;; Last updated: <2004/11/03 20:35:56 +0900>
+;;;
+;;; この lisp は grep.l grepd.l を基にして作成しました。
+;;; また、OHKUBO Hiroshi さんの ggrep を一部引用させていただいています。m(__)m
+;;; 作者（？）が書いた部分については自由に改変・再配布などしてもらってかまいません。
+;;; 大事なファイルを損なう危険性が高いので自己責任でお使い下さい。
+;;;
+;;; インストール:
+;;; (require "egrep")
+;;;
+;;; 使い方:
+;;; M-x egrep-dialog で egrep バッファを出力
+;;; egrep バッファで C-s するとカーソル下またはセレクションをマーク
+;;; C-u でカーソル下またはセレクションのマークを削除
+;;; C-a でバッファ全体をマーク（またはマークを削除）
+;;; egrep バッファを編集して C-e すると編集内容が元のファイルに反映される（セーブまではしない）
+
+(provide "egrep")
+
+(in-package "editor")
+
+(export '(egrep-dialog egrep-edit-buffer egrep-set-mark egrep-unset-mark
+	  toggle-egrep-mark-all))
+
+(defvar *egrep-open-p* nil)
+(defvar *egrep-all-buffer* nil)
+(defvar *egrep-current-buffer* nil)
+(defvar *egrep-narrow* nil)
+(defvar *egrep-gr* nil)
+(defvar *egrep-mode-keymap* nil)
+
+(unless *egrep-mode-keymap*
+  (setq *egrep-mode-keymap* (copy-keymap *lisp-mode-map*))
+  (define-key *egrep-mode-keymap* #\C-e 'egrep-edit-buffer)
+  (define-key *egrep-mode-keymap* #\C-s 'egrep-set-mark)
+  (define-key *egrep-mode-keymap* #\C-u 'egrep-unset-mark)
+  (define-key *egrep-mode-keymap* #\C-a 'toggle-egrep-mark-all))
+
+(defun egrep-scan-files-1 (file pattern buffer scanner)
+  (let ((file-buffer (get-file-buffer file)))
+    (if file-buffer
+	(set-buffer file-buffer)
+      (progn
+	(set-buffer buffer)
+	(erase-buffer buffer)
+	(ignore-errors (insert-file-contents file))))
+    (save-excursion
+      (goto-char (point-min))
+      (message "scanning (~A)" file)
+      (egrep-scan-file file scanner))))
+
+(defun egrep-scan-files-setup (dir buffer temp scanner)
+  (pop-to-buffer buffer t)
+  (set-buffer temp)
+  (set-default-directory dir)
+  (set-buffer buffer)
+  (erase-buffer buffer)
+  (set-buffer-fold-width nil)
+  (setq buffer-read-only nil)
+  (setq need-not-save t)
+  (setq auto-save nil)
+  (set-default-directory dir)
+  (make-local-variable '*find-error-scanner*)
+  (setq *find-error-scanner* scanner))
+
+(defun egrep-scan-files-sync (pattern buffer temp scanner file dir)
+  (unwind-protect
+      (let ((dirlist (if (consp dir) (glob-expand-list dir) (glob-expand dir))))
+	(unless dirlist
+	  (error "~A~%ディレクトリが見つかりません" dir))
+	(egrep-scan-files-setup (glob-common-path dirlist)
+				buffer temp scanner)
+	(refresh-screen)
+	(with-output-to-selected-buffer
+	  (let ((last-tick (get-internal-real-time))
+		(found nil)
+		tick)
+	    (glob-exec dirlist
+		       :recursive *grep-subdir*
+		       :file-only t :wild file
+		       :callback
+		       #'(lambda (f)
+			   (when (egrep-scan-files-1 f pattern temp scanner)
+			     (setq found t))
+			   (when found
+			     (setq tick (get-internal-real-time))
+			     (when (> (- tick last-tick) 500)
+			       (setq last-tick tick)
+			       (set-buffer buffer)
+			       (goto-char (buffer-stream-point *standard-output*))
+			       (refresh-screen)
+			       (setq found nil)))
+			   (do-events))))))
+    (delete-buffer temp)
+    (set-buffer buffer)
+    (goto-char (point-min)))
+  (set-buffer-modified-p nil)
+  (use-keymap *egrep-mode-keymap*)
+  (run-hooks '*grepd-hook*)
+  (message "done"))
+
+(defun egrep-async-scanner (pattern buffer temp scanner glob)
+  #'(lambda ()
+      (let ((update (get-buffer-window buffer)))
+	(with-set-buffer
+	  (save-excursion
+	    (set-buffer buffer)
+	    (if (null async-grep-timer-callback)
+		(setq update nil)
+	      (let ((file (funcall glob))
+		    (timer async-grep-timer-callback)
+		    (last-tick async-grep-last-update))
+		(cond ((stringp file)
+		       (with-output-to-buffer (buffer (point-max))
+			 (cond ((not (egrep-scan-files-1 file pattern temp scanner))
+				(setq update nil))
+			       (update
+				(let ((tick (get-internal-real-time)))
+				  (cond ((> (- tick last-tick) 500)
+					 (set-buffer buffer)
+					 (setq async-grep-last-update tick))
+					(t
+					 (setq update nil))))))
+			 (start-timer 0 timer t)))
+		      (file
+		       (setq update nil)
+		       (start-timer 0 timer t))
+		      (t
+		       (stop-async-grep)))))))
+	(and update (refresh-screen)))))
+
+(defun egrep-scan-files-async (pattern buffer temp scanner file dir)
+  (let* ((dirlist (if (consp dir) (glob-expand-list dir) (glob-expand dir)))
+	 (commonl (glob-common-length dirlist)))
+    (unless dirlist
+      (error "~A~%ディレクトリが見つかりません" dir))
+    (egrep-scan-files-setup (subseq (car dirlist) 0 commonl)
+			    buffer temp scanner)
+    (async-grep-mode)
+    (setq async-grep-temp-buffer temp)
+    (setq async-grep-timer-callback
+	  (egrep-async-scanner pattern buffer temp scanner
+			       (glob-enumerator (mapcar #'(lambda (x)
+							    (subseq x commonl))
+							dirlist)
+						file *grep-subdir* t)))
+    (start-timer 0 async-grep-timer-callback t)
+    (setq async-grep-mode t)
+    (setq async-grep-status "running")))
+
+(defun egrep-scan-files (pattern file dir &optional async)
+  (long-operation
+    (let ((buffer (get-buffer-create "*egrep*")))
+      (when (save-excursion
+	      (set-buffer buffer)
+	      async-grep-timer-callback)
+	(if (yes-or-no-p "egrepはすでに動作中です。死なす?")
+	    (save-excursion
+	      (set-buffer buffer)
+	      (stop-async-grep))
+	  (quit)))
+      (when *grep-regexp-search*
+	(setq pattern (compile-regexp pattern *grep-case-fold-search*)))
+      (let ((temp (create-new-buffer "*egrep temp*"))
+	    (scanner (grep-scanner pattern *grep-case-fold-search*
+				   *grep-word-search*)))
+	(if async
+	    (egrep-scan-files-async pattern buffer temp scanner file dir)
+	  (egrep-scan-files-sync pattern buffer temp scanner file dir))))))
+
+(defun egrep-scan-file (file scanner)
+  (let ((found nil))
+    (while (funcall scanner)
+      (setq found t)
+      (let ((beg (progn (goto-bol) (point)))
+	    (end (progn (goto-eol) (point))))
+	(format t " ~A:~D:~A~%" file (current-line-number) (buffer-substring beg end))
+	(when (and *grep-highlight-match*
+		   (buffer-stream-p *standard-output*))
+	  (save-excursion
+	    (set-buffer (buffer-stream-buffer *standard-output*))
+	    (let ((p (- (buffer-stream-point *standard-output*) end 1)))
+	      (apply #'set-text-attribute (+ (match-beginning 0) p) (+ (match-end 0) p)
+		     'grep *grep-highlight-match*)))))
+      (or (forward-char 1)
+	  (return)))
+    found))
+
+(defun egrep-dialog-1 (template dirlist)
+  (interactive)
+  (let ((pattern (selection-start-end (start end)
+		   (buffer-substring start end)))
+	(no-dirs (if dirlist
+		     (dolist (d dirlist ':disable)
+		       (if (file-directory-p d)
+			   (return))))))
+    (multiple-value-bind (result data)
+	(dialog-box template
+		    (list (cons 'pat pattern)
+			  (cons 'pat *minibuffer-search-string-history*)
+			  (cons 'file (or (car *grep-file-history*) "*"))
+			  (cons 'file *grep-file-history*)
+			  (cons 'dir
+				(if dirlist
+				    nil
+				  (let ((dir (and *grep-directory-name-hook*
+						  (funcall *grep-directory-name-hook*))))
+				    (if (stringp dir)
+					dir
+				      (default-directory)))))
+			  (cons 'dir *grep-directory-history*)
+			  (cons 'case-fold (cfs2dialog *grep-case-fold-search*))
+			  (cons 'word *grep-word-search*)
+			  (cons 'regexp *grep-regexp-search*)
+			  (cons 'escseq *grep-understand-escape-sequences*)
+			  (cons 'subdir *grep-subdir*)
+			  (cons 'async *grep-async*)
+			  (cons 'buf *egrep-all-buffer*)
+			  (cons 'cbuf *egrep-current-buffer*)
+			  (cons 'narrow *egrep-narrow*))
+		    `((file :disable ,no-dirs)
+		      (file-static :disable ,no-dirs)
+		      (subdir :disable ,no-dirs)
+		      (word :disable (regexp))
+		      (pat :non-null "検索文字列を入力して" :enable (IDOK))
+		      (ref :related dir :directory-name-dialog (:title "参照"))))
+      (when result
+	(let ((pattern (cdr (assoc 'pat data)))
+	      (file (or (cdr (assoc 'file data)) "*"))
+	      (dir (or dirlist (namestring (or (cdr (assoc 'dir data))
+					       (default-directory))))))
+	  (when pattern
+	    (si:*activate-toplevel)
+	    (add-history pattern '*minibuffer-search-string-history*)
+	    (or no-dirs (add-history file '*grep-file-history*))
+	    (or dirlist (add-history dir '*grep-directory-history*))
+	    (setq *grep-case-fold-search* (dialog2cfs (cdr (assoc 'case-fold data))))
+	    (setq *grep-word-search* (cdr (assoc 'word data)))
+	    (setq *grep-regexp-search* (cdr (assoc 'regexp data)))
+	    (setq *grep-understand-escape-sequences* (cdr (assoc 'escseq data)))
+	    (when *grep-understand-escape-sequences*
+	      (setq pattern (decode-escape-sequence pattern *grep-regexp-search*)))
+	    (or no-dirs (setq *grep-subdir* (cdr (assoc 'subdir data))))
+	    (setq *grep-async* (cdr (assoc 'async data)))
+	    (setq *egrep-all-buffer* (cdr (assoc 'buf data)))
+	    (setq *egrep-current-buffer* (cdr (assoc 'cbuf data)))
+	    (setq *egrep-narrow* (cdr (assoc 'narrow data)))
+	    (cond ((or *egrep-all-buffer* *egrep-current-buffer*)
+		   (egrep1 pattern *egrep-current-buffer*))
+		  (*egrep-narrow*
+		    (egrep1 pattern nil t))
+		  (t
+		   (egrep-scan-files pattern (split-string file #\; t " ")
+				     (or dirlist dir) *grep-async*)))
+	    t))))))
+
+(defun egrep-dialog ()
+  (interactive)
+  (setq *egrep-open-p* t)
+  (setq *egrep-gr* nil)
+  (egrep-dialog-1 '(dialog 0 0 272 146
+		    (:caption "eGrep")
+		    (:font 9 "ＭＳ Ｐゴシック")
+		    (:control
+		     (:static nil "ﾊﾟﾀｰﾝ(&P):" #x50020000 7 10 38 8)
+		     (:combobox pat nil #x50210042 51 8 157 96)
+		     (:static nil "ﾌｧｲﾙ名(&F):" #x50020000 7 27 40 8)
+		     (:combobox file nil #x50210042 51 25 157 96)
+		     (:static nil "ﾃﾞｨﾚｸﾄﾘ(&D):" #x50020000 7 45 42 8)
+		     (:combobox dir nil #x50210042 51 42 157 96)
+		     (:button case-fold "大文字小文字を区別する(&C)" #x50010006 51 61 113 10)
+		     (:button word "単語単位で検索する(&W)" #x50010003 51 74 97 10)
+		     (:button regexp "正規表現(&E)" #x50010003 51 87 62 10)
+		     (:button escseq "ｴｽｹｰﾌﾟｼｰｹﾝｽを理解しろ(&Y)" #x50010003 51 100 113 10)
+		     (:button subdir "ついでにｻﾌﾞﾃﾞｨﾚｸﾄﾘも(&U)" #x50010003 51 113 103 10)
+		     (:button async "非同期でgrep(&A)" #x50010003 51 126 103 10)
+		     (:button buf "全表示ﾊﾞｯﾌｧを対象(&B)" #x50010003 160 61 94 10)
+		     (:button cbuf "ｶﾚﾝﾄﾊﾞｯﾌｧを対象(&C)" #x50010003 160 74 94 10)
+		     (:button narrow "絞込み(&N)" #x50010003 160 87 94 10)
+		     (:button IDOK "検索(&S)" #x50010001 215 7 50 14)
+		     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 215 24 50 14)
+		     (:button ref "参照(&R)..." #x50010000 215 41 50 14)))
+		  nil))
+
+(defun egrep1 (pattern arg &optional n)
+  (long-operation
+    (let ((bn "*egrep*") flist sbuffer)
+      (and arg
+	   (setq arg (selected-buffer)))
+      (and n
+	   (not (find-buffer bn))
+	   (plain-error "egrep バッファが出力されていません")
+	   (return-from egrep1))
+      (when n (setq flist (eregrep-file-list bn))
+	(when *egrep-gr* (setq common-path (glob-common-path flist))))
+      (setq sbuffer (get-buffer-create (if n "*eregrep*" "*egrep*")))
+      (when *grep-understand-escape-sequences*
+	(setq pattern (decode-escape-sequence pattern *grep-regexp-search*)))
+      (when *grep-regexp-search*
+	(setq pattern (compile-regexp pattern *grep-case-fold-search*)))
+      (with-output-to-buffer (sbuffer)
+	(let ((scanner (grep-scanner pattern *grep-case-fold-search* *grep-word-search*)))
+	  (save-excursion
+	    (pop-to-buffer sbuffer t)
+	    (set-buffer sbuffer)
+	    (erase-buffer sbuffer)
+	    (set-buffer-fold-width nil)
+	    (setq buffer-read-only nil)
+	    (setq need-not-save t)
+	    (setq auto-save nil)
+	    (when *egrep-gr* (set-default-directory common-path))
+	    (make-local-variable '*find-error-scanner*)
+	    (setq *find-error-scanner* scanner)
+	    (if *egrep-gr*
+		(let ((temp (create-new-buffer "*eregrep temp*")))
+		  (set-buffer-fold-width nil temp)
+		  (dolist (file flist)
+		    (let ((file-buffer (get-file-buffer file)))
+		      (msgbox (format nil "~A" file))
+		      (if file-buffer
+			  (set-buffer file-buffer)
+			(progn
+			  (set-buffer temp)
+			  (erase-buffer temp)
+			  (ignore-errors (insert-file-contents file))))
+		      (save-excursion
+			(goto-char (point-min))
+			(message "scanning (~A)" (subseq file (length common-path)))
+			(egrep-scan-file (subseq file (length common-path)) scanner))))
+		  (delete-buffer temp))
+	      (dolist (buffer (if n flist (if arg (list arg) (buffer-list))))
+		(let ((bufname (buffer-name buffer)))
+		  (unless (or (eq buffer sbuffer)
+			      (string-match "^ " bufname)
+			      (string= bufname "*grep*")
+			      (string= bufname "*ggrep*")
+			      (string= bufname "*regrep*"))
+		    (message "Scanning (~A)" bufname)
+		    (set-buffer buffer)
+		    (save-excursion
+		      (goto-char (point-min))
+		      (egrep-scan-file (concatenate 'string "<" bufname ">") scanner)))))))))
+      (set-buffer sbuffer)
+      (goto-char (point-min))
+      (set-buffer-modified-p nil)
+      (use-keymap *egrep-mode-keymap*)
+      (run-hooks '*grep-hook*)
+      (message "completed.")
+      t)))
+
+(defun eregrep-file-list (buffer) ;;; ggrep より引用（一部改変）しました。
+  (message "ﾌｧｲﾙﾘｽﾄ作成中...")
+  (let ((regexp (compile-regexp "^.\\(.+?\\):\\([1-9][0-9]*\\):" t))
+	default-directory target-list target (pre-target "")
+	target-buffer)
+    (flet ((get-target ()
+	     (if (scan-buffer regexp)
+		 (match-string 1)
+	       (buffer-substring (point) (progn (goto-eol) (point))))))
+      (save-excursion
+	(set-buffer buffer)
+	(setq default-directory (default-directory))
+	(goto-char (point-min))
+	(while (and (setq target (get-target)) (string/= "" target))
+	  (when (string-not-equal target pre-target)
+	    (setq pre-target target)
+	    (if (string-match "^<\\(.+\\)>$" target)
+		(if (setq target-buffer (find-buffer (match-string 1)))
+		    (push target-buffer target-list))
+	      (progn
+		(push (merge-pathnames target default-directory) target-list)
+		(setq *egrep-gr* t))))
+	  (goto-eol)
+	  (forward-char))
+	(nreverse target-list)))))
+
+(defun egrep-edit-buffer ()
+  (interactive)
+  (let ((regexp (compile-regexp "^\*\\(.+?\\):\\([1-9][0-9]*\\):" t))
+	bufname filename target lnum str)
+    (flet ((get-target ()
+	     (if (scan-buffer regexp :nodup t)
+		 (progn
+		   (setq target (match-string 1))
+		   (setq lnum (parse-integer (match-string 2)))
+		   (setq str (buffer-substring (match-end 0)
+					       (save-excursion (goto-eol) (point))))
+		   )))
+	   (insert-str ()
+	     (goto-line lnum)
+	     (goto-bol)
+	     (kill-line)
+	     (insert str)))
+      (save-excursion
+	(goto-char (point-min))
+	(while (and (get-target))
+	  (save-excursion
+	    (if (string-match "^<\\(.+\\)>$" target)
+		(if (setq bufname (find-buffer (match-string 1)))
+		    (progn
+		      (set-buffer bufname)
+		      (insert-str)))
+	      (progn
+		(setq filename (merge-pathnames target (default-directory)))
+		(find-file filename)
+		(insert-str))))
+	  (goto-eol)
+	  (forward-char))))))
+
+(defun egrep-set-mark (&optional u)
+  (interactive)
+  (let ((old (if u "^\*" "^ "))
+	(new (if u " " "*")) from to)
+    (if (pre-selection-p)
+	(progn
+	  (setq from (selection-mark))
+	  (setq to (selection-point))
+	  (if (> from to)
+	      (rotatef from to)))
+      (progn
+	(save-excursion
+	  (setq from (progn (goto-bol) (point)))
+	  (setq to (+ (point) 1)))))
+    (save-excursion
+      (save-restriction
+	(narrow-to-region from to)
+	(goto-char from)
+	(replace-buffer old new :regexp t)))))
+
+(defun egrep-unset-mark ()
+  (interactive)
+  (egrep-set-mark t))
+
+(defun toggle-egrep-mark-all ()
+  (interactive)
+  (let ((old (if *egrep-open-p* "^ " "^\*"))
+	(new (if *egrep-open-p* "*" " ")))
+    (setq *egrep-open-p* (not *egrep-open-p*))
+    (save-excursion
+      (goto-char (point-min))
+      (replace-buffer old new :regexp t))))

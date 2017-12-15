@@ -1,0 +1,70 @@
+* 外部文書からの引用の整理 [#qddb5264]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-04-22 (土) 00:18:32
+-バージョン: 
+
+** メッセージ [#w335fba2]
+外部文書からの引用は基本的に排除しようと思います。
+理由は
+-現在、引用元が不明確な状態にある
+-内容的に重複が生じる
+-リンクで十分
+-xyzzyの動作と異なる場合があるため参考程度にしかならない
+-引用部分は自由に編集できない
+
+と、大体こんなところです。
+ご意見募集。
+
+対象となる項目は以下です。まだあったら教えてください。
+-[[autoload>refwiki:autoload]]
+-[[bury-buffer>refwiki:bury-buffer]]
+-[[defun>refwiki:defun]]
+-[[defvar>refwiki:defvar]]
+-[[forward-line>refwiki:forward-line]]>[[リファレンスにツッコミを入れる/212]]
+-[[goto-char>refwiki:goto-char]]>[[リファレンスにツッコミを入れる/203]]
+-[[interactive>refwiki:interactive]]>[[リファレンスにツッコミを入れる/233]]
+-[[let>refwiki:let]]
+-[[rename-buffer>refwiki:rename-buffer]]
+-[[replace-string>refwiki:replace-string]]
+-[[save-excursion>refwiki:save-excursion]]
+-[[set-buffer>refwiki:set-buffer]]
+-[[string-match>refwiki:string-match]]
+-[[substring>refwiki:substring]]>[[リファレンスにツッコミを入れる/263]]
+-[[decode-universal-time>refwiki:decode-universal-time]]
+-[[encode-universal-time>refwiki:encode-universal-time]]
+-[[export>refwiki:export]]
+-[[intern>refwiki:intern]]
+-[[mapc>refwiki:mapc]]
+-[[mapcan>refwiki:mapcan]]>[[リファレンスにツッコミを入れる/215]]
+-[[mapcar>refwiki:mapcar]]
+-[[maplist>refwiki:maplist]]
+-[[multiple-value-bind>refwiki:multiple-value-bind]]
+-[[parse-integer>refwiki:parse-integer]]
+-[[read-line>refwiki:read-line]]
+-[[require>refwiki:require]]
+-[[return-from>refwiki:return-from]]
+-[[rotatef>refwiki:rotatef]]
+-[[set-difference>refwiki:set-difference]]>[[リファレンスにツッコミを入れる/174]]
+-[[with-open-file>refwiki:with-open-file]]
+-[[with-open-stream>refwiki:with-open-stream]]
+-[[values>refwiki:values]]
+-[[cond>refwiki:cond]]
+-[[``'(backquote)>refwiki:``'(backquote)]]
+-[[read-char>refwiki:read-char]]
+-[[find-file>refwiki:find-file]]>[[リファレンスにツッコミを入れる/209]]
+-[[find-file-other-window>refwiki:find-file-other-window]]
+-[[insert-file>refwiki:insert-file]]
+-[[バッファの内部構造>refwiki:バッファの内部構造]]
+
+-[[refwiki:forward-char]]←2006-05-28追加
+--------
+- リンク張ってみました。手が空いたらざらっと見てみます。 -- [[佐野]] &new{2006-04-22 (土) 00:29:26};
+- 消すだけ消しました。 -- [[NANRI]] &new{2007-02-03 (土) 01:17:59};
+- [[goto-line>refwiki:goto-line]]が抜けていたので調整。 -- [[NANRI]] &new{2007-02-20 (火) 04:51:21};
+
+#comment

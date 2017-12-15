@@ -1,0 +1,59 @@
+* emacsのように物理行で動作させるには [#pfe79d10]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2007-06-08 (金) 23:43:58
+
+** メッセージ [#y06af3ae]
+折り返しが有効のときのカーソル移動が，emacs は物理行で xyzzy はデフォルトで論理行になっています．
+
+慣れている emacs の挙動に合わせようと，substitute-key-definition を使って
+以下を変更してみました．
+
+-next-virtual-line を next-line へ．
+-previous-virtual-line を previous-line へ．
+
+ところが，rectangle 系の動作も論理行になっています (string-rectangle など)．
+これを物理行にさせる方法はどのようなものでしょうか．
+
+もっと良い方法 (一括で物理行にできてしまうなど) ありましたら教えてください．
+
+next-line などについて [[Emacsキーバインド]] に書かせていただきました．
+----
+ (defun phisical-rectangle (fun args)
+   (let ((fold (buffer-fold-width))
+ 	ret)
+     (set-buffer-fold-width nil)
+     (refresh-screen)
+     (apply fun args)
+     (set-buffer-fold-width fold)
+     (refresh-screen)))
+ 
+ (defun string-phisical-rectangle (p1 p2 str)
+   (interactive "*r\nsString: ")
+   (phisical-rectangle #'string-rectangle (list p1 p2 str)))
+- 期待に添えているか分かりませんが、とりあえずこんなのとか。 --  &new{2007-06-09 (土) 16:24:31};
+
+ (setf (symbol-function 'selection-previous-line) #'selection-previous-virtual-line)
+ (setf (symbol-function 'goto-bol) #'goto-virtual-bol)
+ (setf (symbol-function 'forward-line) #'forward-virtual-line)
+ (setf (symbol-function 'current-line-number) #'current-virtual-line-number)
+ (setf (symbol-function 'goto-column) #'goto-virtual-column)
+ (setf (symbol-function 'end-of-line) #'end-of-virtual-line)
+ (setf (symbol-function 'backward-line) #'backward-virtual-line)
+ (setf (symbol-function 'next-line) #'next-virtual-line)
+ (setf (symbol-function 'bolp) #'virtual-bolp)
+ (setf (symbol-function 'beginning-of-line) #'beginning-of-virtual-line)
+ (setf (symbol-function 'goto-line) #'goto-virtual-line)
+ (setf (symbol-function 'previous-line) #'previous-virtual-line)
+ (setf (symbol-function 'eolp) #'virtual-eolp)
+ (setf (symbol-function 'selection-beginning-of-line) #'selection-beginning-of-virtual-line)
+ (setf (symbol-function 'goto-eol) #'goto-virtual-eol)
+ (setf (symbol-function 'current-column) #'current-virtual-column)
+ (setf (symbol-function 'selection-end-of-line) #'selection-end-of-virtual-line)
+ (setf (symbol-function 'selection-next-line) #'selection-next-virtual-line)
+- すみません。置換自体はこれでできるはずですが、怖くてとても使う気になりません。 -- [[佐野]] &new{2007-06-09 (土) 17:24:51};
+- あ、逆かも。 -- [[佐野]] &new{2007-06-09 (土) 17:26:11};
+- ありがとうございます。いったん fold をやめて、という方法でできるのですね。仰せの通り、一度に全部以降するのは怖そうですね。不満なところから変えていこうと思います。 -- [[質問者]] &new{2007-06-12 (火) 19:53:53};
+
+#comment

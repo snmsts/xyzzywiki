@@ -1,0 +1,65 @@
+* set-window-flags [#d3fd6af3]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[中野]]
+-優先順位:   低
+-状態:       着手
+-カテゴリー: ツッコミをいれる
+-投稿日:     2007-09-01 (土) 10:54:06
+-バージョン: 
+
+** メッセージ [#seb7e767]
+説明を加筆しました。
+
+ <chapter>
+ <title>set-local-window-flags</title>
+ <type>Function</type>
+ <arguments>set-local-window-flags WINDOW-OR-BUFFER FLAGS ON-OR-OFF</arguments>
+ <package>editor</package>
+ <description>
+ ウィンドウもしくはバッファの各種表示を制御します。
+ ほぼ全ての項目で、ウィンドウでもバッファでも設定可能です。
+ バッファの設定 &gt; ウィンドウの設定 &gt; 全体の設定
+ の順番で指定が優先されます。
+ 
+  BUFFER-OR-WINDOW : バッファかウィンドウのいずれかを指定します。
+  FLAGS            : 下のフラグのどれかを指定します。
+         *window-flag-alternate-vscroll-bar* バッファ全体表示できている
+                                             場合の垂直スクロールバー
+         *window-flag-cursor-line*           行カーソル
+         *window-flag-eof*                   EOF
+         *window-flag-fold-line*             折り返しライン
+         *window-flag-fold-mark*             折り返し
+         *window-flag-full-width-space*      全角スペース
+         *window-flag-half-width-space*      半角スペース
+         *window-flag-hscroll-bar*           水平スクロールバー
+         *window-flag-just-inverse*          （詳細不明）
+         *window-flag-line-number*           行番号
+         *window-flag-mode-line*             モード行
+         *window-flag-newline*               改行
+         *window-flag-ruler*                 ルーラ
+         *window-flag-scrolling*             描画位置の計算でジャンプスクロール
+         *window-flag-tab*                   タブ
+         *window-flag-vscroll-bar*           垂直スクロールバー
+         *window-flag-zenkaku-space*         全角スペース
+                                             (*window-flag-full-width-space*と同じ)
+  ON-OR-OFF       : 変更後の値を設定します。
+         t        フラグをonにします。
+         nil      フラグをoffにします。
+         それ以外 デフォルトに戻します。
+ 
+ 使用例：
+   ;;; カレントバッファの行番号を表示しないようにする。
+   (set-local-window-flags (selected-buffer)
+                           *window-flag-line-number* nil)
+   =&gt; t
+ </description>
+ <seealso>set-window-flags</seealso>
+ <seealso>get-local-window-flags</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+
+#comment

@@ -1,0 +1,407 @@
+*ftp関係 [#f37c72a9]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 保留
+-カテゴリー: 新規項目
+-投稿日: 2005-05-04 20:59:05 (水)
+-バージョン: 
+
+**メッセージ [#q409f900]
+メモったので置いておきますが、この辺りの項目もあったほうがいいんでしょうか。
+
+ <chapter>
+ <title>with-ftp-stream</title>
+ <type>Macro</type>
+ <arguments>with-ftp-stream (FTP HOST &amp;optional (PORT FTP)) &amp;body BODY</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバーに接続し、通信を行います。
+   
+   FTP  : ftp 構造体
+   HOST : ホストの場所
+   PORT : ポート番号
+   BODY : 作業内容
+ 
+   ;;; ring サーバーにゲストログインしてみる
+   (with-ftp-stream (ftp "ftp.ring.gr.jp")
+     (ftp-login ftp "anonymous" "anonymous@example.com")
+     (ftp-pwd ftp))
+   R: 220 ring.tains.tohoku.ac.jp FTP server (Version wu-2.6.2(Tohoku University) Mon Dec 6 22:54:38 JST 2004) ready.
+   S: USER anonymous
+   R: 331 Guest login ok, send your complete e-mail address as password.
+   S: PASS *****
+   R: 230 Guest login ok, access restrictions apply.
+   S: PWD
+   R: 257 "/" is current directory.
+   S: QUIT
+   R: 221-You have transferred 0 bytes in 0 files.
+   R: 221-Total traffic for this session was 347 bytes in 0 transfers.
+   R: 221-Thank you for using the FTP service on ring.tains.tohoku.ac.jp.
+   R: 221 Goodbye.
+   =&gt;"/"
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-cdup</title>
+ <type>Function</type>
+ <arguments>ftp-cdup FTP</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバー上で親ディレクトリへ移動します。
+ 
+   FTP  : 接続中の FTP サーバーへの構造体
+ </description>
+ <seealso>ftp-cd</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-chmod</title>
+ <type>Function</type>
+ <arguments>ftp-chmod FTP MODE FILENAME</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバー上でのパーミッションを変更します。
+ 
+   FTP      : 接続中の FTP サーバーへの構造体
+ 　MODE     : パーミッション
+   FILENAME : ファイル名
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-umask</title>
+ <type>Function</type>
+ <arguments>ftp-umask FTP &amp;optional UMASK</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバー上での新規作成ファイルのパーミッションを設定します。
+ 
+   FTP   : 接続中の FTP サーバーへの構造体
+   UMASK : 許可しない権限
+ </description>
+ <seealso>ftp-chmod</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-delete</title>
+ <type>Function</type>
+ <arguments>ftp-delete FTP FILENAME</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバー上でファイルを削除します。
+ 
+   FTP      : 接続中の FTP サーバーへの構造体
+   FILENAME : ファイル名
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-mkdir</title>
+ <type>Function</type>
+ <arguments>ftp-mkdir FTP DIR</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバー上でディレクトリを作成します。
+   
+   FTP : 接続中の FTP サーバーへの構造体
+   DIR : ディレクトリ名
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-mtime</title>
+ <type>Function</type>
+ <arguments>ftp-mtime FTP FILENAME</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバー上でのファイルの最終更新時刻を取得します。
+ 戻り値はユニバーサルタイム形式です。
+   
+   FTP      : 接続中の FTP サーバーへの構造体
+   FILENAME : ファイル名
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-system</title>
+ <type>Function</type>
+ <arguments>ftp-system FTP</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバーのオペレーティングシステムの情報を取得します。
+   
+   FTP  : 接続中の FTP サーバーへの構造体
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-size</title>
+ <type>Function</type>
+ <arguments>ftp-size FTP FILENAME</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバー上でのファイルサイズを取得します。
+   
+   FTP      : 接続中の FTP サーバーへの構造体
+   FILENAME : ファイル名
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-rename</title>
+ <type>Function</type>
+ <arguments>ftp-rename FTP FROM TO</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバー上でファイル名を変更します。
+ 
+   FTP  : 接続中の FTP サーバーへの構造体
+   FROM : 変更前のファイル名
+   TO   : 変更後のファイル名
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-nlist</title>
+ <type>Function</type>
+ <arguments>ftp-nlist FTP &amp;optional PATHNAME</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバー上のファイルの一覧を取得します。
+ ファイル名のみの一覧です。
+ 
+   FTP      : 接続中の FTP サーバーへの構造体
+   PATHNAME : 対象となるディレクトリ
+ </description>
+ <seealso>ftp-ls</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-ls</title>
+ <type>Function</type>
+ <arguments>ftp-ls FTP &amp;optional PATHNAME</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバー上のファイルの一覧を取得します。
+ 
+   FTP      : 接続中の FTP サーバーへの構造体
+   PATHNAME : 対象となるディレクトリ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-get</title>
+ <type>Function</type>
+ <arguments>ftp-get FTP FILENAME OS</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバーからファイルをダウンロードします。
+ 
+   FTP      : 接続中の FTP サーバーへの構造体
+   FILENAME : ファイル名
+   OS       : 出力ストリーム
+   
+   補足:
+     ファイルのやりとりはバイナリモードで行います。
+ </description>
+ <seealso>ftp-put</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-put</title>
+ <type>Function</type>
+ <arguments>ftp-put FTP IS FILENAME</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバーへファイルをアップロードします。
+ 
+   FTP      : 接続中の FTP サーバーへの構造体
+   IS       : 入力ストリーム
+   FILENAME : ファイル名
+ 
+   補足:
+     ファイルのやりとりはバイナリモードで行います。
+ </description>
+ <seealso>ftp-get</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-binary</title>
+ <type>Function</type>
+ <arguments>ftp-binary FTP</arguments>
+ <package>user</package>
+ <description>
+ 転送モードをバイナリモードに変更します。
+ 
+   FTP  : 接続中の FTP サーバーへの構造体
+ </description>
+ <seealso>ftp-ascii</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-ascii</title>
+ <type>Function</type>
+ <arguments>ftp-ascii FTP</arguments>
+ <package>user</package>
+ <description>
+ 転送モードをアスキーモードに変更します。
+ 
+   FTP  : 接続中の FTP サーバーへの構造体
+ 
+   補足:
+     ftp-get, ftp-put の段階でバイナリモードへ変更されるため、
+     あまり意味を持ちません（たぶん）。
+ </description>
+ <seealso>ftp-binary</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-quit</title>
+ <type>Function</type>
+ <arguments>ftp-quit FTP</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバーとの接続を終了します。
+ 
+   FTP  : 接続中の FTP サーバーへの構造体
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-cd</title>
+ <type>Function</type>
+ <arguments>ftp-cd FTP DIR</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバー上でのカレントディレクトリを変更します。
+   
+   FTP : 接続中の FTP サーバーへの構造体
+   DIR : 変更先のディレクトリ
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-pwd</title>
+ <type>Function</type>
+ <arguments>ftp-pwd FTP</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバー上でのカレントディレクトリを取得します。
+   
+   FTP  : 接続中の FTP サーバーへの構造体
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-login</title>
+ <type>Function</type>
+ <arguments>ftp-login FTP &amp;optional USER PASS ACCT</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバーへログインします。
+   
+   FTP  : 接続中の FTP サーバーへの構造体
+   USER : ユーザー名
+   PASS : パスワード
+   ACCT : アカウント
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>ftp-connect</title>
+ <type>Function</type>
+ <arguments>ftp-connect HOST PORT</arguments>
+ <package>user</package>
+ <description>
+ FTP サーバーへ接続します。
+ 接続に成功するとそのサーバーへの ftp 構造体を返します。
+   
+   HOST : ホストの場所
+   PORT : ポート番号
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>その他</section>
+ <file>wip/ftp.l</file>
+ </chapter>
+----
+-これだけまとまりと分量があるものを全部sectionをその他に入れるのは…と考えてしまいます。section ftpをつくりませんか？ -- [[佐野]] &new{2005-05-17 17:56:28 (火)};
+-なるほど、確かに。FTPセクションを新設してもいいかもしれませんね。 -- [[NANRI]] &new{2005-05-17 21:33:59 (火)};
+
+#comment

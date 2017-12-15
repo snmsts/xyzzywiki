@@ -1,0 +1,16 @@
+[[L10N/english]]
+
+ defs.l:80:  '(("ﾃｷｽﾄﾌｧｲﾙ(*.txt;*.doc;*.log)" . "*.txt;*.doc;*.log")
+-Text files(*.txt;*.doc;*.log) --  &new{2005-03-04 21:58:04 (金)};
+
+#comment
+ defs.l:81:    ("C/C++(*.c;*.cpp;*.cxx;*.h)" . "*.c;*.cpp;*.cxx;*.cc;*.h;*.hxx")
+#comment
+ defs.l:82:    ("Lisp(*.l)" . "*.l")
+#comment
+ defs.l:83:    ("HTML(*.htm;*.html)" . "*.htm;*.html")
+#comment
+ defs.l:84:    ("すべてのﾌｧｲﾙ(*.*)" . "*.*")))
+-All files(*.*) --  &new{2005-03-04 21:58:45 (金)};
+
+#comment

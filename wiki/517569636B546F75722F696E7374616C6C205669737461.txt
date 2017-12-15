@@ -1,0 +1,10 @@
+[[QuickTour]]
+Vistaにxyzzyをinstallするとき、「ユーザーアカウント制御」がかかっているので
++ .xyzzyの位置を%XYZZYHOME%で指定しないと自動では探してくれないらしい。
++ xyzzy.iniが保存されないらしい。色の変更とか困った
+* 参考資料 [#d9e8bd8d]
+http://chez-sugi.net/journal/20070202.html
+----
+- xyzzy.ini が保存されないのは、 program files 以下に xyzzy を配置したときだけだから、2の表現は誤解を生むんじゃないですか？ Vista は持っていなくて試せないですが、資料を見る限り、c:\xyzzy 等に配置すれば保存してくれると思うんですがどうでしょう。  --  &new{2008-08-16 (土) 10:18:00};
+
+#comment

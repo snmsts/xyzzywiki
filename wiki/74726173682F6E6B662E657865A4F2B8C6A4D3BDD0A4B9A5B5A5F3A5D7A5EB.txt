@@ -1,0 +1,90 @@
+#freeze
+[[trash]]
+
+* about [#h9a45254]
+
+xyzzy lispで外部コマンドの呼び出しを行う練習用に作りました。nkfを呼び出します。いわゆる文字コードを変更するスクリプトです。
+
+** 使い方など [#ae8b00b4]
+
+nkfが必要です。http://www.vector.co.jp/soft/win95/util/se295331.html から入手できます。パスは初期値ではxyzzyディレクトリのetcディレクトリの中にしました。
+
+以下のソースコードをファイルに保存して、
+
+ M-x eval-buffer
+
+とすると、定義されている関数が使えます。単純に指定したファイルをnkfに渡すだけなので、細かい問い合わせなどは作ってません。注意して使ってください。とりわけconvert-encoding-subdir-file は、サブディレクトリ内のファイルをすべてnkfに渡しますので、これを使うときは特に注意してください。
+
+ ;;; nkffront.l
+ ;;; nkf.exeのフロントエンド
+ 
+ ;; nkfは http://www.vector.co.jp/soft/win95/util/se295331.html にあるものをつかいました。
+ 
+ (defvar *nkf-path* (concat (si:system-root) "etc/nkf32.exe"))
+ (defvar *nkf-version* "2.11")
+ (defvar *nkf-temp-buffer* "*nkfman*")
+ (defvar *nkf-char-encoding-list*
+   '(("-e"     . "EUC-jp / 昔の日本語Linux向け")
+     ("-j"     . "JIS")
+     ("-s"     . "ShiftJIS / Windows向け")
+     ("-w80"   . "UTF8  [Non-BOM] / Ubuntu向け")
+     ("-w8"    . "UTF8  [BOM]")
+     ("-w16"   . "UTF16 [Big-Non-BOM]")
+     ("-w16B"  . "UTF16 [Big-BOM]")
+     ("-w16L"  . "UTF16 [Little-BOM]")
+     ("-w16L0" . "UTF16 [Little-Non-BOM]")))
+ (defvar *nkf-wrap-encoding-list*
+   '(("-Lu" . "Unix / Mac OSX以降 (LF)とか多分")
+     ("-Lw" . "Windows (CRLF)")
+     ("-Lm" . "Mac OS9まで (CR)")))
+ 
+ (defun nkf-man ()
+   "バッファを新たに作り、nkfのマニュアルを見る。"
+   (interactive)
+   (create-new-buffer *nkf-temp-buffer*)
+   (setup-temp-buffer *nkf-temp-buffer*)
+   (switch-to-buffer  *nkf-temp-buffer*)
+   (set-buffer-fold-type-window-update)
+   (goto-char (point-min))
+   (filter-region
+    (concat *nkf-path* " --help"))
+   (goto-char (point-min)))
+ 
+ (defun ask-nkf-options (msg nkf-list)
+   "ミニバッファからnkfのオプションを指定し、指定されたものを返す"
+   (car (rassoc
+         (completing-read  msg
+                           (mapcar #'cdr nkf-list)
+                           :case-fold t
+                           :must-match t)
+         nkf-list :test #'string=)))
+ 
+ 
+ (defun convert-encoding-file (f)
+   "nkfでファイルの文字コードを変更する。元のファイルを上書きする。"
+   (interactive "fどのファイルをnkfで処理する？: ")
+   (setq encode (ask-nkf-options "文字コードはどうする？: " *nkf-char-encoding-list*))
+   (setq wrap (ask-nkf-options "改行コードはどうする？: " *nkf-wrap-encoding-list*))
+   (call-process
+    (concat *nkf-path* " "  encode " " wrap " --overwrite "  "\"" (map-slash-to-backslash f)  "\"")
+    :show :hide))
+ 
+ 
+ (defun convert-encoding-subdir-file (dir)
+   "nkfでファイルの文字コードを変更する。元のファイルを上書きする。
+ サブディレクトリも含めて問い合わせせずに一括変更する。使用には注意。"
+   (interactive "Dどのディレクトリを変更する？")
+   (let (files encode wrap)
+     ;; あるディレクトリ内のファイルのパスをリストで返す
+     (setq files (directory dir
+                            :recursive t
+                            :file-only t))
+     (setq encode (ask-nkf-options "文字コードはどうする？: " *nkf-char-encoding-list*))
+     (setq wrap (ask-nkf-options "改行コードはどうする？: " *nkf-wrap-encoding-list*))
+     ;; dolistでfilesの要素を順次nkfに渡している
+     ;; ファイルパス一つ一つに対してnkfを実行するので、リストの要素が多いと処理に時間がかかる
+     (dolist (f  files)
+       (call-process
+        (concat *nkf-path* " "  encode " " wrap " --overwrite "  "\""
+                (concat (map-slash-to-backslash  dir)  "\\" f) "\"")
+        :show :hide))))

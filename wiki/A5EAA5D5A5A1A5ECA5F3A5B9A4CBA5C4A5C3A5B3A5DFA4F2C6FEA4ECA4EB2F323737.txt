@@ -1,0 +1,51 @@
+* lisp-indent-hook [#becc1cd2]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[lambda]]
+-優先順位:   低
+-状態:       着手
+-カテゴリー: ツッコミをいれる
+-投稿日:     2007-04-06 (金) 00:08:26
+-バージョン: 
+
+** メッセージ [#s94bf6f4]
+
+ nil      : 通常のインデント
+ それ以外 : すべての引数を *lisp-body-indention* だけインデント
+
+↓
+
+ nil,指定なし : すべての引数を *lisp-indent-offset* だけインデント
+ それ以外     : (+ 現在の桁位置 -1 *lisp-body-indention*) だけインデント
+
+----
+- どーもです。こんな感じですかね。プロパティですので指定無しがnilと同じになるのは自明として扱っています。 -- [[NANRI]] &new{2007-05-03 (木) 04:57:33};
+ <chapter>
+ <title>lisp-indent-hook</title>
+ <type>Misc</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ シンボルにプロパティを設定することで lisp-indent-line でのインデント量を制御します。
+ 
+   数値 n   : n 番目以降の引数を *lisp-body-indent* だけ、
+              それより前の引数を (* *lisp-body-indent* 2) だけインデント
+   nil      : 通常のインデント
+              ただし1番目の引数のインデント量は *lisp-indent-offset* に従う
+   それ以外 : すべての引数を *lisp-body-indention* だけインデント
+ 
+ 使用例：
+   ;;; $XYZZY/lisp/lispmode.l から
+   (setf (get 'lambda 'lisp-indent-hook) 'defun)
+   (setf (get 'interactive 'lisp-indent-hook) 1)
+   (setf (get 'progn 'lisp-indent-hook) 0)
+   (setf (get 'if 'lisp-indent-hook) 2)
+   (setf (get 'let 'lisp-indent-hook) 1)
+   (setf (get 'let* 'lisp-indent-hook) 1)
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>シンボル</section>
+ <file></file>
+ </chapter>
+
+#comment

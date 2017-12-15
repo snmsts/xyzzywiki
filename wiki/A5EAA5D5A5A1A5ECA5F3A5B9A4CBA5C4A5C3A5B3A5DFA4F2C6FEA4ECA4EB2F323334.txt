@@ -1,0 +1,31 @@
+* read-exact-char-encoding [#qfb44f4e]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-09-13 (水) 23:52:24
+-バージョン: 
+
+** メッセージ [#f312aff2]
+(interactive "Z")の動作が分かったので。
+
+ <chapter>
+ <title>read-exact-char-encoding</title>
+ <type>Function</type>
+ <arguments>read-exact-char-encoding PROMPT &amp;key :history</arguments>
+ <package>editor</package>
+ <description>
+ read-char-encodingとほぼ同じですが、自動判定が候補から除外されます。
+ (interactive "Z") に相当します。
+ </description>
+ <seealso>read-char-encoding</seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+--------
+
+#comment

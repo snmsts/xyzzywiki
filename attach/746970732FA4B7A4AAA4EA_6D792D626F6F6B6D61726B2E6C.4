@@ -1,0 +1,346 @@
+;;; -*- Mode: Lisp; Package: EDITOR -*-
+;;;
+;;; Last updated: <2004/10/02 12:41:32 +0900>
+;;;
+;;; my-bookmark.l
+
+(provide "my-bookmark")
+
+(in-package "editor")
+
+(export '(bookmark-jump-to-bookmark bookmark-add-new-bookmark
+	  bookmark-clear-this-bookmark bookmark-clear-all
+	  my-bookmark-menu bookmark-edit-bookmark-list
+	  bookmark-select-list-file bookmark-menu-selected-file
+	  *bookmark-max* *bookmark-list* *bookmark-list-file*
+	  *bookmark-filename-length* *bookmark-string-length*
+	  *bookmark-list-file-list*))
+
+;;; カスタマイズできる変数
+(defvar *bookmark-menu-item-length* 16)	 	 ;; 引き出しに入れる個数
+(defvar *bookmark-max* 400)	 	 	 ;; bookmark をいくつまで認めるか
+(defvar *bookmark-filename-length* 24)	  	 ;; メニューに表示するファイル名の長さ（バイト数）
+(defvar *bookmark-string-length* 36)	 	 ;; メニューに表示する文字列の長さ（バイト数）
+
+(define-history-variable *bookmark-list-file* "~/bookmarklist")	 ;; しおりを保存するファイル
+(defvar *bookmark-list* nil)
+(defvar *bookmark-list-file-list* nil)
+
+;;; ジャンプ
+(defun bookmark-jump-to-bookmark (filename pt)
+  (find-file filename)
+  (when (pre-selection-p) (stop-selection))
+  (goto-char pt))
+
+;;; リストの操作
+
+;; utility
+
+(defun data-read-from-file ()  ;NetInstaller を参考にしました
+  (with-open-file (s
+		   *bookmark-list-file*
+		   :direction :input
+		   :if-does-not-exist :create)
+    (setq *bookmark-list* (read s nil))
+    ))
+
+(defun data-write-to-file (data)
+  (with-open-file (s
+		   *bookmark-list-file*
+		   :direction :output
+		   :if-exists :overwrite
+		   :if-does-not-exist :create)
+    (format s "~S" data))
+  t)
+
+(defun get-string-from-line ()
+  (let* ((str (string-left-trim '(#\SPC #\TAB #\　)
+				(if (pre-selection-p)
+				    (buffer-substring (selection-point) (selection-mark))
+				  (buffer-substring
+				   (save-excursion (goto-bol) (point))
+				   (save-excursion (goto-eol) (point))))))
+	 (convstr (convert-encoding-to-internal
+		   *encoding-binary* str)))
+    (unless (< (length convstr) *bookmark-string-length*)
+      (setq str (convert-encoding-to-internal
+		 *encoding-sjis*
+		 (subseq convstr 0 *bookmark-string-length*))))
+    str))
+
+;; 追加
+(defun bookmark-add-new-bookmark (mn)
+  (interactive)
+  (if (get-buffer-file-name)
+      (progn (unless mn (data-read-from-file))
+	(let ((bookmark (acons (cons (current-line-number) (get-string-from-line))
+			       (cons (format-date-string "%y/%m/%d %H:%M:%S") t)
+			       (cons (get-buffer-file-name) (point)))))
+	  (bookmark-clear-this-bookmark (cdr bookmark) t)
+	  (setq *bookmark-list* (nsubst nil t *bookmark-list*))
+	  (push bookmark *bookmark-list*)
+	  (let ((exceed (- (length *bookmark-list*) *bookmark-max*)))
+	    (when (> exceed 0)
+	      (setq *bookmark-list* (nbutlast *bookmark-list* exceed))))
+	  (data-write-to-file *bookmark-list*)
+	  (message "しおりを挟みました")))
+    (plain-error "ファイル名がないよん。"))
+  t)
+
+;; 削除
+(defun bookmark-clear-this-bookmark (dlkey ad)
+  (let ((dl (rassoc dlkey *bookmark-list* :test #'equal)))
+    (setq *bookmark-list* (delete dl *bookmark-list* :test #'equal)))
+  (unless ad (data-write-to-file *bookmark-list*) (my-bookmark-menu t nil))
+  t)
+
+(defun bookmark-clear-all ()
+  (interactive)
+  (setq *bookmark-list* nil)
+  (data-write-to-file *bookmark-list*)
+  (message "すべて削除しました")
+  t)
+
+;; ソート
+(defun bookmark-sort-bookmark-list-by-filename (predp predf dmode)
+  (setq *bookmark-list* (sort *bookmark-list* predp :key #'cddr))
+  (setq *bookmark-list* (sort *bookmark-list* predf :key #'cadr))
+  (data-write-to-file *bookmark-list*)
+  (my-bookmark-menu dmode nil))
+
+(defun bookmark-sort-bookmark-list-by-time (predt dmode)
+  (setq *bookmark-list* (sort *bookmark-list* predt :key #'cadar))
+  (data-write-to-file *bookmark-list*)
+  (my-bookmark-menu dmode nil))
+
+;;; 編集
+(defvar *bookmark-edit-mode-keymap* nil)
+(unless *bookmark-edit-mode-keymap*
+  (setq *bookmark-edit-mode-keymap* (copy-keymap *lisp-mode-map*))
+  (define-key *bookmark-edit-mode-keymap* #\C-g 'bookmark-save-bmlist))
+
+(defun bookmark-edit-bookmark-list ()
+  (interactive)
+  (data-read-from-file)
+  (message "#\C-g で保存終了")
+  (set-buffer (get-buffer-create "*bookmark-edit*"))
+  (make-local-variable 'kept-undo-information)
+  (setq kept-undo-information t)
+  (use-keymap *bookmark-edit-mode-keymap*)
+  (insert "(\n")
+  (with-output-to-buffer ("*bookmark-edit*" (point-max))
+    (dolist (x *bookmark-list*)
+      (format t "~S~%" x)))
+  (goto-char (point-max))
+  (insert ")"))
+
+(defun bookmark-save-bmlist ()
+  (interactive)
+  (message "変更を保存しました")
+  (set-buffer (find-buffer "*bookmark-edit*"))
+  (goto-char (point-min))
+  (replace-buffer "$" "" :regexp t)
+  (goto-char (point-min))
+  (setq *bookmark-list*
+	(with-input-from-selected-buffer (read)))
+  (data-write-to-file *bookmark-list*)
+  (delete-buffer (selected-buffer)))
+
+;;; メニュ
+(defun my-bookmark-menu (dmode btn)
+  (interactive)
+  (continue-pre-selection)
+  (let ((exis (data-read-from-file))
+	(minit nil)
+	(sinit nil)
+	(menu (create-popup-menu))
+	(l (reverse *bookmark-list*)))
+    (if exis
+	(unless (< 1 (length *bookmark-list*)) (setq sinit :disable))
+      (progn (setq minit :disable)
+	(setq sinit :disable)
+	(setq dmode nil)))
+    (dotimes (i (floor (length l) *bookmark-menu-item-length*))
+      (let ((popup (create-popup-menu)))
+	(add-popup-menu menu popup (format nil " Bookmark-~d" i))
+	(dotimes (i *bookmark-menu-item-length*)
+	  (let* ((dlkey (cdar l))
+		 (filename (cadar l))
+		 (pt (cddar l))
+		 (lnum (caaaar l))
+		 (str (cdaaar l))
+		 (jflg (cddaar l))
+		 (fn (file-namestring filename))
+		 (convfn (convert-encoding-to-internal
+			  *encoding-binary* fn)) menu-item)
+	    (unless (< (length convfn) *bookmark-filename-length*)
+	      (setq fn (convert-encoding-to-internal
+			*encoding-sjis*
+			(subseq convfn 0 *bookmark-filename-length*))))
+	    (setq menu-item (concat fn " \t｜" (format nil "~A" lnum) "｜" str))
+	    (add-menu-item popup nil (format nil "~A&~D: ~a"
+					     (if (>= i 10)
+						 (truncate i 10)
+					       " ")
+					     (rem i 10)
+					     menu-item)
+			   #'(lambda ()
+			       (interactive)
+			       (if dmode
+				   (bookmark-clear-this-bookmark dlkey nil)
+				 (bookmark-jump-to-bookmark filename pt)))
+			   #'(lambda ()
+			       (when jflg :check)))
+	    (pop l)))))
+    (let ((c 0))
+      (dolist (b l)
+	(let* ((dlkey (cdr b))
+	       (filename (cadr b))
+	       (pt (cddr b))
+	       (lnum (caaar b))
+	       (str (cdaar b))
+	       (jflg (cddar b))
+	       (fn (file-namestring filename))
+	       (convfn (convert-encoding-to-internal
+			*encoding-binary* fn)) menu-item)
+	  (unless (< (length convfn) *bookmark-filename-length*)
+	    (setq fn (convert-encoding-to-internal
+		      *encoding-sjis*
+		      (subseq convfn 0 *bookmark-filename-length*))))
+	  (setq menu-item (concat fn " \t｜" (format nil "~A" lnum) "｜" str))
+	  (add-menu-item menu nil (format nil "~A&~D: ~a"
+					  (if (>= c 10)
+					      (truncate c 10)
+					    " ")
+					  (rem c 10)
+					  menu-item)
+			 #'(lambda ()
+			     (interactive)
+			     (if dmode
+				 (bookmark-clear-this-bookmark dlkey nil)
+			       (bookmark-jump-to-bookmark filename pt)))
+			 #'(lambda ()
+			     (when jflg :check))))
+	(setq c (1+ c))))
+    (add-menu-separator menu)
+    (if dmode
+	(add-menu-item menu nil "削除モードです")
+      (add-menu-item menu nil "しおりをはさむ(&A)"
+		     #'(lambda () (interactive) (bookmark-add-new-bookmark t))))
+    (let ((smenu (create-popup-menu))
+	  (tmenu (create-popup-menu))
+	  (orderu  "昇順(&U)")
+	  (orderd  "降順(&D)"))
+      (add-popup-menu menu smenu (format nil "フルパス名でソート(&F)"))
+      (add-menu-item smenu nil orderu
+		     #'(lambda () (interactive)
+			 (bookmark-sort-bookmark-list-by-filename #'> #'string-greaterp dmode))
+		     #'(lambda () sinit))
+      (add-menu-item smenu nil orderd
+		     #'(lambda () (interactive)
+			 (bookmark-sort-bookmark-list-by-filename #'< #'string-lessp dmode))
+		     #'(lambda () sinit))
+      (add-popup-menu menu tmenu (format nil "更新日時でソート(&T)"))
+      (add-menu-item tmenu nil orderu
+		     #'(lambda () (interactive)
+			 (bookmark-sort-bookmark-list-by-time #'string> dmode))
+		     #'(lambda () sinit))
+      (add-menu-item tmenu nil orderd
+		     #'(lambda () (interactive)
+			 (bookmark-sort-bookmark-list-by-time #'string< dmode))
+		     #'(lambda () sinit)))
+    (add-menu-item menu nil "編集する(&E)" 'bookmark-edit-bookmark-list)
+    (add-menu-item menu nil "すべて削除(&C)" 'bookmark-clear-all
+		   #'(lambda () minit))
+    (if dmode
+	(progn (message "削除モード")
+	  (add-menu-item menu nil "ジャンプモードにする(&J)"
+			 #'(lambda () (interactive) (my-bookmark-menu nil nil))))
+      (progn (message "ジャンプモード")
+	(add-menu-item menu nil "削除モードにする(&D)"
+		       #'(lambda () (interactive) (my-bookmark-menu t nil))
+		       #'(lambda () minit))))
+    (track-popup-menu menu btn)))
+
+;;; しおりを挟んだ位置に戻る
+(defun bookmark-jump-to-previous-bookmark (&optional n)
+  (interactive)
+  (let (exis l l1 filename pt jflg tflg fflg blist key fkey predt)
+    (flet ((set-bookmark-list ()
+	     (data-read-from-file)
+	     (setq l1 (reverse *bookmark-list*))
+	     (dolist (c l1)
+	       (let ((key1 (cdr c))
+		     (lnum-str (caar c))
+		     (date-str (cadar c)))
+		 (if (equal key1 key)
+		     (progn
+		       (setq *bookmark-list* (nsubst nil t *bookmark-list*))
+		       (push (acons lnum-str (cons date-str t) key1) blist))
+		   (push c blist))))
+	     (setq *bookmark-list* blist)
+	     (data-write-to-file *bookmark-list*)
+	     (find-file filename)
+	     (goto-char pt)
+	     (return-from bookmark-jump-to-previous-bookmark)))
+      (setq exis (data-read-from-file))
+      (unless exis
+	(plain-error "しおりがありません。")
+	(return-from bookmark-jump-to-previous-bookmark))
+      (if n
+	  (setq predt #'string<)
+	(setq predt #'string>))
+      (setq l (sort *bookmark-list* predt :key #'cadar))
+      (dolist (b l)
+	(unless n
+	  (unless fflg
+	    (setq fkey (cdr b))
+	    (setq fflg t)))
+	(setq key (cdr b))
+	(when tflg
+	  (set-bookmark-list))
+	(setq filename (cadr b))
+	(setq pt (cddr b))
+	(setq jflg (cddar b))
+	(when jflg
+	  (setq tflg t)))
+      (if tflg
+	  (if (and (equal filename (get-buffer-file-name))
+		   (equal pt (point)))
+	      (plain-error "ないよん。")
+	    (progn
+	      (find-file filename)
+	      (goto-char pt)))
+	(progn
+	  (unless n
+	    (setq key fkey)
+	    (setq filename (car fkey))
+	    (setq pt (cdr fkey)))
+	  (set-bookmark-list)))
+      )))
+
+(defun bookmark-jump-to-next-bookmark ()
+  (interactive)
+  (bookmark-jump-to-previous-bookmark t))
+
+;;; しおりを保存するファイルの切り替え
+(defun bookmark-menu-selected-file (file)
+  (setq *bookmark-list-file* file)
+  (my-bookmark-menu nil :button2))
+
+(defun bookmark-select-list-file ()
+  (interactive)
+  (if *bookmark-list-file-list*
+      (track-popup-menu *bookmark-list-file-list*)
+    (plain-error "しおりを保存するファイルのリストが設定されていません。")))
+
+;;; キーバインディング
+(global-set-key '(#\C-c #\b #\a) #'(lambda () (interactive) (bookmark-add-new-bookmark nil)))
+(global-set-key '(#\C-c #\b #\c) 'bookmark-clear-all)
+(global-set-key '(#\C-c #\b #\m) #'(lambda () (interactive) (my-bookmark-menu nil :button2)))
+(global-set-key '(#\C-c #\b #\d) #'(lambda () (interactive) (my-bookmark-menu t :button2)))
+(global-set-key '(#\C-c #\b #\e) 'bookmark-edit-bookmark-list)
+(global-set-key '(#\C-c #\b #\p) 'bookmark-jump-to-previous-bookmark)
+(global-set-key '(#\C-c #\b #\n) 'bookmark-jump-to-next-bookmark)
+(global-set-key '(#\C-c #\b #\s) 'bookmark-select-list-file)
+(global-set-key '(#\S-F2) #'(lambda () (interactive) (my-bookmark-menu nil :button2)))

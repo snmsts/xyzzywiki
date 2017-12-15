@@ -1,0 +1,68 @@
+;;; 右クリックしながらホイール回転でバッファを移動
+(defvar *mouse-right-button-state* nil)
+
+;; (defun mouse-right-button-down ()
+;;   (interactive)
+;;   (setf *mouse-right-button-state* :pressed)
+;;   (continue-pre-selection))
+
+(defun my-mouse-wheel-scroll (window n lines)
+  (if *mouse-right-button-state*
+      (let ((*next-buffer-in-tab-order* t))
+        (declare (special *next-buffer-in-tab-order*))
+        (if (> n 0)
+            (next-buffer)
+          (previous-buffer))
+        (setf *mouse-right-button-state* :rotated))
+    (ed::mouse-wheel-scroll window n lines)))
+
+;; (defun mouse-right-button-up ()
+;;   (interactive)
+;;   (unless (eq *mouse-right-button-state* :rotated)
+;;     (mouse-menu-popup))
+;;   (setf *mouse-right-button-state* nil))
+
+(setq-default mouse-wheel-handler #'my-mouse-wheel-scroll)
+;(global-set-key #\RBtnDown 'mouse-right-button-down)
+;(global-set-key #\RBtnUp 'mouse-right-button-up)
+
+(defun minor-mouse-right-button-down ()
+  (interactive)
+  (let ((command nil))
+    (setf *mouse-right-button-state* :pressed)
+    (and (setq command (or (lookup-keymap (local-keymap) #\RBtnDown)
+                           (lookup-keymap *global-keymap* #\RBtnDown)))
+         (call-interactively command)))
+  t)
+
+(defun minor-mouse-right-button-up ()
+  (interactive)
+  (let ((command nil))
+    (unless (eq *mouse-right-button-state* :rotated)
+      (and (setq command (or (lookup-keymap (local-keymap) #\RBtnUp)
+                             (lookup-keymap *global-keymap* #\RBtnUp)))
+           (call-interactively command)))
+    (setf *mouse-right-button-state* nil))
+  t)
+
+(let ((keymap (make-sparse-keymap)))
+  (define-key keymap #\RBtnDown 'minor-mouse-right-button-down)
+  (define-key keymap #\RBtnUp 'minor-mouse-right-button-up)
+  (set-minor-mode-map keymap (find-buffer "*scratch*"))
+  (add-hook '*create-buffer-hook*
+	    #'(lambda (buffer)
+ 		(set-minor-mode-map keymap buffer))))
+
+(require "mouse-gesture-light")
+
+(setq mouse-gesture-light:*gesture-handler*
+     '(("↓→" "close" (lambda ()
+                         (if (> (count-windows) 1)
+                             (delete-window)
+                           (kill-buffer (selected-buffer)))))
+       ("←" "recent-file"
+        (lambda ()
+          (track-popup-menu editor::*recent-file-popup-menu*)))
+       ("→" "split-window" split-window)
+       ("↓" "delete-other-windows" delete-other-windows)
+       ))

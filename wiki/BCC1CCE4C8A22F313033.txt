@@ -1,0 +1,35 @@
+* 「ファイルがみつかりません：”navi"」と起動時にエラー表示：原因不明[#wb60cffd]
+-ページ: [[質問箱]]
+-投稿者: [[Miteba]]
+-状態: 完了
+-投稿日: 2005-08-06 17:10:58 (土)
+
+** メッセージ [#dcc47fd6]
+
+「ファイルがみつかりません：”navi"」と起動時にエラー表示：原因不明です――Netinstallerを使って、この[[FrontPage]]にあるpackages.lのURLをM-x netinstaller そして　a のあとに入れ、さまざまなものをnetinstallしました。その後に、M-x tdiaryとか、M-x　xml-mode　とか、M-x　diary　その他、二、三のものをためしに使ってみました。その後に、この「ファイルがみつかりません：”navi"」と起動時にエラー表示、が起こってしまい、その原因がわかりません。『入門xyzzy』をめくってみてもでていないようです。なお、ファイル検索によっって、*.l でなかに「navi」の記述のあるものを探したところ、~/.netinst/dat　のなかに、http%3A%2F%2Fwww.geocities.co.jp%2FTechnopolis-Mars%2F8229%2Fxyzzy%2Fpackages.l　というファイルがあり、そのなかに「navi」が数カ所はいっていました。これを削除して起動しても、やはり、「ファイルがみつかりません：”navi"」と起動時にエラー表示。また、~ にあるxyzzy.wxpを削除、かつ、~/usr/bin/wxp/ にある.xyzzy.history と、xyzzy.ini を削除してから、起動してもやはり、同じエラー表示がでます。――――なお、いろいろ　netinstaller　で導入した結果、xyzzytail.exe  xyzzytai.ini    xyzzydiff.exe  xyzzydiff.ini  という今までなかったファイルが、~のディレクトリーにはいった状態です。――さらには、念のため、naviという名前の普通のテキスト系ファイル（拡張子なし）を~ディレクトリーに入れてみてから、起動しても、やはり、同じエラー表示がでてきて、原因がわかない状態です。　――――起動時には、**scratch*　(*scratch* ではなく)　がbuffer-tabとしてウィンド画面にでてきます。このエラー表示が出る前は、ふつうに、*scratch*がでてきていました。エラー表示に関しては、たぶんなにかのバッファーtab　＜navi＞が設定されそれを読みに行っているのか、その過程で、*scratch*が一回保存されてまた呼び出せれている感じがします。ただし、検索で調べた限りは、.xyzzy   *sitelinit.l  その他の*.l に「navi」が記述されているのは、上記http%3A%2F%2Fwww.geocities.co.jp%2FTechnopolis-Mars%2F8229%2Fxyzzy%2Fpackages.l　以外はないはずなのですが……――このようなエラー表示は、典型的なエラー表示なのかもしれないのですが、経験のあるかたがご教示くださればさいわいです。
+　
+----
+-おそらく、http://www.geocities.co.jp/Technopolis-Mars/8229/xyzzy/packages.l.txtの内にあるnavi.lをインストールせずに、
+
+ idea-marathon-v02
+
+だけをインストールしていませんか？とりあえず、xyzzyを起動して、
+
+ 「ファイルがみつかりません：”navi"」
+
+と起動時にエラー表示があった後に、
+
+ M-x netinstaller
+
+と入力してNetInstallerを起動してください。そして、 Memory Palace (2)のサイトからnavi.lをnetinstallすれば解決すると思います。あるいは、idea-marathon-v02に行カーソルを合わせて、
+
+ d
+
+を入力し、idea-marathon-v02をアンインストールしても解決すると思います。もし余力があればidea-marathon-v02の上でスペースキーを押してみてください。
+
+ 依存      : navi.l
+
+と記述があります。idea-marathon-v02を使用するためにはnavi.lが必要なようです。拡張Lispによっては、あらかじめある拡張Lispを必要とする場合があります。ですので、netinstallをするときには、まず説明を読み、説明で依存関係をチェックするとよいです。そして、依存の部分に記述がある拡張Lispを先にインストールすれば、この種のトラブルは回避できます。-- [[稲原]] &new{2005-08-06 18:22:03 (土)};
+-大変ありがとうございました。その通りでした。上記で指摘したいただいたとおりに、navi.l を　netinstaller で導入したところ、無事に、起動時エラー表示はきえました。起動時に、それまでは出てこなかった **scratch*　(*scratch* ではなく)　がbuffer-tabとしてウィンド画面にでてきてしまう、というのはなくなりませんが、一応、これで解決いたしました。再度、お礼を申し上げます。 -- [[Miteba]] &new{2005-08-07 02:19:08 (日)};
+
+#comment

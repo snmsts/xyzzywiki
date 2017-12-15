@@ -1,0 +1,166 @@
+#freeze
+#contents
+
+*スペルチェックをしよう [#j85320ff]
+
+**前口上 [#edfc999c]
+
+このページでは、xyzzy上で使用できるスペルチェッカのispellの導入から、実際に使ってみるところまでを説明しています。あまり突っ込んだ説明はしていません。
+
+**ispellの導入 [#qc497f13]
+
+まず必要なものは以下の通りです。
+
+|ツール								|説明|h
+|[[Ispell本体:http://www.jsdlab.co.jp/~kamei/]]			|亀井さんのページからダウンロードできる。|
+|[[辞書ファイル:http://xyzzy.s53.xrea.com/archive/Ispell.zip]]	|XyzzyWikiからからダウンロードできる。|
+|[[xyzzy本体:http://www.jsdlab.co.jp/~kamei/]]			|持っているはず。|
+
+おそらくこのページを見ているほとんどの人はxyzzyを持っていると思うので、Ispellと辞書ファイルを新たにダウンロードしてください。
+
+***ispellのダウンロード [#uadf0379]
+
+[[亀井さんのページ:http://www.jsdlab.co.jp/~kamei/]]からダウンロードします。ダウンロード後、解凍すると、下のような感じになると思います。
+
+#br
+#br
+
+CENTER:''ispell-win32.lzhを解凍すると……''
+CENTER:#ref(01.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){こんな感じ。};
+
+#br
+#br
+
+ちなみに、このファイルの中のREADME.jaには、実際に辞書ファイルをBSDやLinuxに同梱されているファイルから作成する手順も記載されていますが、今回自分は、xyzzywikiのやつを使うことにしたので、簡単に目を通す程度にしておきました。（新しいものにこだわりたい、って人はCygwinとかを使ってやったほうが良いかもしれません）
+
+この中で実際に使用するのは、''/bin/ispell.exe''と、''/bin/ispell.ini''の2つだけです。
+
+***辞書ファイルのダウンロード [#f86f5b2c]
+
+次に辞書ファイルをダウンロードします。[[Xyzzy WikiのArc/Ispell>Arc/Ispell]]からダウンロードできます。解凍すると、下のようにファイルが二つあるはずです。
+
+#br
+#br
+
+CENTER:''解凍後''
+CENTER:#ref(02.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){これが辞書ファイルです。};
+
+#br
+#br
+
+とりあえずreadme.txtを読みましょう。これで準備は整いました。そうしたら設定します。
+
+**ispellの設定 [#z76119cb]
+
+***フォルダの設定 [#na19cfcc]
+
+まず、ispellの辞書をおくフォルダを決めます。自分は、xyzzyのフォルダの内部に作成することにしました。
+
+そのフォルダの中には亀井さんのページからダウンロードしたフォルダの中に含まれている、/bin/ispell.exeと、/bin/ispell.ini、そして、xyzzywikiから入手したamericanmed+.hashを入れます。
+
+#br
+#br
+
+CENTER:''ispell用のフォルダ内には以下の三つのファイルを入れておく''
+CENTER:#ref(03.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){ispell.iniとispell.exeとamericanmed+.hashの三つを同じフォルダに入れておきます。};
+
+#br
+#br
+
+***ispell.iniのパスを設定 [#w5267ade]
+
+そうしたら、フォルダ内のispell.iniのパスを変更します。最初の状態では、
+
+  [Config]
+  LibDir=D:/usr/bin/spell/dict
+
+となっていますが、この、''LibDir=''以降のパスを自分のものへ変更します。今回の例では、ispell用のフォルダは（上の画像のパスを見れば分かるとおり）、
+
+  C:\Documents and Settings\tomohisa\My Documents\xyzzy\dic
+
+なので、
+
+  [Config]
+  LibDir=C:/Documents and Settings/tomohisa/My Documents/xyzzy/dic
+
+としました。 \を/に変更するのを忘れずに。（C-sとか置換ダイアログを使って置換して下さい）そうしたら、ispell.iniの変更は終了です。
+
+**.xyzzyやsiteinit.lに書き加える [#h477c94e]
+
+そうしたら、.xyzzyやsiteinit.lに以下のように書き加えておきます。
+
+ (setq *ispell-command* "C:/Documents and Settings/tomohisa/My Documents/xyzzy/dic/ispell.exe")
+
+"C://〜〜〜"という部分がispellのフォルダのパスになります。こちらも\ではなく、/になるので注意して下さい。パスの後に、ispell.exeを追加するのも忘れないようにしましょう。((siteinit.lに書き加えた場合にはダンプファイルを作り直してください。))
+
+これで全ての準備が終了しました。後は使うだけです。
+
+***出来た。 [#tc1ad2db]
+
+上記で準備が終わったので、やってみます。''M-x ispell-buffer''と打ち込んでみてください。すると、以下のような画面になります。
+
+#br
+#br
+
+CENTER:''M-x ispell-bufferとしてispell.exeを起動する''
+CENTER:#ref(04.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){ispellの起動画面です。};
+
+#br
+#br
+
+自動的にウィンドウが分割されて、上のウィンドウにはミススペルと思われるものの候補が表示されます。下のウィンドウがスペルチェックを開始したファイルです。ミニバッファに書いてあるとおり、 ?を入力すると、簡単に説明画面を表示してくれます。
+
+#br
+#br
+
+CENTER:''使い方の説明（?で表示される）''
+CENTER:#ref(05.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){簡単な説明が出ます。};
+
+#br
+#br
+
+一応、各キーの説明をしておきます。
+
+|ispellのキー			|説明|h
+|SPC				|Space（=スペース）の事。対象となる単語を修正せずに次の単語に進む。|
+|<Number>			|選択された単語を修正する。押したナンバーの単語に変更される。|
+|i				|自分用の辞書（環境変数HOMEに,''.ispell_americanmed+''と言う名前のファイルが出来るらしい）に登録して次の単語に進む。環境変数のHOMEがあればそちらを優先するが、HOMEが無い時にはXYZZYHOMEに作成される。(([[佐野]]さんに感謝。))|
+|a				|選択された単語を、（今回のスペルチェックの時のみ）次以降も無視する。（同じ単語が沢山あるときとかはSPCよりもこっちの方が良いかも）|
+|r				|選択された単語を自分で修正する。ミニバッファに変更後の単語を自分で入力する。|
+|u				|選択された語を小文字で自分の辞書に登録する。|
+|q				|スペルチェックを終了する。C-gでも終了可能。|
+
+という感じです。Wordとかのスペルチェックよりも慣れると早そうな気がする。
+
+**カスタマイズしたい人は [#ye63c8ae]
+
+/lisp/ispell.lに詳しいことが書かれています。自分の好きなように設定できるよう、あらかじめ、*ispell-spelling-error-attributes*や、*ispell-possibilities-window-height*など関数が定義されているようです。
+
+上記の時と同様に、(setq 〜〜)をして設定すれば良いと思います。例えば、
+
+  (setq *ispell-possibilities-window-height* 10)
+
+等を.xyzzyやsiteinit.lに記述しておけば、スペルチェックの候補を表示するペイン（ウィンドウ）が広くなります。
+
+#br
+#br
+
+CENTER:''上記のように設定してみた例''
+CENTER:#ref(06.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){上のペインが広く取られて起動します。ただそれだけ。};
+
+#br
+#br
+
+他にも*ispell-option*というものがあったりと、幾つかあるみたいです。

@@ -1,0 +1,178 @@
+#freeze
+[[trash]]
+
+**eliza [#t74b5b7e]
+ ;;; -*- Mode: Lisp; Package: EDITOR -*-
+ 
+ (provide "eliza")
+ (in-package "editor")
+ (eval-when (:compile-toplevel :load-toplevel :execute)
+   (export '(eliza *eliza-mode-hook* eliza-mode *eliza-mode-map* eliza-eval-line)))
+ (defvar *eliza-mode-hook* nil)
+ (defvar *eliza-before* "")
+ 
+ (defvar *eliza-change* '(
+                                                "mom" "dad" "kids" "dreams" "kid"
+                                                "house" "i" "you" "me" "one"
+                                                "my" "two" "three" "your" "myself"
+                                                "too" "yourself" "hurt" "home" "i'm"
+                                                "you're" "am" "were" "easy" "difficult"))
+ (defvar *eliza-changeto* '(
+                                                  "mother" "father" "children" "dream" "child"
+                                                  "home" "you" "i" "you" "1"
+                                                  "your" "2" "3" "my" "yourself"
+                                                  "also" "myself" "harm" "house" "you're"
+                                                  "i'm" "are" "was" "simple" "hard"))
+ 
+ (defvar *eliza-findresp* '(
+                                                  "computer" "machine" "name" "alike" "like"
+                                                  "same" "you remember" "do i remember" "you dreamed" "dream"
+                                                  "if" "everybody" "everyone" "nobody" "no one"
+                                                  "was you" "you was" "was i" "your mother" "your father"
+                                                  "your husband" "your children" "your" "your sister" "your brother"
+                                                  "your wife" "always" "are i" "are you" "how"
+                                                  "because" "can i" "can you" "certainly" "deutsch"
+                                                  "espanol" "francais" "hello" "i remind you of" "i are"
+                                                  "i'm" "italiano" "maybe" "my" "no"
+                                                  "perhaps" "sorry" "what" "when" "why don't i"
+                                                  "why can't you" "yes" "you want" "you need" "are"
+                                                  "i" "you are sad" "you're sad" "you are unhappy" "you're unhappy"
+                                                  "you are unhappy" "you're unhappy" "you are depressed" "you're depressed" "you are sick"
+                                                  "you're sick" "you are happy" "you're happy" "you are elated" "you're elated"
+                                                  "you are glad" "you're glad" "you are better" "you're better" "you feel you"
+                                                  "you think you" "you believe you" "you wish you" "you are" "you're"
+                                                  "you can't" "you cannot" "you don't" "you feel" "he"
+                                                  "she"))
+ 
+ (defvar *eliza-respaddr* '(
+                                                  1 1 2 3 3
+                                                  3 4 5 6 7
+                                                  8 9 9 9 9
+                                                  10 11 12 13 13
+                                                  13 13 14 13 13
+                                                  13 15 16 18 25
+                                                  19 20 21 22 23
+                                                  23 23 24 3 26
+                                                  26 23 28 29 30
+                                                  28 31 25 25 32
+                                                  33 22 34 34 17
+                                                  27 35 35 35 35
+                                                  35 35 35 35 35
+                                                  35 36 36 36 36
+                                                  36 36 36 36 37
+                                                  37 37 37 38 38
+                                                  39 39 40 41 42
+                                                  43))
+ 
+ 
+ (eval-when (:compile-toplevel :load-toplevel :execute)
+   (defvar *eliza-package* (defpackage "eliza"
+                                                       (:use)
+                                                       (:internal-size 30)
+                                                       (:external-size 0)))
+   (unuse-package "lisp" *eliza-package*))
+ 
+ (defun eliza-eval-line ()
+   (interactive)
+   (let ((result nil) (temp "") (flg -1))
+       (when (save-excursion
+                       (goto-bol)
+                       (looking-at "^ *\\$"))
+         (handler-case
+                 (setq result (buffer-substring (match-end 0)
+                                                                                (progn
+                                                                                  (goto-eol)
+                                                                                  (point))))))
+       (goto-eol)
+       (insert "\n")
+       (dotimes (n (length *eliza-change*))
+         (setq result (substitute-string result (concat "\\<" (nth n  *eliza-change*) "\\>") (nth n *eliza-changeto*) :case-fold t)))
+       (cond
+        ((string= result " ") (insert "What seems to be the problem?\n"))
+        ((string= result *eliza-before*) (insert "You are being repetitious!\n"))
+        (t (dotimes (n (length *eliza-findresp*))
+                 (if (string-matchp (concat "\\<" (nth n *eliza-findresp*) "\\>") result)
+                         (progn (setq flg n)
+                               (if (> (string-matchp (concat "\\<" (nth n *eliza-findresp*) "\\>") result)
+                                          (length (nth n *eliza-findresp*)))
+                                       (setq temp (substring result (+ (string-matchp (nth n *eliza-findresp*) result)
+                                                                                                       (length (nth n *eliza-findresp*)) 1))))
+                               (return))))
+               (cond
+                ((= flg -1) (insert "Hmmm....Interesting, could you explain a little bit better?\n"))
+                ((= (nth flg *eliza-respaddr*) 1) (insert "Computers are great, and I like them!\n"))
+                ((= (nth flg *eliza-respaddr*) 2) (insert "Names, WHO needs names?\n"))
+                ((= (nth flg *eliza-respaddr*) 3) (insert "In what way?\n"))
+                ((= (nth flg *eliza-respaddr*) 4) (insert (concat "Do you often think about" temp "?\n")))
+                ((= (nth flg *eliza-respaddr*) 5) (insert (concat "Did you really think I would forget" temp "?\n")))
+                ((= (nth flg *eliza-respaddr*) 6) (insert (concat "Really, " temp "?\n")))
+                ((= (nth flg *eliza-respaddr*) 7) (insert "How does that dream make you feel?\n"))
+                ((= (nth flg *eliza-respaddr*) 8) (insert (concat "Do you think that its likely that if" temp "\n")))
+                ((= (nth flg *eliza-respaddr*) 9) (insert (concat "Really, " temp "?\n")))
+                ((= (nth flg *eliza-respaddr*) 10) (insert (concat "What if you were " temp "?\n")))
+                ((= (nth flg *eliza-respaddr*) 11) (insert "Were you really?\n"))
+                ((= (nth flg *eliza-respaddr*) 12) (insert (concat "Would you like to believe I was " temp "?\n")))
+                ((= (nth flg *eliza-respaddr*) 13) (insert "Tell me more about your family.\n"))
+                ((= (nth flg *eliza-respaddr*) 14) (insert (concat "Why is it that your " temp "?\n")))
+                ((= (nth flg *eliza-respaddr*) 15) (insert "Can you think of a specific example?\n"))
+                ((= (nth flg *eliza-respaddr*) 16) (insert (concat "Why are you interested in whether I am" temp " or not?\n")))
+                ((= (nth flg *eliza-respaddr*) 17) (insert (concat "Did you think they might not be" temp "?\n")))
+                ((= (nth flg *eliza-respaddr*) 18) (insert (concat "Do you believe you are " temp "?\n")))
+                ((= (nth flg *eliza-respaddr*) 19) (insert "Is that the real reason?\n"))
+                ((= (nth flg *eliza-respaddr*) 20) (insert (concat "You believe I can " temp ", don't you?\n")))
+                ((= (nth flg *eliza-respaddr*) 21) (insert (concat "Whether you can " temp " depends on you more than me.\n")))
+                ((= (nth flg *eliza-respaddr*) 22) (insert "You seem quite sure!\n"))
+                ((= (nth flg *eliza-respaddr*) 23) (insert "Sorry, Im a pure bred American!\n"))
+                ((= (nth flg *eliza-respaddr*) 24) (insert "How do you do?\n"))
+                ((= (nth flg *eliza-respaddr*) 25) (insert "Why do you ask?\n"))
+                ((= (nth flg *eliza-respaddr*) 26) (insert (concat "What makes you think I am " temp "?\n")))
+                ((= (nth flg *eliza-respaddr*) 27) (insert "Im actually quite boring, lets talk about you.\n"))
+                ((= (nth flg *eliza-respaddr*) 28) (insert "Are you sure?\n"))
+                ((= (nth flg *eliza-respaddr*) 29) (insert (concat "Why are you concerned over my" temp "?\n")))
+                ((= (nth flg *eliza-respaddr*) 30) (insert "Aren't we just a bit negative today?\n"))
+                ((= (nth flg *eliza-respaddr*) 31) (insert "Apology accepted!\n"))
+                ((= (nth flg *eliza-respaddr*) 32) (insert (concat "Do you believe I don't " temp "?\n")))
+                ((= (nth flg *eliza-respaddr*) 33) (insert (concat "Do you think you should be able to " temp "?\n")))
+                ((= (nth flg *eliza-respaddr*) 34) (insert (concat "What would it mean to you if you got " temp "?")))
+                ((= (nth flg *eliza-respaddr*) 35) (insert (concat "Im sorry to hear you are " temp "?\n")))
+                ((= (nth flg *eliza-respaddr*) 36) (insert (concat "How have I helped you be " temp "?\n")))
+                ((= (nth flg *eliza-respaddr*) 37) (insert "Do you really think so?\n"))
+                ((= (nth flg *eliza-respaddr*) 38) (insert (concat "Its because you are" temp " that you came to me?\n")))
+                ((= (nth flg *eliza-respaddr*) 39) (insert (concat "How do you know you can't" temp "?\n")))
+                ((= (nth flg *eliza-respaddr*) 40) (insert (concat "Don't you really " temp "?\n")))
+                ((= (nth flg *eliza-respaddr*) 41) (insert "Tell me more about such feelings.\n"))
+                ((= (nth flg *eliza-respaddr*) 42) (insert "How is he doing these days?\n"))
+                ((= (nth flg *eliza-respaddr*) 43) (insert "Did you know I dated her once?\n"))
+                (t (insert "You should NOT have gotten this message!! PROGRAM ERROR.\n")))))
+       (setq *eliza-before* result)
+       (insert "$ ")))
+ 
+   (defun eliza ()
+       (interactive)
+       (switch-to-buffer "*eliza*")
+       (eliza-mode))
+ 
+   (defun eliza-mode ()
+       (interactive)
+       (kill-all-local-variables)
+       (setq buffer-mode 'eliza-mode)
+       (setq mode-name "eliza")
+       (use-keymap *eliza-mode-map*)
+       (make-local-variable 'need-not-save)
+       (setq need-not-save t)
+       (make-local-variable 'auto-save)
+       (setq auto-save nil)
+       (goto-char (point-max))
+       (unless (bolp)
+         (insert #\LFD))
+       (insert #\LFD)
+       (forward-char -1)
+       (setq *eliza-before* "")
+       (insert "Hello.  What's up?\n")
+       (insert "$ ")
+       (run-hooks '*eliza-mode-hook*))
+ 
+   (defvar *eliza-mode-map* nil)
+   (unless *eliza-mode-map*
+       (setq *eliza-mode-map* (make-sparse-keymap))
+       (define-key *eliza-mode-map* #\RET 'eliza-eval-line))

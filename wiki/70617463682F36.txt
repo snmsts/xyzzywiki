@@ -1,0 +1,85 @@
+*grep 結果をファイル名順にソート [#p03b0f8c]
+
+-ページ: [[patch]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 提案
+-カテゴリー: 機能追加
+-投稿日: 2005-07-25 22:59:16 (月)
+-バージョン: 
+
+**メッセージ [#h6dd26d1]
+grepd.l より（非同期でgrepでない時）
+
+ (defun scan-files-sync (pattern buffer temp scanner file dir)
+   (unwind-protect
+       (let ((dirlist (if (consp dir) (glob-expand-list dir) (glob-expand dir))))
+ 	(unless dirlist
+ 	  (error "~A~%ディレクトリが見つかりません" dir))
+ 	(scan-files-setup (glob-common-path dirlist)
+ 			  buffer temp scanner)
+ 	(refresh-screen)
+ 	(with-output-to-selected-buffer
+ 	  (let ((last-tick (get-internal-real-time))
+ 		(found nil)
+ 		(l (glob-common-length dirlist))
+ 		tick)
+ 	    (dolist (d dirlist)
+ 	      (let ((files (sort (directory d
+ 					    :recursive *grep-subdir*
+ 					    :file-only t :wild file)
+ 				 #'string-lessp))
+ 		    (base (glob-subseq d l)))
+ 		(dolist (f files)
+ 		  (setq f (concatenate 'string base f))
+ 		  (when (scan-files-1 f pattern temp scanner)
+ 		    (setq found t))
+ 		  (when found
+ 		    (setq tick (get-internal-real-time))
+ 		    (when (> (- tick last-tick) 500)
+ 		      (setq last-tick tick)
+ 		      (set-buffer buffer)
+ 		      (goto-char (buffer-stream-point *standard-output*))
+ 		      (refresh-screen)
+ 		      (setq found nil)))
+ 		  (do-events)))))))
+     (delete-buffer temp)
+     (set-buffer buffer)
+     (goto-char (point-min)))
+   (set-buffer-modified-p nil)
+   (run-hooks '*grepd-hook*)
+   (message "done"))
+
+glob.l より（非同期でgrep時）
+ (defun glob-enumerator (dirlist wild recursive-p &optional empty-ok)
+   (let ((files nil))
+     #'(lambda ()
+ 	(loop
+ 	  (when files
+ 	    (return (pop files)))
+ 	  (let* ((dir (pop dirlist))
+ 		 (dot (equal dir ".")))
+ 	    (unless dir
+ 	      (return nil))
+ 	    (setq files (directory dir :wild wild :file-only t))
+ 	    (setq files (sort files #'string-lessp)) ;+
+ 	    (let ((dirp (file-directory-p dir)))
+ 	      (if dirp
+ 		  (or (equal dir "")
+ 		      (setq dir (append-trail-slash dir)))
+ 		(let ((slash (position #\/ dir :from-end t)))
+ 		  (setq dir (if slash (subseq dir 0 (1+ slash)) ""))))
+ 	      (unless dot
+ 		(setq files (mapcar #'(lambda (f) (concat dir f)) files)))
+ 	      (when (and dirp recursive-p)
+ 		(let ((dirs (directory dir :directory-only t)))
+ 		  (setq dirlist (nconc (if dot
+ 					   dirs
+ 					 (mapcar #'(lambda (f) (concat dir f)) dirs))
+ 				       dirlist)))))
+ 	    (when (and empty-ok (null files))
+ 	      (return t)))))))
+
+----
+
+#comment

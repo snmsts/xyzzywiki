@@ -1,0 +1,94 @@
+;;; -*- Mode: Lisp; -*-
+;;;
+;;; This file is not part of rss-mode.
+;;;
+;                              Last updated: <2004-06-26T19:39:24+09:00>
+;                              written by NANRI <southly@sannet.ne.jp>
+;
+; ■使い方
+;     ~/.rss/config.l からロードしてください。
+;
+
+(in-package "rss")
+
+(defvar *rss-attribute-date* *rss-attribute-item*)
+
+; とりあえず dc:date に対応してみる。content:encoded にもへなちょこ対応。
+; from site-lisp/rss/parse.l
+(defun rss-parse-item (xml)
+  (let (cur item)
+    (while xml
+      (or xml (return))
+      (or (listp xml) (return))
+      (setq cur (car xml))
+      (setq xml (cdr xml))
+      (when (listp cur)
+        (let ((name (ed::xmlpm-tag-name cur))
+              (opts (ed::xmlpm-tag-opts cur))
+              (contents (ed::xmlpm-tag-contents cur)))
+          (when (or (equal name "title")
+                    (equal name "link")
+                    (equal name "description")
+                    (equal name "dc:date")
+                    (equal name "content:encoded"))
+            (push (cons name (car contents)) item)))))
+    (when item
+      (push item *rss-item-list*))))
+
+; see site-lisp/rss/macro.l
+(defmacro rss-date (list)
+  `(rss-value "dc:date" ,list))
+
+(defmacro rss-encoded (list)
+  `(rss-value "content:encoded" ,list))
+
+; from site-lisp/rss/rss.l
+(defun rss-item-text-format (item)
+  (format nil "~A~%~A~@[~%~%~A~]~@[~%~%\t~A~]"
+          (rss-title item)
+          (rss-link item)
+          (or (rss-description item) (rss-decode-content (rss-encoded item)))
+          (rss-date item)))
+
+(defun rss-decode-content (cdata)
+  (when cdata
+    (substitute-string
+     (substitute-string
+      (substitute-string
+       (ed::xmlpm-decode-special-chars (substitute-string cdata "[\n\r]" ""))
+       "\\(<br[^<>]*>\\|</p>\\|<p[^<>]*>\\|</[uo]l>\\)" "\n")
+      "<li>" "\n  ・")
+     "<[^<>]+>" "")))
+
+;; ; from site-lisp/rss/rss.l
+;; ; ソートしたい時
+;; (defun rss-print-items ()
+;;   (dolist (item (sort *rss-item-list* #'string-greaterp
+;;                       :key #'(lambda (x) (cdr (assoc "dc:date" x :test #'string=)))))
+;;     (rss-print-item item)))
+
+; from site-lisp/rss/rss.l
+(defun rss-print-item (item)
+  (apply #'set-text-attribute
+         (point)
+         (progn
+           (insert *rss-print-item-prefix*)
+           (point))
+         'rss-item
+         *rss-attribute-item-prefix*)
+  (when (rss-date item)
+    (apply #'set-text-attribute
+           (point)
+           (progn
+             (insert (format nil "~@[<~A> ~]" (substring (rss-date item) 0 10)))
+             (point))
+           'rss-item
+           *rss-attribute-date*))
+  (apply #'set-text-attribute
+         (point)
+         (progn
+           (insert (substitute-string (format nil "~@[~A~]"
+                                              (rss-title item)) "[\n\r]" " ") "\n")
+           (point))
+         'rss-item
+         *rss-attribute-item*))

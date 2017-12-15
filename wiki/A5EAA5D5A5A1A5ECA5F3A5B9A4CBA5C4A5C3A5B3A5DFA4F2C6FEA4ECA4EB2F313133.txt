@@ -1,0 +1,60 @@
+*set-local-window-flags [#u7b27f59]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-04-02 12:00:16 (土)
+-バージョン: 
+
+**メッセージ [#baea95cd]
+フラグの説明を追加しようと試みたものの・・・
+ <chapter>
+ <title>set-local-window-flags</title>
+ <type>Function</type>
+ <arguments>set-local-window-flags WINDOW-OR-BUFFER FLAGS ON-OR-OFF</arguments>
+ <package>editor</package>
+ <description>
+ 特定のウィンドウもしくはバッファの各種表示を制御します。
+ 
+  BUFFER-OR-WINDOW : バッファかウィンドウのいずれかを指定します。
+  FLAG             : 下のフラグのどれかを指定します。
+         *window-flag-alternate-vscroll-bar* バッファ全体表示できている
+                                             場合の垂直スクロールバー
+         *window-flag-cursor-line*           行カーソル
+         *window-flag-eof*                   EOF
+         *window-flag-fold-line*             折り返しライン
+         *window-flag-fold-mark*             折り返し
+         *window-flag-full-width-space*      全角スペース
+         *window-flag-half-width-space*      半角スペース
+         *window-flag-hscroll-bar*           水平スクロールバー
+         *window-flag-just-inverse*          （詳細不明）
+         *window-flag-line-number*           行番号
+         *window-flag-mode-line*             モード行
+         *window-flag-newline*               改行
+         *window-flag-ruler*                 ルーラ
+         *window-flag-scrolling*             （詳細不明）
+         *window-flag-tab*                   タブ
+         *window-flag-vscroll-bar*           垂直スクロールバー
+         *window-flag-zenkaku-space*         全角スペース
+  ON-OR-OFF       : 変更後の値を設定します。
+         t        フラグをonにします。
+         nil      フラグをoffにします。
+         それ以外 デフォルトに戻します。
+ 
+ 使用例：
+   ;;; カレントバッファの行番号を表示しないようにする。
+   (set-local-window-flags (selected-buffer)
+                           *window-flag-line-number* nil)
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>builtin.l</file>
+ </chapter>
+----
+-許可をいただいたので、「入門xyzzy」を参考に記述を加えました。 -- [[NANRI]] &new{2005-05-15 21:47:21 (日)};
+-取り込みます→[[refwiki:set-local-window-flags]] -- [[NANRI]] &new{2005-06-11 23:11:25 (土)};
+
+#comment

@@ -1,0 +1,35 @@
+[[tips]]
+
+http://homepage1.nifty.com/blankspace/emacs/sticky.htmlにあるelispの移植です。
+ただし、もともとの動作を知らないので正しく移植できているかは分かりません。
+
+ (defvar *sticky-key* #\;)
+ (defvar *sticky-list*
+   '(("a" . "A")("b" . "B")("c" . "C")("d" . "D")("e" . "E")("f" . "F")("g" . "G")
+     ("h" . "H")("i" . "I")("j" . "J")("k" . "K")("l" . "L")("m" . "M")("n" . "N")
+     ("o" . "O")("p" . "P")("q" . "Q")("r" . "R")("s" . "S")("t" . "T")("u" . "U")
+     ("v" . "V")("w" . "W")("x" . "X")("y" . "Y")("z" . "Z")
+     ("1" . "!")("2" . "@")("3" . "#")("4" . "$")("5" . "%")("6" . "^")("7" . "&")
+     ("8" . "*")("9" . "(")("0" . ")")
+     ("`" . "~")("[" . "{")("]" . "}")("-" . "_")("=" . "+")("," . "<")("." . ">")
+     ("/" . "?")(";" . ":")("'" . "\"")("\\" . "|")
+     ))
+ (defvar sticky-map (make-sparse-keymap))
+ (setf (symbol-function 'sticky-map-prefix) sticky-map)
+ (defun set-sticky ()
+   (if (get-ime-mode)
+       (define-key *global-keymap* *sticky-key* 'self-insert-command)
+     (define-key *global-keymap* *sticky-key* 'sticky-map-prefix)))
+ (set-sticky)
+ (add-hook '*ime-mode-hook* #'set-sticky)
+ (mapcar #'(lambda (pair)
+             (define-key sticky-map (character (first pair))
+                         #'(lambda (&optional (arg 1))
+                             (interactive "*p")
+                             (let ((*last-command-char* (character (cdr pair))))
+                               (self-insert-command arg)))))
+         *sticky-list*)
+ (define-key sticky-map *sticky-key* #'(lambda (&optional (arg 1))
+                                         (interactive "*p")
+                                         (let ((*last-command-char* *sticky-key*))
+                                           (self-insert-command arg))))

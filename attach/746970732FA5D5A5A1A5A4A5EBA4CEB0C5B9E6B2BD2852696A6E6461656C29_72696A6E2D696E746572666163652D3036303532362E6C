@@ -1,0 +1,44 @@
+(require "rijn")
+
+(defvar-local *buffer-needs-encryption* nil)
+(defvar *encrypted-file-list* nil)
+;; ê›íËó· (My Documents/passwords Çà√çÜâª)
+;; (pushnew (merge-pathnames "passwords" (get-special-folder-location :personal))
+;;	  *encrypted-file-list*
+;;	  :test 'path-equal)
+
+(defun file-encrypted-p (filename)
+  (dolist (pattern *encrypted-file-list*)
+    (when (string-matchp pattern filename)
+      (return-from file-encrypted-p t))))
+
+(let (key-alist)
+  (flet ((get-key ()
+	   (cdr (assoc (selected-buffer) key-alist :test #'eq)))
+	 (set-key (key)
+	   (pushnew (cons (selected-buffer) key) key-alist :test #'eq :key #'car)))
+    (defun save-buffer-with-encryption ()
+      (when *buffer-needs-encryption*
+	(write-file-and-encrypt (get-buffer-alternate-file-name)
+				(get-key)
+				t)
+	(set-buffer-modified-p nil)))
+    (defun find-file-with-decryption (filename)
+      (si:*activate-toplevel)		; filer Ç©ÇÁäJÇ¢ÇΩÇ∆Ç´ÇÃÇΩÇﬂ
+      (let ((exist-p (file-exist-p filename)))
+	(when exist-p
+	  (setq filename (truename filename)))
+	(unless (file-encrypted-p filename)
+	  (return-from find-file-with-decryption nil))
+	(if exist-p
+	    (read-encrypt-file filename (get-key))
+	  (progn
+	    (set-buffer (create-new-buffer (file-namestring filename)))
+	    (set-key (rijndael::getpass))))
+	(setq *buffer-needs-encryption* t))
+      (set-buffer-alternate-file-name filename)
+      (selected-buffer))
+    ))
+
+(add-hook '*before-save-buffer-hook* 'save-buffer-with-encryption)
+(add-hook '*before-find-file-hook* 'find-file-with-decryption)

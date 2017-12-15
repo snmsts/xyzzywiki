@@ -1,0 +1,42 @@
+[[SimplePaste:http://www.atdot.net/sp/]] にリージョン部分を貼り付ける．IRC でなんか喋ってるとき，地味に便利．
+
+Ruby が入ってないといけない．xyzzy lisp だけでも出来ると思うけど，面倒なんで調べていない．
+
+* 1. etc/spc.rb を用意する [#x1fcf554]
+
+	require 'cgi'
+	require 'net/http'
+	
+	data = ''
+	while line = ARGF.gets
+	  data << line
+	  break if /\x00/ =~ line
+	end
+	
+	body = CGI.escape(data)
+	
+	Net::HTTP.version_1_2
+	Net::HTTP.start('www.atdot.net', 80) {|http|
+	  response = http.post('/sp/commit/auto',
+	    'paste_body=' + body)
+	  puts response.body
+	}
+
+* 2. こんな感じで使う [#i089ff43]
+
+ (defun my-simple-paste ()
+  (interactive)
+  (let ((paste-body (buffer-substring (mark) (point)))
+        (cmd        (format nil "ruby ~A"
+                            (merge-pathnames "spc.rb" (etc-path))))
+        )
+    (if (yes-or-no-p "Can I paste follows?\n~A" paste-body)
+        ;; simple paste
+        (with-output-to-temp-buffer ("*simple paste*" t)
+          (let ((proc (make-process cmd)))
+            (process-send-string proc paste-body)
+            (process-send-string proc "\x00\n")
+            )))))
+ 
+ (global-set-key '(#\C-c #\C-p) 'my-simple-paste)
+-ああぁ，tips というプレフィックスを付け忘れてしまいました... -- [[書いた人]] &new{2005-04-28 02:16:10 (木)};

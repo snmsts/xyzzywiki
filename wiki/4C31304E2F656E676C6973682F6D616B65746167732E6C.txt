@@ -1,0 +1,32 @@
+[[L10N/english]]
+
+ maketags.l:88:    (:caption "ﾀｸﾞﾌｧｲﾙを作る")
+#comment
+ maketags.l:89:    (:font 9 "ＭＳ Ｐゴシック")
+#comment
+ maketags.l:91:     (:static nil "ｿｰｽﾃﾞｨﾚｸﾄﾘ(&S):" #x50020000 7 7 58 8)
+#comment
+ maketags.l:93:     (:button subdir "ついでにｻﾌﾞﾃﾞｨﾚｸﾄﾘも(&U)" #x50010003 7 48 102 10)
+#comment
+ maketags.l:94:     (:static nil "検索する階層の深さ(&D):" #x50020000 9 63 80 8)
+#comment
+ maketags.l:96:     (:spin depthspin "Spin1" #x500000b6 119 55 9 14)
+#comment
+ maketags.l:97:     (:static nil "(0は無制限)" #x50020000 129 63 48 8)
+#comment
+ maketags.l:98:     (:button IDOK "OK" #x50010001 169 7 50 14)
+#comment
+ maketags.l:99:     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 169 24 50 14)
+#comment
+ maketags.l:100:     (:button ref "参照(&R)..." #x50010000 169 41 50 14))))
+#comment
+ maketags.l:115:		  '((src :non-null "ｿｰｽﾃﾞｨﾚｸﾄﾘを入力して" :enable (IDOK))
+#comment
+ maketags.l:117:			   :range-error "階層の深さ0以上です"
+#comment
+ maketags.l:118:			   :type-error "数値を入力してください")
+- Numeric value is required --  &new{2014-06-24 (火) 10:44:58};
+
+#comment
+ maketags.l:120:		    (ref :related src :directory-name-dialog (:title "参照"))))
+#comment

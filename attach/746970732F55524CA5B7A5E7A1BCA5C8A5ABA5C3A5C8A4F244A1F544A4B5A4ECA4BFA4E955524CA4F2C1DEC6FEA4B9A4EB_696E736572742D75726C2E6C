@@ -1,0 +1,40 @@
+;;;;;;;;;;;;;;;;
+;;;■ URLショートカットをD&Dされたら、URLを挿入する。
+;;;設定項目
+;このモードのときはリンク形式でペーストする。
+(defvar *insert-url-as-link-mode-list* '(html-mode html+-mode))
+;ドロップされたもとのショートカットを削除する?
+(defvar *kill-url-shortcut-file* nil)
+;ふつうにペーストするときのフォーマット
+(defvar *insert-as-text-format* "\n($filename)\n($url)\n")
+;リンクでペーストするときのフォーマット
+(defvar *insert-as-link-format* "<a href=\"($url)\">($filename)</a>")
+(c:define-dll-entry
+ winapi:DWORD
+ GetPrivateProfileString
+ (winapi:LPCSTR winapi:LPCSTR winapi:LPCSTR winapi:LPCSTR winapi:DWORD winapi:LPCSTR)
+ "kernel32" "GetPrivateProfileStringA")
+(setq *drag-and-drop-hook*
+	  #'(lambda (window files)
+		  (set-window window)
+		  (if (minibuffer-window-p window)
+			  (insert (format nil "~{~A~^ ~}" files))
+			(dolist (f files t)
+			  (if (string-matchp "^\\(.*\\)\.url$" (file-namestring f))
+				  (let* ((ttl (match-string 1))
+						 (name (pathname-name f))
+						 (sec (si:make-string-chunk "InternetShortcut"))
+						 (key (si:make-string-chunk "URL"))
+						 (non (si:make-string-chunk ""))
+						 (sz 500)
+						 (url (si:make-chunk nil sz))
+						 (file (si:make-string-chunk (map-slash-to-backslash f))))
+					(GetPrivateProfileString sec key non url sz file)
+					(if (member buffer-mode *insert-url-as-link-mode-list*)
+						(setq st *insert-as-link-format*)
+					  (setq st *insert-as-text-format*))
+					(setq st (substitute-string st "($url)" (si:unpack-string url 0)))
+					(setq st (substitute-string st "($filename)" name))
+					(insert st)
+					(when *kill-url-shortcut-file* (delete-file f :recycle t)))
+				(find-file f))))))

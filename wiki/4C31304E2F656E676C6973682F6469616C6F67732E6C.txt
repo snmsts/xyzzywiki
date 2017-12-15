@@ -1,0 +1,275 @@
+[[L10N/english]]
+
+ dialogs.l:30:    (:caption "文字列の検索")
+-Search String --  &new{2005-03-21 01:01:42 (月)};
+- fltTpgwNhW -- [[jorbyptxz]] &new{2014-05-15 (木) 20:59:05};
+
+#comment
+ dialogs.l:31:    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-21 01:04:12 (月)};
+
+#comment
+ dialogs.l:33:     (:static nil "検索(&S):" #x50020000 7 10 31 8)
+-&Search --  &new{2005-03-21 01:04:25 (月)};
+
+#comment
+ dialogs.l:35:     (:button case-fold "大文字小文字を区別する(&C)" #x50010006 39 27 113 10)
+-Enable &Case sensitivity --  &new{2005-03-21 01:04:35 (月)};
+
+#comment
+ dialogs.l:36:     (:button word "単語単位で検索する(&W)" #x50010003 39 40 100 10)
+-search by word -- [[gosia]] &new{2005-09-24 22:33:16 (土)};
+-search by word -- [[gosia]] &new{2005-09-24 22:50:27 (土)};
+
+#comment
+ dialogs.l:37:     (:button regexp "正規表現(&E)" #x50010003 39 53 55 10)
+-regexp -- [[gosia]] &new{2005-09-24 22:47:37 (土)};
+-regexp -- [[gosia]] &new{2005-09-24 22:50:11 (土)};
+- Regular &Expression -- [[名無し]] &new{2008-08-19 (火) 03:15:05};
+
+#comment
+ dialogs.l:38:     (:button escseq "ｴｽｹｰﾌﾟｼｰｹﾝｽを理解しろ(&Y)" #x50010003 39 66 105 10)
+-hear EscapeSequence -- [[gosia]] &new{2005-09-24 22:48:13 (土)};
+-Interpret escape sequences --  &new{2005-09-25 02:11:53 (日)};
+
+#comment
+ dialogs.l:39:     (:button wrap "見つからなければ戻って検索(&V)" #x50010003 39 79 125 10)
+-wrapped search(&V) --
+
+#comment
+ dialogs.l:40:     (:button backward "上検索(&P)" #x50010000 185 7 50 14)
+-search backward(&P) --
+
+#comment
+ dialogs.l:41:     (:button forward "下検索(&N)" #x50010001 185 24 50 14)
+-search forward(&N) --
+
+#comment
+ dialogs.l:42:     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 185 41 50 14))))
+-cancel --
+
+#comment
+ dialogs.l:64:		      (search :non-null "検索文字列を入力して" :enable (forward backward)))))
+-input pattern --
+
+#comment
+ dialogs.l:86:    (:caption "文字列の置換")
+-replace string --
+
+#comment
+ dialogs.l:87:    (:font 9 "ＭＳ Ｐゴシック")
+#comment
+ dialogs.l:89:     (:static nil "検索(&S):" #x50020000 7 10 32 8)
+-&Search --
+
+#comment
+ dialogs.l:91:     (:static nil "置換(&R):" #x50020000 7 29 32 8)
+-&Replace --
+
+#comment
+ dialogs.l:93:     (:button case-fold "大文字小文字を区別する(&C)" #x50010006 39 46 113 10)
+-&Case fold search --
+-"Case sensitive" --  &new{2005-10-02 17:33:25 (日)};
+-一番上のを書いたものですが、確かに意味が逆でしたね。訂正ありがとうございます。 --  &new{2005-10-09 21:29:28 (日)};
+
+#comment
+ dialogs.l:94:     (:button word "単語単位で検索する(&W)" #x50010003 39 59 97 10)
+-&Word search --
+
+#comment
+ dialogs.l:95:     (:button regexp "正規表現(&E)" #x50010003 39 72 63 10)
+-reg&Exp --
+
+#comment
+ dialogs.l:96:     (:button escseq "ｴｽｹｰﾌﾟｼｰｹﾝｽを理解しろ(&Y)" #x50010003 39 85 113 10)
+-use escape sequence(&Y) --
+
+#comment
+ dialogs.l:97:     (:button whole "ﾊﾞｯﾌｧの先頭から(&O)" #x50010003 39 98 89 10)
+-search whole buffer(&O) --
+
+#comment
+ dialogs.l:98:     (:button query "確認あり(&Q)" #x50010001 185 7 50 14)
+-&Query --
+
+#comment
+ dialogs.l:99:     (:button all "全て置換(&A)" #x50010000 185 24 50 14)
+-replace &All occurrences --
+
+#comment
+ dialogs.l:100:     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 185 41 50 14))))
+-cancel --
+
+#comment
+ dialogs.l:132:		      (search :non-null "検索文字列を入力して" :enable (query all)))))
+-input pattern --
+
+#comment
+ dialogs.l:165:    (:caption "一致する文字列を数える")
+-count matches --
+
+#comment
+ dialogs.l:166:    (:font 9 "ＭＳ Ｐゴシック")
+#comment
+ dialogs.l:168:     (:static nil "検索(&S):" #x50020000 7 10 31 8)
+-&Search --
+
+#comment
+ dialogs.l:170:     (:button case-fold "大文字小文字を区別する(&C)" #x50010006 39 27 113 10)
+-&Case %%fold search%%sensitive --
+
+#comment
+ dialogs.l:171:     (:button word "単語単位で検索する(&W)" #x50010003 39 40 100 10)
+-&Word search --
+
+#comment
+ dialogs.l:172:     (:button regexp "正規表現(&E)" #x50010003 39 53 55 10)
+-reg&Exp --
+
+#comment
+ dialogs.l:173:     (:button insert "結果を挿入する(&I)" #x50010003 39 66 105 10)
+-&Insert result --
+
+#comment
+ dialogs.l:174:     (:button IDOK "検索(&P)" #x50010001 185 7 50 14)
+-Go(&P) --
+
+#comment
+ dialogs.l:175:     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 185 24 50 14))))
+-cancel --
+
+#comment
+ dialogs.l:191:		    (search :non-null "検索文字列を入力して" :enable (IDOK))))
+-input pattern --
+
+#comment
+ dialogs.l:201:		(insert (format nil "~D" count))
+#comment
+ dialogs.l:203:		  (msgbox "文字列が見つかりません")
+-pattern not found --
+
+#comment
+ dialogs.l:204:		(msgbox "~D個の文字列があります" count)))))))))
+-~~D occurrences found --
+
+#comment
+ dialogs.l:211:		(:caption "指定行へ移動")
+-goto line --
+
+#comment
+ dialogs.l:212:		(:font 9 "ＭＳ Ｐゴシック")
+#comment
+ dialogs.l:214:		 (:static nil "行番号(&L):" #x50020000 7 16 40 8)
+-&Line number --
+
+#comment
+ dialogs.l:216:		 (:button disp "表示行だす(&D)"
+-virtual line(&D) ショートカットキーと合わないのが気持ち悪いですが。--
+
+#comment
+ dialogs.l:219:		 (:button IDOK "移動(&G)" #x50010001 99 7 50 14)
+-&Go --
+
+#comment
+ dialogs.l:220:		 (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 99 24 50 14)))
+-cancel --
+
+#comment
+ dialogs.l:223:	       :type-error "行番号を入力してしださい"
+-input line number --
+
+#comment
+ dialogs.l:224:	       :range-error "1以上を指定してください")))
+-line number should be positive --
+
+#comment
+ dialogs.l:253:    (open-file-dialog "閉じて開く" nil)))
+-close and open file --
+
+#comment
+ dialogs.l:284:	((yes-no-or-cancel-p "~aを保存しますか?" (selected-buffer))
+-save ~a? --
+
+#comment
+ dialogs.l:294:      (file-name-dialog :title "ﾌｧｲﾙの挿入"
+-insert file --
+
+#comment
+ dialogs.l:310:      (file-name-dialog :title "名前の変更" :save t
+-rename --
+
+#comment
+ dialogs.l:324:			  '((:font 9 "ＭＳ Ｐゴシック")
+#comment
+ dialogs.l:326:			     (:static nil "ｺﾏﾝﾄﾞﾗｲﾝ(&C):" #x50020000 7 7 48 8)
+-&Command line --
+
+#comment
+ dialogs.l:328:			     (:button IDOK "OK" #x50010001 180 7 50 14)
+-OK --
+
+#comment
+ dialogs.l:329:			     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 180 24 50 14)
+-cancel --
+
+#comment
+ dialogs.l:330:			     (:button ref "参照(&R)..." #x50010000 180 41 50 14))))
+-&Refer (browse のような気もする)--
+
+#comment
+ dialogs.l:333:		  '((cmd :non-null "実行するｺﾏﾝﾄﾞを入力してください" :enable (IDOK))
+-input command --
+
+#comment
+ dialogs.l:335:			 :file-name-dialog (:title "参照"
+-refer (ここも "browse" ?)--
+
+#comment
+ dialogs.l:336:					    :filter (("実行ﾌｧｲﾙ(*.exe;*.com;*.cmd;*.bat;*.pif)" . "*.exe;*.com;*.cmd;*.bat;*.pif")
+-executable files --
+
+#comment
+ dialogs.l:337:						     ("すべてのﾌｧｲﾙ(*.*)" . "*.*"))
+-all files --
+
+#comment
+ dialogs.l:346:  (execute-process-dialog #'execute-subprocess "非同期ﾌﾟﾛｸﾞﾗﾑの実行" init-cmd))
+-"execute async program" あるいは関数名にあわせて "execute subprocess"？--
+
+#comment
+ dialogs.l:350:  (execute-process-dialog #'pipe-command "ｺﾝｿｰﾙﾌﾟﾛｸﾞﾗﾑの実行" init-cmd))
+-execute console program --
+
+#comment
+ dialogs.l:354:  (execute-process-dialog #'launch-application "Windowsﾌﾟﾛｸﾞﾗﾑの実行" init-cmd))
+-execute windows program --
+
+#comment
+ dialogs.l:369:		    (:caption "制御ｺｰﾄﾞの入力")
+-insert control code --
+
+#comment
+ dialogs.l:370:		    (:font 9 "ＭＳ Ｐゴシック")
+#comment
+ dialogs.l:372:		     (:button IDOK "OK" #x50010001 129 7 50 14)
+-OK --
+
+#comment
+ dialogs.l:373:		     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 129 24 50 14)
+-cancel --
+
+#comment
+ dialogs.l:417:		      (:caption "xyzzyの選択")
+-select xyzzy --
+
+#comment
+ dialogs.l:418:		      (:font 9 "ＭＳ Ｐゴシック")
+#comment
+ dialogs.l:421:		       (:button IDOK "OK" #x50010001 107 110 50 14)
+-OK --
+
+#comment
+ dialogs.l:422:		       (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 162 110 50 14)))
+-cancel --
+
+#comment

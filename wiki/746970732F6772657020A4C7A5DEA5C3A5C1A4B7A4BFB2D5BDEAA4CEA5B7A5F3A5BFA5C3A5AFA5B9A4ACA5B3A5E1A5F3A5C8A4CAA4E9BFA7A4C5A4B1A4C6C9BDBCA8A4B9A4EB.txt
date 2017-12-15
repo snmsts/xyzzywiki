@@ -1,0 +1,36 @@
+.xyzzy かsiteinit.lに
+[[tips/個別のsyntax-tableを参照するgrep-dialog]] のコードに加えて、以下のコードを書くと多分動きます。
+
+ (require "grepd")
+ (in-package "editor")
+ (defun grep-scan-file (file scanner)
+   (let ((found nil) syntax)
+     (while (funcall scanner)
+       (setq found t)
+       (setq syntax (parse-point-syntax))
+       (let ((beg (progn (goto-bol) (point)))
+ 	    (end (progn (goto-eol) (point))))
+ 	(format t "~A:~D:~A~%" file (current-line-number) (buffer-substring beg  end))
+ 	(when (and *grep-highlight-match*
+ 		   (buffer-stream-p *standard-output*))
+ 	  (save-excursion
+ 	    (set-buffer (buffer-stream-buffer *standard-output*))
+ 	    (let ((p (- (buffer-stream-point *standard-output*) end 1)))
+ 	      (if (eq syntax :comment)
+ 		  (progn
+ 		    (set-text-attribute (+ beg p) (+ end p)
+ 					nil :foreground 10)
+ 		    (set-text-attribute (+ (match-beginning 0) p)
+ 					(+ (match-end 0) p)
+ 					'grep :foreground 10 :bold t))
+ 		(apply #'set-text-attribute
+ 		       (+ (match-beginning 0) p)
+ 		       (+ (match-end 0) p)
+ 		       'grep *grep-highlight-match*))
+ 	      ))))
+       (or (forward-char 1)
+ 	  (return)))
+     found))
+ (in-package "user")
+----
+#comment

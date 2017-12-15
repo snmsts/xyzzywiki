@@ -1,0 +1,41 @@
+* peek-char [#v9db7a41]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[lambda]]
+-優先順位:   低
+-状態:       却下
+-カテゴリー: ツッコミをいれる
+-投稿日:     2007-03-14 (水) 17:44:35
+-バージョン: 
+
+** メッセージ [#f28be217]
+peek-type の説明を足しました。
+
+ <chapter>
+ <title>peek-char</title>
+ <type>Function</type>
+ <arguments>peek-char &amp;optional PEEK-TYPE INPUT-STREAM EOF-ERROR-P EOF-VALUE RECURSIVE-P</arguments>
+ <package>lisp</package>
+ <description>
+ ストリームから文字を覗き見ます。
+ 
+   PEEK-TYPE
+         nil: read-char して unread-char するのと同じ
+ 	文字: 指定された文字が見つかるまで読み飛ばす
+ 	それ以外: 空白文字以外が来るまで読み飛ばす
+ 
+ 使用例：
+   ;;; 標準入力の文字を除き見る。
+   (peek-char nil *standard-input* nil nil)
+ </description>
+ <seealso>read-char</seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+- [[リファレンスにツッコミを入れる/245]] でいいのでは？ --  &new{2007-03-14 (水) 20:21:57};
+- 失礼、そういえば既出でしたね。すっかり忘れていました。 --  &new{2007-03-14 (水) 22:37:52};
+- どーもです。重複ということで、こちらは却下扱いにしておきます。 -- [[NANRI]] &new{2007-03-15 (木) 20:53:31};
+
+#comment

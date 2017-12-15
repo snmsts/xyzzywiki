@@ -1,0 +1,100 @@
+* keymap.l 関連 [#ibe6deed]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-03-03 (金) 19:40:51
+-バージョン: 20051220
+
+** メッセージ [#r6e236e8]
+keymap.l から export されているものです。あとついでに local-keymap も。
+
+ <chapter>
+ <title>substitute-key-definition</title>
+ <type>Function</type>
+ <arguments>substitute-key-definition OLDDEF NEWDEF &amp;optional (KEYMAP *global-keymap*) (OKEYMAP KEYMAP)</arguments>
+ <package>editor</package>
+ <description>
+ OKEYMAP において OLDDEF が割り当てられているすべてのキーに対して、
+ KEYMAP において NEWDEF を割り当てます。
+ 
+ 例：
+   ;;; text-mode での行の移動を物理行単位にする
+   (substitute-key-definition 'next-virtual-line 'next-line
+                              *text-mode-map* *global-keymap*)
+   (substitute-key-definition 'previous-virtual-line 'previous-line
+                              *text-mode-map* *global-keymap*)
+ </description>
+ <seealso>define-key</seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>keymap.l</file>
+ </chapter>
+
+ <chapter>
+ <title>describe-bindings</title>
+ <type>Function</type>
+ <arguments>describe-bindings</arguments>
+ <package>editor</package>
+ <description>
+ カレントバッファのキー割り当て一覧を表示します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>keymap.l</file>
+ </chapter>
+
+ <chapter>
+ <title>*full-keymap-length*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ make-keymap で作られるキーマップの長さです。
+ </description>
+ <seealso>make-keymap</seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>keymap.l</file>
+ </chapter>
+
+ <chapter>
+ <title>local-keymap</title>
+ <type>Function</type>
+ <arguments>local-keymap &amp;optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ バッファ BUFFER のローカルキーマップ (use-keymap で設定されたキーマッ
+ プ) を返します。
+ 
+ BUFFER が省略された場合はカレントバッファが対象になります。
+ </description>
+ <seealso>use-kaymap</seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>local-set-key</title>
+ <type>Function</type>
+ <arguments>local-set-key KEY COMMAND</arguments>
+ <package>editor</package>
+ <description>
+ カレントバッファのローカルキーマップにキーを登録します。
+ 引数の意味は global-set-key と同じです。
+ </description>
+ <seealso>local-keymap</seealso>
+ <seealso>global-set-key</seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>keymap.l</file>
+ </chapter>
+
+--------
+- どーもです。 -- [[NANRI]] &new{2006-03-03 (金) 21:31:04};
+
+#comment

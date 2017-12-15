@@ -1,0 +1,105 @@
+* Perlのcgi開発にxyzzyを取り急ぎ使いたいのですが [#j837aa6a]
+-ページ: [[質問箱]]
+-投稿者: [[mNeji]]
+-状態: 完了
+-投稿日: 2005-05-24 20:53:26 (火)
+
+** メッセージ [#c8ec6b1a]
+OSを「Windows 98se → XP」に交換したのですが，「入門xyzzy」に遭遇し感激しました．そこで，これまで使っていた Mifesというエディタからxyzzyに変更しました．ついては超初心者の質問で申し訳ありませんが，宜しくご指導ください．
+
+当面，サマリのようにperlでYukiWikiのカスタマイズをしており，下記の問題に直面しているものの，Lispまだ理解できていない初心者です．
+
+1) Perl(.cgi, .pl, .pm)の開発で，オート・インデントのタブ(4スペース/タブ)を使用したい．初期設定ファイル(.xyzzy)での記述方法をお教えください．
+
+なお，現在の.xyzzyは下記に記載いたします．現状では，タブ入力は出来ますが，オート・インデントは出来ません．入力時に大変なストレスとなっております．
+
+
+2) 上記perl-modeでは，ファイル・エンコーディングはeucとしたい．他方，text-modeでは,s-jisとしたい．
+
+
+3) 当面，キーバインディングはWindows風で行きたい．winkey.lは利用していますが，これに「C-a」をずべてをハイライトするにしたいのです．この方法と，副作用をお教えください．なお，余裕が出来てくれば「Emacs風なキーバインディング」に移行していくつもりです．
+
+ー − − ー − − ー (.xyzzy)− − ー − − ー − − ー − − 
+ ; 入門xyzzy p284
+ ;;; winkey.1
+ (load-library "winkey")
+ 
+ ; インデントキャンセル用仮想キー Virtual key setting for indent cansell   [xyzzy:06599] 2005-05-24: works! :-)
+ (set-extended-key-translate-table exkey-tab #\F18)
+ (global-set-key #\F18
+                 #'(lambda ()
+                     (interactive)
+                     (let ((command (or (lookup-keymap (local-keymap) #\TAB)
+                                        (lookup-keymap *global-keymap* #\TAB)))
+                           (*last-command-char* #\TAB))
+                       (command-execute (if (eq command  mode-specific-indent-command)
+                                            'self-insert-command
+                                          command)))))
+ 
+ ; Auto-indent for TAB [xyzzy:01057] 2005-05-24: not works, ;-<
+ (add-hook 'ed::*perl-mode-hook* #'(lambda () (setq indent-tabs-mode t)))
+ 
+ー − − ー − − ー − − ー − − ー − − ー − − 
+以上．
+----
+ (require "perl")
+ ; すべてを選択
+ (global-set-key #\C-a 'selection-whole-buffer)
+ ; euc-jp/lf
+ (add-hook '*perl-mode-hook*
+           #'(lambda ()
+               (change-eol-code *eol-lf*)
+               (change-fileio-encoding *encoding-euc-jp*)))
+ ; インデント4桁 and TAB
+ (add-hook '*perl-mode-hook*
+           #'(lambda ()
+               (setq indent-tabs-mode t)
+               (setq c-indent-level 4)
+               (set-tab-columns 4 (selected-buffer))))
+-こんな感じですか？ -- [[NANRI]] &new{2005-05-25 00:31:45 (水)};
+-早速のご回答と，元質問の整形まで戴き，感謝いたします．ご指示部を，上記"Auto-indent ..."の替わりに挿入したところ爽快に動作することを確認いたしました．自分で動作をしったコマンドを拝見すると, -- [[mNeji]] &new{2005-05-25 12:59:03 (水)};
+-操作ミスで切れました‥‥．急にLispに親しみを感じるようになりました（笑）．しばらくxyzzyに浸りたいと思います．本当に有難うございました．　取り急ぎ，ご連絡まで． -- [[mNeji]] &new{2005-05-25 13:05:37 (水)};
+-C-aの動作についてはほとんど勘だったのですが、あっていたのですね。YukiWikiのソースはShift_JISだったような気がするので、euc-jp/lfについては以下のようにした方が良かったかもしれません。TABキーへの割り当ても多分以下のような感じのほうがよりいいんじゃないかなぁと思います。あんまり変わりませんけど。 -- [[NANRI]] &new{2005-05-25 19:39:39 (水)};
+ ; euc-jp/lf
+ (add-hook 'ed::*perl-mode-hook*
+           #'(lambda ()
+               (when (= (buffer-size) 0)
+                 (change-eol-code *eol-lf*)
+                 (change-fileio-encoding *encoding-euc-jp*))))
+ ; TABキーの設定
+ (set-extended-key-translate-table exkey-tab #\F18)
+ (global-set-key #\F18
+                 #'(lambda ()
+                     (interactive)
+                     (let ((command (lookup-key-command #\TAB))
+                           (*last-command-char* #\TAB))
+                       (command-execute (if (eq command  mode-specific-indent-command)
+                                            'self-insert-command
+                                          command)))))
+-C-aは順調に動いています．:-) 私は昨年からYukiWikiユーザになったのですが，.cgiはeucで，日本語は．ｔｘｔ(sj-is)に入れて，Jperlで変換して出力しています．おそらくWinもMacもLinuxも同様に書けるからと理解しています．TABについてはすこし使い慣れてから，ご報告します．勘では，BackTAB，って自分で勝手に呼んでいますが，Shift+TABで，tabを一つ消すモードが欲しいかもしれません．
+-xyzzyのサブセットをwikiの編集画面の替わりに使えると，wikiのインデント型のコマンドの入力が画期的に改善できると推定しています．その手始めに今回ご紹介の設定を元にlispを勉強させて戴こうと思っています． -- [[mNeji]] &new{2005-05-25 21:31:44 (水)};
+ ; Shift-TABの設定
+ (set-extended-key-translate-table exkey-S-tab #\S-F18)
+ (global-set-key #\S-F18 #'(lambda ()
+                             (interactive)
+                             (save-excursion
+                               (unshift-region (progn (goto-bol) (point))
+                                               (progn (goto-eol) (point))))))
+ (in-package "editor")
+ ; セレクション時のTAB
+ (define-key *default-selection-keymap* #\F18 'shift-selection)
+ ; セレクション時のShift-TAB
+ (define-key *default-selection-keymap* #\S-F18 'unshift-selection)
+ (setq-default selection-keymap *default-selection-keymap*)
+ (in-package "user")
+-↑のShift-TAB設定，内容を理解していませんが利用させて戴きました．当分幸せな気分でxyzzyで楽しませていただきます．はやくLispになじんで，あんな事やそんな事を自由に設定できるようになりたいです．きっとwiki入力で素敵な事が出来るような希望が近づいている，と期待しています． -- [[mNeji]] &new{2005-05-27 22:56:46 (金)};
+-NANRIさんに「YukiWikiの.cgiはeuc...」と申し上げましたが，間違いでしたので，訂正するとともにお詫びします．YukiWikiの出力(html)はeucです.一方wiki.cgiの内部では，外部txtファイルから読み込んだ漢字をjcode.plないしはJcode.pmによりeucに変換しています．この時，変換もとのエンコードは自動で設定しています．自分は，タイム・スタンプをwiki.cgiに増設し，曜日を漢字で書いたとき，wiki.cgiに直接書いてしまいました(でも，しっかり漢字変換はしていました)．その後，おそらくwiki.cgiのエンコーディングにぶれを生じ，wiki.cgiをeucにしないと文字化けすると思い込んだようです．8ヶ月ほど前に理解したものの，未消化で，間違えて覚えていたようです．これに懲りず，ご指導を戴ければ，幸いです． -- [[mNeji]] &new{2005-05-27 23:15:20 (金)};
+-（以下雑談）mNejiさんのお名前はどこかで見かけたような気がしていたんですが、本家YukiWikiでした。最近は本家YukiWikiを全く見ないのでとんと思い出せませんでした。(^^) -- [[NANRI]] &new{2005-05-28 00:48:57 (土)};
+-NANRIさんとは，本家YukiWikiで入れ違いに近かったようですね．結城さんのポリシーで「プラグ・インは脆弱性の心配から進めたくない．」旨のご発言があり，それ以来，YukiWikiを長期的には変更しようと思っています．一時はFreeStyleWikiに移行しようとしたのですが，設定が難しく，1年ほどの準備期間をおいて動こうと思っています．話はxyzzyに戻りますが，昨日から快調に動き出しました．入力も快適ですが，ファイラも素敵です．wikiのページ用2画面ファイラが出来ると，wikiも操作が楽になりましょう． -- [[mNeji]] &new{2005-05-28 13:37:57 (土)};
+-大昔wikiページ用のwiki-modeを作った事があるんですが、需要あります？ YukiWiki系じゃないので多少移植が必要ですけど。 -- [[たけを]] &new{2005-05-28 23:24:42 (土)};
+-たけをさん，はじめまして．入門xyzzyには「www-mode」とあり，早晩wiki-modeもあるかなあと思っていましたが，やはり(笑)．駆け出しのｘｙｚｚｙ使いには，どのような概念で動作をさせるかから興味があります．Perlもよちよち歩きのユーザなので，すぐに移植できるかどうかは判りませんが，勉強したいと思います． -- [[mNeji]] &new{2005-05-29 00:17:00 (日)};
+-あーいや、私のはあくまで自分用に作って、特に公開してないんです。私も誰か作ってないかと思ってたんですが、もしないんならコードをキレイにしてパッケージ化してみようか、と・・・といいつつ、数年前に書いてほったらかしなので、自分も中身忘れてたりして(^^; -- [[たけを]] &new{2005-05-29 01:16:29 (日)};
+-数年前に，そのような発想をされた事が素敵だと思います．最近では，wikiに手を出そうとすると，安全性の問題や荒らしの問題などで批判を浴びかねませんね．でも，幾つかの工夫を用いれば，問題を乗り越えて，実り豊かなwiki世界を構築できるような気もします． -- [[mNeji]] &new{2005-05-29 13:08:01 (日)};
+-一応質問は解決したようなので完了に変更しました。 -- [[稲原]] &new{2005-06-09 01:14:15 (木)};
+
+#comment

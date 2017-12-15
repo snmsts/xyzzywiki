@@ -1,0 +1,366 @@
+;;; -*- Mode: Lisp; Package: qa -*-
+#|
+=======
+LICENSE
+=======
+MITライセンスに基づき改変・再配布等可能です。
+Copyright (C) 2006 47D
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+install
+---------
+site-lispにqa.lを置く(バイトコンパイル推奨)
+.xyzzyに以下を記述
+(require "qa")
+
+uninstall
+---------
+site-lispからqa.l(qa.lc)を削除
+.xyzzyに設定した記述を削除
+
+start
+---------
+M-x qa-start  あらかじめ指定した問題集もしくはFilerから選ぶ(通常はこちらを想定)
+M-x qa-mask   現在のバッファにqa-modeを適用
+
+|#
+(provide "qa")
+
+(eval-when (:compile-toplevel :load-toplevel :execute) 
+  (defpackage "qa" (:use "lisp" "editor")
+    (:import-from "user"	; 次の変数が.xyzzy上で変更可能
+     *qa-extension-list*	; qa-modeを適用するファイルの拡張子を指定
+     *qa-book-list*		; 問題集の位置を指定
+     *qa-giveup*		; 降参するときの合言葉を指定
+     *qa-mask-color*		; 穴埋めの色を指定(表示色番号)
+     *qa-mode-map*		; qa-mode時のキーマップ
+     *qa-mode-hook*		; フック指定
+     *add-tag-mode-map*		; add-tag-mode時のキーマップ
+     )))
+
+(defun qa-start ()
+  (interactive)
+  (qa::start))
+
+(defun qa-mask ()
+  (interactive)
+  (qa::buf-mask))
+
+(defun qa-tag ()
+  (interactive)
+  (qa::add-tag-mode))
+
+(in-package "qa")
+
+(defvar *qa-extension-list* '("q" "txt"))
+(defvar *qa-book-list* nil)
+(defvar *qa-giveup* "giveup")
+(defvar *qa-mask-color* '(7 . 8))
+(defvar *qa-mode-map* nil)
+(defvar *qa-mode-hook* nil)
+
+(defvar *mask-regex* "\\[\\([^[]+\\)\\]")
+(defvar *comment-regex* "^;\\(.*\\)$")
+(defvar *box-char* "[─|│|┌|┐|┘|└|├|┬|┤|┴|┼|━|┃|┏|┓|┛|┗|┣|┳|┫|┻|╋|┠|┯|┨|┷|┿|┝|┰|┥|┸|╂|─|─|│|│|━|━|┃|┃]")
+(defvar *extension* (format nil "\\.\\(~A~{\\|~A~}\\)$" (car *qa-extension-list*) (cdr *qa-extension-list*)))
+(defvar *qa-igchar* "[、。　 .\t]")
+(defvar *book* nil)
+(defvar *page* nil)
+(defvar *order* nil)
+(defvar *buf* "  *QA*")
+
+(defstruct book location name)
+(defstruct page number name chapter comment)
+(defstruct qa number string mask boxp)
+
+(unless *qa-mode-map*
+  (setq *qa-mode-map* (ed:make-sparse-keymap))
+  (define-key *qa-mode-map* '(#\n) 'page-next)      ; 次頁
+  (define-key *qa-mode-map* '(#\b) 'page-back)      ; 前頁
+  (define-key *qa-mode-map* '(#\RET) 'check-reply)  ; 回答等
+  (define-key *qa-mode-map* '(#\TAB) 'jump-mask)    ; 次の穴埋め箇所へ
+  (define-key *qa-mode-map* '(#\a) 'show-answer)    ; 全ての答えを表示
+  (define-key *qa-mode-map* #\r 'set-buf)           ; 問題を再読み込み
+  (define-key *qa-mode-map* #\e 'edit)              ; 終了
+  (define-key *qa-mode-map* #\q 'exit)              ; 問題を編集
+  )
+
+(defun qa-mode ()
+  (kill-all-local-variables)
+  (setq major-mode 'qa-mode)
+  (setq mode-name "qa")
+  (make-local-variable 'need-not-save)
+  (setq need-not-save t)
+  (make-local-variable 'auto-save)
+  (setq auto-save nil)
+  (setq buffer-mode 'qa-mode)
+  (use-keymap *qa-mode-map*)
+  (run-hooks '*qa-mode-hook*)
+  )
+
+(defun start ()
+  (multiple-value-bind (result data)
+      (dialog-box
+       `(dialog 0 0 110 130
+		(:caption "*QA*  問題集選択")
+		(:font 9 "MS UI Gothic")
+		(:control
+		 (:listbox list nil #x50b10111 5 5 100 100)
+		 (:button IDOK "OK" #x50010001 5 110 45 15)
+		 (:button IDCANCEL "CANCEL" #x50010000 60 110 45 15)))
+       `((list ,@(append (mapcar #'(lambda (x) (cons (concat (if (file-directory-p x) " D*   " " F*   ") (pathname-last x)) x)) *qa-book-list*)
+			 (list (cons "  *    Filer" 'start-filer)))))
+       '((list :column (0))))
+    (setq data (cddar data))
+    (cond ((null data) (msgbox "qa-modeを終了します。"))
+	  ((null result) (msgbox "qa-modeを終了します。"))
+	  ((eq 'start-filer data) (eval (list 'start-filer)))
+	  ((file-directory-p data) (start-dir data))
+	  ((file-exist-p data) (start-file data))
+	  (t (msgbox "qa:Error\n指定のdirectory/fileが存在しない可能性があります。")))))
+
+(defun start-dir (dir)
+  (setq *order* (order dir)
+	*book* (make-book :location dir
+			  :name (pathname-last dir))
+	*page* (make-page :number '0))
+  (set-buf))
+
+(defun start-file (f)
+  (setq *order* (list f)
+	*book* (make-book :location (directory-namestring f)
+			  :name (file-namestring f))
+	*page* (make-page :number '0))
+  (set-buf))
+
+(defun start-filer ()
+  (multiple-value-bind (f r)
+      (filer)
+    (when r
+      (if (string-matchp *extension* f)
+	  (let ((dir (or (car (stable-sort (remove-if-not #'(lambda (x) (sub-directory-p (directory-namestring f) x)) *qa-book-list*) #'string-lessp))
+			 (directory-namestring f))))
+	    (setq *order* (order dir)
+		  *book* (make-book :location dir
+				    :name (pathname-last f))
+		  *page* (make-page :number (position f *order* :test #'path-equal)))
+	    (set-buf))
+	(progn (msgbox "拡張子が  ~A~{,~A~}  以外のFileは指定できません。~%やめる場合はESCを押してください。"
+		       (car *qa-extension-list*) (cdr *qa-extension-list*))
+	  (start-filer))))))
+
+(defun buf-mask ()
+  (setq *order* nil
+	*book* (make-book :location "---"
+			  :name "---")
+	*page* (make-page :number nil
+			  :name (buffer-name (selected-buffer))
+			  :chapter "---"))
+  (set-buf))
+
+(defun order (dir)
+  (mapcan #'(lambda (x)
+	      (stable-sort (remove-if-not #'(lambda (y) (string-matchp *extension* y))
+					  (directory x :recursive nil :absolute t :directory t :file-only t)) #'string-lessp))
+	  (cons dir (stable-sort (directory dir :recursive t :absolute t :directory-only t) #'string-lessp))))
+
+(defun pathname-last (pathname)
+  (car (last (split-string pathname "/"))))
+
+(defun set-buf ()
+  (interactive)
+  (switch-to-buffer *buf*)
+  (setq buffer-read-only nil)
+  (erase-buffer *buf*)
+  (if (page-number *page*)
+      (let ((fp (nth (page-number *page*) *order*)))
+	(setf (page-name *page*) (file-namestring fp))
+	(setf (page-chapter *page*) (or (progn (string-matchp (concat (book-location *book*) "/\\(.*\\)/" (file-namestring fp)) fp) (match-string 1)) "---"))
+	(setf (page-comment *page*) nil)
+	(insert-file (nth (page-number *page*) *order*)))
+    (insert-buffer (page-name *page*)))
+  (let ((n 1))
+    (goto-char (point-min))
+    (insert (format nil "BOOK:    ~A~%Chapter: ~A~%QAName:  ~A~%---~%" (book-name *book*) (page-chapter *page*) (page-name *page*)))
+    (goto-line 4)
+    (while (scan-buffer *mask-regex* :regexp t :no-dup nil :tail t)
+      (mask (match-beginning 1) (match-end 1) (make-qa :number (format nil "~D" n)
+						       :string (match-string 1)
+						       :mask nil
+						       :boxp (string-match *box-char* (buffer-substring (match-end 0) (progn (goto-eol) (point))))))
+      (incf n))
+    (setq buffer-read-only nil)
+    (goto-line 4)
+    (while (scan-buffer *comment-regex* :regexp t :no-dup nil :tail t)
+      (setf (page-comment *page*) (cons (string-left-trim ";" (match-string 1)) (page-comment *page*)))
+      (replace-match "")
+      (delete-char 1)))
+  (goto-line 5)
+  (qa-mode)
+  (setq buffer-read-only t))
+
+(defun page-next ()
+  (interactive)
+  (if (incf-page)
+      (set-buf)
+    (msgbox "次頁はありません。")))
+
+(defun page-back ()
+  (interactive)
+  (if (decf-page)
+      (set-buf)
+    (msgbox "前頁はありません。")))
+
+(defun incf-page ()
+  (when (ignore-errors (> (1-(length *order*)) (page-number *page*)))
+    (setf (page-number *page*) (1+ (page-number *page*)))))
+
+(defun decf-page ()
+  (when (ignore-errors (> (page-number *page*) 0))
+    (setf (page-number *page*) (1- (page-number *page*)))))
+
+(defun string-columns (str)
+  (let ((n 0))
+    (every #'(lambda(x) (setq n (+ n (char-columns x)))) str ) n))
+
+(defun mask (from to qa)
+  (setq buffer-read-only nil)
+  (delete-region from to)
+  (insert (qa-number qa))
+  (setq to (+ from (string-columns (qa-number qa))))
+  (when (qa-boxp qa)
+    (let ((n (- (string-columns (qa-string qa)) (string-columns (qa-number qa)))))
+      (when (plusp n)
+	(goto-char (+ to 1))
+	(insert (format nil "~VA" n " ")))))
+  (setf (qa-mask qa) t)
+  (set-text-attribute from to qa :foreground (car *qa-mask-color*) :background (cdr *qa-mask-color*))
+  (setq buffer-read-only t))
+
+(defun unmask (from to qa)
+  (setq buffer-read-only nil)
+  (delete-region from to)
+  (insert (qa-answer qa))
+  (setq to (+ from (length (qa-answer qa))))
+  (when (qa-boxp qa)
+    (let ((n (- (string-columns (qa-answer qa)) (string-columns (qa-number qa)))))
+      (when (plusp n)
+	(goto-char (+ to 1))
+	(delete-char n))))
+  (setf (qa-mask qa) nil)
+  (set-text-attribute from to qa :foreground (car *qa-mask-color*) :background (cdr *qa-mask-color*))
+  (setq buffer-read-only t))
+
+(defun check-reply (pt)
+  (interactive "d")
+  (multiple-value-bind (from to tag)
+      (find-text-attribute-point pt)
+    (if (and tag (qa-mask tag))
+	(let ((reply (read-string (format nil "問~A: " (qa-number tag))))
+	      (l (cdr (split-string (qa-string tag) ";"))))
+	  (cond ((string= *qa-giveup* reply) (unmask from to tag) (msgbox "降参"))
+		((equalp (substitute-string reply *qa-igchar* "") (substitute-string (qa-answer tag) *qa-igchar* "")) (unmask from to tag) (msgbox "正答"))
+		(l (msgbox "誤答~%----~%~A~{~%~A~}" (car l) (cdr l)))
+		(t (msgbox "誤答"))))
+      (or (jump-mask pt)
+	  (let ((l (reverse (page-comment *page*))))
+	    (progn (show-comment) (page-next)))))))
+
+(defun qa-answer (qa)
+  (car (split-string (qa-string qa) ";")))
+
+(defun jump-mask (pt)
+  (interactive "d")
+  (ignore-errors (goto-char (or (find-text-attribute t :test #'eq :key #'qa-mask :start (+ pt 1))
+				(find-text-attribute t :test #'eq :key #'qa-mask :start (point-min))))))
+
+(defun show-comment ()
+  (let ((l (reverse (page-comment *page*))))
+    (when l (msgbox "Comment~%--------~%~A~{~%~A~}" (car l) (cdr l)))))
+
+(defun show-answer ()
+  (interactive)
+  (save-excursion
+    (while (jump-mask (point))
+      (multiple-value-bind (from to tag)
+	  (find-text-attribute-point (point))
+	(unmask from to tag)))
+    (show-comment)))
+
+(defun edit ()
+  (interactive)
+  (if (page-number *page*)
+      (find-file (nth (page-number *page*) *order*))
+    (set-buffer (page-name *page*)))
+  (text-mode)
+  (add-tag-mode))
+
+(defun exit ()
+  (interactive)
+  (delete-buffer *buf*))
+
+;;;おまけ   穴埋め問題作成支援
+
+(defvar *tag-list* '(("[" . "]") (";" . "") ("" . "")))
+(defvar *tag-ring* nil)
+(defvar *tag-str* nil)
+(defvar-local add-tag-mode nil)
+
+(defun add-tag-interactive ()
+  (interactive)
+  (cond ((pre-selection-p) (selection-start-end (from to) (add-tag from to)))
+	((mark t) (add-tag (mark) (point)))
+	(t (message "Error"))))
+
+(defun add-tag (start end &optional arg)
+  (flet ((tag-ring ()
+	   (let ((l (copy-list *tag-list*)))
+	     (setq *tag-ring* (nconc l l)))))
+    (let (tag tag1 tag2 tag3)
+      (cond (arg (setq tag (nth arg *tag-list*)) (setq *tag-str* (buffer-substring start end)))
+	    ((eq *last-command* 'add-tag-interactive) (setq tag (pop *tag-ring*)))
+	    (t (tag-ring) (setq tag (pop *tag-ring*)) (setq *tag-str* (buffer-substring start end))))
+      (setq tag1 (car tag)
+	    tag2 (cdr tag)
+	    tag3 (concat tag2 "\n" tag1))
+      (delete-region start end)
+      (insert (concat tag1 (substitute-string *tag-str* "\n" tag3) tag2)))))
+
+(defvar *add-tag-mode-map*
+  (let ((keymap (make-sparse-keymap)))
+    (define-key keymap #\C-] 'add-tag-interactive)                                                ; 穴埋め/コメント作成
+    (define-key keymap #\RBtnDown #'(lambda () (interactive) (track-popup-menu *add-tag-popup*))) ; 穴埋め/コメント作成
+    keymap))
+
+(defun add-tag-mode (&optional (arg nil sv))
+  (interactive "p")
+  (ed::toggle-mode 'add-tag-mode arg sv)
+  (if add-tag-mode
+      (progn
+	(set-minor-mode-map *add-tag-mode-map*)
+	(copy-menu-items *app-popup-menu* (setq *add-tag-popup* (define-popup-menu)))
+	(insert-menu-separator *add-tag-popup* 0 'qa)
+	(insert-menu-item *add-tag-popup* 0 'qa "; コメント作成" #'(lambda (from to) (interactive "R") (add-tag from to '1)) :modify-any-selection)
+	(insert-menu-item *add-tag-popup* 0 'qa "[ 穴埋め作成 ] " #'(lambda (from to) (interactive "R") (add-tag from to '0)) :modify-any-selection))
+    (unset-minor-mode-map *add-tag-mode-map*))
+  (update-mode-line t))
+
+(pushnew '(add-tag-mode . "QA-TAG") *minor-mode-alist* :key #'car)

@@ -1,0 +1,44 @@
+佐野 掲載日 2003-04-25
+ ;;ずいぶん仰々しいものを作ってしまった。
+ (defun recompile-if-updated (filename)
+   (interactive)
+   (let ((path filename))
+     (if (file-exist-p filename)
+ 	;lファイルが存在し
+ 	(if (string-matchp ".l$" filename)
+ 	    ;lcファイルが存在するならそれを対象に。
+ 	    (when (file-exist-p (format nil "~Ac" filename))
+ 	      (setq path (format nil "~Ac" filename)))
+ 	  (setq path nil))
+       ;ライブラリかもね。
+       (setq path (find-load-path filename)))
+     (cond
+      ;pathがnullなら何もしない。
+      ((null path)
+       nil)
+      ;lcファイルがないということなのでまぁいっときましょう。
+      ((string-match ".l$" path)
+       (byte-compile-file path)
+       t)
+      ;lcがあるなら日付の比較をして勝ったらコンパイル。
+      ((string-match ".lc$" path)
+       (when (file-newer-than-file-p (substring path 0 -1) path)
+ 	(byte-compile-file (substring path 0 -1)) t)
+       ))))
+~使い方（多分
+ (recompile-if-updated "api")
+ (load-library "api")
+ 
+-最後のところは file-newer-than-file-p 使った方が楽かも
+--直しました.確かにすっきり 佐野 03/04/27
+ 
+~load-pathにあるもの全部コンパイル
+ (mapcar #'recompile-if-updated
+	(delete-if #'(lambda (file)
+		       (not (string-matchp "\\.l$" file)))
+		   (mapcan #'(lambda (path)
+			       (directory path :absolute t))
+			   *load-path*)))
+
+
+#comment

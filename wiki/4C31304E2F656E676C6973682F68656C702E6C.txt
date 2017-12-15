@@ -1,0 +1,6 @@
+[[L10N/english]]
+
+ help.l:102:  "指定した正規表現に一致するシンボルを表示します"
+-"Show symbols that match specified regexp" --  &new{2005-09-16 14:58:33 (金)};
+
+#comment

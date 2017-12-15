@@ -1,0 +1,57 @@
+[[tips]]
+
+[[思いつくままxyzzy>http://www.jaist.ac.jp/~m-nakano/cgi-bin/blog/?date=20040416]]に、より汎用的になったバージョンがあります。
+----
+2ch [Windows板] xyzzy Part10 792,797 辺りからの流れで
+ ;;; -*- Mode: Lisp; Package: EDITOR -*-
+ 
+ (provide "gmark-session")
+ 
+ ;(require "session")
+ ;(require "gmark")
+ 
+ (in-package "editor")
+ 
+ (defun gmark-to-readable-gmark ()
+   (let ((list nil))
+     (dolist (x *global-mark-list*)
+       (let ((buffer (marker-buffer x))
+             (point (marker-point x)))
+       (and point
+            (get-buffer-file-name buffer)
+            (pushnew (cons (get-buffer-file-name buffer) point) list)))
+       )
+     list))
+ 
+ (defun restore-gmark (list)
+   (save-excursion
+     (setq *global-mark-list* nil)
+     (dolist (x list)
+       (and (set-buffer (get-file-buffer (car x)))
+            (goto-char (cdr x))
+            (global-mark-add)))))
+ 
+ ; デフォルトの関数を上書き
+ ; from session.l
+ (defun save-session-info (s)
+   (save-current-pseudo-frame)
+   (let ((finfo (mapcan #'(lambda (frame)
+                            (when (pseudo-frame-save-p frame)
+                              (list (list (pseudo-frame-name frame)
+                                          (winconf-to-readable-winconf
+                                           (pseudo-frame-winconf frame))
+                                          (eq frame *current-pseudo-frame*)))))
+                        *pseudo-frame-list*))
+         (binfo (list-buffer-info))
+         (gminfo (gmark-to-readable-gmark))) ; +
+     (princ ";;; xyzzy session file.
+ ;;; This file is generated automatically. do not edit.\n" s)
+ (write `(in-package ,(package-name *package*)) :stream s :escape t)
+ (terpri s)
+ (write `(restore-session ',binfo ',finfo) :stream s :escape t)
+ (when gminfo                    ; +
+   (terpri s)                    ; +
+   (write `(restore-gmark ',gminfo) :stream s :escape t)) ; +
+ (terpri s)))
+----
+#comment

@@ -1,0 +1,60 @@
+* create-shortcut [#d2df6c91]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-12-14 (水) 23:33:02
+-バージョン: 20050929
+
+** メッセージ [#sc0afc36]
+気が付いてしまったので%%嫌々%%書き足しました。
+なんか引数の複雑さが説明し切れてないんですけど…~
+＃パラメータ名：値の対応関係が見えにくいです。
+こういうのどうするんでしたけか…
+
+ <chapter>
+ <title>create-shortcut</title>
+ <type>Function</type>
+ <arguments>create-shortcut SRC DEST &amp;rest REST</arguments>
+ <package>editor</package>
+ <description>
+ ショートカットを作成します。
+ 
+   SRC  : ショートカットが指すパスを指定します。
+   DEST : ショートカットを作成するパスを指定します。
+   REST : 作成するショートカットへのパラメータを与えることが出来ます。
+      :description        ドラッグオーバの時やプロパティ表示時に見られる説明
+      :arguments          コマンドライン引数
+      :working-directory  作業ディレクトリ
+      :show               ウィンドウの状態の指定
+                             :show      標準のサイズで起動
+                             :maximize  最大化状態で起動
+                             :minimize  最小化状態で起動
+ 
+ 使用例：
+   ;;; スタートメニューにショートカットを作成する。
+   (create-shortcut (merge-pathnames "xyzzy.exe" (si:system-root)) (get-special-folder-location :start-menu))
+   =&gt; t
+   (delete-file (merge-pathnames "xyzzy.exe.lnk" (get-special-folder-location :start-menu)))
+   =&gt; t
+ 
+   ;;; 送るメニューにxyzzyを登録する。
+   (create-shortcut (merge-pathnames "xyzzy.exe" (si:system-root)) (get-special-folder-location :send-to))
+   =&gt; t
+   (delete-file (merge-pathnames "xyzzy.exe.lnk" (get-special-folder-location :send-to)))
+   =&gt; t
+ </description>
+ <seealso>resolve-shortcut</seealso>
+ <section>ファイルシステム</section>
+ <file>files.l</file>
+ </chapter>
+--------
+- どーもです。こういうのは見えづらくなっても多少は仕方ないかと。*create-shortcutを参照させるように書くのもそれはそれで面倒ですし。それはともかく全角の「：」は使っていないつもりだったのですが、かなり使われていますね。統一しておきたいところです。 -- [[NANRI]] &new{2005-12-15 (木) 00:19:00};
+- あ、いきなりcのソースに潜ってしまってファイル名の制限が見当たらなくて首をかしげていたところです…駄目だなぁ… -- [[佐野]] &new{2005-12-15 (木) 01:02:55};
+- fileがbuiltin.lになっているものには対応するccのファイル名も書きたいと思いました。 -- [[佐野]] &new{2005-12-15 (木) 01:04:46};
+- 自分も昔そう思いましたが、lispリファレンスなのでC++レイヤーの話は無しにした方がよい気がしています。どうしてもというときはdescriptionに書いてください。 -- [[NANRI]] &new{2005-12-15 (木) 23:03:38};
+- 取り込みました。→[[refwiki:create-shortcut]] -- [[NANRI]] &new{2006-02-13 (月) 23:11:46};
+
+#comment

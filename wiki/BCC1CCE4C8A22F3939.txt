@@ -1,0 +1,411 @@
+#freeze
+* xyzzy＋howm(howm-wrap)でメモ・ファイル群のディレクトリーを指定し、また、二つのメモ・ファイル群を指定をきりかえて使い分けるには？ [#xd05f079]
+-ページ: [[質問箱]]
+-投稿者: [[Miteba]]
+-状態: 投稿者反応待ち
+-投稿日: 2005-07-16 22:26:30 (土)
+
+** メッセージ [#l8ad1f74]
+xyzzy0.2.2.235　＋　howm(howm-wrap1.1.0.3)を使わせていただいいます（kimuraさんなどのしゃく者のかた、ありがとうございます）
+質問箱96+98で関連質問をすでにさせていただいていますが、もう一つ、xyzzyでhowm（howm-wrap）の使い勝手をよくするため、質問をしたいのですが……。以下の問題があるのですが、いろいろやってみてもうまくいきませんでした。質問は（１）と（２）で、相互に関連しています。
+
+(1) howmのメモ・ファイル群を、通常の ~/xyzzy/howm/ にではなく、c:/home/howm/ におきたいのですが、
+
+
+ (setq howm-directory "~/memo/")
+ (setq howm-file-name-format "%Y/%Y%m%d-%H%M%S.howm")
+
+として、howm-initl.l に書いても、やはり、通常の ~/xyzzy/howm/に、howmのメモ・ファイル群を読みに行ってしまうのですが……
+
+ ;あるいは、Emacsとメモのファイルを共用したい
+ 
+ (setq howm-directory "c:/Editors/Emacs/site-lisp/howm/")
+
+と、.xyzzy に書いてもうまくいきません。
+
+備考：xyzzy0.2.2.235　＋　howm(howm-wrap1.1.0.3)　で、xyzzyを二組、継時的に使用しています。つたないのですが、xyzzy1.bat 、xyzzy2.bat をつくり、そのbatファイルで、
+ set XYZZYHOME=C:\Editors\xyzzy\xyzzy0.22235
+ cd C:\Editors\xyzzy\xyzzy0.22235
+ xyzzycli.exe
+ cd\
+ set XYZZYHOME=C:\ChangeLog\xyzzy-0.2.2.235\xyzzy
+ END
+などのようにして二組のxyzzyを別々に、継時的に使用しています。xyzzy1+howm(howm-wrap1.1.0.3)は、howm新規のときに、ただひとつのchagelogmemoファイルが毎回開けられ、xyzzy２
+のときは、howm新規のときhowmの新しいメモファイが開かれる。このように、二組のxyzzyを使うので、Howmのメモ・ファイル群を、通常の ~/xyzzy/howm/ にではなく、c:/home/howm/ におきたいわけです。
+
+（２）次は、（１）が解決され、xyzzy＋howm(howm-wrap)でメモ・ファイル群のディレクトリーを指定できるとし、さらに、二つのメモ・ファイル群を指定をきりかえて使い分けるにはどうしたらよいか？　という質問です。
+
+つまり、howm-directory を複数指定し、複数のメモディレクトリを切りかえたい ――
+
+これには、howm 関連サイトに、Emacsのかたちで、以下が載っていました。
+
+ (defun my-howm-set-directory (dir &optional keyfile)
+   `(lambda ()
+      (interactive)
+      (setq howm-directory ,dir)
+      (when ,keyfile
+        (setq howm-keyword-file ,keyfile))
+      (setq howm-menu-next-expiry-time (current-time))
+      (message "%s" ,dir)))
+ 
+ ;; 切り替えてメニューを呼ぶ (thx > 
+ (defun my-howm-switch-directory (dir &optional keyfile)
+   (my-howm-set-directory dir keyfile)
+   (howm-menu))
+ 
+ ;;Emacs=(global-set-key "\C-c,1" (my-howm-set-directory "~/howm1" "~/.howm1-keys"))
+ ;;Emacs=(global-set-key "\C-c,2" (my-howm-set-directory "~/howm2" "~/.howm2-keys"))
+ (global-set-key '#\C-c #1" (my-howm-set-directory "~/howm1" "~/.howm1-keys"))
+ (global-set-key '#\C-c #2" (my-howm-set-directory "~/howm2" "~/.howm2-keys"))
+
+以上を、.xyzzy に書き加えました。
+
+
+そして、以下を、.howm-menu ファイルに書きまいした。これで、 メニューから「1」「2」キーで切り替え、のはずなのに、切り替えはまったくおこらない。
+
+ ;;Emacs=%"1" %eval%(my-howm-switch-directory "~/howm1" "~/.howm1-keys")
+ ;;Emacs=%"2" %eval%(my-howm-switch-directory "~/howm2" "~/.howm2-keys")
+ %"1" :eval%(my-howm-switch-directory "~/howm1" "~/.howm1-keys")
+ %"2" :eval%(my-howm-switch-directory "~/howm2" "~/.howm2-keys")
+
+以上です。
+----
+-追加すべき説明がありました――初心者の悲しさですが、Emacs用のLispをxｙzzyのCommonLispに合わせて書き直せないことからくる要因もあります。 -- [[Miteba]] &new{2005-07-17 18:50:55 (日)};
+-上の説明が途中できれてしまいました――http://howm.sourceforge.jp/cgi-bin/hiki/hiki.cgi?SwitchMemoDirectory　に	SwitchMemoDirectory 複数のメモディレクトリを切りかえたい 、というのがあります。それをxyzzy用にあわせて多少書き換えなくてはならないのでしょうが、いろいろやってみると――＃’(lambda () (interactive) (setq howm-directory 'dir)　……などと――「’,’がバックオート構文以外にあらわれました」とか、「Dispatching Macro 副文字ではない」とか、起動して.xyzzyを読み込ませた直後のメッセージがでてきます。まだ、これをつぶせていない段階です。 -- [[Miteba]] &new{2005-07-17 18:55:50 (日)};
+-ええと、まず global-set-key の引数ですが、複数ストロークの場合書式は '(#\C-c #\1) といった風にリストの形になります。その上で、`(lambda ... を #'(lambda ... として、中にある , を消し、(defun my-howm-switch-directory ... 内の (my-howm-set-directory dir keyfile) を (funcall (my-howm-set-directory dir keyfile)) とするとどうでしょうか。 --  &new{2005-07-18 02:43:54 (月)};
+-どうもありがとうございます。さっそくやってみたのですが、まだ問題が残りました――「dir」「keyfile」の前の「,」をとるなど指示のとおりになおして、
+xyzzyを起動したところ、「’,’がバックオート構文以外にあらわれました」と「Dispatching Macro 副文字ではない」というのは無事消えました。ただし、
+ 引数が多すぎます：global-set-key '(#\C-c #\1) 'my-howm-set-directory "~/howm1" "~/.howm1-keys")）
+と警告がでたので、「’」を「(」 に替えて、xyzzyを再起動すると、
+ 予期しないENDOFFを検出しました：(global-set-key '(#\C-c #\2) (my-howm-set-directory "~/howm2" "~/.howm2-keys")）
+となってしまいました。――――なお、そのあとで、C,,でHowmメニューをだしてみても、howm-メモファイルに「」  -- [[Mibeta]] &new{2005-07-18 09:30:04 (月)};
+-再度、すいません。上記のつづきです。
+ 予期しないENDOFFを検出しました＜対応行＝＞　(global-set-key '(#\C-c #\2) (my-howm-set-directory "~/howm2" "~/.howm2-keys")）
+でつかえていますが、それでもhowmの複数メモファイルdirectoryを切り換えられるかためしてみました。でも、やはりだめです……xyzzyのあるdirectory内の、.howm-memu の最後の行に、
+ %"1" :eval%(my-howm-switch-directory "~/howm1" "~/.howm1-keys")
+および
+ %"2" :eval%(my-howm-switch-directory "~/howm2" "~/.howm2-keys")
+と書き足し、また、同じファイルの一番上のほうにある
+ = <<< %menu%
+の下の行に
+ %"1"[MemoDat1] %"2"[MemoDat2] 
+と書き足していますが、以下の＜１＞＜２＞＜３＞の症状があります。
+++「(global-set-key '(#\C-c #\1) (my-howm-set-directory "~/howm1" "~/.howm1-keys")）」と.xyzzyに書いているが、C-c 1 のキー入力をscratchでおこなってもなにもおこらない。　　
+++C-c,, でhowmのメニューhowmM:%memu%を出すが、そこには、.howm-menu に書いたはずの%"1"[MemoDat1]%"2"[MemoDat2]」が反映されていない。 このファイルがでているときに、C-c 1 のキー入力をすると、「書き込み禁止バッファーです」と警告。　　　
+++しかたなく、同じhowmのメニューhowmM:%memu%にある「[menu 編集]」でリターンして、0000-00-00-000000.howm のファイルをみると、そこには、.howm-menuに書いたはずの新しい書き込みがまったく反映されていない。その、0000-00-00-000000.howm のファイルに、
+ %"1" [Memodat壱] :eval%(my-howm-switch-directory "~/howm1" "~/.howm1-keys")
+ %"2" [Memodat弐]:eval%(my-howm-switch-directory "~/howm2" "~/.howm2-keys")
+と書き込むと、今度は、howmM:%memu%　に反映されるが、「 [Memodat壱] 」「[Memodat弐]」の下に下線がついてこないし、それをクリックすると、「書き込み禁止バッファーです」と警告。
+~――以上です　 -- [[Miteba]] &new{2005-07-18 10:07:37 (月)};
+-1. の最後の括弧が全角になってませんか？ --  &new{2005-07-18 17:04:09 (月)};
+-(1) はhowm-pre-init.lで指定する。howm-pre-init.lに書いてあります。(2)は以下をhowm-init.lに追加。ディレクトリとキーファイルは用意しておいてください。howm使いではありませんので検証はほとんどやってません。 --  &new{2005-07-19 12:48:17 (火)};
+ (defun my-howm-set-directory (dir &optional keyfile)
+   `(lambda ()
+      (interactive)
+      (setq howm-directory ,dir)
+      (when ,keyfile
+        (setq howm-keyword-file ,keyfile))
+      (setq howm-menu-next-expiry-time (current-time))
+      (message "%s" ,dir)))
+ 
+ ;; 切り替えてメニューを呼ぶ
+ (defun my-howm-switch-directory (dir &optional keyfile)
+   (my-howm-set-directory dir keyfile)
+   (howm-menu))
+ 
+ (global-set-key '(#\C-c #\, #\1) (my-howm-set-directory "~/howm1" "~/.howm1-keys"))
+ (global-set-key '(#\C-c #\, #\2) (my-howm-set-directory "~/howm2" "~/.howm2-keys"))
+-「……の最後の括弧が全角になってませんか？ -- 2005-07-18 17:04:09 (月) New 」：どうもすいません。たしかに、（２）の最後、全角になっていました。よく犯す間違いをまたやってしまいました。これで、「予期しないENDOFFを検出しました：(global-set-key '(#\C-c #\2) (my-howm-set-directory "~/howm2" "~/.howm2-keys")）」は無事消えました。――また、「(1) はhowm-pre-init.lで指定する。-- 2005-07-19 12:48:17 (火) New! 」はたしかにその通りでした。メモファイルは無事指定したいところに指定されました。教えていただいてありがとうございます――ただし、（２）のところはまだうまくいっていません。やはりEmacs系のLispをxyzzy-Common　Lispに替える必要があるのでしょうか。それとも、howm-wrap（howmをxyzzy用適用可能にするwrapper）があるから、howm-init.lには、Emacs系のLispをそのまま書いてもいいわけなのでしょか？　いま、『入門xyzzy』のcommon Lisp等のところをみたりしながら、試行錯誤しているところですが、（２）については、まだ解決されていません。 -- [[Miteba]] &new{2005-07-19 23:53:15 (火)};
+-もともとどういう動作なのかよく分かりませんが、保存されるディレクトリが変更されるのは確認しています。howm-init.lは用意されていたものをコピーして使っていらっしゃらないのでしょうか？　それじゃあ以下で。これでうまくいかないというのでしたら、私にはお手上げです。 --  &new{2005-07-20 01:27:55 (水)};
+ (in-package "elisp-lib")
+ (defun my-howm-set-directory (dir &optional keyfile)
+   `(lambda ()
+      (interactive)
+      (setq howm-directory ,dir)
+      (when ,keyfile
+        (setq howm-keyword-file ,keyfile))
+      (setq howm-menu-next-expiry-time (current-time))
+      (message "%s" ,dir)))
+ 
+ ;; 切り替えてメニューを呼ぶ
+ (defun my-howm-switch-directory (dir &optional keyfile)
+   (my-howm-set-directory dir keyfile)
+   (howm-menu))
+ 
+ (global-set-key '(#\C-c #\, #\1) (my-howm-set-directory "~/howm1" "~/.howm1-keys"))
+ (global-set-key '(#\C-c #\, #\2) (my-howm-set-directory "~/howm2" "~/.howm2-keys"))
+-教えていただいて、どうもありがとうごさいます。　たしかに、上記でも、あるいは、＜ええと、まず global-set-key の引数ですが…… -- 2005-07-18 02:43:54 (月) New ＞を書き込んでくれた方の通りに上記をcommon Lispで少し直したものを、howm-init.l に書き込みますと、見かけ上は、~/howm1/ や、~/homw2/　にきりかわります。ただし、そこから、C,,でhowmの%memu％を出そうとすると、(i) 「no match」　 と出るか、いろいろhowm1のディレクトリーをかえると、%memu% は、無事、C,,　 で現われるものの、そこから[新規]でメモファイルを作ろうとすると、（ii）「.howm2-keys  がみあたりません」という表示になってしまいます。この、.howm-keysのファイルのことがよくわかりません。このファイルをつくってなにかを書いておけば、[新規]でメモファイルで日付[2005-07-21 22:06] とともにあらわれるのでしょうが……。ここでつかえてしまっています。 -- [[Miteba]] &new{2005-07-21 03:03:52 (木)};
+-<2005-07-19 12:48:17 (火)>で「キーファイルは用意しておいてください」と書いていたんですがスルーされていたのですね。勝手にスルーされると話の前提が狂うのでやめてください。デフォルトのまま使うと「~/.howm-keys」というファイルができますが、それをコピーして「~/.howm1-keys」、「~/.howm2-keys」を作ってください。 --  &new{2005-07-21 12:22:58 (木)};
+-初心者程度なので、つい、初歩的ミスをおかしていました。申し訳ありません。.howm1.keys と、.howm2.keysを早速いれて、キーファイルを用意しました。それでも、やはり、切り替わった.howm1-keysがおいてある~/home1/のなかのメモファイルを対象に、C,, が効かない状態からぬけられません。その理由は目下不明ですが、以下のような症状と連動しているみたいです……C-X　4a　（Changelog.txtを出すためのキーバインド）が効くように設定して場合では、メモファイルをhowm1に切り換え後に、C,,　をしても、「no match」となってしまうような印象をうけました――今、また、いろいろ試行錯誤してみて、もっと正確な症状記述を再度掲載させていただく予定です -- [[Miteba]] &new{2005-07-24 16:58:15 (日)};
+-たびたびお騒がせしてすいません。試行錯誤した結果、一応使えるみたいになりました――――ただし、それでも、「関数が定義されていません::homw-menu」というエラー表示が、xyzzyの起動時に出てしまい、それは消えない状態です。:一応解決するまでの手順ですが、以下のようにやったところ、一応動くようになりました――結局、.howm-menuのなかに、＜%"1" :eval%(my-howm-switch-directory "c:/home/howm1" "~/.howm1-keys")＞と＜%"2" :eval%(my-howm-switch-directory "c:/home/howm2" "~/.howm2-keys")＞を書くのを忘れていたからのように思われます――.howm-menuとは、~/ つまり、.xyzzyがあるdirectory にあるファイルことで、なかをのぞくと、「= <<< %menu%」からはじまる内容で、howmメニュー表示と内容が（ほぼ）一致しています――なぜそう言う印象があるかというと、「関数が定義されていません　elisp-lib::my-howm-set-directory」がxyzzy起動時に再三表示されていたときに、いろいろ試行錯誤し、C,1やC,2のキーバインド定義を入れるのを忘れていたのを埋めた後に、さらに、.howm-menuに上記を書き加えた前後に、再三表示されていた上述エラー表示がきえたからです――このようなわけで、一応使えるようになったのですが、ただし、それでも、「関数が定義されていません::homw-menu」というエラー表示が、xyzzyの起動時に出てしまい、それは消えない状態です。＝＝＝なお、これらの書き加えは、.howm-init.lにではなくて、.xyzzy  に書き加えて行いました（.xyzzyに書くと、.howm-init.lに書き加えたときと違って、誤りがあれば行番号コメントつきエラー表示を出してくれるので見当がつくから）＝＝＝さらに、どのような経過があったかを詳述します：「関数が定義されていません　elisp-lib::my-howm-set-directory」――これがしばらく出ましたが、＜(global-set-key '(#\C-c #\, #\1) (my-howm-set-directory "c:/home/howm1" "~/.howm1-keys"))＞ および ＜(global-set-key '(#\C-c #\, #\1) (my-howm-set-directory "c:/home/howm2" "~/.howm2-keys"))＞を、.xyzzyに書き忘れていたことを確認。それから、.home-menu を念のため、~/howm/にいれてみました。すると、たしかに、メモファイル・ディレクトリーhowm1とhowm2をきりかえ、しかも、C,,でできるようになりました――それまでは、C,, のキー入力をすると、「no match」とエラー表示されていました。以前は、C-x 4a　がききませんでしたが、いまは、Changelog.txtもC-X 4a　で出せます（なぜ、C-x4 aが効くようになったのかの原因はわかりません）。つまり、一応使えるみたいになりました――ただし、それでも、「関数が定義されていません::homw-menu」というエラー表示が、xyzzyの起動時に出てしまい、それは消えない状態です。 -- [[Miteba]] &new{2005-07-24 19:41:08 (日)};
+-上記追加備考です（たびたび、すいません）――一応つかえるようになったのですが、もうひとつの不具合があります：C-c,, でhowmのメニューhowmM:%memu%を出しても、そこには、.howm-menu に書いたはずの%"1"[MemoDat1]%"2"[MemoDat2]」が反映されていない―― 同じhowmのメニューhowmM:%memu%にある「[menu 編集]」でリターンして、0000-00-00-000000.howm のファイルをみると、そこには、.howm-menuに書いたはずの新しい書き込みがまったく反映されていない。しかたがないので、変と思いつつ、その、0000-00-00-000000.howm のファイルに、＜　%"1" [Memodat壱] :eval%(my-howm-switch-directory "~/howm1" "~/.howm1-keys")＞　と　＜	%"2" [Memodat弐]:eval%(my-howm-switch-directory "~/howm2" "~/.howm2-keys")＞　と書き込むと、今度は、もちろん、howmM:%memu%　に反映されるが、「 [Memodat壱] 」「[Memodat弐]」の下に他の[新規]などにはついている下線が表示されてこない。、 [Memodat壱] 」あるいは「[Memodat弐]」のところにカーソルをおいてリターン・クリックすると、「書き込み禁止バッファーです」と警告。 この症状も残ったままです  -- [[Miteba]] &new{2005-07-24 19:55:59 (日)};
+-少し読みにくいので、重複部分や入力ミスの部分を直して頂けますか（画面上下の編集ボタンをクリックすれば書き込み後でも編集できます）。 --  &new{2005-07-24 21:31:03 (日)};
+-ところで「.howm-menu」ってなんですか？　どこにもそんなファイルの説明は書いてないのですが。 --  &new{2005-07-24 23:25:03 (日)};
+-上記＜2005-07-24 19:41:08 (日) ＞＜2005-07-24 19:55:59 (日) ＞を編集ボタンを押して、編集更新し、多少は読みやすくなるようになおしました。なお、上にも書きましたが、――.howm-menuとは、~/ つまり、.xyzzyがあるdirectory にあるファイルこと。なかをのぞくと、「= <<< %menu%」からはじまる内容で、howmメニュー表示時のファイル＊howmM*~/.howm-menu*　（もしくは、設定によっては（？）howmM:%memu%）と内容が（ほぼ）一致しています。ほぼ、と書いたのは、(.xyzzyと同じディリクトリーにある).howm-menuの内容が、そのまま、＊ｈowmM*~/.howm-menu* （もしくは、設定によっては（？）howmM:%memu%）に反映されるわけではないらしいからです。なお、~/howm　には、howm-menu.lcというLCファイル（バイナリー）がありますが、これがなにか関係しているのでしょうか？？-- [[Miteba]] &new{2005-07-25 10:23:48 (月)};
++まず、上のコードを xyzzy 風に書き直してみました。 
+ (defun my-howm-set-directory (dir &optional keyfile)
+        (interactive)
+        (setq howm-directory dir)
+        (when keyfile
+ 	 (setq howm-keyword-file keyfile))
+        (setq howm-menu-next-expiry-time (current-time))
+        (message "%s" dir))
+ 
+ ;; 切り替えてメニューを呼ぶ
+ (defun my-howm-switch-directory (dir &optional keyfile)
+        (interactive)
+        (my-howm-set-directory dir keyfile)
+        (howm-menu t))
+ 
+ (global-set-key '(#\C-c #\, #\1)
+ 		#'(lambda () (interactive) (my-howm-switch-directory "~/howm1" "~/.howm1-keys")))
+ (global-set-key '(#\C-c #\, #\2)
+ 		#'(lambda () (interactive) (my-howm-switch-directory "~/howm2" "~/.howm2-keys")))
++そして、メニューファイルには以下を追加
+ %"1" %eval%(elisp-lib::my-howm-switch-directory "~/howm1" "~/.howm1-keys")
+ %"2" %eval%(elisp-lib::my-howm-switch-directory "~/howm2" "~/.howm2-keys")
++それと、メニューファイルはデフォルトでは 0000-00-00-000000.howm ですが、これを変更するには
+ (setq howm-menu-top nil)
+ (setq howm-menu-file "~/.howm-menu")
+のように書く必要があると思います。
+以上のようにするとどうでしょうか（1.と3.は howm-init.l に記述してください）？--  &new{2005-07-25 10:35:20 (月)};
+-起動時のエラーについては、.xyzzy に howm 関係の記述をしていませんか？していたなら、それを正確に書いてみてください。 --  &new{2005-07-25 10:51:42 (月)};
+-ちなみに、howm-init.l にコードを記述した場合、それを反映させるには再ダンプ（Cｔｒｌ＋Shift を押しながら xyzzy を起動するなど）する必要があると思います（siteinit.l に (require "howm-wrap") を記述していた場合）。 --  &new{2005-07-25 11:43:02 (月)};
+-上にも追加しましたが、メニューファイルを変更する場合には、(setq howm-menu-top nil) も記述する必要があるようです。 それと、ついでに howm-pre-init.l のデフォルトのディレクトリ、キーワードファイルのファイル名 も変えておくといいかもしれないです（C-c , , だとデフォルトのものが呼び出されるので）。--  &new{2005-07-25 12:27:25 (月)};
+-上記の１．２．３．もふくめて教えていただいて大変感謝しております――いま、いろいろやって試しているところで、また、あとで報告いたします。ここでは、「起動時のエラーについては、.xyzzyにhowm 関係の記述をしていませんか？」という点について、上記１．２．３．を教えていただく前に、書き込んでいたhowm関係の記述を以下で引用いたします―― 
++
+ ;;Xyzzy+Howm
+ (pushnew (merge-pathnames "site-lisp/howm/" (si:system-root))
+ 	 *load-path* :test #'string-equal)
+ (require "howm-wrap")
+ ;; `howm-init.l' をコピーしてない場合、以下を有効に。
+ ;; 日本語メニューを使う。
+ ;(setq elisp-lib::howm-menu-lang 'elisp-lib::ja)
+ 
+ (in-package "elisp-lib");これが必要
+ ;二つのメモ・ファイル群を指定をきりかえて使い分ける
+ (defun my-howm-set-directory (dir &optional keyfile)
+   ;`(lambda ()
+   #'(lambda ()
+       (interactive)
+       ;(setq howm-directory ,dir)
+       (setq howm-directory dir)
+       ;(when ,keyfile
+       (when keyfile
+ 	;(setq howm-keyword-file ,keyfile))
+ 	(setq howm-keyword-file keyfile))
+       (setq howm-menu-next-expiry-time (current-time))
+       ;(message "%s" ,dir)))
+       (message "%s" dir)))
+ 
+ ;; 切り替えてメニューを呼ぶ
+ (defun my-howm-switch-directory (dir &optional keyfile)
+   ;(funcall (my-howm-set-directory dir keyfile))
+   (my-howm-set-directory dir keyfile)
+   (howm-menu))
+ 
+ (global-set-key '(#\C-c #\, #\1) (my-howm-set-directory "~/howm1" "~/.howm1-keys"))
+ (global-set-key '(#\C-c #\, #\2) (my-howm-set-directory "~/howm2" "~/.howm2-keys"))
+ 
+ 
+ ;; 「最近のメモ」一覧時にタイトル表示
+ (setq howm-list-recent-title t)
+ ;; 全メモ一覧時にタイトル表示
+ (setq howm-list-all-title t)
+ ;; メニューを 2 時間キャッシュ
+ (setq howm-menu-expiry-hours 2)
+ 
+ ;; howm の時は auto-fill で
+ (add-hook 'howm-mode-on-hook 'auto-fill-mode)
+ 
+ ;; RET でファイルを開く際, 一覧バッファを消す
+ ;; C-u RET なら残る
+ (setq howm-view-summary-persistent nil)
+ 
+ ;; メニューの予定表の表示範囲
+ ;; 10 日前から――以下は、＝＝.howm-init.l にいれないとき
+ (setq howm-menu-schedule-days-before 10)
+ ;; 3 日後まで
+ (setq howm-menu-schedule-days 3)
+ 
+ 
+ ;; メニューを自動更新しない
+ (setq howm-menu-refresh-after-save nil)
+ ;; 下線を引き直さない
+ (setq howm-refresh-after-save nil)
+ (in-package "user");userパッケージに戻す
++そして、.howm-pre-init.l　にはhowm関連で以下を記述しています。
+ (in-package "elisp-lib")
+ 
+ ;; howm ロード前の初期化。
+ 
+ ; メモ溜ディレクトリ。
+ (setq howm-directory "c:/Home/howm/")
+ ; キーワードファイルのファイル名。
+ (setq howm-keyword-file "c:/Home/howm1/.howm1-keys")
++また、.howm-init.l のなかの記述は以下のようにやっていました――
+ (in-package "elisp-lib")
+ ;; メジャーモードを指定。
+ (pushnew '("\\.howm$" . text-mode) *auto-mode-alist* :test #'equal)
+  
+ ;; メニューは日本語。
+ (setq howm-menu-lang 'ja)
+ 
+ ;; メモのタイトル。=
+ (setq *howm-mode-title-face*        '( 4 nil :bold :underline))
+ ;; goto リンク。>>> ほげほげ
+ (setq *howm-mode-ref-face*          '( 6   ))
+ ;; come-from リンク。<<< ふがふが
+ (setq *howm-mode-keyword-face*      '( 7  4))
+ ;; Wiki 風リンク。[[へろへろ]]
+ (setq *howm-mode-wiki-face*         '(14 nil :underline))
+ ;; 覚え書き。[2002-10-20]-
+ (setq *howm-reminder-normal-face*   '( 4   ))
+ ;; todo。[2002-10-20]+
+ (setq *howm-reminder-todo-face*     '( 3   ))
+ ;; 〆切。[2002-10-20]!
+ (setq *howm-reminder-deadline-face* '( 1   ))
+ ;; 予定。[2002-10-20]@
+ (setq *howm-reminder-schedule-face* '(14   ))
+ ;; 済。[2002-10-20].
+ (setq *howm-reminder-done-face*     '(15   ))
+ ;; 今日の日付。
+ (setq *howm-reminder-today-face*    '( 8  3))
+ ;; 明日の日付。
+ (setq *howm-reminder-tomorrow-face* '( 8  9))
+ ;; 検索語など。
+ (setq *howm-view-hilit-face*        '( 1   ))
+ ;; action-lock。{ }等。
+ (setq *action-lock-face*            '( 8 nil :underline))
+ ;; メニューのショートカットキー。c[新規]
+ ;;                               ^
+ (setq *howm-menu-key-face*          '( 3   ))
+ 
+ ;; サマリとコンテンツは行番号なしにする。
+ (defun howm-no-line-number ()
+   (set-local-window-flags (selected-buffer) *window-flag-line-number* nil))
+ (add-hook 'howm-view-summary-mode-hook 'howm-no-line-number)
+ (add-hook 'howm-view-contents-mode-hook 'howm-no-line-number)
+ 
+ 	 ;; メニューを自動更新しない
+         (setq howm-menu-refresh-after-save nil)
+        ;; 下線を引き直さない
+         (setq howm-refresh-after-save nil)
+ 
+ 
+ ;xyzzy+howm(howm-wrap)では、[2005-06-23 11:20]@　を予定として認知しない[2005-06-23]@ でないとだめ
+ (setq howm-template-date-format (concat "[" howm-date-format "]"))
+ 
+ ;; メニューの予定表の表示範囲
+ ;; 10 日前から
+ (setq howm-menu-schedule-days-before 10)
+ ;; 3 日後まで
+ (setq howm-menu-schedule-days 3)
+ 
+ ;;毎回一ファイルでなく、一日一ファイルにする;;メモ置き場/年/月/年＿月＿日.howm　に
+ (setq howm-file-name-format "%Y/%m/%Y-%m-%d.howm")
+ 
+ 
+ (setq howm-view-grep-parse-line
+       "^\\(\\([a-zA-Z]:/\\)?[^:]*\\.howm\\):\\([0-9]*\\):\\(.*\\)$")
+ ;; 検索しないファイルの正規表現
+ (setq howm-excluded-file-regexp "/\\.#\\|[~#]$\\|\\.bak$\\|/CVS/\\|\\.doc$\\|\\.pdf$\\|\\.ppt$\\|\\.xls$")
+ 
+ 
+ ;; C-cC-c で保存してバッファをキルする
+ (defun my-save-and-kill-buffer ()
+   (interactive)
+   (when (and
+          (buffer-file-name)
+          (string-match "\\.howm"
+                        (buffer-file-name)))
+     (save-buffer)
+     (kill-buffer nil)))
+ (eval-after-load "howm-mode"
+   '(progn
+      (define-key howm-mode-map
+        "\C-c\C-c" 'my-save-and-kill-buffer)))
+
+以上、参考までに記しました。
+
+
+-- [[Miteba]] &new{2005-07-26 02:04:11 (火)};
+-見ずらかったので書き直しました。コード部については、行頭に半角スペースを入れる（空行も含めて）と見やすくなると思います。また、.xyzzy の記述を修正しました。パッケージについては、この辺り（http://www.geocities.jp/m_hiroi/xyzzy_lisp/abclisp17.html#chap34）を参照のこと。 --  &new{2005-07-26 06:17:41 (火)};
+-たびたび、どうもありがとうございます。Common Lisp のパッケイジなど、、『入門xyzzy』をいろいろみていても初心者的なのでわからなかったのですが、教えていただいたURLですこしイメージができました。＜関連質問I＞今回は、すぐ上の、.xyzzy 部分の書き直しの件についてです――さっそく、上記で教えていただいたとおり、.xyzzyを書き直しました。すると、xyzzy起動時のエラー表示「関数が定義されていません::homw-menu」は無事消えました。そして、メニューファイルの切り換えもうまく作動しています。ただし、C-c,,　や　C-x 4a　のときに、howmの%memu％や changelog.txt は出てくるのですが、いままでのようにはscratchファイルの下段に、C-cとか　C-x　の表示が示されなくなり、いきなり、howmの%memu％や changelog.txt がでてきます。これでも十分で実質的には差し支えないわけですが……-- [[Miteba]] &new{2005-07-27 12:11:33 (水)};
+-上記とは別に、前の究極の解決策＜new{2005-07-25 10:35:20 (月)}＞に関して、その通りにやってつかえているところがありますので以下に……＜関連質問II＞起動時につぎのようなエラー表示がでます。「c:/xyzzy/howm-init.l:139 アクセスできないシンポルです：c:/home/howm1」――その行１３９行は、以下ですが、まず、１３８行目が、
+
+ (global-set-key '(#\C-c #\, #\1)
+つぎの１３９行目は、
+ 		#'(lambda () (interactive) (my-howm-switch-directory ""c:/home/howm1" "~/.howm1-keys")))
+
+です。これは、前に教えていただいたところ＜まず、上のコードを xyzzy 風に書き直してみました：new{2005-07-25 10:35:20 (月)};＞の箇所を、そのまま、howm-init.lに書き込み、ただし、
+
+　(my-howm-switch-directory "~/howm1" "~/.howm1-keys")))
+の部分は、以下のように、実際にhowm1が置いてあるディレクトリーを指定するところだけを指定し直したものです（オフィスのPCと共有するファイル、データーは、すべて共有ディレクトリーhomeに置いているため）。
+ (my-howm-switch-directory "c:/home/howm1" "~/.howm1-keys")))
+-- [[Miteba]] &new{2005-07-27 12:34:26 (水)};
+-c:... の前のダブルクォートがふたつになってませんか？ --  &new{2005-07-27 13:24:56 (水)};
+-上の＜関連質問II＞ですが、＜c:... の前のダブルクォートがふたつになってませんか？ ＞の指摘は、まさにその通りでした。どうも初歩的なミスに気づかないで申し訳ありません。＜”＞を削って起動すると、エラー表示がきえ、問題なくメモファイルの切り替え等もふくめ使えるようになりました。C-c,,　や　C-x 4a　でscratchファイルの下段に、C-cとか　C-x　の表示が示されたあと、howmの%memu％や changelog.txt がでてきますので、＜関連質問I＞にみらる問題点も発生しません。ひとつ残ったことは、やはり、.howm-menuの変更内容が反映されない点です。つまり、前の＜Miteba 2005-07-24 19:55:59 (日)＞で述べた点ですが、.howm-menu に書いたはずの「%"1"[MemoDat1] %"2"[MemoDat2] 」が反映されていない（同じhowmのメニューhowmM:%memu%にある「[menu 編集]」でリターンして、0000-00-00-000000.howm のファイルをみると、そこには、.howm-menuに書いたはずの新しい書き込みがまったく反映されていない）、という症状は残っています。実際に使っていく上では支障はないのですが……。＜howm-pre-init.l のデフォルトのディレクトリ、キーワードファイルのファイル名 も変えておくといいかもしれないです（C-c , , だとデフォルトのものが呼び出されるので）＞に関係していると思うのでいま試行錯誤して確かめているところです。いずれにしても、大変ありがとうございました。重ね重ね感謝いたしております。 -- [[Miteba]] &new{2005-07-27 15:20:44 (水)};
+-質問する前には十分に検証を行ってください。初心者は言い訳にならないと思います。 --  &new{2005-07-27 15:31:36 (水)};
+-検証してもケアレスミスが多くてすいません。以後、ミスをどんどん少なくするように気をつけます。＜関連質問II＞の残りの問題ですが、変更したはずの.howm-menu内容が　C,,　で反映されるようになりましたが、やはり、 書き加えた通りに、＜1[MemoDat1] 2[MemoDat2]＞  と出てきても、そこには下線が引かれて出でてきません。また、＜ 1[MemoDat1] ＞あるいは＜2[MemoDat2] ＞にカーソルをあて、returnキーを押しても、「書き込み禁止バッファーです」とエラー表示されてしまいます。なお、.howm-pre-init.l で
+
+ ; キーワードファイルのファイル名。
+ (setq howm-keyword-file "c:/Home/howm/.howm-keys") 
+と指定し、また、.howm-init.l には、＜new{2005-07-25 10:35:20 (月)};＞で教えていただいたように、
+
+ (setq howm-menu-top nil)
+ (setq howm-menu-file "c:/Home/howm/.howm-menu")
+としているのですが……-- [[Miteba]] &new{2005-07-27 21:31:38 (水)};
+-ここ（http://pc5.2ch.net/win/kako/1053/10538/1053880433.html）の866〜869を参考に。変数名が多少違っていますので、「[新規]」などで grep をかけてみるといいのではないかと思います。後はご自分でなんとかして下さい。 --  &new{2005-07-27 23:37:54 (水)};
+-こんな感じですかね？
+ ;; メニューにコマンドを追加
+ (setq howm-menu-command-table-ja
+       (append howm-menu-command-table-ja
+ 	      '(("[MemoDat1]" (lambda () (my-howm-switch-directory "~/howm1" "~/.howm1-keys")))
+ 		("[MemoDat2]" (lambda () (my-howm-switch-directory "~/howm2" "~/.howm2-keys"))))))
+メニューには以下を追加
+ %"1"[MemoDat1] %"2"[MemoDat2]
+
+lisp の記述ミスを減らすには paren.l などを入れるといいかもしれませんね。--  &new{2005-07-31 18:24:14 (日)};
+-どうもありがとうございました。以下、(a) (b) (c) (d) を述べます。
+いろいろ組み込んで複雑にしたxyzzyだと、複合的からみによる症状が現れ、そのため、この質問箱９９の諸問題がうまくいかない理由・原因をしぼりこむのが難しかったので、返事が遅れました((（e.g. 起動後、*scratch* でなくて、**scratch*がでてきてしまうなど複合的症状原因が絡みあうと思われる異常がみられた==[[質問箱/101]]「起動時、スクラッチ・ファイル表示時、このファイル画面の左上が「**scratch*」と表示される」[[質問箱/101]]参照）） ((なお、site-lisp内にparen.l　を導入し、byte-compileして、.xyzzyにparen.lを使うコードを記述後、括弧絡みの単純ミスを容易に発見することができるようになりました )) ))。
+今回、xyzzyを最初からinstall仕直し、*scrach* ((**scratch* ではなく))が正常に現れる設定条件下で[[質問箱/99]]に対していただいた提案・コードの検証をおこないました。
+現段階での結論としては、大部分は解決したものの、以下記載の(c) (d) の問題が残っている、ということになります。
+&br;&br;
+＜ 2005-07-25 10:35:20 (月)＞＋＜2005-07-31 18:24:14 (日)＞の提案コードだけを用いるやりかたでやってみました。その結果、 C+c ,,  後、　C+c, 1 あるいは、C+c, 2((もしくは、さらに、C+c, 3 を増やしても))をすると、それぞれ、メモ・ファイル群のdirectoryである c:/home/howm1/ ; c:/home/howm2/ ((さらには、C:/home/howm3/)) に切り替わることを検証しました。
+その後に、C+c, y ないし、それぞれの*howmM:~/.howm-menu*((*howmM:%menu%*ではなく)) バッファtabで[予定]をclickすると、それぞれのメモ・ファイル群に対応する予定が検索配列されて表示されます。&br;
+(a) つまり、キー操作だけでおこなう限りでは、[[質問箱/99]]は解決しています。この場合、＜ 2005-07-25 10:35:20 (月)＞にある、３の
+ (setq howm-menu-top nil)
+ (setq howm-menu-file "~/.howm-menu")
+を記述してもしなくても、同じ結果となるようです。&br;
+さて、起動後、C+c,, でウィンドウ画面に現れる*howmM:~/.howm-menu*　((*howmM:%menu%*ではなく)) バッファtabには、%"1"[MemoDat1]%"2"[MemoDat2]　に下にちゃんと下線がひかれて表示されます((この新installed xyzzyの設定の場合、~にあるhowmメニュー、つまり、howm-menuファイル＝0000-00-00-000000、に、%"1"[MemoDat1]%"2"[MemoDat2]を追加すると、howmM:%menu%* バッファtabの%"1"[MemoDat1]%"2"[MemoDat2]該当箇所に下線が引かれる))。
+&br;
+(b) ＜下線がひかれる＞、という点では、＜2005-07-31 18:24:14 (日)＞提案コードによって、うまくいくのです。けれども、 (c) (d) の症状が残る
+ことが確認できました。
+&br;
+(c) は以下の通り：　*howmM:~/.howm-menu* ((*howmM:%menu%*ではなく)) バッファtab　のウィンドウ画面で、下線の引かれた[MemoDat2]をmouse でclickした場合、mini-buffer に、「done」　と表示されるものの、その次に ＜[予定]＞をmouse でclickしたら、*howmM:~/.howm-menu*のbuffer-tabの表示名自体は変わらないものの、内容が切り替わりました。今回使用のxyzzyの.xyzzy の最後の行には、
+ (homw-menu) 
+ないしは、
+ (add-hook '*post-startup-hook* 'howm-menu)
+と記述しているため、起動時以降は、メモ・ファイルdirectory 初期設定c:/home/howmORG/(( howm-pre-init.l に記述))に対応するメユー*howmM:~/.howm-menu*がウィンドウ画面になっています。そのメニュー画面内には、リンク＜[〆切!, 予定@] ((デフォルトでは 7 日先まで表示))＞と＜[〆切!, todo+, 覚書-, 済み.] ((デフォルトでは上位 50 個まで表示))＞の各該当部分に、一週間範囲の予定メモファイルのリストが提示されていました。ところが、下線の引かれた[MemoDat2]をmouse でclick後に、ウィンドウ画面メニュー画面を調べてみると、リンク＜[〆切!, 予定@]＞ と＜[〆切!, todo+, 覚書-, 済み.] ＞の各部分それぞれの次ぎの行から提示されていた個々の予定内容リストが、ごっそり全部消えてなくなりました。そして、
+(c)この*howmM:~/.howm-menu*内の＜[予定]＞をmouse でclickすると、*scratch*に単に切り替わるだけで終わります。
+ちなみに、%"3"[MemoDat3]をふやしてみても、key 入力ではうまくのに、*howmM:~/.howm-menu*内の下線つき[MemoDat3]や＜[予定]＞をmouse でclickする場合は、*scratch*に単に切り替わるだけの結果になります。&br;
+では、最初の[MemoDat1]をmouse でclickする場合はどうか？　この場合は、*howmM:~/.howm-menu* 内の下線つき[MemoDat1]をmouse でclick後、mini-buffer に「done」が現れる((次の (d) の症状もなく、一週間範囲予定表示リストをふくむ正常な内容の、*howmM:~/.howm-menu*))。その直後のhowmM:~/.howm-menu*内の下線つき[予定]＞をmouse でclickすると、無事、メモ・ファイルdirectory  howm1 に切り替わり、howm1のメモ・ファイル群を検索配列した　＜*howmS:[schedule]*＞ ((そして、そこのカーソル位置に対応するファイル内容を表示した、＜*howmC:[schedule]*＞が同時に))出現。
+&br;
+つまり、下線のついた[MemoDat1]をmouse でclickする場合は、うまく機能しています.
+&br;&br;　まとめると、
+(d) ＜＜それまで起動時に出現していたメモ・ファイルdirectory 初期設c:/home/HowmORg/((.xyzzyに、(home-menu)　と書き加えていたため))へのリンク＜[〆切!, 予定@] ((デフォルトでは 7 日先まで表示))＞と＜[〆切!, todo+, 覚書-, 済み.] ((デフォルトでは上位 50 個まで表示))＞の次行から出ていた個々の予定内容が、すっかり全部消えてなくなる＞＞という問題症状は、[MemoDat2]同様、　[MemoDat3]　も同じです。
+別言すれば、mouseのclickによるやりかただと、*howmM:~/.howm-menu* 内の一週間範囲検索内容は非表示((C+c, 1  のkey入力をするやりかたなら、表示))という同じ症状が起こります。&br;ということは、、[MemoDat2]((さらには、[MemoDat3]))で起こるこの問題(d)を解決するためには、
+＜2005-07-31 18:24:14 (日)＞で指示のコードの一部になにか付加することによって、 mouse-clickのときだけhowmに関して、''＜メニューの一週間表示範囲内かどうかの判定関数がはたらかない、あるいはoffになってしまう点を修正しないといけない＞''ということかもしれない、と思いました。
+via key-typingの場合は正常に機能しているのに、mouse-clickingのときはどうしてはたらかないのかは、howm-memuと判定関数との連動dysfunction という問題なのではないか、と思われました。以上、煩瑣になって申し訳ないのですが、現段階で残る問題症状をその原因推定に役立つかもしれない関連現象を記してみました。-- [[Miteba]] &new{2005-08-07 18:49:22 (日)};
+-上記の捕捉です。以下のように、症状のパターンが一種循環的に変化を繰り返しているような面があることが、検証の繰り返しの過程で、思いがけずわかりました。まだ、全部把握できないので、輪郭だけを示します：：key入力では、C+c,1 も　
+C+c,2も、C+C,3　それぞれ対応するメモ・ファイルdirectory に切り替わることは検証。そのときは、*howmM:~/.howm-menu* 内の一週間範囲検索内容もちゃんと表示されていました ((非表示ではない：つまり、C+c,3対応のメモ・ファイル初期設定directory c:/home/howmORG/ や、C+c,1対応のメモ・ファイルdirectory や、C+c,2対応のメモ・ファイルdirectory へのリンク＜[〆切!, 予定@] ＞と＜[〆切!, todo+, 覚書-, 済み.] ＞をみると、それぞれの検索配列内容分が表示されている))。&br;&br;ところが、mouse-clickingだけでやるときは、次のような特徴の現象があることを確かめました。(d-1) key入力ないし[MemoDat1]mouse-clicking((ないし、{howm-pre-init.lでdefault設定でメモ溜めファイルdirectoryに指定したc:/home/howmORG}対応の[MemoDat3]))をおこない、メモ・ファイル群directoryであるc:/home/howm/対応の、*howmM:~/.howm-menu*((正常に検索配列された一週間分のリスト表示あり)）をウィンドウ画面に出しておく。その後、[MemoDat2]をmouse-clicking((あるいは、[MemoDat3]をclick))。すると、min--biffer が　done表示。*howmM:~/.howm-menu*が、検索配列された一週間分のリスト非表示のものに変わる。さらに、そこの[予定]をmouse-clicking すると、現れるのは空白の*scratch*となる。つまり、*scratch*に切り替わってしまう。　　(d-2) なぜかわからないが、このような組み合わせを何回か繰り返したあとに、[MemoDat2] ((ないし[MemoDat3]))をクリックすると、min--biffer が　done表示。*howmM:~/.howm-menu*((検索配列された一週間分のリスト非表示)) が変わるのだが、そこの[予定]mouse-clickingで*howmS:[schedule]*が出現し、その内容は、[MemoDat2]((ないし[MemoDat3]))対応の予定検索配列でなくて、その直前の[MemoDat１]（等？）の内容のままで変化していない、という現象が現れました。そこで、これらの変化パターンをExcelの表にして、組み合わせ条件と出現パターンとの対応関係をみつけようと思いました。空白*scratch*に切り替わる症状を繰り返すうち、組み合わせ条件依存の範囲内のパターン値変動ながら、一定回数以上繰り返されると、*howmS:[schedule]*に切り替わる……というような、循環的にくりかえられるパターン値変動循環現状という印象があるものの、その出現パターンをまだはっきり見いだすことができていません。ただし、(d-3)　なにかの条件が重なると、[MemoDat2]をクリックしたとき、min--biffer が　done表示後の*howmM:~/.howm-menu*のほうは、検索配列された一週間分のリスト非表示、となるが、にもかかわらず、*howmS:[schedule]*のほうは、[MemoDat2]に対応する正しい検索配列リストになることがある。&br;&br; 以上のように、まだ確定的なパターンをつかめていません。ともあれ、(d-1）のパターン、つまり、*scratch*に切り替わる場合が多いようである。また、そうでなければ、(d-2)のように、直前の検索配列内容の*howmS:[schedule]*が切り替わらずにそのまま居残る、という場合も出現する、という印象です。 -- [[Miteba]] &new{2005-08-07 19:18:22 (日)};
+-もの凄く見づらかったので、なるべく元投稿の意味が変わらないようにwikiの記法に従って書き直してみました。((煩雑だと思うなら見やすくなるように書いて欲しいと思う今日この頃。。。)) --  &new{2005-08-07 21:55:03 (日)};
++以前も言いましたが、十分に検証を行ってから質問をして下さい。
++また、[[質問箱/102]]でも指摘されていましたが、Rでサマリを反転できるということは readme.txt に書いてあります。せめて、readme.txt くらいは読んで下さい。
++さらに、せっかくコードを書いてもきちんと読まずにスルーされてしまうことがありますが、質問をする以上せめてそれに対する回答は読んで下さい。
++そして、私だけでなく他の何人かの方もわざわざ回答してくれているのですから、せめて少しは読みやすいように書いて下さい。これは xyzzy が初心者的であるかどうかとは何の関係も無いと思います。 --  &new{2005-08-07 22:26:48 (日)};
+-xyzzy 版の howm はマウス対応なんですか? --  &new{2005-08-08 00:26:29 (月)};
+- 1 -- [[1]] &new{2015-05-05 (火) 10:02:03};
+
+#comment

@@ -1,0 +1,41 @@
+*prog2 [#ea5c9781]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-10-24 11:45:24 (月)
+-バージョン: 
+
+**メッセージ [#ec61e8bf]
+prog1 と同じように書いてみました。
+
+ <chapter>
+ <title>prog2</title>
+ <type>Macro</type>
+ <arguments>prog2 FIRST SECOND &amp;body BODY</arguments>
+ <package>lisp</package>
+ <description>
+ フォームを順番に評価して二番目のフォームの結果を返します。
+ 
+ 使用例：
+   (prog2 (print "The first form")
+          (print "The second form")
+          (print "The third form"))
+   -> "The first form"
+   -> "The second form"
+   -> "The third form"
+   => "The second form"
+ </description>
+ <seealso>progn</seealso>
+ <seealso>prog1</seealso>
+ <link></link>
+ <section>制御構造</section>
+ <file>evalmacs.l</file>
+ </chapter>
+----
+-どーもです。prog2はまだ無かったんですね(^^; -- [[NANRI]] &new{2005-10-24 21:05:20 (月)};
+- 取り込みました。→[[refwiki:prog2]] -- [[NANRI]] &new{2005-12-03 (土) 03:11:48};
+
+#comment

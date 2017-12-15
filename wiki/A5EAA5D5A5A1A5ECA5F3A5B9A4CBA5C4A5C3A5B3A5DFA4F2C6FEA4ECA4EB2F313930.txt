@@ -1,0 +1,198 @@
+* session 関係 [#g11dab54]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-03-09 (木) 23:42:40
+-バージョン: 20051220
+
+** メッセージ [#ca90bb5c]
+session.l から。
+
+ <chapter>
+ <title>ed::*auto-save-session-file*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ セッションの自動保存フラグです。
+ 
+   nil     : 自動保存しない
+   non-nil : 自動保存する
+ </description>
+ <seealso>toggle-session-auto-save</seealso>
+ <seealso>close-session</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>session.l</file>
+ </chapter>
+
+ <chapter>
+ <title>*buffer-info-variable-list*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ セッションファイルに保存しておくバッファローカル変数のリストです。
+ 
+ このリストに含まれる変数のバッファごとの値はセッションファイルに保存さ
+ れ、ロードした際に復元されます。(正確には、バッファローカルになってい
+ る場合だけそのバッファの情報として保存されます)
+ </description>
+ <seealso>save-session</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>session.l</file>
+ </chapter>
+
+ <chapter>
+ <title>close-session-dialog</title>
+ <type>Function</type>
+ <arguments>close-session-dialog &optional NOASK</arguments>
+ <package>editor</package>
+ <description>
+ close-session とほぼ同じですが、変更されたバッファを保存する際にダイア
+ ログを表示して保存先を指定します。
+ 
+   NOASK      : nil の場合ファイルごとに保存するかどうか確認
+ </description>
+ <seealso>close-session</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>session.l</file>
+ </chapter>
+
+ <chapter>
+ <title>close-session</title>
+ <type>Function</type>
+ <arguments>close-session &amp;optional NOASK (CREATE-NEW t) (FN #'write-file)</arguments>
+ <package>editor</package>
+ <description>
+ すべてのフレームと *scratch* を除くすべてのバッファを削除します。
+ 保存していないバッファがあれば保存します。
+ 
+ ed::*auto-save-session-file* が non-nil であり、現在セッションを開いて
+ いるならば同時にセッションファイルを上書きします。
+ 
+   NOASK      : nil の場合ファイルごとに保存するかどうか確認
+   CREATE-NEW : non-nil であれば最後に新しいフレームをひとつ作る
+   FN         : ファイルの保存に使われる関数
+ </description>
+ <seealso>ed::auto-save-session-file</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>session.l</file>
+ </chapter>
+
+ <chapter>
+ <title>toggle-session-auto-save</title>
+ <type>Function</type>
+ <arguments>toggle-session-auto-save &amp;optional (ARG () SV)</arguments>
+ <package>editor</package>
+ <description>
+ セッションの自動保存フラグ (ed::*auto-save-session-file*) を切り替え
+ ます。 non-nil のときは、セッションを終了する際に自動でセッションファ
+ イルを上書きします。
+ 
+ ARG が与えられたとき (SV が non-nil のとき) は
+   nil または負の整数 : nil にする
+   それ以外           : t にする
+ </description>
+ <seealso>close-session</seealso>
+ <seealso>ed::*auto-save-session-file*</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>session.l</file>
+ </chapter>
+
+ <chapter>
+ <title>*default-session-directory*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ セッションファイルの保存・ロードの際にファイル名を読むときにデフォルト
+ で表示されるディレクトリです。
+ </description>
+ <seealso>load-session</seealso>
+ <seealso>save-session</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>session.l</file>
+ </chapter>
+
+ <chapter>
+ <title>save-session-dialog</title>
+ <type>Function</type>
+ <arguments>save-session-dialog</arguments>
+ <package>editor</package>
+ <description>
+ ダイアログからセッションファイル名を指定してセッションを保存します。
+ </description>
+ <seealso>save-session</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>session.l</file>
+ </chapter>
+
+ <chapter>
+ <title>open-session-dialog</title>
+ <type>Function</type>
+ <arguments>open-session-dialog</arguments>
+ <package>editor</package>
+ <description>
+ ダイアログからセッションファイル名を指定してセッションを開きます。
+ </description>
+ <seealso>load-session</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>session.l</file>
+ </chapter>
+
+ <chapter>
+ <title>load-session</title>
+ <type>Function</type>
+ <arguments>load-session FILENAME &amp;optional NOT-CLOSE</arguments>
+ <package>editor</package>
+ <description>
+ セッションファイルに保存されている状態を復元します。
+ 
+   NOT-CLOSE : ロード前に開いているバッファを削除するかどうか
+         nil     : *scratch* を除いてすべて削除してからロード
+         non-nil : 残したままロード
+ </description>
+ <seealso>save-session</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>session.l</file>
+ </chapter>
+
+ <chapter>
+ <title>save-session</title>
+ <type>Function</type>
+ <arguments>save-session FILENAME &amp;optional NOWARN</arguments>
+ <package>editor</package>
+ <description>
+ 現在のバッファと各フレームのウィンドウの状態をセッションファイルに保存
+ します。ただし file-visited でないバッファと save-p が nil なフレーム
+ は保存されません。
+ 
+ 保存した状態は load-session で復元することができます。
+ 
+   NOWARN : 指定されたファイルがすでに存在するときの動作
+         nil     : 黙って上書きする
+         non-nil : メッセージボックスを表示して確認する
+ </description>
+ <seealso>load-session</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>session.l</file>
+ </chapter>
+
+--------
+- どーもです。「セッションを閉じたときに自動的にセッションファイルを上書きするかどうかを表すフラグ」というのはメニューの表現を用いて「セッションの自動保存フラグ」とするほうがいいと思います。 -- [[NANRI]] &new{2006-03-09 (木) 23:56:27};
+- そのほうが簡潔でいいですね。変えておきました。 --  &new{2006-03-10 (金) 08:43:07};
+
+#comment

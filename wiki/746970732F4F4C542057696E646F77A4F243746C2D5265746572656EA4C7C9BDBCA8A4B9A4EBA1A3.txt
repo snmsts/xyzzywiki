@@ -1,0 +1,20 @@
+* 旧 outline-tree の情報で適用不可です。。 [#nc553c16]
+----
+
+導入時の設定では起動時とファイルを開いたときに表示される設定なっていたOLT
+(OHKUBO HiroshiさんのOut-Line Tree http://ohkubo.s53.xrea.com/xyzzy/index.html#outline-tree )を
+
+必要なときだけ表示するには
+
+(delete-hook 'ed:*find-file-hooks* 'outline-tree:olt-make)
+
+を.xyzzyに書いて解決しました。（もっと理にかなった方法があったら訂正して下さい）
+
+
+----
+以下で。(03/03/31 大久保)
+ ;; バッファリストを表示
+ ;(add-hook '*olt-open-hook* 'olt-make-only-buffer-node-all-buffer)
+ ;(add-hook 'ed:*create-buffer-hook* 'olt-make-only-buffer-node)
+ ;; ファイルを開くと同時にアウトライン作成
+ ;(add-hook 'ed:*find-file-hooks* 'olt-make)

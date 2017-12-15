@@ -1,0 +1,101 @@
+[[tips]]
+
+ひょっとすると現実的な速度で動くかもと思って作ってみたら結構動きました。~
+もたつきは無きにしも非ずな感じなので遅いマシンだとどうなるのかはよくわかりません。~
+完成度は低いので修正等よろしくお願いします。ウィンドウがらみがどうするのが良いのかいまいち謎でした。佐野
+
+ (define-history-variable *iapropos-history* nil)
+ 
+ (defun iapropos ()
+   (interactive)
+   (let ((string "")
+         (ostr "")
+         (winconf (current-window-configuration))
+         (print-key *prefix-args*)
+         (index -1)
+         (buf (selected-buffer))
+         (p (point))
+         (last-string "")
+         pred last-history)
+     (flet ((history-forward (reverse)
+              (if (eq last-history string)
+                  (setq index (min (max 0 index) (1- (length *iapropos-history*))))
+                (progn (setq index -1) (setq last-string string)))
+              (loop
+                (if reverse
+                    (incf index)
+                  (decf index))
+                (let ((s (if (minusp index)
+                             last-string
+                           (nth index *iapropos-history*))))
+                  (unless s
+                    (ding)
+                    (return))
+                  (setq last-history s)
+                  (setq string s)
+                  (return))))
+            (copy-word ()
+              (save-excursion
+                (set-buffer buf)
+                (let* ((start (+ p (length string)))
+                       (end (progn (goto-char start) (forward-word) (point)))
+                       (word (buffer-substring p start))
+                       (next-word (buffer-substring start end)))
+                  (if (or (string-match word string) (string= string ""))
+                      (setq string (format nil "~A~A" string next-word))
+                    (setq string word))))))
+       (loop
+         (minibuffer-prompt "iapropos: ~A" string)
+         (let ((c (read-char *keyboard*)))
+           (case c
+             (#\RET
+              (if (fboundp 'info-modoki-mode)
+                  (info-modoki-mode))
+              (add-history string '*iapropos-history*)
+              (return))
+             (#\C-g (set-window-configuration winconf) (quit))
+             (#\C-v (next-page))
+             (#\M-v (previous-page))
+             (#\C-h (or (zerop (length string))
+                        (setq string (substring string 0 -1))))
+             ((#\TAB #\SPC) (if (pos-visible-in-window-p (point-max))
+                                (goto-char (point-min))
+                              (next-page)))
+             (#\C-w (copy-word))
+             (#\C-y (setq string (format nil "~A~A" string (ed::current-kill 0))))
+             ((#\C-p #\Up)  (history-forward t))
+             ((#\C-n #\Down) (history-forward nil))
+             (t
+              (if (graphic-char-p c) (setq string (format nil "~a~c" string c))))))
+         (unless (or (string= string ostr) (= (length string) 0))
+           (with-output-to-temp-buffer ("*Help*")
+             (message "Building apropos list...")
+             (let ((local-keymap (local-keymap))
+                   (doc-path (lisp::documentation-path)))
+               (dolist (sym (sort (ed::apropos-find-matches (regexp-quote string) pred) #'string<))
+                 (prin1 sym)
+                 (if (and print-key (commandp sym))
+                     (let ((keys (command-keys sym *global-keymap* local-keymap)))
+                       (when keys
+                         (format t "~40T")
+                         (ed::print-key-sequence keys))))
+                 (terpri)
+                 (let ((doc (si:get-documentation-string
+                             sym 'lisp::function-documentation t doc-path)))
+                   (if doc
+                       (format t "  Function: ~A~%" doc)))
+                 (let ((doc (si:get-documentation-string
+                             sym 'lisp::variable-documentation t doc-path)))
+                   (if doc
+                       (format t "  Variable: ~A~%" doc)))))
+             (message "Building apropos list...done")))
+         (setq ostr string)))))
+
+----
+-少し手を入れてみました。もう少し完成度を上げたいところです。minibuffer-copy-wordとhistory関係は欲しいと思うんですが、もう少し気合いを入れないとできそうにありません（＾＾； -- [[NANRI]] &new{2005-02-22 19:32:08 (火)};
+-history と なんちゃって yank を追加しました( yank-pop はできません)．next/previous -page のキーバインドを変更しましたが，それはちょっとという場合は戻しておいてください -- [[中野]] &new{2005-02-23 22:17:42 (水)};
+-最初は常用するつもりが全く無かったのですがこれなら使えそうです。みなさんありがとうございます。 -- [[佐野]] &new{2005-02-23 22:52:41 (水)};
+-キーバインドを足しました。 -- [[NANRI]] &new{2005-02-24 19:57:13 (木)};
+-中野さんがつくってらっしゃったhistory系のコマンドはなんか変な動きをしている気がしたのでisearch.lからぱくって作り直しちゃいました。（ごめんなさいm(_ _)m）　勢いでcopy-wordも実装。 -- [[NANRI]] &new{2005-02-24 23:39:15 (木)};
+
+#comment

@@ -1,0 +1,37 @@
+*psetq [#ub0a9abf]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-07-27 (火) 23:09:32
+-バージョン: 20031002
+
+**メッセージ [#s8cb0710]
+ <chapter>
+ <title>psetq</title>
+ <type>Macro</type>
+ <arguments>psetq &rest ARGS</arguments>
+ <package>lisp</package>
+ <description>
+ 変数に値を設定します。
+ 
+   (psetq 変数1 値1 変数2 値2 ... 変数N 値N)
+ 
+ 上記の様に変数と値の組を任意の数だけ並べることができます。 
+ 
+ setqと似ていますがsetqは頭から順に変数に束縛していくのに対し、psetqは値を全て評価した上で束縛します。
+ 
+ </description>
+ <seealso>setq</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file>evalmacs.l</file>
+ </chapter>
+
+----
+-主文の主語が setq なので一瞬 setq の説明に見えました。自分としては順番を入れ替えて「setqと似ていますがsetqは頭から順に変数に束縛していくのに対し、psetqは値を全て評価した上で束縛します。」の方がいいかなと思うのですがいかがでしょう。 -- [[NANRI]] &new{2004-07-28 (水) 20:07:25};
+-そうしてみました。 -- [[佐野]] &new{2004-07-28 (水) 23:24:05};
+
+#comment

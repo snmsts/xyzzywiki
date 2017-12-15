@@ -1,0 +1,62 @@
+* substitute-string のキーワード [#radd4413]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-04-15 (土) 23:50:44
+-バージョン: 20060329
+
+** メッセージ [#x604d0b5]
+とりあえず説明を書いてみました。 :skip, :count は使用例があった方がいいかと思ったんですが、いい例が浮かびませんでした。
+
+ <chapter>
+ <title>substitute-string</title>
+ <type>Function</type>
+ <arguments>substitute-string STRING PATTERN REPLACEMENT &amp;key :case-fold :start :end :skip :count</arguments>
+ <package>editor</package>
+ <description>
+ 文字列中のパターンを置換して返します。
+ 
+   :case-fold  : nil なら大文字小文字を区別する。
+                 :smart なら、パターンに大文字が現れないときのみ区別しない。
+                 その他の場合なら大文字小文字を区別しない。                
+   :start      : 開始位置。デフォルトは 0 で非負の整数
+   :end        : 終了位置。デフォルトは nil で、 nil の場合は列の長さを
+                 指定した場合と等しい動作
+   :skip       : 指定された回数マッチするまでは置換を行わない
+   :count      : 置き換える最大の回数
+ 
+ 使用例：
+   ;;; 部分文字列を置換する。
+   (substitute-string "Hogehoge" "ho" "pa")
+   =&gt; "Hogepage"
+ 
+   ;;; 大文字小文字を区別せず置換する。
+   (substitute-string "Hogehoge" "ho" "pa" :case-fold t)
+   =&gt; "pagepage"
+ 
+   ; 正規表現・メタ文字の利用
+   (substitute-string "abc123cdef" "[^0-9]*\\([0-9]+\\).*" "\\1 in \\&amp;")
+   =&gt;"123 in abc123cdef"
+ </description>
+ <seealso>replace-string</seealso>
+ <seealso>substitute</seealso>
+ <seealso>replace</seealso>
+ <seealso>quote-string</seealso>
+ <section>文字列</section>
+ <file>builtin.l</file>
+ </chapter>
+
+--------
+- どーもです。:startと:endは非負の整数なんですね。負の場合は末尾から数えるのかと思ってました。 -- [[NANRI]] &new{2006-04-16 (日) 06:47:04};
+
+ (substitute-string "abababababababab" "ab" "CD" :skip 3 :count 2)
+ =>"abababCDCDababab"
+ =>2
+- case-fold の :smart を追記しました。 -- [[中野]] &new{2006-04-17 (月) 02:22:42};
+- パターンは正規表現で記述するとした方がよくないですか？ -- [[中野]] &new{2006-04-17 (月) 02:26:22};
+- 他のところでは正規表現パターンという表現が使われているみたいですね。 -- [[NANRI]] &new{2006-04-23 (日) 23:05:11};
+
+#comment

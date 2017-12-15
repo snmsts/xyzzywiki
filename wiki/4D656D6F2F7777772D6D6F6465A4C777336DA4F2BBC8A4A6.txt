@@ -1,0 +1,75 @@
+*きっかけ [#s3183e03]
+今まで[[w3m-cygwinなしセット>http://popup2.tok2.com/home/i9n/memo.html#xy-w3m]]を使わせてもらっていたのですが、なんとなくw3mをバージョンアップしてみようとしたところ、あっさりとは行かなかったので、試行錯誤の結果を書いておきます。
+（ちなみに「w3m-cygwinなしセット」は今現在ダウンロードできなくなっているみたいです。）
+
+//（補記：2004/11/05現在、「w3m-cygwinなしセット」はここからダウンロードできるようです。http://i9n.s38.xrea.com/memo.html）
+*必要なもの [#qe5dc63a]
+www-modeはnetinstallerなどでインストール、設定をしてください。
+
+w3m.exeは、本来cygwin上でコンパイルすべきところなのですが、このためだけにcygwinをインストールするのもバカバカしいと思っていたところ、バイナリを公開している方のページを見つけました。%%[[w3mバイナリ（WATANABE Katsuyukiさんのページ）>http://www.page.sannet.ne.jp/knabe/w3m/w3m-bin.html]]%%
+
+w3mを使うのにもcygwinが必須なのですが、もちろん全部インストールすることなどせず、必要最小限のdllだけを入れることにします。必要なdllは次の3つです：
+- cygwin1.dll
+- cygcrypto-0.9.7.dll
+- cygssl-0.9.7.dll
+
+cygwin関連のファイルはいろんなFTPサイトから入手できますが、たとえば、ftp://ftp.gnupilgrims.org/pub/cygwin/release/といったところがあります。この中のcygwinフォルダからcygwin1.dllを、opensslフォルダから残りの二つをダウンロードします。（一番バージョンが新しそうなアーカイブファイルを取ってきて解凍すれば、必要なdllができるはず。）
+
+ Ring Server ProjectでもCygwinをミラーしています。
+ Ring Server Projectに参加しているミラーサイトの数も圧倒的に多いで
+ しょう から日本国内からダウンロードする場合はRing Server Projectの
+ サイトを利用すると有利だと思います。
+ http://ftp.ring.gr.jp/archives/pc/gnu-win32/
+ ftp://ftp.ring.gr.jp/archives/pc/gnu-win32/
+ といったぐあいにFTPとHTTPのいずれかを選べます。
+ 代表ドメインのftp.ring.gr.jpに接続すると参加サイトの中から適当なサ
+ イトへ誘導してくれます。
+
+*設定 [#k2e99d05]
+拾ってきたw3m.exeと3つのdllをとりあえずxyzzy.exeと同じフォルダに入れて、www-modeの必要な設定をします。（面倒なので説明省略）
+
+で、www-modeを動かしてみると、エラーが出ます。前にダウンロードした「w3m-cygwinなしセット」の時はうまく行ったのですが、今回の新しいバージョンのw3m.exeでは素直に行かないようです。調べてみると、新しいw3m.exeはドライブレター（C:とかD:とか）を認識していないようです。じゃあ、どうやってドライブを指定するのかと調べてみたところ、/cygdrive/c/とかやるみたいです。w3m.exeを修正するのも面倒なので（そもそもバイナリだし）、www-modeの方をいじることにします。www-w3m.lの50ライン目を以下のようにします：
+-もともと
+ (let ((command (www-w3m-command (map-slash-to-backslash temp)
+-手直し後
+ (let ((command (www-w3m-command (substitute-string temp "C:/" "/cygdrive/c/")
+
+これでめでたく動くはず。
+（ちなみに、苦労してw3m.exeを新しくしたのですが、www-modeを使う上では特に変化はありません。。。）
+
+**追加 [#p604c697]
+以下の dll も必要なようです（w3m-0.4.2-cvs-1.890-3 以降？）:
+
+-cygncurses7.dll
+-cygintl-2.dll
+-cygiconv-2.dll
+
+**文字化け回避 [#d418a830]
+上記のドライブレターのバグは、少なくともバイナリ配布版の新しいw3m.exeでは結構前に修正されていますので、
+現在その修正は不要のはずです。
+
+ところで、バイナリ配布版の新しいw3m.exeと最小限のdllの組み合わせでの、
+文字化けに悩んでいる人っておられないのでしょうか?
+私はずっと悩んでいましたが、やっと文字化け回避方法を見つけましたので書いておきます。
+
+上の方の書き方をまねさせていただきますが、.wwwにおけるw3m.exeのパス指定で、
+
+-もともと
+ (setq *www-w3m-command*
+      (map-slash-to-backslash "C:/cygwin/usr/local/bin/w3m.exe"))
+-手直し後
+ (setq *www-w3m-command*
+      (map-slash-to-backslash "C:/cygwin/usr/local/bin/w3m.exe
+       -o display_charset=EUC-JP -o document_charset=Shift_JIS -o ext_halfdump=ON"))
+
+昔配布されていた古いw3m.exeをしぶとく使っていましたが、
+それだと最近多いUNICODEのページが(3を押して切り替えないと)読めず、
+不便を感じていました。
+これでやっと乗り換えられます。
+
+----
+- めんどいんでリンク　http://ohkubo.s53.xrea.com/diary/20051119.html -- [[佐野]] &new{2005-11-20 (日) 15:16:33};
+- ここにあるのが使えます。http://www.fl.ctrl.titech.ac.jp/~old/home/graduate/naitou/public_html/meadow/install2.html --  &new{2006-08-18 (金) 03:11:47};
+- こめんなさい。上のは halfdump できないようなので www-mode で使うのは無理みたいです。 --  &new{2006-08-25 (金) 17:05:44};
+
+#comment

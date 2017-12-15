@@ -1,0 +1,43 @@
+#freeze
+* SumatraPDF をダブルクリックしても TeX ソースファイルの該当箇所にジャンプしない [#baa2ca05]
+-ページ: [[質問箱]]
+-投稿者: [[zyam56]]
+-状態: 完了
+-投稿日: 2005-10-15 11:15:28 (土)
+
+** メッセージ [#l5edcfaa]
+SumatraPDF をダブルクリックしても TeX ソースファイルの該当箇所にジャンプしません。
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ SumatraPDF の [設定(S)]-[オプション(O)...]-[逆順検索コマンドラインの設定] で
+ C:\xyzzy\xyzzycli.exe -g %l "%f"
+ と書き込んで [OK] をクリックしてください。
+ SumatraPDF の画面の一部をダブルクリックすると， xyzzy が前面に出て，該当個所に飛ぶはずです。
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+なにか、ご存じでしたら教えてください。
+また、このページの下に記述してあるlispソースを.xyzzyに記述することで、TeXソースからPDFの該当箇所にとぶとあるのですが、PDFファイルが表示されるのみです。
+----
+-(setq elisp::tex-command "ptex2pdf -u -l -ot \"-synctex=1\"") というように -synctex=1 オプションをつけてコンパイルする必要があったと思います。 --  &new{2005-10-15 16:56:35 (土)};
+-できました。.xyzzyの設定lispに (setq elisp::tex-command "ptex2pdf -u -l -ot \"-synctex=1\"") のように設定してタイプセットし SumatraPDF をダブルクリックすると、確かに相互に所定の場所に跳びました。すごい！感激です。ありがとうございました。 -- [[zyam56]] &new{2005-10-15 17:34:23 (土)};
+-ちなみに KaTeX をつかっているなら下の設定を追加して C-c s をタイプすれば forward search ができると思います。 --  &new{2005-10-15 17:34:55 (土)};
+
+ (defun sumatrapdf-forward-search ()
+   (interactive)
+   (let* ((tex-file (get-buffer-file-name))
+          (pdf-file (concat (el::KaTeX-get-preview-file-name) ".pdf"))
+          (line (format nil "~D" (current-line-number)))
+          (cmd "rundll32 shell32,ShellExec_RunDLL SumatraPDF")
+          (args))
+     (setq args (concat "-reuse-instance \"" pdf-file "\" -forward-search \"" tex-file "\" " line))
+     (message (concat cmd " " args))
+     (call-process (concat cmd " " args)
+                   :exec-directory (directory-namestring tex-file))))
+ 
+ (add-hook 'elisp::katex-mode-hook
+           #'(lambda ()
+               (define-key elisp::*KaTeX-mode-map* '(#\C-c #\s) 'sumatrapdf-forward-search)))
+
+-ありがとうございます。秀丸エディタから乗り換えようとしている xyzzy 入門者です。さっそくためしてみます。 -- [[zyam56]] &new{2005-10-15 17:38:55 (土)};
+-xyzzy(KaTeX併用) で TeX のソースを書くのが非常に楽になりました。 -- [[zyam56]] &new{2005-10-20 05:15:37 (木)};
+-フォローありがとうございました。早速反映してみました。 -- [[TeX Wikiのダメダメ筆者]] &new{2005-10-31 10:08:14 (月)};
+
+#comment

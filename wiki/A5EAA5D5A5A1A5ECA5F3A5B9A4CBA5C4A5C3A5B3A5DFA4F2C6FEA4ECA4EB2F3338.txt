@@ -1,0 +1,31 @@
+*smart-indentation [#b352bc8e]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2003-11-15 (土) 21:33:43
+-バージョン: 20031002
+
+**メッセージ [#vccaeebb]
+ <chapter>
+ <title>smart-indentation</title>
+ <type>Function</type>
+ <arguments>smart-indentation COLUMN</arguments>
+ <package>editor</package>
+ <description>
+ 行頭からcolumn文字インデントします。
+ *smart-indentation*がtの時は適度にサボったりするみたいです。
+ </description>
+ <seealso>*smart-indentation*</seealso>
+ <seealso>indent-to</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>cmds.l</file>
+ </chapter>
+
+----
+-取り込みました。*smart-indentation*の方からのseealsoも追加しました。 -- [[山本]] &new{2003-12-06 (土) 18:34:28};
+
+#comment

@@ -1,0 +1,63 @@
+*CalMemoでサマリに日数を表示する [#d09850e0]
+
+-ページ: [[patch]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 提案
+-カテゴリー: 機能追加
+-投稿日: 2005-09-25 23:07:21 (日)
+-バージョン: 
+
+**メッセージ [#b329b376]
+ ;; サマリに日数を表示する
+ (defun summary-this ()
+   "CalMemo メモ一覧からサマリを作成"
+   (interactive)
+   (if (and (eq buffer-mode 'calmemo-list-mode)
+ 	   (eq (list-type) 'todo))
+       (list-todo t)
+     (when (or (and (eq buffer-mode 'calmemo-list-mode)
+ 		   (eq (list-type) 'clog))
+ 	      (eq buffer-mode 'calmemo-search-mode))
+       (summary-quit)
+       (let (date str y m d hi lo days)
+ 	(save-excursion
+ 	  (goto-char (point-min))
+ 	  (while (scan-buffer
+ 		  (concat "^\\(\\([0-9]\\{8\\}\.[0-9]\\{4\\}\\) "
+ 			  "\\|\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\) \\(([A-Z][a-z]\\{2\\})  .*\\)$\\)")
+ 		  :regexp t)
+ 	    (setf date (buffer-substring (point)
+ 					 (progn (forward-char 16) (point))))
+ 	    (forward-line 2)
+ 	    (back-to-indentation)
+ 	    (setf y (parse-integer (subseq date 0 4))
+ 		  m (parse-integer (subseq date 5 7))
+ 		  d (parse-integer (subseq date 8 10)))
+ 	    (setf hi (encode-universal-time 0 0 0 d m y))
+ 	    (setf y (parse-integer (format-date-string "%Y"))
+ 		  m (parse-integer (format-date-string "%m"))
+ 		  d (parse-integer (format-date-string "%d")))
+ 	    (setf lo (encode-universal-time 0 0 0 d m y))
+ 	    (setf days (/ (- hi lo) (* 60 60 24)))
+ 	    (setf str (concat str "    " date " " (format nil "~3@A" days) " "
+ 			      (buffer-substring (point) (progn (goto-eol) (point))) "\n"))))
+ 	(create-window-summary)
+ 	(setf *summary-dir* *log-directory*)
+ 	(setf *summary-type* 'clog)
+ 	(setf buffer-read-only nil)
+ 	(when str
+ 	  (insert str)
+ 	  ;;キーワードのハイライト
+ 	  (when (and *calmemo-grep-last-words*
+ 		     (eq (list-content) 'grep))
+ 	    (grep-hilight *calmemo-grep-last-words*))))
+       (setf buffer-read-only t)
+       (set-mode-line-format (symbol-value (list-content)))
+       (goto-char (point-min))
+       (summary-set-holiday-color)
+       (summary-view-memo))))
+
+----
+
+#comment

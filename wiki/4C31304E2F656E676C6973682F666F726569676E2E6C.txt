@@ -1,0 +1,72 @@
+[[L10N/english]]
+
+ foreign.l:81:	(error "~Aは型指定子ではありません" type))
+- error "~A is not a type specifier" type) --  &new{2006-03-11 (土) 00:25:24};
+
+#comment
+ foreign.l:88:	  (error "~Aはすでに宣言されています" decl))
+- error "~A is already declared." -- [[a]] &new{2005-12-24 (土) 11:43:11};
+
+#comment
+ foreign.l:130:    (error ":void型引数はサポートしていません"))
+- (error ":void type of argument is not supported")) --  &new{2006-03-11 (土) 00:26:10};
+
+#comment
+ foreign.l:132:    (error "構造体の値渡しはサポートしていません: ~A" (ctypedef-type type)))
+- (error "pass by value of constitute is not supported: ~A" (ctypedef-type type))) --  &new{2006-03-11 (土) 00:29:28};
+
+#comment
+ foreign.l:138:    (error "構造体の戻り値はサポートしていません: ~A" (ctypedef-type type)))
+- (error "return value of constitute is not supported: ~A" (ctypedef-type type))) --  &new{2006-03-11 (土) 00:29:51};
+
+#comment
+ foreign.l:207:    (error "構造体のメンバがありません: ~A" name))
+- (error "no member of constitute: ~A" name)) --  &new{2006-03-11 (土) 00:30:32};
+
+#comment
+ foreign.l:214:			   (error "不正なスロットの形式です"))
+- (error "Invalid slot type")) --  &new{2006-03-11 (土) 00:31:13};
+
+#comment
+ foreign.l:218:			   (error "不正なスロットの形式です"))
+- (error "Invalid slot type")) --  &new{2006-03-11 (土) 00:31:24};
+
+#comment
+ foreign.l:223:			     (error "不正なスロットの形式です")))
+- (error "Invalid slot type")) --  &new{2006-03-11 (土) 00:31:35};
+
+#comment
+ foreign.l:228:			   (error ":void型は構造体のメンバには使用できません"))
+- (error "type :void cannot be used for member of constitute")) --  &new{2006-03-11 (土) 00:32:37};
+
+#comment
+ foreign.l:231:			   (error "スロット名はシンボルです: ~A" name))
+- (error "slot name is a symbol: ~A" name)) --  &new{2006-03-11 (土) 00:33:43};
+
+#comment
+ foreign.l:238:			     (error "配列の長さは整数です: ~A" dims))
+- Length of arrays must be integer: ~A --  &new{2005-12-24 (土) 17:07:15};
+
+#comment
+ foreign.l:240:			     (error "不正な配列の長さです: ~A" dims))
+- Invalid length of array: ~A --  &new{2005-12-24 (土) 17:10:20};
+
+#comment
+ foreign.l:242:			     (error "スロットの引数が多すぎます")))
+- (error "Too many argument of slot"))) --  &new{2006-03-11 (土) 00:34:23};
+
+#comment
+ foreign.l:306:      (error "~Aは構造体ではありません" type))
+- (error "~A is not a constitute" type)) --  &new{2006-03-11 (土) 00:34:57};
+
+#comment
+ foreign.l:311:	    (error "~Aは~Aのメンバではありません" slot type))
+- ~A is not member of ~A. --  &new{2005-12-24 (土) 17:11:19};
+
+#comment
+ foreign.l:318:      (error "~Aは構造体ではありません" type))
+- (error "~A is not a constitute" type)) --  &new{2006-03-11 (土) 00:35:32};
+
+#comment
+ foreign.l:322:	(error "~Aは~Aのメンバではありません" slot type))
+#comment

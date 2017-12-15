@@ -1,0 +1,65 @@
+*map, map-into [#aa3d4ae1]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-09-04 15:22:56 (日)
+-バージョン: 
+
+**メッセージ [#yc5a0003]
+ <chapter>
+ <title>map</title>
+ <type>Function</type>
+ <arguments>map RESULT-TYPE FUNCTION SEQUENCE &amp;rest MORE-SEQUENCES</arguments>
+ <package>lisp</package>
+ <description>
+ SEQUENCE に FUNCTION を適用して、RESULT-TYPE に応じたシーケンスを返します。
+ 
+ RESULT-TYPE は make-sequence の TYPE と同じものが使えます。
+ FUNCTION の引数は mapcar と同様、SEQUENCE の各要素をひとつずつ取り出したものとなります。
+ MORE-SEQUENCES がある場合もやはり mapcar と同じように適用されます。
+   
+ mapcar との違いは文字列や配列にも適用できることと、RESULT-TYPE の指定が必要なことです。
+ 
+ 使用例:
+   ;;; 文字列の場合は一つ一つの要素が string ではなく char になることに注意
+   (map 'list #'char-code "abc")
+   =&gt; (97 98 99)
+ </description>
+ <seealso>make-sequence</seealso>
+ <seealso>mapcar</seealso>
+ <link></link>
+ <section>シーケンス</section>
+ <file>sequence.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>map-into</title>
+ <type>Function</type>
+ <arguments>map-into RESULT-SEQUENCE FUNCTION &amp;rest SEQUENCES</arguments>
+ <package>lisp</package>
+ <description>
+ SEQUENCES に map と同じように FUNCTION を適用し、その結果を RESULT-SEQUENCE に埋め込みます。
+ 返されるシーケンスの長さは RESULT-SEQUENCE および SEQUENCES の中でもっとも短いものと同じになります。
+ 
+ 使用例:
+   (map-into "abcde" #'char-upcase "fgh")
+   =&gt; "FGHde"
+   (map-into '(1 2 3) #'- '(4 5 6 7 8))
+   =&gt; (-4 -5 -6)
+ </description>
+ <seealso>map</seealso>
+ <link></link>
+ <section>シーケンス</section>
+ <file>sequence.l</file>
+ </chapter>
+----
+-ありがとうございます。ただ、map-intoの「返されるシーケンスの長さは RESULT-SEQUENCE および SEQUENCES の中でもっとも短いものと同じになります。」と一番目の使用例の結果が矛盾しているようです。どちらが正しいのでしょうか？　オレもちょっと仕様をあたってみます。 -- [[NANRI]] &new{2005-09-05 19:23:06 (月)};
+-cltl2に"result-sequenceが一番短いsequenceよりも長い場合にはresult-sequenceの後部の余った要素は変わらない"とありました -- [[佐野]] &new{2005-09-05 20:02:26 (月)};
+-すいません、勘違いでした。「RESULT-SEQUENCE およびSEQUENCES」うんぬんの指しているのは変更される部分の長さです。返されるシーケンスはあくまでresult-sequenceの長さになるのだと思います。 -- [[書いた人]] &new{2005-09-06 00:18:50 (火)};
+-了解です。 -- [[NANRI]] &new{2005-09-06 19:51:14 (火)};
+-指摘部分の修正は書いた人さんにお任せしたかったのですが、取り込んじゃいました。→[[refwiki:map-into]], [[refwiki:map]] -- [[NANRI]] &new{2005-10-23 00:42:52 (日)};
+
+#comment

@@ -1,0 +1,20 @@
+[[tips]]
+
+ (defun filer-get-rename-pattern (files)
+    :
+    (setq from (cdr (assoc 'from data)))
+    (setq to (cdr (assoc 'to data)))
+    (when (and (string= from (regexp-quote from))        ; ←追加
+               (string= to (regexp-quote to)))           ; ←追加
+      (setq from (format nil "\\(.*\\)~A\\(.*\\)" from)) ; ←追加
+      (setq to (format nil "\\1~A\\2" to)))              ; ←追加
+    (add-history from '*filer-rename-regexp-from-history*)
+    (add-history to '*filer-rename-regexp-to-history*)
+    :
+
+***コメント [#a2939177]
+-一気にリネームするときにわざわざ正規表現を書くのが面倒なので、入力されたパターンが正規表現でない場合(regexp-quoteしても変化が無い場合)には、勝手に正規表現にしてくれます。 -- [[山本]] &new{2005-05-02 14:59:05 (月)};
+-foo1.c foo2.c foo3.c とファイルがあったときに、fooをbarに変えたければ変更前ファイル名には「foo」を、変更後ファイル名には「bar」とだけ入力します。上のソースのように前後の正規表現は勝手につけます。 -- [[山本]] &new{2005-05-02 15:00:51 (月)};
+-とても便利ですね。私も早速適用させてもらいました。 -- [[OHKUBO]] &new{2005-05-07 14:06:51 (土)};
+
+#comment

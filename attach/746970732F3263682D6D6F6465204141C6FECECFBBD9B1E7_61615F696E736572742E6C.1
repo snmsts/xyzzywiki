@@ -1,0 +1,117 @@
+; C-c C-a ‚Å AA ‚ğ“ü‚ê‚ç‚ê‚é‚æ‚¤‚É‚·‚é
+; config.l ‚ÌÅŒã‚É (load "~/.2ch/aa_insert.l") ‚È‚Ç‚Æ‚µ‚Äg‚¤B
+; ƒoƒCƒgƒRƒ“ƒpƒCƒ‹‚µ‚Ä‚à‚æ‚¢B‚»‚Ìê‡‚Í (load "~/.2ch/aa_insert.lc") ‚Æw’è‚·‚éB
+
+
+(eval-when (:compile-toplevel) (require "2ch/main"))
+(in-package "2ch")
+
+(defun aa-insert ()
+  (interactive)
+  (let ((*minibuffer-save-ime-status* nil)
+	(ime-status (get-ime-mode)))
+    (toggle-ime nil)
+    (minibuffer-prompt "AA ID (? - show list): ")
+    (let ((c (read-char *keyboard*))
+	  aa)
+      (cond
+       ((equal c #\?)
+	(aa-select))
+       ((setq aa (cdr (assoc (format nil "~C" c) *aa-alist* :test 'equal)))
+	(aa-insert-to-buffer aa))))
+    (toggle-ime ime-status)))
+
+(define-key *form-map* '(#\C-c #\C-a) 'aa-insert)
+
+(defun aa-select ()
+  (let (c
+	aa)
+    (save-window-excursion
+      (switch-to-buffer "*AA Select*")
+      (erase-buffer (selected-buffer))
+      (with-output-to-selected-buffer
+	(format t "~A     ~A~%" "ID" "AA"))
+      (let (item)
+	(dolist (item *aa-alist*)
+	  (insert (car item))
+	  (aa-insert-to-buffer-to-show-list (cdr item))))
+      (goto-char (point-min))
+      (let ((continue t))
+	(while continue
+	  (minibuffer-prompt "AA ID(SPC, BS: scroll): ")
+	  (setq c (read-char *keyboard*))
+	  (cond
+	   ((equal #\  c)
+	    (scroll-window (window-height)))
+	   ((equal #\C-h c)
+	    (scroll-window (* -1 (window-height))))
+	   (t
+	    (setq continue nil)))))
+      (delete-buffer (selected-buffer)))
+    (when (setq aa (cdr (assoc (format nil "~C" c) *aa-alist* :test 'equal)))
+      (aa-insert-to-buffer aa))))
+
+(defun aa-insert-to-buffer (aa)
+  (if (listp aa)
+      (progn
+	(insert (car aa))
+	(when (cdr aa)
+	  (let (item)
+	    (with-output-to-selected-buffer
+	      (dolist (item (cdr aa))
+		(format t "~%~A" item))))))
+    (insert aa)))
+
+(defun aa-insert-to-buffer-to-show-list (aa)
+  (with-output-to-selected-buffer
+    (if (listp aa)
+	(progn
+	  (format t "     ~A~%" (car aa))
+	  (when (cdr aa)
+	    (let (item)
+	      (dolist (item (cdr aa))
+		(format t "      ~A~%" item))))); ƒXƒy[ƒX‚Ì”‚ª‚Ps–Ú‚Æˆá‚¤‚Ì‚Å’ˆÓ
+      (format t "     ~A~%" aa))))
+
+(defvar *aa-alist* '(("a" . "RiM„DLjƒm")
+		     ("A" . "(ß„tß)")
+		     ("T" . ("@È||È"
+			     " i@ Ü R"
+			     " @¾@@É"
+			     " @@‚t‚t"))))
+
+;car ‚Í•¶š—ñ‚Å‚È‚­•¶š‚Å‚¢‚¢‚æ‚¤‚È‹C‚à‚·‚é‚ªANavi2ch ‚Æ‚ÌŒİŠ·«‚ğæ‚Á‚Ä•¶š—ñ‚É‚·‚é‚±‚Æ‚É‚µ‚½
+;‚±‚ê‚É‚æ‚èANavi2ch ‚ÌƒŠƒXƒg‚ğ—¬—p‚Å‚«‚é
+
+(setq *aa-alist*
+  '(("a" . "(L„DM)")
+    ("b" . "R(`„DL)É")
+    ("B" . "(((Gß„Dß)))¶Ş¸¶Ş¸ÌŞÙÌŞÙ")
+    ("c" . "›|P|Q")
+    ("f" . "(ßÍß)")
+    ("e" . "(½„t`)")
+    ("E" . "¡¥ß¥(É„D`)¥ß¥¡")
+    ("F" . "(L[M)")
+    ("g" . "(ß„Dß)ºŞÙ§")
+    ("G" . "¶Ş„ª„ª(ß„Dß;)„ª„ª¿!")
+    ("h" . "(ß„Dß)Ê§?")
+    ("H" . "(;L„DM)Ê§Ê§")
+    ("i" . "(¥Í¥)²²!!")
+    ("I" . "(¥‚`¥)²¸Å²!!")
+    ("j" . "(¥Í¥)¼Ş»¸¼Ş´İÃŞ¼À")
+    ("k" . "·À„ª„ª„ª„ª„ª„ª(ßÍß)„ª„ª„ª„ª„ª„ª !!!!!")
+    ("K" . "·À„ª(ßÍß)„ª( ßÍ)„ª( @ß)„ª(@@)„ª(ß @)„ª(Íß )„ª(ßÍß)„ª!!!!")
+    ("m" . "(LÍM)")
+    ("M" . "R(L¤M)É")
+    ("n" . "('A`)")
+    ("N" . "(L-`).¡‚‚n(‚È‚ñ‚Å‚¾‚ë‚¤H)")
+    ("p" . "i@ß„tßjÎß¶°İ")
+    ("s" . "ƒ°iß„tßlllj¶Ş°İ")
+    ("S" . "(L¥ƒÖ¥`)¼®ÎŞ°İ")
+    ("t" . "y=°( ß„tß)¥æ.@À°İ")
+    ("T" . ("@È||È"
+	    " i@ Ü R"
+	    " @¾@@É"
+	    " @@‚t‚t"))
+    ("u" . "(ß„tß)³Ï°")
+    ("U" . "(-Q-)³ÂÀŞ")))

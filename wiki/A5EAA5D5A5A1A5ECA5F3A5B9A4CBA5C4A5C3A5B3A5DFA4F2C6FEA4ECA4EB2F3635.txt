@@ -1,0 +1,39 @@
+*list-length [#e5025393]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[nakano]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2004-07-25 (日) 23:27:10
+-バージョン: 
+
+**メッセージ [#vba802a8]
+ <chapter>
+ <title>list-length</title>
+ <type>Function</type>
+ <arguments>LIST</arguments>
+ <package>lisp</package>
+ <description>
+ リストの長さを返します．
+ リストが循環している場合，length は結果を返さないかもしれませんが，
+ list-length は nil を返します．
+ 
+ 使用例：
+   ;;; リストの長さを比べてみる。
+   (list-length '())             =&gt; 0 
+   (list-length '(a b c d))      =&gt; 4 
+   (list-length '(a (b c) d))    =&gt; 3 
+   (let ((a '(x)))
+     (setf (cdr a) a)
+     (list-length a))            =&gt; nil
+ </description>
+ <seealso>length</seealso>
+ <section>リスト</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-length と list-lengthの違いについて説明を追加しました -- [[nakano]] &new{2004-07-25 (日) 23:28:18};
+
+#comment

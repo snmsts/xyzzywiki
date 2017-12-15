@@ -1,0 +1,51 @@
+* 単語単位で検索（アンダーバーの扱いを変更したい） [#q53ad75e]
+-ページ: [[質問箱]]
+-投稿者: [[くらま]]
+-状態: 提案
+-投稿日: 2007-05-04 (金) 20:00:14
+
+** メッセージ [#s8335853]
+xyzzyで、検索ダイヤログボックスから単語単位で検索をした場合に、
+アンダーバーのある場合に単語が連なっていると判断するように、
+変更したいのですが可能でしょうか？
+
+単語単位の設定をした場合に、[aaa_bbb]を[aaa]の検索で引っかから
+ないようにしたいのです。どなたかいい方法をご存知でしたら押して
+てください。
+
+----
+- [[tips/個別のsyntax-tableを参照するgrep-dialog]] とか --  &new{2007-05-04 (金) 21:37:02};
+- あんまり推奨されないけど (set-syntax-word (syntax-table) #\_) こんなのかも。 ↑のはどう運用すればいけるん？ -- [[佐野]] &new{2007-05-04 (金) 21:48:30};
+- こんなふうにしたらいいんじゃないかなと思って。改めて考えると飛躍ありすぎでした。&new{2007-05-05 (土) 12:44:02};
+ (in-package "editor")
+ (let ((tab (make-syntax-table)))
+   (set-syntax-word tab #\_)
+   (defun scan-files-1 (file pattern buffer scanner)
+     (let ((file-buffer (get-file-buffer file)))
+       (if file-buffer
+           (set-buffer file-buffer)
+         (progn
+           (set-buffer buffer)
+           (erase-buffer buffer)
+           (ignore-errors (insert-file-contents file)
+                          (use-syntax-table tab)
+                          )))
+       (save-excursion
+         (goto-char (point-min))
+         (message "scanning (~A)" file)
+         (cond (*grep-name-only*
+                (when (funcall scanner)
+                  (princ file)
+                  (terpri)
+                  t))
+               (t
+                (grep-scan-file file scanner)))))))
+- ありがとうございます。すんなりいけるシンタックスを持ったモードが既にあるのかと思いました。この質問への回答としては最初だけだとちょと厳しいかもですね。 -- [[佐野]] &new{2007-05-05 (土) 12:58:44};
+- 2ステップかかるのであまりスマートではないかもしれないですが、grep-mode や ggrep を使ってgrep結果を絞り込んでいくのが、汎用性もありかつ判りやすい気がします。 ただ grep-mode ちょっと今探しても落とせる場所が分からなかったですけど。 あとは正規表現を工夫してaaa\([^_]\|\`\) とかもお手軽です。 -- [[中野]] &new{2007-05-06 (日) 19:50:35};
+- いろいろありがとうございました。まずはjavascript-modeで変数を検索するときに使おうと思ってます。すぐできるのであれば正規表現もいいですね（能力的に時間がかかってしまいそうです）。 -- [[くらま]] &new{2007-05-07 (月) 15:34:57};
+ ; [_] をsymbolからwordに変更。副作用は良くわかりません。javascript-mode.l中にて
+ ;(set-syntax-symbol *javascript-mode-syntax-table* #\_)
+ (set-syntax-word *javascript-mode-syntax-table* #\_)
+
+
+#comment

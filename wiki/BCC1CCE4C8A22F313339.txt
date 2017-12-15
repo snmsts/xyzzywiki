@@ -1,0 +1,49 @@
+* ASPと、HTMLを同時に色付けしたい。 [#t7776553]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2006-01-12 (木) 18:45:07
+
+** メッセージ [#z3acc6e1]
+Active Server Pages の開発をしています。
+Basic-mode である程度代用できるのですが、ASPとHTMLが混在している場合、HTML にも、色をつけたいです。html のマイナーモードのようなものは存在しているのでしょうか？
+----
+- [[multi-mode>http://www2.ocn.ne.jp/~cheerful/script/xyzzy/mode/multiMode.html]]((ミラーサイトへリンク))を使うのが良いのではないかと思います。 -- [[NANRI]] &new{2006-01-12 (木) 19:44:13};
+- 元質問者です。multi-mode で、とりあえず切り替えることできました。ありがとうございます。ひとつお伺いしたいのですが、セカンドモードを表示する際に背景色が改行コードまでしか適用されないのですが、ウィンドウ全体に背景色を適用することは可能でしょうか。 -- [[アレッポ]] &new{2006-01-13 (金) 11:33:59};
+- multi-modeは使ったことが無いので状況を正しく理解できているか自信が無いのですが、それはセカンドモードがONになる領域を示しているのではないのですか?　それをなくしてしまっても良いということでしたら、こんな感じでしょうか。 -- [[NANRI]] &new{2006-01-13 (金) 23:48:42};
+--- multi-mode.l~	Fri Jan 13 23:39:58 2006
++++ multi-mode.l	Fri Jan 13 23:41:39 2006
+@@ -149,5 +149,5 @@
+;(defvar multi-string-func "fundamental-mode")
+
+-(defvar *multi-mode-text-attribute* (list :background 15))
++(defvar *multi-mode-text-attribute* (list :background 15 :extend t))
+;(setq *multi-mode-text-attribute* (list :background 15))
+
+@@ -416,5 +416,5 @@
+	(delete-text-attributes 'mmm-mode))
+; (incf fp)
+- (apply 'set-text-attribute fp (1+ ep) 'mmm-mode *multi-mode-text-attribute*)
++ (apply 'set-text-attribute (point-min) (point-max) 'mmm-mode *multi-mode-text-attribute*)
+(setq first-pos-in-multi-mode (+ fp 1) end-pos-in-multi-mode ep)
+- パッチ当ててみました。セカンドモードがオンになる領域を示すことができて、且つ改行コード以降のウィンドウ全体に背景色が変わるのが理想です。セカンドモードかどうかを行単位で判断して、改行コード以降も色を変えてほしいのです。。 -- [[アレッポ]] &new{2006-01-16 (月) 11:09:49};
+- リージョン単位で、モードを判断しているのだとしたら、僕のやりたいことは難しいですね。。 -- [[アレッポ]] &new{2006-01-16 (月) 11:10:59};
+- それじゃあ、こんなでしょうか。 -- [[NANRI]] &new{2006-01-16 (月) 20:26:23};
+--- multi-mode.l~	Mon Jan 16 20:16:52 2006
++++ multi-mode.l	Mon Jan 16 20:25:23 2006
+@@ -149,5 +149,5 @@
+;(defvar multi-string-func "fundamental-mode")
+
+-(defvar *multi-mode-text-attribute* (list :background 15))
++(defvar *multi-mode-text-attribute* (list :background 15 :extend t))
+;(setq *multi-mode-text-attribute* (list :background 15))
+
+@@ -416,5 +416,5 @@
+	(delete-text-attributes 'mmm-mode))
+; (incf fp)
+- (apply 'set-text-attribute fp (1+ ep) 'mmm-mode *multi-mode-text-attribute*)
++ (apply 'set-text-attribute fp (if (save-excursion (goto-char (1+ ep)) (eolp)) (+ 2 ep) (1+ ep)) 'mmm-mode *multi-mode-text-attribute*)
+(setq first-pos-in-multi-mode (+ fp 1) end-pos-in-multi-mode ep)
+- 遅くなりました。試してみましたが、やはり改行コード前後で色が変わってしまいます。 -- [[アレッポ]] &new{2006-02-14 (火) 11:24:52};
+
+#comment

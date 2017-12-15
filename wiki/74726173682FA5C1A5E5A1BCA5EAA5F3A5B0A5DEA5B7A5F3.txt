@@ -1,0 +1,115 @@
+[[trash]]
+
+**チューリングマシン [#l7bd56fd]
+
+これもなんとなく課題で作りました。[[佐野]]
+
+ ;チューリングマシン本体（短さが命）
+ (defun turing(tape modelist)
+   (let
+       ((ac '(nil nil start))
+        (pos 1))
+     (loop
+       (cond
+        ((eq (caddr ac) 'halt) (return tape))
+        ((eq pos 0) (return 'no)))
+       (setq ac (cdr (assoc (nth (1- pos) tape) (cdr (assoc (caddr ac) modelist)))))
+       (and
+        (> pos (length tape))
+        (setq tape (append tape (make-list (- pos (length tape))))))
+       (setf (nth (1- pos) tape) (car ac))
+       (cond
+        ((eq (cadr ac) 'l) (decf pos))
+        ((eq (cadr ac) 'r) (incf pos))))))
+
+サンプルプログラムとして与えられた0と1の列であるテープの情報を
+テープの後方にコピーするプログラムdoubleをつけます。
+
+double本体。想定しているテープではありえない入力は省略。
+最初の数行を解説すると
+startが状態名(スタート時の状態名をstartとしました)
+(0 start0 r fstn)とあるのは
+テープの値が0だったらテープにstart0を書き込み右に移動
+状態をfstnに移行するという意味です。
+
+ (setq dbl
+   '(
+ 	(start
+ 	 (0   start0 r fstn)
+ 	 (1   start1 r fstn)
+ 	 (nil nil    r halt))
+ 	(fstn
+ 	 (0   0   r fstn)
+ 	 (1   1   r fstn)
+ 	 (nil nil l mkend))
+ 	(mkend
+ 	 (0      end0 l fst)
+ 	 (1      end1 l fst)
+ 	 (start0 0    r cp0end)
+ 	 (start1 1    r cp1end))
+ 	(cp0end
+ 	 (nil 0 l halt)
+ 	 (0   0 l halt)
+ 	 (1   0 l halt))
+ 	(cp1end
+ 	 (nil 1 l halt)
+ 	 (0   1 l halt)
+ 	 (1   1 l halt))
+ 	(fst
+ 	 (0 0 l fst)
+ 	 (1 1 l fst)
+ 	 (start0 0 r cp0ste1)
+ 	 (start1 1 r cp1ste1)
+ 	 (last0  0 r cplast0)
+ 	 (last1  1 r cplast1)
+ 	 (end0 end0 l fst)
+ 	 (end1 end1 l fst))
+ 	(cplast0
+ 	 (0 0 r cplast0)
+ 	 (1 1 r cplast0)
+ 	 (nil 0 r halt))
+ 	(cplast1
+ 	 (0 0 r cplast1)
+ 	 (1 1 r cplast1)
+ 	 (nil 1 r halt))
+ 	(cp0ste1
+ 	 (0    start0 r cp0ste2)
+ 	 (1    start1 r cp0ste2)
+ 	 (end0  last0 r cp0ste2)
+ 	 (end1  last1 r cp0ste2))
+ 	(cp1ste1
+ 	 (0    start0 r cp1ste2)
+ 	 (1    start1 r cp1ste2)
+ 	 (end0  last0 r cp1ste2)
+ 	 (end1  last1 r cp1ste2))
+ 	(cp0ste2
+ 	 (0 0 r cp0ste2)
+ 	 (1 1 r cp0ste2)
+ 	 (end0 end0 r cp0ste2)
+ 	 (end1 end1 r cp0ste2)
+ 	 (nil 0 l fst))
+ 	(cp1ste2
+ 	 (0 0 r cp1ste2)
+ 	 (1 1 r cp1ste2)
+ 	 (end0 end0 r cp1ste2)
+ 	 (end1 end1 r cp1ste2)
+ 	 (nil 1 l fst))))
+ 
+実行結果
+ (turing '(1 1 1) dbl)
+ (1 1 1 1 1 1)
+
+ (turing '(1 0 1 1 0 1 0 0) dbl)
+ (1 0 1 1 0 1 0 0 1 0 1 1 0 1 0 0)
+
+ (turing '() dbl)
+ (nil)
+本来ならばnilが帰ってきて欲しいものなのですが、
+これはヘッダが終端を越えたときにダミーとしてnilを埋めるような
+仕様の為不可抗力です。
+
+----
+-チューリングのスペルがビミョーに違うっぽいよ。http://ja.wikipedia.org/wiki/%E3%82%A2%E3%83%A9%E3%83%B3%E3%83%BB%E3%83%81%E3%83%A5%E3%83%BC%E3%83%AA%E3%83%B3%E3%82%B0 -- [[稲原]] &new{2004-07-12 (月) 02:09:39};
+-サンクス直した。 -- [[佐野]] &new{2004-07-12 (月) 02:50:57};
+
+#comment

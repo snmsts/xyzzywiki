@@ -1,0 +1,157 @@
+#freeze
+#contents
+
+*[[xyzzy:http://www.jsdlab.co.jp/~kamei/]]についての前口上 [#ue42aec8]
+
+自分も未だにどんな機能があるのかよくわからない[[xyzzy:http://www.jsdlab.co.jp/~kamei/]]。その[[xyzzy:http://www.jsdlab.co.jp/~kamei/]]にちょっと興味はあるんだけど、ためらっているという方のために、どういうことができるのかをすこーし説明しようと思います。
+
+**基本はエディタ [#w88a359a]
+
+です。つまり、[[xyzzy release note :http://www.jsdlab.co.jp/~kei/download/00README.html]]に書かれている言葉を引用すると、''テキストファイルを読んだり書いたりできる''とか、''文字を入力したり削除したりできる''、''回数制限のあるUndo/Redo''ってところがそれにあたるかと。
+
+***初めて起動したときは、こんなシンプルな画面だけど……。 [#d5443b7e]
+
+初めて起動した時は下みたいな画面です。
+
+CENTER:''[[xyzzy:http://www.jsdlab.co.jp/~kamei/]]を最初に起動させた状態''
+CENTER:#ref(01.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){他のエディタと比較すると、多少シンプルな画面に見えるなぁ。};
+
+自分の好きなように変更を加えれば、こんな風にも（↓）なります。（''キャレットの形の変更''や、''HTMLやプログラミング言語などのキーワードの色付け表示''、下に''ファンクションキー''を出したり、''拡張Lispファイル''やDLLを入れると、いろいろなことが……）
+
+CENTER:#ref(02.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){ボタンが表示できたり、キーワードの色づけなどはもちろん、さらにいろいろできます。};
+
+さらに多言語対応((さまざまな文字コードに対応・一つのファイル内で日本語と外国語を一緒に記入可能。多言語については[[xyzzyでギリシャ語:http://homepage1.nifty.com/suzuri/000/xyzzy.html]]のページが詳しいです。))していたり、ファイルの保存をするごとに、編集をする前のファイルを''バックアップ''しておいてくれたり、とエディタとしての性能だけでも恐ろしい……。
+
+CENTER:#ref(03.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){入りきらないくらいたくさんの文字コードに対応してるらしい。};
+
+もちろん''キーバインドを自分の好きなように変更''したりもできるし、画面表示も折り返し、指定桁数、ウィンドウのサイズから選べる。マクロとか、機能が多すぎて紹介しきれない……。カスタマイズの好きな人はハマってしまうことうけ合いです。
+
+***検索関係は正規表現が使える [#if74855a]
+
+です。あんまりよく正規表現知りませんが……。
+
+CENTER:''検索ダイアログ''
+CENTER:#ref(04.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){正規表現はもちろん置換やGrepやGresregでも使用可。Perlみたいに()でグループ分け（正確には\(と、\)）して、置換文字では\数字で後方参照しながら置換できる。};
+
+お次はGrepダイアログ。
+
+CENTER:''Grepダイアログ''
+CENTER:#ref(05.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){文字コードがShift_JISでなくても自動的に適当なコードで検索してくれる（すごい！！）};
+
+***印刷機能も充実してる [#l9bf7506]
+
+印刷も細かく指定できる。エディタなのか？
+
+CENTER:''印刷の指定''
+CENTER:#ref(06.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){印刷設定ダイアログ。mm単位で細かい所まで指定でき、印刷時のフォント・サイズ・ヘッダ等を指定できる。};
+
+#br
+#br
+CENTER:''プレビュー機能もあるよ''
+CENTER:#ref(07.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){印刷プレビューももちろん装備している。};
+
+***電卓とか、五目並べとか、 [#lb7fe23f]
+
+もできます。不思議不思議。特に電卓は分数の計算とか、精度の高い計算とか（よくわからないけど）をすることができるそうです。
+
+CENTER:''電卓モード''
+CENTER:#ref(08.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){こんな分数の計算とか……。};
+
+**ファイラも付属 [#o8c7da6b]
+
+しています。エディタの部分もかなり凄いですけれど、ファイラもかなり凄いようです。自分はあんまり使いこなせてませんが……。
+
+CENTER:''ファイラもあるよ''
+CENTER:#ref(09.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){こんな感じ。高機能らしいです。（使っていないので説明できませんけれど……）};
+
+**基本機能も凄いけど…… [#p0ff44ee]
+
+それ以上に凄いのが、ユーザーさんによるさまざまな拡張かもしれない。[[xyzzy:http://www.jsdlab.co.jp/~kamei/]]はLispインタプリタで[[Emacs:http://www.gnu.org/software/emacs/emacs.html]]というUNIX等でよく用いられるエディタ((というよりは何？))に似ています。((ただし、完全なEmacsクローンではありません。Emacs Lispとxyzzy Lispは同じLispと名はつきますが、別物です。Windows上で動作するEmacsクローンは、[[Meadow:http://www.meadowy.org/meadow/wiki/]]が有名です。))
+
+xyzzy Lispを書くことで機能を変更したり、追加したりできますが、先人のユーザさんによって、色々と便利なものが公開されています。
+
+たとえばプログラムを書く人の場合、予約語とかを色付けしてくれたりすると便利です。よく使われているプログラミング言語のファイルは標準で含まれていますが、ない場合でもさまざまな方が公開していますので、おそらく必要とされる言語のそのほとんどはあるんじゃないでしょうか。また、仮に無かったとしても、自分で書いてしまえばまったく問題ないと思います。 :p((実際には、かなりの言語のモードを多くの方々が公開されていますから、そんなに困ることはないと思います。))
+
+***アウトラインツリー [#y3325df1]
+
+プログラマーじゃない人でも、便利なものが結構あります。たとえば、[[OHKUBO]]さんの公開されている、ファイルの構造をわかりやすく表示する[[アウトラインツリー:http://ohkubo.s53.xrea.com/xyzzy/index.html#outline-tree]]などです。
+
+CENTER:''アウトラインを表示させることもできる''
+CENTER:#ref(10.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){（[[xyzzy:http://www.jsdlab.co.jp/~kamei/]]単体だけではできません。拡張Lispやdllが必要で、それらをダウンロードすれば下のようなことも可能です）};
+
+***browserex [#hfc57465]
+
+また、[[browser.dll:http://oowada.pobox.ne.jp/xyzzy/xyzzy.html]]と[[browserex:http://ohkubo.s53.xrea.com/xyzzy/index.html#browserex]]を使用すれば、[[xyzzy:http://www.jsdlab.co.jp/~kamei/]]の中でhtmlがブラウザでどのように表示されるのかを、チェックしながら書いていくなんてこともできます。
+
+CENTER:''[[browserex:http://ohkubo.s53.xrea.com/xyzzy/index.html#browserex]]を導入するとこんなことも''
+CENTER:#ref(11.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){最初見ると面食らいますね。画面が違うのは、後から付け足したからです。XPでも2000でも機能に差はありません。};
+
+***2ch-mode [#he920a17]
+
+他にも、2ちゃんねるを見るときに便利（らしい）2ch-modeもあります。
+
+CENTER:''2ch-modeはこんな感じ''
+CENTER:#ref(12.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){右クリックするとたくさんのメニューが出てきます。もちろんメニューの表示も含めてカスタマイズが可能です。};
+
+***dabbrev [#j3dddb5f]
+
+あとは''dabbrev''が便利かもしれません。これはxyzzy本体の機能です。''少し文字を打ったら補完''ができます。（固有名詞などの）慣れない人名とかを入力する時などに特に便利ではないでしょうか。((この機能については、[[QuickTour/abbrev]]にて説明しています。良かったらどうぞ。))
+
+CENTER:''一部を入力して補完できるdabbrevもあるよ''
+CENTER:#ref(13.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){[[xyzzy:http://www.jsdlab.co.jp/~kamei/]]で開いているファイル内から補完できる。（dabbrevじゃないけど）キーワードの補完ももちろんできます。途中まで入力してわからない時とかに便利かも。};
+
+**ほかにもいろいろ [#p4afc0bb]
+
+できます。たとえば、
+
+- 英語の辞書で単語の意味を調べる
+- 罫線を↓→などの矢印キーで引く
+
+もできます。さらには、
+
+-xyzzy内でメールを受信して読む
+-xyzzy内でExcelを操作する
+
+なんてこともできたりします。
+
+単なるエディタの枠を越えた、なんか凄い（そして不思議な）ソフトってのが[[xyzzy:http://www.jsdlab.co.jp/~kamei/]]に対する私の印象です。
+
+**機能のまとめ [#a006227f]
+
+まとめると、[[xyzzy:http://www.jsdlab.co.jp/~kamei/]]は、
+
+-基本はエディタ
+-Lispがわかる人にはLispインタプリタ（ただしxyzzy Lispという独自のLispです）
+-ファイラも付いてる
+-カスタマイズが凄い
+-しかもフリーで配布中
+-Unix等で使用される[[Emacs:http://www.gnu.org/software/emacs/emacs.html]]に似ている（けどすっかりおんなじではない）
+-（実は）電卓代わりにもなる
+
+ということになりますか。（最後のは全く説明していないけど……）自分の説明では[[xyzzy:http://www.jsdlab.co.jp/~kamei/]]の持つ機能の一部分しか説明できていないと思いますので、さらに詳しく知りたい人は、[[xyzzyの全機能]]を見るとよくわかると思います。

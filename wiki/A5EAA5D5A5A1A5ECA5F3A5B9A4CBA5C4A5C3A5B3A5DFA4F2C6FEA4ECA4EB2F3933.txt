@@ -1,0 +1,39 @@
+*delete-other-windows [#f091bf3d]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[OHKUBO]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2004-11-27 (土) 09:39:31
+-バージョン: 20041115
+
+**メッセージ [#f05d7bb1]
+加筆しました。
+
+ <chapter>
+ <title>delete-other-windows</title>
+ <type>Function</type>
+ <arguments>delete-other-windows</arguments>
+ <package>editor</package>
+ <description>
+ 現在カーソルがあるウィンドウ以外のウィンドウを削除します。
+ ただし、現在カーソルがあるウィンドウがミニバッファウィンドウの場合は他の
+ ウィンドウを削除しません。
+ 
+ 戻り値：
+   t     ウィンドウの削除に関わらず t 固定
+ 
+ 補足：
+   本関数はコマンドで、初期設定では C-x 1 にバインドされています。
+ </description>
+ <seealso>delete-window</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-取り込みました->[[refwiki:delete-other-windows]] -- [[NANRI]] &new{2005-03-02 00:53:51 (水)};
+
+#comment

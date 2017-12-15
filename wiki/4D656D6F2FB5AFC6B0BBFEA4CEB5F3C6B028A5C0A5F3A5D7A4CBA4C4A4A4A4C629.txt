@@ -1,0 +1,41 @@
+*起動の際最初に実行されるlisp関数
+si:*startupです。これは*初めて起動したとき*にはxyzzyのバイナリの中に埋め込まれた記述が使用されます。~
+実際の記述はCになってますけど
+ (defun si:*startup ()
+   (si:*load-library "startup" nil))
+大体こんな感じです。~
+多分lispディレクトリのstartup.lcを読み込むという挙動になりますね。
+*lisp/startupって何が書いてある？
+内容を見ていく。
+ (si:*load-library "loadup")
+lispディレクトリのファイルをかなりの数読み込んでいきます。
+ (provide "startup")
+リファレンス参照。ここで説明する意味は特になし。(か？
+ (defun si:*startup ()
+   (ed::startup))
+スタートアップのエントリの書き換えを行います。~
+この内容がダンプされたときに次回起動の際startup.lが読み込まれることは無く(ed::startup)が実行されます。具体的な内容はestartup.l参照。
+ (unless (xyzzy-dumped-p)
+   (si:*show-window-foreground)
+   (ed::init-misc-objects)
+   (lisp::snarf-documentation)
+   (dump-xyzzy))
+ダンプされていなければダンプをする。中間３行の内容はあまし追っていないので知らない。
+ (si:*startup)
+ダンプ後にも実行されるであろうスタートアップを回す。
+*ダンプとは
+その時点のxyzzyの変数や関数の状態を単一ファイルに書き出すことのようです。~
+少なくとも次回起動時にsi:*startupが読み込まれる以前には読み込まれるようになってるはず。~
+*siteinit.lと.xyzzyの違い。
+|siteinit.l|.xyzzy|
+|loadupの際に読み込まれる|ed::startupの中で読み込まれる|
+|ダンプされているので高速|毎回読み出されるので遅い|
+
+記述内容の違いはダンプのほかにもloadupから.xyzzyが読み込まれるまでの*間に変更された内容*について考慮しないといけません。
+siteinit.lからダンプ後にも柔軟に変化する挙動を記述したい場合はフックを利用してください。
+*参考資料
+[[山本さん所のtips>http://www1.odn.ne.jp/ymtz/tips.html#boot]]
+なぜダンプが一回こっきりなのかが気になったので調べました。
+----
+*他に何かある？
+#comment

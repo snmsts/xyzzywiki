@@ -1,0 +1,88 @@
+#freeze
+これがないと生活できません．
+
+
+ (defun my-execute-nanika2 (list)
+  "拡張子やモードを見て、対応したプログラムを走らせて見たり 2"
+  (let* ((buffer (selected-buffer))
+         (rfile  (get-buffer-file-name))
+         (file   (concat (pathname-name rfile) "." (pathname-type rfile)))
+         (type   (and file (pathname-type file)))
+         (f      #'(lambda (a b) (eq 0 (string-matchp b a))))
+         (exec   (and type (assoc type list :test f))))
+
+    (if (not exec)
+        (progn
+          (setq exec (assoc mode-name list :test f))
+          (and exec (setq type mode-name))))
+
+    (and exec (setq exec (cdr exec)))
+    (cond
+     ((stringp exec)
+      (progn
+        (if (buffer-modified-p) (save-buffer)) ; セーブしてから
+        (execute-subprocess (format nil exec file))
+        (set-window (get-buffer-window buffer))))
+     ((consp exec)
+      (funcall (eval exec))
+      )
+     (t (message (concat "やりたいことがねーっす : " (string type))))
+     )))
+
+ (global-set-key '#\C-2
+                #'(lambda () (interactive)
+                    (my-execute-nanika2
+                     '(("tex" . "platex ~A")
+                       ("rb"  . "ruby -wd ~A")
+                       ("ruby". "ruby -wd ~A")
+                       ("html". "start ~A")
+                       ("pl"  . "perl ~A")
+                       ("scm" . "gosh -i < ~A")
+                       ("c|cpp". "make")
+                       ("lisp". #'(lambda () (eval-buffer (selected-buffer))))
+                       ))))
+#hr
+lisp-mode でメニューをポップアップしてみる
+ (defvar *lisp-exec-menu* nil)
+ (setq *lisp-exec-menu*
+       (define-popup-menu
+         (:item nil "Compile(&C)" #'lisp-compile-visited-file)
+         (:item nil "Compile and Load(&L)" #'lisp-compile-and-load)
+         (:item nil "Eval Buffer(&B)"
+          #'(lambda () (interactive) (eval-region (point-min) (point-max))))
+         (:item nil "Eval Region(&R)" #'eval-region)
+         (:item nil "Indent Region(I)" #'indent-region)
+         (:item nil "Indent Sexp(&S)" #'indent-sexp)
+         ))
+
+ (global-set-key '#\C-2
+                 #'(lambda () (interactive)
+                     (my-execute-nanika2
+                      '(("lisp". #'(lambda () (track-popup-menu *lisp-exec-menu*))
+                        ))))
+
+#hr
+ちっちゃくしてみました
+
+ (defun my-execute-nanika3 (list)
+   "拡張子やモードを見て、対応したプログラムを走らせて見たり3?"
+   (let* ((bf   (selected-buffer))
+          (path (get-buffer-file-name))
+          (exec (or (and path (cdr (assoc (pathname-type path)
+                                          list :test 'string-equal)))
+                    (cdr (assoc mode-name list :test 'string-equal)))))
+      (cond ((stringp exec)
+             (if (buffer-modified-p) (save-buffer))
+             (execute-subprocess (format nil exec (file-namestring path)))
+             (set-window (get-buffer-window bf)))
+            ((consp exec)
+             (funcall (eval exec)))
+            (t (message (format nil "やりたいことがねーっす   mode: ~A    ~A" mode-ame
+                                   (if path (concat "拡張子: " (pathname-type pah)) "")))))))
+
+----
+-(file   (concat (pathname-name rfile) "." (pathname-type rfile))) → (file   (fle-namestring (get-buffer-file-name))) --  &new{2005-04-27 03:19:58 (水)};
+-頂きました。alist のデータ部にメニューを指定するといろいろできてさらにいい感じです。 --  &ew{2005-04-27 20:42:17 (水)};
+-メニューを指定，とはどういったものなのでしょうか． -- [[書いた人]] &new{2005-04-28 10:3:40 (木)};
+-コマンドや関数の代わりに define-popup-menu で定義したメニューを入れることを考えていたのでが、メニューをポップアップする関数を入れればいいですね。サンプルを貼り付けておきました。なん変な関数が入ってますが気にしないで下さい。 -- [[メニューの人]] &new{2005-04-28 18:33:09(木)};
+- ついでに*scratch*等のファイル以外のバッファで出るエラーも修正してます -- [[ちっちゃくの] &new{2005-12-17 (土) 02:35:39};

@@ -1,0 +1,8 @@
+[[tips]]
+
+* 現在の outline-tree では標準実装済みで、本ページの設定は不要です（適用不可）。 [#abf345d1]
+----
+ -*- olt-mode: lisp-dots -*-
+ファイルの先頭で，こんな感じにoltの種類を指定できるように
+
+#ref(olt-enparam.l)

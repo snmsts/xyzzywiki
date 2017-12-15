@@ -1,0 +1,12 @@
+*質問箱 [#g509b92d]
+-xyzzyに関する質問を受け付けます。（xyzzyとはなんぞや？という方は[[xyzzyの全機能]]を見てください。）
+-全ての質問に答える能力は多分無いので反応が無くても怒らないでください。
+-答えがわかったら人助けだと思って答えのサマリを書いてください。
+-旧質問箱は[[こちら>./old]]
+-[[質問するときの心がけ>http://www.hyuki.com/writing/techask.html]]
+** 質問する [#p0ae1a1e]
+#tracker(質問箱)
+
+** 質問の一覧 [#e606131f]
+#tracker_list(質問箱,,state:SORT_ASC;_past:SORT_ASC)
+#norelated

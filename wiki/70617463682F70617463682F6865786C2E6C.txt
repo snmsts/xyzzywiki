@@ -1,0 +1,45 @@
+* hexl¤Î¥Ñ¥¹Ì¾¤Èread-onlyÌäÂê¤ËÂÐ±þ [#k714011f]
+-¥Ú¡¼¥¸:     [[patch]]
+-Åê¹Æ¼Ô:     [[kosh]]
+-Í¥Àè½ç°Ì:   ÉáÄÌ
+-¾õÂÖ:       ´°Î»
+-¥«¥Æ¥´¥ê¡¼: ÄûÀµ
+-Åê¹ÆÆü:     2009-02-10 (²Ð) 02:34:40
+-¥Ð¡¼¥¸¥ç¥ó: 
+
+** ¥á¥Ã¥»¡¼¥¸ [#vd4808df]
+NANRI¤µ¤óÇÛÉÛ¤ÎHexl¤ËÂÐ¤¹¤ëpatch¤Ç¤¹¡£~
+­¡¥Ç¥¹¥¯¥È¥Ã¥×¤Ê¤É¡¢¶õÇò¤ò´Þ¤à¥Ñ¥¹Ì¾¥Õ¥¡¥¤¥ë¤Ï¥·¥ç¡¼¥È¥Ñ¥¹¤ËÊÑ´¹¤·¤ÆÆÉ¤ß¹þ¤à¤è¤¦¤Ë¤¹¤ë~
+­¢´û¤ËÆÉ¤ß¹þ¤ó¤À¥Õ¥¡¥¤¥ë¤Î¥Ð¥Ã¥Õ¥¡¤¬read-only¤Î¤È¤­¤ËM-x: hexl-mode¤È¤¹¤ë¤È¤¦¤Þ¤¯É½¼¨¤¬½ÐÍè¤Ê¤¤ÌäÂê¤ò½¤Àµ¤·¤¿¤Ä¤â¤ê~
+
+¥Õ¥¡¥¤¥ë¤ÎÃæ¿È¤ò¸«¤é¤ì¤ì¤ÐÎÉ¤¤ÄøÅÙ¤Ë»È¤Ã¤Æ¤¤¤ë¤Î¤Ç¡¢hexl-modeÊÔ½¸»þ¤Ë¤â¤³¤Îpatch¤¬Í­¸ú¤«¤É¤¦¤«¤ÏÊ¬¤«¤ê¤Þ¤»¤ó¡£
+
+ 169,172c169,171
+ <     (kill-all-local-variables)	;+buffer-read-only¤ò»¦¤µ¤Ê¤¤¤è¤¦¤Ë°ÌÃÖ½¤Àµ
+ <     (let ((mode buffer-mode)
+ <           (buffer-read-only nil))          ;+
+ <       (declare (special buffer-read-only)) ;+
+ ---
+ >     (let ((mode buffer-mode))
+ >       (kill-all-local-variables)
+ > 
+ 237,239c236
+ <     (let ((p (hexl-current-address))
+ <           (buffer-read-only nil))
+ <       (declare (special buffer-read-only))
+ ---
+ >     (let ((p (hexl-current-address)))
+ 470,473c467
+ <   (execute-shell-command (format nil "~a ~a" hexlify-command
+ < 				 ;+¶õÇò¤ò´Þ¤à¥Õ¥¡¥¤¥ëÌ¾¤ËÂÐ±þ
+ < 				 (get-short-path-name (get-buffer-file-name)))
+ < 			 t (selected-buffer))
+ ---
+ >   (execute-shell-command (format nil "~a ~a" hexlify-command (get-buffer-file-name)) t (selected-buffer))
+
+- ¤¢¤ê¤¬¤È¤¦¤´¤¶¤¤¤Þ¤¹¡£²Ë¤ò¸«¤Ä¤±¤ÆÄ¾¤·¤Æ¤ª¤­¤Þ¤¹¡£ -- [[NANRI]] &new{2009-02-11 (¿å) 16:21:34};
+- hexl-mode-exit¤Ç¤âread-onlyÌäÂê¤¬¤¢¤Ã¤¿¤Î¤ÇÄÉ²Ã½¤Àµ¤·¤Þ¤·¤¿¡£ -- [[kosh]] &new{2009-02-11 (¿å) 19:11:20};
+- ½¤Àµ¤·¤Þ¤·¤¿¡£ttp://raido.sakura.ne.jp/southly/xyzzy/site-lisp/hexl-20090214.zip -- [[NANRI]] &new{2009-02-14 (ÅÚ) 14:29:59};
+- ½¤Àµ¤¢¤ê¤¬¤È¤¦¤´¤¶¤¤¤Þ¤¹¡£ -- [[kosh]] &new{2009-02-17 (²Ð) 00:16:30};
+
+#comment

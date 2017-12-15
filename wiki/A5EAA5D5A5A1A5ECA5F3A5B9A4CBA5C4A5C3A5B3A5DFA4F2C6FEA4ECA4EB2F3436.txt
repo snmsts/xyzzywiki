@@ -1,0 +1,30 @@
+*dump-image-path [#r1ee4f6c]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2003-12-10 (水) 16:30:14
+-バージョン: 20031002
+
+**メッセージ [#o635d68b]
+ <chapter>
+ <title>si:dump-image-path</title>
+ <type>Function</type>
+ <arguments>dump-image-path</arguments>
+ <package>system</package>
+ <description>
+ 読み込んだダンプファイルのパスを返します。
+ </description>
+ <seealso>dump-xyzzy</seealso>
+ <link></link>
+ <section>システム</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-これがdump-xyzzyのデフォルトpathだと思います。 -- [[佐野]] &new{2003-12-10 (水) 16:30:41};
+-使用例を追加して取り込みました。 -- [[山本]] &new{2004-02-26 (木) 20:59:04};
+
+#comment

@@ -1,0 +1,37 @@
+[[tips]]
+
+* キーボードマクロを便利に [#te1975eb]
+[[黒い羽根>http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/]]さんのページで「キーボードマクロの開始・終了を同じキーに割り当てる」を見て、早速使ってみました。とても便利になりました。~
+ついでに、「キーボードマクロの終了・実行を同じキーに割り当てる」を作ってみました。~
+下記キーバインドは mifes 風(?)ですのでお好みに合わせて変更して下さい。
+ ; mifes 風 キーボードマクロ
+ (defun startend-kbd-macro()
+   (interactive)
+     (if (kbd-macro-saving-p)
+       (progn
+         (message "定義終了")
+         (end-kbd-macro))
+       (progn
+         (message "定義開始")
+         (start-kbd-macro))))
+ (defun endcall-kbd-macro()
+   (interactive)
+     (if (kbd-macro-saving-p)
+       (progn
+         ;(message "定義終了とマクロ実行")
+         (end-kbd-macro)
+         (call-last-kbd-macro))
+       (progn
+         ;(message "マクロ実行")
+         (call-last-kbd-macro))))
+ (setf (svref *kbd-translate-table* (char-code #\C-@)) #\F20)
+ (define-key *global-keymap* #\F20 'startend-kbd-macro)
+ (define-key *global-keymap* #\C-\\ 'endcall-kbd-macro)
+//**使い方
+//**言い訳
+// mifes を使っていた頃は、キーボードマクロを良く使っていたのに
+// xyzzy に乗り換えてからは全然使わなくなってしまいました。
+// C-x ( C-x ) C-x e この三つが面倒でしかたないのが原因のようでした。
+// で、何とかしてみました。
+
+#comment

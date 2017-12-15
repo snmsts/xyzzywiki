@@ -1,0 +1,19 @@
+#freeze
+* kyotex-mode の導入[#p697bb1d]
+-ページ: [[質問箱]]
+-投稿者: [[初心者]]
+-状態: 完了
+-投稿日: 2014-05-25 13:40:14 (日)
+
+** メッセージ [#e46cd13a]
+xyzzy と kyotex-mode をダウンロードし、http://www.ss.scphys.kyoto-u.ac.jp/person/yonezawa/contents/program/xyzzy/kyotex/install.html
+の指示通りに設定しましたが、何故か
+texファイルを読み込んでも kyotex-mode が起動しません。~
+何かよくある落とし穴的なものがあれば教えてほしいです。~
+よろしくお願いします。~
+----
+-いまいち要領を得ませんね。http://www.ss.scphys.kyoto-u.ac.jp/person/yonezawa/contents/program/xyzzy/kyotex/install.html とか見て何が違うか教えていただけません？ -- [[佐野]] &new{2014-05-25 17:34:08 (日)};
+-あとloadpathの設定は適切な場所においてあるなら (push (merge-pathnames "site-lisp/kyotex" (si:system-root)) *load-path*)　の方が良いと思います。一応。 -- [[佐野]] &new{2014-05-25 17:35:35 (日)};
+- kyotex-mode が導入出来ました。 --  &new{2014-05-26 (月) 14:01:45};
+
+#comment

@@ -1,0 +1,79 @@
+* post-buffer-modified-hook, enable-post-buffer-modified-hook [#v603936e]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[lambda]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: ツッコミをいれる
+-投稿日:     2007-03-18 (日) 02:21:51
+-バージョン: 
+
+** メッセージ [#e4d82676]
+ <chapter>
+ <title>post-buffer-modified-hook</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ バッファが修正されたときに実行されます。
+ 
+ 設定された関数は以下の5引数で呼び出されます。
+   BUFFER    : 修正されたバッファ
+   OPERATION : 修正された操作の種類
+                :insert  文字の挿入
+                :delete  文字の削除
+                :modify  修正(downcase-wordなど)
+   FROM      : 開始位置のポイント
+   TO        : 終了位置のポイント
+               OPERATIONが:deleteの場合はFROMとTOは同じ値になります。
+   UNDO-P    : 修正された状況
+                undo     undo
+                redo     redo
+                nil      その他
+ 
+ 注意：
+   enable-post-buffer-modified-hookでフックを有効にしないと実行されません。
+   対話的でなくても実行されます。
+   同じバッファに修正を行うとread-only-bufferエラーになります。
+   なんらかのエラーが発生するとフックが無効になります。
+   ウィンドウ・バッファを削除したり、
+   戻るときにウィンドウ・バッファが切り替わってたりすると、
+   きっと良くないことが起こるので、あまり無茶なことはしない方が無難です。
+ 
+ 使用例：
+   (enable-post-buffer-modified-hook t)
+   (defun buffer-modified-hook (buffer operation from to undo-p)
+     (message "ope:~A  undo:~A from:~d to:~d" operation undo-p from to))
+   (add-hook 'post-buffer-modified-hook 'buffer-modified-hook)
+ </description>
+ <seealso>enable-post-buffer-modified-hook</seealso>
+ <seealso>post-buffer-modified-hook-enabled-p</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>enable-post-buffer-modified-hook</title>
+ <type>Function</type>
+ <arguments>enable-post-buffer-modified-hook ENABLE &amp;optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ post-buffer-modified-hookを有効・無効にします。
+ カレントバッファの値のみ変更します。
+ 
+   ENABLE  : non-nil 有効にします
+             nil     無効にします
+   BUFFER  : 有効にするバッファを指定します。
+             省略時やnilを与えた場合はカレントバッファを指定したとみなします。
+ </description>
+ <seealso>post-buffer-modified-hook-enabled-p</seealso>
+ <seealso>post-buffer-modified-hook</seealso>
+ <link>[xyzzy:06354]</link>
+ <section>変数と定数</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+- どーもです。ちと説明を足しました。 -- [[NANRI]] &new{2007-03-24 (土) 06:21:31};
+
+#comment

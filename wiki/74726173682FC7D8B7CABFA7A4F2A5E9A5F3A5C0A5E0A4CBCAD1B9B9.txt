@@ -1,0 +1,14 @@
+[[trash]]
+
+**背景色をランダムに変更 [#xb309efd]
+ ;;; .xyzzyに追加する
+ (setq *random-state* (make-random-state t))
+ (add-hook '*find-file-hooks*
+ 		  #'(lambda ()
+ 			  (let ((fc (random #xffffff))
+ 					(v (make-array 2 :fill-pointer 0)))
+ 				(vector-push fc v)
+ 				(vector-push (- #xffffff fc) v)
+ 				(set-buffer-colors v))))
+
+#comment

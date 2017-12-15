@@ -1,0 +1,64 @@
+* 文字 [#i6088e94]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-08-31 (木) 22:18:56
+-バージョン: 
+
+** メッセージ [#k259d624]
+ <chapter>
+ <title>extended-alphabet-char-p</title>
+ <type>Function</type>
+ <arguments>extended-alphabet-char-p CHAR</arguments>
+ <package>editor</package>
+ <description>
+ CHAR が欧文(ISO8859)の単語構成文字かを判定します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>データ型</section>
+ <file></file>
+ <!--  builtin.l??? -->
+ </chapter>
+ 
+ <chapter>
+ <title>graphic-char-p</title>
+ <type>Function</type>
+ <arguments>graphic-char-p CHAR</arguments>
+ <package>lisp</package>
+ <description>
+ CHAR が印字文字かどうかを判定します。
+ 
+   (graphic-char-p #\A)
+   =&gt;t
+   (graphic-char-p #\SPC)
+   =&gt;t
+   (graphic-char-p #\TAB)
+   =&gt;nil
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>データ型</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>word-char-p</title>
+ <type>Function</type>
+ <arguments>word-char-p CHAR</arguments>
+ <package>editor</package>
+ <description>
+ CHAR が単語構成文字かどうかを判定します。
+ </description>
+ <seealso>syntax-word-p</seealso>
+ <link></link>
+ <section>データ型</section>
+ <file>builtin.l</file>
+ </chapter>
+
+--------
+
+#comment

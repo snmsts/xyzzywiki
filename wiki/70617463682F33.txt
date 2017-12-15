@@ -1,0 +1,49 @@
+*netinstallerの登録siteが壊れたときの処理 [#oba7e032]
+
+-ページ: [[patch]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 提案
+-カテゴリー: 訂正
+-投稿日: 2005-06-14 17:12:44 (火)
+-バージョン: 
+
+**メッセージ [#p89c9439]
+404や異常なsiteを登録してしまった時に起動しなくなるので、~
+異常なsiteは読み込まないようにして見ました。
+ (defun ni::load-site-data ()
+   (let (sites-temp sites)
+     (when (file-exist-p ni::*install-site-file*)
+       (setq sites-temp
+             (ni::data-read-from-file ni::*install-site-file*)))
+     ;;無理やり読み込んでみてエラーが出るようだったらリストから削除する。
+     (dolist (site sites-temp)
+       (handler-case
+           (let ((data (ni::load-site-data-file site)))
+             (when data
+               (unless (ni::site-src data)
+                 (push (cons "src" (ni::site-src site)) data))
+               (dolist (app (ni::site-apps data))
+                 (setq app (ni::app-data-add-site app data)))
+               (push site sites)))
+         (error (c) )))
+     (setq sites-temp (reverse sites))
+     (setq sites nil)
+     ;;パッチここまで
+     (setq ni::*app-data* nil)
+     (dolist (site sites-temp)
+       (let ((data (ni::load-site-data-file site)))
+         (when data
+           (unless (ni::site-src data)
+             (push (cons "src" (ni::site-src site)) data))
+           (push data sites)
+           (dolist (app (ni::site-apps data))
+             (setq app (ni::app-data-add-site app data))
+             (push app ni::*app-data*)))))
+     (setq ni::*app-data*
+           (sort ni::*app-data* #'ni::app-newer-p))
+     (setq ni::*site-data* (reverse sites))
+     (ni::category-parse)
+     (ni::save-site-data)))
+
+----

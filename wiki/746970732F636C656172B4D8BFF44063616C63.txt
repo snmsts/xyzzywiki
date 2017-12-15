@@ -1,0 +1,5 @@
+03/05.30
+ (setf (symbol-function 'calc::clear)
+       #'(lambda () (delete-region (point-min) (point-max))
+ 	  (insert "$")
+ 	  (quit)))

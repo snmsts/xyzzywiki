@@ -1,0 +1,52 @@
+*  tab-columns, set-tab-columns の引数の取り扱い誤りを修正 [#q1ecd6f8]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     nakano
+-優先順位:   低
+-状態:       提案
+-カテゴリー: ツッコミをいれる
+-投稿日:     2011-06-04 (土) 14:44:06
+-バージョン: 
+
+** メッセージ [#u00f8af8]
+ <chapter>
+ <title>tab-columns</title>
+ <type>Function</type>
+ <arguments>tab-columns &amp;optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ タブ幅を返します。タブ幅は set-tab-columns で設定できます。
+ 
+   BUFFER : タブ幅を返すバッファを指定します。
+            指定がなければバッファーローカルなタブ幅を設定されていない
+            バッファ全てが対象となります。
+ </description>
+ <seealso>set-tab-columns</seealso>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ 
+ <chapter>
+ <title>set-tab-columns</title>
+ <type>Function</type>
+ <arguments>set-tab-columns COLUMN &amp;optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ タブ幅を設定します。
+ 
+   COLUMN : タブ幅を指定します。1以上32以下の任意の整数です。
+            2のべき乗である必要はありません。
+   BUFFER : タブ幅を変更するバッファを指定します。
+            指定がなければバッファーローカルなタブ幅を設定されていない
+            バッファ全てが対象となります。
+ </description>
+ <seealso>tab-columns</seealso>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+
+
+----
+
+#comment

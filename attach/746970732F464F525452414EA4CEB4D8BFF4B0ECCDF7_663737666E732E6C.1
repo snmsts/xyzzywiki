@@ -1,0 +1,68 @@
+; f77-fns.l
+; Last updated: <2003-08-13T11:59:58+09:00>
+;; まさか局所ニュースに取り上げられるとは思わなかった(^^;
+;; もう少しまっとうな動きをするようにして、解説を付け加えておきます。
+;; 
+;; *解説
+;; 
+;; ** できること
+;; FORTRAN77 のソースコードで M-x: list-function と TAGS ファイルを使ったタ
+;; グジャンプが可能になります。
+;; 
+;; ** 導入
+;; 適当なタイミングで f77-fns.l をロードしてください。一応お勧めは 
+;; fortran.l をロードした直後。
+;; 
+;; ** 想定している動作
+;; function の型を確認するのが面倒、かつそこまで正規表現に自信がないという
+;; ことでコメント行でも文字列でもないところで function や subroutine（つい
+;; でに program も）という単語が出てくる場所を全部拾ってきています（スゲー
+;; 乱暴(^^; ）。取りこぼしがあるよりましだろうという判断です（言い訳）。一
+;; 応、可能な範囲で動作確認したところ、うまくいっている感じです。
+
+(require "fortran")
+
+(pushnew '(fortran-maketags "*.f") *maketags-list* :key #'car)
+
+(defun fortran-maketags (file count)
+  (goto-char (point-min))
+  (while (scan-buffer "^ [ \tA-Za-z0-9]*\\(function\\|subroutine\\|program\\)[ \t]+" :regexp t :tail t :case-fold t)
+    (do-events)
+    (let ((opoint (point)))
+      (skip-chars-forward "A-Za-z0-9_")
+      (unless (= opoint (point))
+        (format t "~A~A~D" (buffer-substring opoint (point)) file opoint)
+        (incf count))))
+  count)
+
+(defun tags-find-fortran-point (class name functionp point)
+  (goto-char (- point *jump-tag-limit*))
+  (and (scan-buffer (concat "^ [ \tA-Za-z0-9]*\\(function\\||subroutine\\|program\\)[ \t]+"
+			    (regexp-quote name)
+			    "\\($\\|[ \t\r\n\f#]\\)")
+		    :regexp t
+		    :case-fold t
+		    :limit (+ point *jump-tag-limit*))
+       (point)))
+
+(defun fortran-build-summary-of-functions ()
+  (let ((result nil))
+    (save-excursion
+      (goto-char (point-min))
+      (while (scan-buffer "^ [ \tA-Za-z0-9]*\\(function\\|subroutine\\|program\\)[ \t]+\\([^ \t\n{(]+\\)"
+			  :regexp t :case-fold t :tail t)
+	(push (list (current-line-number) (match-string 2)) result)
+      )
+    )
+    (nreverse result)
+  ))
+
+(add-hook 'fortran-mode-hook 'fortran-add-list-function)
+(defun fortran-add-list-function ()
+  (make-local-variable 'tags-find-target)
+  (setq tags-find-target #'ed::c-tags-find-target)
+  (make-local-variable 'tags-find-point)
+  (setq tags-find-point #'tags-find-fortran-point)
+  (make-local-variable 'ed::build-summary-function)
+  (setq ed::build-summary-function 'fortran-build-summary-of-functions)
+)

@@ -1,0 +1,26 @@
+えーと、ただ聞くだけです。自動的にダウンロードとかするわけではありません。~
+しかも聞けるかどうかは環境に依存します。
+
+ ;config.lに
+ (defun rss-parse-item (xml)
+  (let (cur item)
+    (while xml
+      (or xml (return))
+      (or (listp xml) (return))
+      (setq cur (car xml))
+      (setq xml (cdr xml))
+      (when (listp cur)
+	(let ((name (ed::xmlpm-tag-name cur))
+	      (opts (ed::xmlpm-tag-opts cur))
+	      (contents (ed::xmlpm-tag-contents cur)))
+	  (cond ((or (equal name "title")
+		     (equal name "link")
+		     (equal name "description"))
+		 (push (cons name (car contents)) item))
+		((equal name "enclosure")
+		 (push (cons "link" (cdr (assoc "url" opts :test #'equal))) item)
+		 )))))
+    (when item
+      (push item *rss-item-list*))))
+
+#comment

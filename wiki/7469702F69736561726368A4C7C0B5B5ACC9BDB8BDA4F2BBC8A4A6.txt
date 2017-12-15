@@ -1,0 +1,113 @@
+[[tips]]
+
+正規表現でインクリメンタルサーチするためのコードです。~
+2chに書いたのを、もうちょっと使えるようにしました。
+
+以下変更点~
+-メタキャラクタの入力に対応しました。ただし、[] を文字として扱うには、常にエスケープする必要があります。~
+-migemoをまねして、ステータスバーにメッセージを出すようにしました。
+
+使い方~
+-コードをファイルに保存して、isearch関連の設定の最後でロードしてください。~
+-migemoを使っている場合は、migemo より先に、ロードするようにしてください。~
+
+ (provide "reg-search")
+ 
+ (require "isearch")
+ (in-package "editor")
+ 
+ (defvar *isearch-hook-backup* nil)
+ (defvar *isearch-use-regexp* nil)
+ 
+ (defun isearch-set-regexp (str)
+   (setf *isearch-regexp* t)
+   (message "regexp")
+   (if *isearch-no-scan* "" str))
+   
+ (defun toggle-regex-isearch ()
+   (interactive)
+   (if (setf *isearch-use-regexp* (not *isearch-use-regexp*))
+       (progn (message "regexp on")
+         (setf *isearch-hook-backup* *isearch-scanner-hook*
+               *isearch-scanner-hook* 'isearch-set-regexp))
+     (progn (message "regexp off")
+       (when (eq *isearch-scanner-hook* 'isearch-set-regexp)
+         (setf *isearch-scanner-hook* *isearch-hook-backup*)))))
+ 
+ (define-key *isearch-map* #\C-t 'toggle-regex-isearch)
+ 
+ (defvar *isearch-no-scan* nil)
+ 
+ (defun isearch-insert-noscan ()
+   (let ((*isearch-no-scan* t))
+     (declare (special *isearch-no-scan*))
+     (isearch-self-insert)))
+ 
+ (define-key *isearch-map* #\\ 'isearch-insert-noscan)
+ 
+ (defun isearch-insert-meta-character ()
+   (isearch-toggle-noscan
+    *isearch-command-char* *isearch-last-command*)
+   (isearch-self-insert))
+ 
+ (define-key *isearch-map* #\( 'isearch-insert-meta-character)
+ (define-key *isearch-map* #\) 'isearch-insert-meta-character)
+ (define-key *isearch-map* #\{ 'isearch-insert-meta-character)
+ (define-key *isearch-map* #\} 'isearch-insert-meta-character)
+ (define-key *isearch-map* #\[ 'isearch-insert-meta-character)
+ (define-key *isearch-map* #\] 'isearch-insert-meta-character)
+ 
+ (let ((count 0))
+   (defun isearch-toggle-noscan (char last-cmd)
+     (flet ((set-noscan ()
+              (unless *isearch-no-scan*
+                (setf *isearch-no-scan* char))))
+       (if (eq last-cmd 'isearch-insert-noscan)
+           (case char
+             (#\( (set-noscan) (incf count))
+             (#\) (when (eq *isearch-no-scan* #\()
+                    (setf *isearch-no-scan*
+                          (unless (zerop (decf count)) #\())))
+             (#\{ (set-noscan))
+             (#\} (when (eq *isearch-no-scan* #\{)
+                    (setf *isearch-no-scan* nil))))
+         (case char
+           (#\[ (set-noscan))
+           (#\] (and (eq *isearch-no-scan* #\[)
+                     (setf *isearch-no-scan* nil)))))))
+   (defun isearch-clear-count ()
+     (setf count 0 *isearch-no-scan* nil
+           *isearch-use-regexp* nil)))
+ 
+ (defun isearch-regexp-delete-char ()
+   (let ((len (length *isearch-current-string*)))
+     (let ((ch (car (member (unless (zerop len)
+                              (char *isearch-current-string* (1- len)))
+                            '((#\[ #\]) (#\( #\)) (#\{ #\}))
+                            :test #'(lambda (x y) (member x y :test #'eq)))))
+           (last (when (< 1 len) (char *isearch-current-string* (- len 2)))))
+       (isearch-toggle-noscan
+        (if *isearch-no-scan* (second ch) (first ch))
+        (if (eq last #\\) 'isearch-insert-noscan)))
+     (isearch-delete-char)))
+ 
+ (defun isearch-regexp-forward ()
+   (interactive)
+   (when *isearch-use-regexp* (message "regexp"))
+   (isearch-forward))
+ 
+ (defun isearch-regexp-backward ()
+   (interactive)
+   (when *isearch-use-regexp* (message "regexp"))
+   (isearch-forward t))
+ 
+ (dolist (key (command-keys 'isearch-delete-char nil ed:*isearch-map*))
+   (define-key *isearch-map* key 'isearch-regexp-delete-char))
+ 
+ (dolist (key (command-keys 'isearch-forward *global-keymap* nil))
+   (global-set-key key 'isearch-regexp-forward))
+ 
+ (dolist (key (command-keys'isearch-backward *global-keymap* nil))
+   (global-set-key key 'isearch-regexp-backward))
+
+#comment

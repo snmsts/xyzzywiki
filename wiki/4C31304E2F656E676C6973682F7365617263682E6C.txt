@@ -1,0 +1,28 @@
+[[L10N/english]]
+
+ search.l:107:	   (plain-error "文字列が見つかりません")))))
+-The pattern is not found. --  &new{2005-03-04 21:15:32 (金)};
+
+#comment
+ search.l:244:		       "(y)置換, (n)スキップ, (!)残り全部, (u)アンドゥ, (C-g)中止, (.)中止して戻る"
+-(y)Replace, (n)Skip, (!)All, (u)Undo, (C-g)Cancel, (.)Cancel and Back --  &new{2005-03-04 21:18:14 (金)};
+
+#comment
+ search.l:245:		     "置換する?"))
+-Replace? --  &new{2005-03-04 21:18:51 (金)};
+
+#comment
+ search.l:293:	   (error "文字列が見つかりません")))
+-The pattern is not found. --  &new{2005-03-04 21:19:07 (金)};
+
+#comment
+ search.l:296:      (message "~d個置換しました" count))
+-  ~d words is replaced. --  &new{2005-03-04 21:20:57 (金)};
+-Replaced ~d word~:p. be 動詞を使うのは避けたくありませんか。 --  &new{2005-09-16 14:21:28 (金)};
+
+#comment
+ search.l:343:	(message "~d個の文字列があります" count))
+-~d words are existing. --  &new{2005-03-04 21:23:35 (金)};
+-~~d matches.  プロンプトでの How many matches と合わせてみました。 --  &new{2005-09-16 23:08:34 (金)};
+
+#comment

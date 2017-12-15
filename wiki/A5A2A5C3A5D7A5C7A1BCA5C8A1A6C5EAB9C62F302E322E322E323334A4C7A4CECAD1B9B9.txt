@@ -1,0 +1,51 @@
+**いろいろ？ [#za7ba692]
+久々にバージョンアップしたxyzzyですが、「なんかいろいろ」といわれると結構気になるものです。~
+調べてみるとたしかに簡潔に記述すると「なんかいろいろ」になるなという感想を持ちました。~
+c++ソースの変更点や、増減（減ってないかも）したシンボルの比較など積み残したチェック項目は多いのですが、~
+ひとまず現段階で公開します。~
+詳しいデータを持っている人やこれから解析する人はマージしてくれるとすごく嬉しいです。~
+2004/03/31　佐野
+----
+|ファイル名|変更点|
+|全体|半角カナのメッセージが一部を除き全角化、UI Gothic化|
+|~|protect-match-data ???|
+|about.l|Copy Rightが2005までに|
+|app-menu.l|メニュー各種に(:tag-commandが付いた識別子として十分なのかしら？|
+|~|create-popup-menuに引数が（これも多分tag|
+|basic-mode.l|拡張子 .clsに対応|
+|buffer.l|find-buffer-colors追加*directory-buffer-color-alist*を評価してバッファの色つけを決定する関数の模様。挙動を深く追うのは後でにする。|
+|~|*buffer-bar-hook*追加。フックの呼ばれ方は未確認。|
+|builtin.l|www-url-encode,www-url-decodeの引数変更->リファレンスに手を入れないと…|
+|~|filer-calc-directory-size,filer-calc-directory-byte-size引数変更。|
+|~|関数名と引数名から推測するにbool値を受け取ってmarkを変更したりしなかったりするんだと思うけど…|
+|~|ole-enumerator-next,ole-enumerator-reset,ole-enumerator-skip追加、さて何に使うんだろー|
+|calc.l|\ ~ < > & &#x7c; ` 主にビット演算かしら？|
+|~|浮動小数点数を e, E で書けるように…|
+|~|詳細は難しいです。|
+|calendar.l|グレゴリオ暦に切り替わった月の曜日の色付けが正しくなってます。他にもあるのかも…|
+|cc-mode.l|decode-c-mode -> detect-c-or-c++-mode ???|
+|~|(setf (symbol-function 'decode-c-mode) #'detect-c-or-c++-mode)があるのでインターフェース的な変更は軽微かと。|
+|cfns.l|よくわからんけど修飾詞に強くなったのかな？|
+|cmdbar.l|よく分かりませんが変わっています。|
+|dexplorer.l|新しく追加されたもの。show-dexplorer→[[使い方>http://www20.big.or.jp/~rin_ne/tdiary/20050317.html#p04]]|
+|dabbrev.l|よく分かりませんが変わっています|
+|estartup.l|.xyzzyを読み込んでいる時には*loading-user-initial-file*がtになるように… siteinit.l中は??|
+|~|*find-file-auto-mode-function*が何かしてる|
+|filer.l|filer-delete-mask *filer-delete-mask-list* ???|
+|~|filer-delete-mask で削除マスクを設定すると、マークしたファイルのうち削除マスクに一致するファイルのみを削除します。ただし、共通設定の[ファイルを削除するときにもっと丁寧に確認して]にチェックが入っていると働きません。filer-delete-mask のキーバインドは I |
+|files.l|*auto-mode-last-buffer* *find-file-auto-mode-function* ???|
+|glob.l|少々の変更あり。元々の役割をよく理解していないのでわからない。|
+|isearch.l|C-vがペーストかsearchの終了になった。Gates設定使用者用？|
+|list.l|tailpがなんかちょっと変わった|
+|loptprop.l|色設定のところがちょいちょいと変わった？|
+|misc.l|*match-data-pool* ???|
+|ole.l|ole-for-each ?|
+|paragraph.l|forward-paragraphの戻り値と挙動が少々変化したよう|
+|pframe.l|switch-pseudo-frame pseudo-frame-selector|
+|search.l|検索のqueryがあるときimeをオフに（本当？|
+|setf.l|よくわかんない…|
+
+----
+-ハハハハさんの解析を最初に参照してくださいhttp://www20.big.or.jp/~rin_ne/tdiary/20050317.html -- [[佐野]] &new{2005-03-31 21:39:09 (木)};
+
+#comment

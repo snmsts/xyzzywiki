@@ -1,0 +1,48 @@
+* append-rectangle [#p81b9ca3]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-12-30 (金) 09:41:55
+-バージョン: 20051220
+
+** メッセージ [#bfa006bd]
+rectangle 関係でひとつだけ抜けてました。
+
+ <chapter>
+ <title>append-rectangle</title>
+ <type>Function</type>
+ <arguments>append-rectangle</arguments>
+ <package>editor</package>
+ <description>
+ コピーしている矩形の各行を現在行以下の行末へ追加します。
+ 
+ 使用例：
+   こんなのをコピーしているときに
+           ┌────┐
+           │A       │
+           │BC      │
+           │DEF     │
+           │GHIJ    │
+           └────┘
+   * の位置で append-rectangle すると
+    ┌─────┐      ┌─────┐
+    │*-lmn     │      │--lmnA    │
+    │--op      │  →  │--opBC    │
+    │--        │      │--DEF     │
+    │--q       │      │--qGHIJ   │
+    └─────┘      └─────┘
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>rectangl.l</file>
+ </chapter>
+
+--------
+- どーもです。 -- [[NANRI]] &new{2006-01-09 (月) 18:45:07};
+- 取り込みました。→[[refwiki:append-rectangle]] -- [[NANRI]] &new{2006-02-13 (月) 23:10:11};
+
+#comment

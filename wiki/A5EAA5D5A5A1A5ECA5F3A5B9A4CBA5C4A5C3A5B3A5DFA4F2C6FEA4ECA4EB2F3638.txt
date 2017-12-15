@@ -1,0 +1,92 @@
+*denominator, numerator, conjugate, cis, phase [#e36975c1]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-07-28 (水) 02:06:49
+-バージョン: 
+
+**メッセージ [#k5e4797c]
+ついでなので、数値セクションで書けそうな所を書いておきました。
+
+ <chapter>
+ <title>denominator</title>
+ <type>Function</type>
+ <arguments>denominator RATIONAL</arguments>
+ <package>lisp</package>
+ <description>
+ 分数の分母を返します。
+ </description>
+ <seealso>numerator</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>numerator</title>
+ <type>Function</type>
+ <arguments>numerator RATIONAL</arguments>
+ <package>lisp</package>
+ <description>
+ 分数の分子を返します。
+ </description>
+ <seealso>denominator</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>conjugate</title>
+ <type>Function</type>
+ <arguments>conjugate NUMBER</arguments>
+ <package>lisp</package>
+ <description>
+ 共役複素数を返します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>数値</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>cis</title>
+ <type>Function</type>
+ <arguments>cis Z</arguments>
+ <package>lisp</package>
+ <description>
+ 偏角が Z で絶対値が 1 の複素数を返します。
+ 
+   (cis Z) == (complex (cos Z) (sin Z))
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>phase</title>
+ <type>Function</type>
+ <arguments>phase Z</arguments>
+ <package>lisp</package>
+ <description>
+ 複素数の偏角を求めます。
+ 返り値はラジアン単位です。
+ 
+   (phase -1)
+   =&gt;3.141593
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+
+----
+
+#comment

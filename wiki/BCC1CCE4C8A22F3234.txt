@@ -1,0 +1,35 @@
+* キーボードから "全角<->半角" の変換 [#e3363a9b]
+-ページ: [[質問箱]]
+-投稿者: [[musashino]]
+-状態: 完了
+-投稿日: 2004-04-27 (火) 20:09:40
+
+** メッセージ [#db7b48a0]
+キーボードから "全角<->半角" の変換は出来ないでしょうか。
+
+Emacsでは、
+ (global-set-key "\M-\C-o"
+		'(lambda (begin end) (interactive "r")
+		   (japanese-hankaku-region begin end t)
+		   ))
+ (global-set-key "\C-]" 'japanese-zenkaku-region)
+とやってたんですけど。
+----
+-すいません。~/.emacsからコピペしたら行頭に空白が入ったままでした。 -- [[musashino]] &new{2004-04-27 (火) 20:11:45};
+-探してみましたが見つかりませんでした。ただし、selectionのはあるのでそれをregion対応にするだけでできます。map-to-half-width-region, map-to-full-width-regionの引数は select.l, app-menu.l を参考に調整してください。
+ (defun map-all-to-half-width-region (start end)
+   "全角 -> 半角（すべて）"
+   (interactive "*r")
+   (ed::map-to-half-width-region start end :ascii t
+                             :hiragana t :katakana t
+                             :greek t :cyrillic t))
+ (defun map-all-to-full-width-hiragana-region (start end)
+   "半角 -> 全角（すべて「ｶﾅ -> ひらがな」）"
+   (interactive "*r")
+   (ed::map-to-full-width-region start end :ascii t
+                             :hiragana t :katakana nil
+                             :greek t :cyrillic t))
+-ありがとうございます。 -- [[musashino]] &new{2004-04-28 (水) 16:23:33};
+-半->全のときは:ascii と :katakana を t にして、全->半のときは:asciiのみtにすることで、目的の動作をさせることが出来ました。 -- [[musashino]] &new{2004-04-28 (水) 16:29:16};
+
+#comment

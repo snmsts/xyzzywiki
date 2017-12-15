@@ -1,0 +1,46 @@
+[[tips]]
+- ミニバッファでひとつ上のディレクトリへ
+ミニバッファでファイル名などを入力するときに，ファイル名部分の削除と
+ひとつ上のディレクトリ名を簡単に表示するための拡張lispです．
+
+
+ ;;.. 親ディレクトリのパス名へ
+ ;; nil       今までどおり (何の?)
+ ;; 'current  ルートディレクトリの上はカレントディレクトリ
+ ;; 'stop     ルートディレクトリ(c:/, d:/ etc) なら，そこで止まる．
+ ;; 'clear    ルートディレクトリの上は全て削除．
+ (defvar *drive-letter-treatment* 'stop)
+ (defun goto-upper-directory()
+  (interactive "*")
+  (if (and (eolp) (not (bolp))
+           (member (minibuffer-completion-type)
+                   '(:file-name :exist-file-name :file-name-list :directory-name)))
+      (if (and *drive-letter-treatment*
+               (scan-buffer "[a-zA-Z]:/$" :regexp t :reverse t :tail t))
+          (case *drive-letter-treatment*
+            ('stop    t)
+            ('current
+             (delete-backward-char)
+             (minibuffer-complete))
+            ('clear   (delete-region (point-min) (point-max)))
+            (t        (plain-error "unknown ~a" *drive-letter-treatment*)))
+        (insert (prog2 (delete-backward-char)
+                    (directory-namestring
+                     (buffer-substring (point-min) (point-max)))
+                  (delete-region (point-min) (point-max)))))))
+ 
+ 
+ ;; (interactive "l")時のキーバインドに割り当て
+ (define-key minibuffer-local-completion-map   #\C-u 'goto-upper-directory)
+ ;; (interactive "f")時のキーバインドに割り当て
+ (define-key minibuffer-local-must-match-map   #\C-u 'goto-upper-directory)
+ ;; (interactive "e")時のキーバインドに割り当て
+ ;(define-key minibuffer-local-command-line-map #\C-u 'goto-upper-directory)
+ ;; ?
+ ;(define-key minibuffer-local-map              #\C-u 'goto-upper-directory)
+
+----
+- ファイル名，ディレクトリ名等を補完するときのみ動作するように修正しました． -- [[作者]] &new{2006-01-17 (火) 18:07:43};
+
+
+#comment

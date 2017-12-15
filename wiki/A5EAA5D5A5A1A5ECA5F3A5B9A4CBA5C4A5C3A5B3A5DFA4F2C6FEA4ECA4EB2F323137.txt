@@ -1,0 +1,81 @@
+* find-all-symbols, do-symbols, do-external-symbols [#fc3922ac]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-05-24 (水) 17:20:56
+-バージョン: 20060329
+
+** メッセージ [#t5e7c32a]
+ <chapter>
+ <title>do-external-symbols</title>
+ <type>Macro</type>
+ <arguments>do-external-symbols (VAR &amp;optional (PACKAGE () SV) RESULT-FORM) &amp;body BODY</arguments>
+ <package>lisp</package>
+ <description>
+ do-symbols と似ていますが、外部シンボルのみに対して繰り返しを行います。
+ </description>
+ <seealso>do-all-symbols</seealso>
+ <seealso>do-symbols</seealso>
+ <link></link>
+ <section>制御構造</section>
+ <file>package.l</file>
+ </chapter>
+
+ <chapter>
+ <title>do-symbols</title>
+ <type>Macro</type>
+ <arguments>do-symbols (VAR &amp;optional (PACKAGE () SV) RESULT-FORM) &amp;body BODY</arguments>
+ <package>lisp</package>
+ <description>
+ シンボルすべてについて繰り返しを行います。
+ 動作としては dolist に似ています。
+ 
+ do-all-symbols と違って特定のパッケージだけを探します。正確にはパッケ
+ ージの外部シンボル・内部シンボルおよび、そのパッケージが use している
+ 他パッケージの外部シンボルが対象になります。
+ 
+   VAR           : BODY 実行中に各シンボルに束縛される変数
+   PACKAGE       : シンボルを探すパッケージ (デフォルトは *package*)
+   RESULT-FORM   : do-symbols の戻り値
+   BODY          : 繰り返しの本体
+ </description>
+ <seealso>do-external-symbols</seealso>
+ <seealso>do-all-symbols</seealso>
+ <seealso>dolist</seealso>
+ <link></link>
+ <section>制御構造</section>
+ <file>package.l</file>
+ </chapter>
+
+ <chapter>
+ <title>find-all-symbols</title>
+ <type>Function</type>
+ <arguments>find-all-symbols NAME</arguments>
+ <package>lisp</package>
+ <description>
+ 印字名が NAME であるようなシンボルを各パッケージから探します。
+ 戻り値は見つかったシンボルのリストです。
+ 
+ 使用例：
+   (find-all-symbols "y")
+   =&gt; (editor::y system::y lisp::y winapi::y)
+ 
+   (find-all-symbols "system-root")
+   =&gt; (system:system-root)
+ 
+   (find-all-symbols "test")
+   =&gt; (editor::test test :test lisp::test)
+ </description>
+ <seealso>find-symbol</seealso>
+ <link></link>
+ <section>シンボル</section>
+ <file>package.l</file>
+ </chapter>
+
+--------
+- どーもです。 -- [[NANRI]] &new{2006-05-24 (水) 22:29:40};
+
+#comment

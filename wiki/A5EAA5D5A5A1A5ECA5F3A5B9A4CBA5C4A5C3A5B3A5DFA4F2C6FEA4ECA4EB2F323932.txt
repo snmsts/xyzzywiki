@@ -1,0 +1,38 @@
+* recenter [#q36bdf47]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[中野]]
+-優先順位:   低
+-状態:       着手
+-カテゴリー: ツッコミをいれる
+-投稿日:     2007-09-01 (土) 13:01:24
+-バージョン: 
+
+** メッセージ [#r94b914a]
+引数、戻り値の説明を加えました。
+ <chapter>
+ <title>recenter</title>
+ <type>Function</type>
+ <arguments>recenter &amp;optional ARG</arguments>
+ <package>editor</package>
+ <description>
+ バッファをスクロールして画面上の表示位置を調整します。[C-l]
+ 引数を指定しなければ現在行が画面の中央に位置します。
+ (recenter 0) で現在行がウインドウの一番上に来ます。
+ 
+  ARG : 
+    nil        : 画面中央の行に移動。
+    数字の場合 : 正の数なら、ウィンドウの上からの行数。
+                 負の数なら、ウィンドウの下からの行数になるはず
+                 ですが、バグのためそうなりません。
+ 
+  戻り値 : カーソルが移動した時、  t。  
+           移動しなかった時、      nil
+ </description>
+ <section>ウィンドウ</section>
+ <file>window.l</file>
+ </chapter>
+
+----
+- バグ云々は判断できないので記述を削りました。 -- [[NANRI]] &new{2007-10-09 (火) 02:09:49};
+
+#comment

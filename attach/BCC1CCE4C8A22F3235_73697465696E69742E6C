@@ -1,0 +1,576 @@
+(export '(kill-line next-word copy-line insert-comment change-1ling add-1line Paste-Cut))
+
+;; kill-line
+(defun my-kill-line (&optional arg)
+  (interactive "*p")
+  (cond ((bolp)
+	 (let ((point (point))
+	       (lines (cond ((or (null arg)
+				 (<= arg 1))
+			     0)
+			    (t
+			     (- arg 1)))))
+	   (kill-region point
+			(progn
+			  (forward-line lines)
+			  (goto-eol)
+			  (forward-char)
+			  (point)))))
+	(t
+	 (kill-line arg))))
+(define-key *global-keymap* #\C-k 'my-kill-line)
+
+;; next-word
+(defun next-word ()
+  (interactive)
+  (let ((opoint (point)))
+    (when (forward-word 1)
+      (forward-word -1)
+      (and (<= (point) opoint)
+	   (forward-word 1)
+	   (forward-word 1)
+	   (forward-word -1))
+      t)))
+
+;; copy line  最後の行では使えません
+(defun copy-line ()
+  (interactive)
+  (start-selection-as-line)
+  (next-virtual-line)
+  (copy-selection)
+  (yank-selection)
+  (previous-virtual-line)
+  (previous-virtual-line)
+)
+(define-key *global-keymap* #\S-F10		'copy-line)
+(set-function-bar-label		#\S-F10		"F10 copy-line")
+
+;; c のコメントを挿入する
+(setq *comment-user* (si:getenv "USERNAME"))
+(defvar *changelog-user* nil)
+(defun insert-comment ()
+  (interactive)
+;  (insert (format nil "/* "));コメントはいらない？M-;の直後にやろう
+  (if *comment-user*
+	  (insert (format nil "~A : " *comment-user*))
+  )
+  (insert (format-date-string "%Y-%m-%d %H:%M:%S"))
+;  (insert (format nil " */"))
+)
+(define-key *global-keymap* #\S-F11		'insert-comment)
+(set-function-bar-label		#\S-F11		"F11 insert-comment")
+
+;; 二画面分割したカレントの１行を反対の１行と交換
+(defun change-1line ()
+  (interactive)
+  (start-selection-as-line)
+  (next-virtual-line)
+  (copy-selection)
+  (beginning-of-line)
+  (other-window)
+  (yank-selection)
+  (start-selection-as-line)
+  (next-virtual-line)
+  (kill-selection)
+  (beginning-of-line)
+  (other-window)
+)
+(define-key *global-keymap* #\C-S-F12		'change-1line)
+(set-function-bar-label		#\C-S-F12		"F12 change-1line")
+
+;; 二画面分割したカレントの１行を反対の１行に追加
+(defun add-1line ()
+  (interactive)
+  (start-selection-as-line)
+  (next-virtual-line)
+  (copy-selection)
+  (beginning-of-line)
+  (other-window)
+  (yank-selection)
+  (beginning-of-line)
+  (other-window)
+)
+(define-key *global-keymap* #\C-S-F11		'add-1line)
+(set-function-bar-label		#\C-S-F11		"F11 add-1line")
+
+;; diff 左右分割
+(defun diff-view (diffs old-buffer new-buffer)
+  (delete-other-windows)
+  (set-buffer old-buffer)
+  (delete-text-attributes 'diff)
+  (mapc #'(lambda (x)
+	    (let ((c (car x)))
+	      (diff-color c (caadr x) (cdadr x) (eql c #\+)
+			  *diff-old-file-foreground*
+			  *diff-old-file-background*)))
+	diffs)
+  (pop-to-buffer new-buffer t t)
+  (delete-text-attributes 'diff)
+  (mapc #'(lambda (x)
+	    (let ((c (car x)))
+	      (diff-color c (caaddr x) (cdaddr x) (eql c #\-)
+			  *diff-new-file-foreground*
+			  *diff-new-file-background*)))
+	diffs))
+
+;; diff 結果を前方に検索する
+(defun search-diff-forward ()
+  (interactive)
+  (goto-char (or (find-text-attribute
+                  'diff
+                  :start (save-excursion (goto-eol) (point)))
+                 (plain-error "異なる行はありません"))))
+
+;; diff 結果を後方に検索する
+(defun search-diff-backward ()
+  (interactive)
+  (goto-char (or (find-text-attribute
+                  'diff
+                  :end (save-excursion (goto-bol) (point))
+                  :from-end t)
+                 (plain-error "異なる行はありません"))))
+(define-key esc-map #\Down 'search-diff-forward)
+(define-key esc-map #\Up 'search-diff-backward)
+
+;; Paste-Cut
+(defun Paste-Cut (&optional (arg 1))
+  (interactive "*p")
+  (yank)
+  (kill-word)
+  (backward-word)
+  (copy-region-as-kill (point)
+					   (progn
+						 (forward-word arg)
+						 (point))))
+;; １ワードを
+(define-key *global-keymap* #\C-M-y		'Paste-Cut)
+(define-key *global-keymap* #\C-S-F10		'include-tag-jump)
+(set-function-bar-label		#\C-S-F10		"F10 include-tag-jump")
+
+;; イベントデータの自動判別
+(load-library "ev")
+  (push '("\\.ev$" . ev-mode) *auto-mode-alist*)
+
+;; include行をタグジャンプする(同一ディレクトリに存在しなければいけない)
+(defun include-tag-jump ()
+  (interactive)
+  (find-file (save-excursion
+	       (goto-bol)
+	       (or (and (looking-at "^[ \t]*#[ \t]*include[ \t]*\"\\(.+\\)\"")
+			(let ((name (match-string 1)))
+			  (and (file-exist-p name) name)))
+		   (error "ないっす")))))
+
+
+
+;-----------------------------------;
+;	キーの設定
+;-----------------------------------;
+;
+;	emacs	準拠
+;
+(global-set-key		'(#\Home)			'beginning-of-buffer )
+(global-set-key		'(#\End)			'end-of-buffer )
+(global-set-key		'(#\C-_)			'undo)
+(global-set-key		'(#\M-_)			'redo)
+(global-set-key		'(#\C-Right)		'forward-word)
+(global-set-key		'(#\C-Left)			'backward-word)
+(global-set-key		'(#\C-x #\r #\k)	'kill-rectangle)
+(global-set-key		'(#\C-x #\r #\d)	'delete-rectangle)
+(global-set-key		'(#\C-x #\r #\y)	'yank-rectangle)
+(global-set-key		'(#\C-x #\r #\r)	'copy-rectangle)
+(global-set-key		'(#\C-x #\r #\t)	'string-rectangle)
+(global-set-key		'(#\C-x #\3)		'split-window-vertically)
+(global-set-key		'(#\C-x #\d)		'buffer-menu)
+(global-set-key		'(#\M-%)			'query-replace)
+(global-set-key		'(#\C-o)			'toggle-ime)
+(global-set-key		'(#\C-M-\\)			'indent-region)
+;
+;	genki custom
+;
+(global-set-key		'(#\C-Home)			'move-previous-window)
+(global-set-key		'(#\C-End)			'other-window)
+(global-set-key		'(#\C-M-Left)		'previous-pseudo-frame)
+(global-set-key		'(#\C-M-Right)		'next-pseudo-frame)
+(global-set-key		'(#\M-Left)			'previous-buffer)
+(global-set-key		'(#\M-Right)		'next-buffer)
+;(global-set-key	'(#\LBtnDown)		'set-mark-command)
+
+;---------------------------------------;
+;	コマンド複数回実行
+;---------------------------------------;
+(global-set-key		'(#\C-0)			'digit-argument)
+(global-set-key		'(#\C-1)			'digit-argument)
+(global-set-key		'(#\C-2)			'digit-argument)
+(global-set-key		'(#\C-3)			'digit-argument)
+(global-set-key		'(#\C-4)			'digit-argument)
+(global-set-key		'(#\C-5)			'digit-argument)
+(global-set-key		'(#\C-6)			'digit-argument)
+(global-set-key		'(#\C-7)			'digit-argument)
+(global-set-key		'(#\C-8)			'digit-argument)
+(global-set-key		'(#\C-9)			'digit-argument)
+
+;-----------------------------------;
+;	Functionキーの設定
+;-----------------------------------;
+;	xyzzy default
+;F1                  find-winhelp
+;F2                  select-buffer
+;F3                  show-info-viewer
+;F4                  jump-tag
+;F5                  repeat-forward-search
+;F6                  start-selection-as-line
+;F7                  kill-selection
+;F8                  copy-selection
+;F9                  yank-selection
+;F10                 first-error
+;F11                 next-error
+;F12                 redo
+;S-F4                back-tag-jump
+;S-F5                repeat-backward-search
+;S-F6                start-selection-as-region
+;S-F9                yank-rectangle-selection
+;C-F1                show-winhelp
+;C-F2                mark-dialog-box
+;
+;	windows	準拠
+;
+;(global-set-key				'(#\C-TAB)			'move-previous-window)
+;(global-set-key				'(#\C-TAB)			'next-buffer)
+(global-set-key				#\C-F4		'close-selected-buffer)
+(set-function-bar-label 	#\C-F4		"F4 編集をやめる")
+(global-set-key				#\M-F4		'kill-xyzzy)
+(set-function-bar-label		#\M-F4		"F4 xyzzyを終了")
+;
+;	genki custom
+;
+;		使いやすい順に
+;			直打ち	Ctrl+	Shift+	Meta+
+;			Meta+はエディタ起動時に一度しか実行しないもの(なるべく)
+;		F1 F3 F4 F5はシステム&ファイル系
+;		F2はかめーる系
+;		F6~F9はストリング系
+;		F10~F12はその他/いろいろ
+;
+(global-set-key				#\F1		'open-filer)
+(set-function-bar-label 	#\F1		"F1 ファイラ")
+(global-set-key				#\C-F1		'revert-buffer)
+(set-function-bar-label 	#\C-F1		"F1 編集を戻す")
+(global-set-key				#\S-F1		'rename)
+(set-function-bar-label		#\S-F1		"F1 ファイル名変更")
+(global-set-key				#\M-F1		'shell)
+(set-function-bar-label 	#\M-F1		"F1 シェル起動")
+(set-function-bar-label		#\F2		"F2 バッファ")
+(set-function-bar-label		#\C-F2		"F2 行マーク")
+(set-function-bar-label		#\S-F2		"F2 かめーる切替")
+(global-set-key				#\M-F2		'kamail)
+(set-function-bar-label		#\M-F2		"F2 かめーる起動")
+(global-set-key				#\F3		'grep-dialog)
+(set-function-bar-label		#\F3		"F3 ＧＲＥＰ")
+(global-set-key				#\C-F3		'search-dialog)
+(set-function-bar-label		#\C-F3		"F3 文字列検索")
+(global-set-key				#\S-F3		'make-tags-file-dialog)
+(set-function-bar-label		#\S-F3		"F3 タグ情報作成")
+(set-function-bar-label		#\F4		"F4 tag-jump")
+(set-function-bar-label		#\S-F4		"F4 back-tag-jump")
+(set-function-bar-label		#\F5		"F5 次検索/下")
+(set-function-bar-label		#\S-F5		"F5 次検索/上")
+(global-set-key				#\C-F5		'search-forward)
+(set-function-bar-label		#\C-F5		"F5 文字列検索↓")
+(global-set-key				#\M-F5		'search-backward)
+(set-function-bar-label		#\M-F5		"F5 文字列検索↑")
+
+(set-function-bar-label		#\F6		"F6 範囲選択")
+(set-function-bar-label		#\F7		"F7 削除")
+(set-function-bar-label		#\S-F6		"F6 文字／矩形選択")
+(global-set-key				#\C-F6		'string-rectangle)
+(set-function-bar-label		#\C-F6		"F6 矩形置換")
+(global-set-key				#\C-F7		'copy-to-register)
+(set-function-bar-label		#\C-F7		"F7 レジスタコピー")
+(global-set-key				#\S-F7		'kill-rectangle)
+(set-function-bar-label		#\S-F7		"F7 矩形削除")
+(set-function-bar-label		#\F8		"F8 コピー")
+(global-set-key				#\C-F8		'append-to-register)
+(set-function-bar-label		#\C-F8		"F8 レジスタＡＤＤ")
+(global-set-key				#\S-F8		'copy-rectangle)
+(set-function-bar-label		#\S-F8		"F8 矩形コピー")
+(set-function-bar-label		#\F9		"F9 ペースト")
+(set-function-bar-label		#\S-F9		"F9 矩形ﾍﾟｰｽﾄ(選択)")
+(global-set-key				#\C-F9		'insert-register)
+(set-function-bar-label		#\C-F9		"F9 レジスタペースト")
+
+(set-function-bar-label		#\F10		"F10 エラー")
+(global-set-key				#\C-F10		'eval-buffer)
+(set-function-bar-label		#\C-F10		"F10 eval-buffer")
+(define-key *global-keymap* #\S-F10		'copy-line)
+(set-function-bar-label		#\S-F10		"F10 copy-line")
+(set-function-bar-label		#\F11		"F11 次エラー")
+(global-set-key				#\C-F11		'byte-compile-file)
+(set-function-bar-label		#\C-F11		"F11 byte-compile-file")
+(global-set-key				#\F12		'compare-windows)
+(set-function-bar-label		#\F12		"F12 ファイル比較")
+(global-set-key				#\C-F12		'goto-line)
+(set-function-bar-label		#\C-F12		"F12 行ジャンプ")
+(global-set-key				#\S-F12		'diff)
+(set-function-bar-label		#\S-F12		"F12 ＤＩＦＦ")
+;
+;	xyzzy default F6~F9,S-F6,S-F9を使おう
+;
+;(global-set-key			#\S-F6		'kill-rectangle)
+;(set-function-bar-label	#\S-F6		"kill-rectangle")
+;(global-set-key			#\S-F8		'yank-rectangle)
+;(set-function-bar-label	#\S-F8		"yank-rectangle")
+;(global-set-key			#\C-F6		'copy-rectangle)
+;(set-function-bar-label	#\C-F6		"copy-rectangle")
+
+;---------------------------------------;
+;	Hex mode
+;---------------------------------------;
+;; hexl.exe のあるディレクトリ（PATH が通っていれば要らない）
+;(setq hexl-exec-directory (si:getenv "XYZZYHOME"))
+;; ロード
+;(load-library "hexl")
+;; オートロードにしたい場合
+;(autoload 'hexl-mode "hexl" t nil)
+;(autoload 'hexl-find-file "hexl" t nil)
+;; お好みで
+;(define-key *global-keymap* '(#\C-c #\C-h) 'hexl-find-file)
+
+;---------------------------------------;
+;	マウスホイールの音を切る
+;---------------------------------------;
+(global-set-key #\MBtnDown 'mouse-nop)
+(global-set-key #\MBtnMove 'mouse-nop)
+(global-set-key #\MBtnUp 'mouse-nop)
+
+;---------------------------------------;
+;	IMEのon/off表示
+;---------------------------------------;
+(setq-default mode-line-format "[%i]%*- %b (%M) [%k:%l] %P %f")
+
+;---------------------------------------;
+;	ChangeLogの設定
+;---------------------------------------;
+(load-library "changelog")
+;(setq *changelog-filename* "u:/ChangeLog/ChangeLog")
+(setq *changelog-filename* "/ChangeLog")
+(setq *changelog-user* (concat (si:getenv "USER") " <" (si:getenv "USERNAME") "@genki.co.jp>"))
+(setq *comment-user* (si:getenv "USERNAME"))
+
+;---------------------------------------;
+;	サーチをインクリメンタルサーチに
+;---------------------------------------;
+(require "isearch")
+
+;---------------------------------------;
+;	i-searchの最後から最初に戻らない(うまくいかない)
+;---------------------------------------;
+(setq *wrap-search* nil)
+
+;---------------------------------------;
+;	コピーペーストでコードが半角になってしまうのを防ぐ
+;---------------------------------------;
+(setq *unicode-to-half-width* nil)
+
+;---------------------------------------;
+;	インクリメンタルサーチ中上下でキャンセル
+;---------------------------------------;
+(define-key ed::*isearch-map* #\Up 'ed::isearch-exit)
+(define-key ed::*isearch-map* #\Down 'ed::isearch-exit)
+
+;---------------------------------------;
+;	()[]などでハイライト
+;---------------------------------------;
+;(load-library "paren")
+
+;---------------------------------------;
+;	back-tag-jumpで関数にカーソルを移動
+;---------------------------------------;
+(setq *gmark-keep-column* t)
+
+;---------------------------------------;
+;	バッファの順番を見た目順に
+;---------------------------------------;
+(setq *next-buffer-in-tab-order* t)
+
+;---------------------------------------;
+;	ドライブのデフォルトディレクトリ
+;---------------------------------------;
+(set-per-device-directory (si:getenv "XYZZYHOME"))
+(setq *auto-update-per-device-directory* nil)
+
+;---------------------------------------;
+;	カレント以外でのカーソルラインの表示
+;---------------------------------------;
+(setq *show-cursor-line-always* t)
+
+;---------------------------------------;
+;	曜日を表示
+;---------------------------------------;
+(setq *status-bar-format* "T")
+
+;---------------------------------------;
+;	ファイラで削除はごみ箱へ
+;---------------------------------------;
+(setq *filer-use-recycle-bin* t)
+
+;---------------------------------------;
+;	C-x-wでバッファも変更
+;---------------------------------------;
+(defun emacs-write-file (filename)
+  (interactive "FWrite file: " :title0 "Write File")
+  (and (rename filename)
+   (save-buffer)))
+ (define-key ctl-x-map #\C-w 'emacs-write-file)
+
+;; 2画面用
+(setq *filer-primary-file-mask* '("*"))
+(setq *filer-secondary-file-mask* '("*"))
+;; 1画面用
+(setq *filer-last-file-mask* '("*"))
+
+;---------------------------------------;
+;	infoのロード
+;---------------------------------------;
+;(load-library	"info")
+
+;---------------------------------------;
+;	diffのロード
+;---------------------------------------;
+;(load-library "wip/diff")
+;(load-library "diff")
+
+;---------------------------------------;
+;	perlのロード
+;---------------------------------------;
+(load-library "perl")
+(load-library "java")
+
+;---------------------------------------
+;	filer
+;---------------------------------------
+(defun filer-change-window ()
+  (if (filer-dual-window-p)
+	  (if (filer-left-window-p)
+		  (filer-right-window)
+		(filer-scroll-right))
+	(if (filer-right-window-p)
+		(filer-left-window)
+	  (filer-scroll-left))))
+
+(define-key filer-keymap #\Left 	'filer-scroll-left-or-left-window)
+(define-key filer-keymap #\Right 	'filer-scroll-right-or-right-window)
+(define-key filer-keymap #\F9		'filer-goto-root)
+(define-key filer-keymap #\F12		'filer-toggle-mark-files)
+(define-key filer-keymap #\TAB		'filer-change-window)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;	インデントヘルプ
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;	インデントのデフォルト			 K&R BSD GNU?
+;; c-indent-level					 5	 8	 4
+;; c-continued-statement-offset		 5	 8	 4
+;; c-brace-offset					-5	-8	 0
+;; c-argdecl-indent					 0	 8	 5
+;; c-label-offset					-5	-8	-2
+;; c-brace-imaginary-offset			 0	 0	 0
+;; インデント説明
+;; * c-indent-level
+;;      {                           if (cond) {
+;;        foo ();       or            do_this ();
+;;      ->                          ->
+;;
+;; * c-continued-statement-offset
+;;      if (cond)
+;;        do_this ();
+;;      ->
+;;
+;; * c-brace-imaginary-offset
+;;   i) 0                       ii) 2
+;;      if (cond) {                 if (cond) {
+;;        do_it ();                   do_it ();
+;;      }                             }
+;;                                  ->
+;;
+;; * c-brace-offset
+;;   i) 0                       ii) -2
+;;      if (cond)                   if (cond)
+;;        {                         {
+;;                                  <-
+;;
+;; * c-argdecl-indent
+;;   i) 0                       ii) 5
+;;      void                          void
+;;      bcopy (from, to, size)        bcopy (from, to, size)
+;;      void *from, *to;                   void *from, *to;
+;;      int size;                          int size;
+;;                                    ---->
+;;
+;; * c-label-offset
+;;   i) 0                       ii) -2
+;;      switch (c)                    switch (c)
+;;        {                             {
+;;          case 'x':                   case 'x':
+;;                                      <-
+;---------------------------------------;
+;	c-mode
+;---------------------------------------;
+;インデントをスペースでなくタブにする
+(add-hook '*c-mode-hook* #'(lambda () (setq indent-tabs-mode t)))
+(add-hook '*c++-mode-hook* #'(lambda () (setq indent-tabs-mode t)))
+(add-hook '*perl-mode-hook* #'(lambda () (setq indent-tabs-mode t)))
+(add-hook '*java-mode-hook* #'(lambda () (setq indent-tabs-mode t)));16/01/14 (・ω・)
+
+; インデントキャンセル用仮想キー(perl-mode)
+(set-extended-key-translate-table exkey-tab #\F18)
+(global-set-key #\F18
+                #'(lambda ()
+                    (interactive)
+                    (let ((command (or (lookup-keymap (local-keymap) #\TAB)
+                                       (lookup-keymap *global-keymap* #\TAB)))
+                          (*last-command-char* #\TAB))
+                      (command-execute (if (eq command mode-specific-indent-command)
+                                           'self-insert-command
+                                         command)))))
+
+
+; BSキー普通に消す(c-mode.lの機能を打ち消す)
+;(define-key *c-mode-map* #\C-h 'backward-delete-char-untabify-or-selection)
+(define-key ed::*c-mode-map* #\C-h 'delete-backward-char-or-selection)
+(define-key ed::*c++-mode-map* #\C-h 'delete-backward-char-or-selection)
+;(define-key ed::*perl-mode-map* #\C-h 'delete-backward-char-or-selection)
+(define-key ed::*java-mode-map* #\C-h 'delete-backward-char-or-selection)
+
+;TABキーを有効にする(c-mode.lの機能を打ち消す)
+;(define-key *c-mode-map* #\TAB 'c-indent-line)
+(define-key ed::*c-mode-map* #\TAB 'self-insert-command) 
+(define-key ed::*c++-mode-map* #\TAB 'self-insert-command) 
+;(define-key ed::*perl-mode-map* #\TAB 'self-insert-command) 
+(define-key ed::*java-mode-map* #\TAB 'self-insert-command) 
+
+; カッコのインデントの設定
+(setq c-indent-level 4)
+(setq c-continued-statement-offset 4)
+(setq c-brace-offset -4)
+(setq c-argdecl-indent 0)
+(setq c-label-offset 0)
+(setq c-brace-imaginary-offset 0)
+(setq c-comment-indent 4)
+
+(setq c++-indent-level 4)
+(setq c++-continued-statement-offset 4)
+(setq c++-brace-offset -4)
+(setq c++-argdecl-indent 0)
+(setq c++-label-offset 0)
+(setq c++-brace-imaginary-offset 0)
+(setq c++-comment-indent 4)
+
+(setq java-indent-level 4)
+(setq java-continued-statement-offset 4)
+(setq java-brace-offset -4)
+(setq java-argdecl-indent 0)
+(setq java-label-offset 0)
+(setq java-brace-imaginary-offset 0)
+(setq java-comment-indent 4)
+

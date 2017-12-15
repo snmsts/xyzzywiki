@@ -1,0 +1,70 @@
+[[L10N/english]]
+
+ monkey.l:10:(set-function-bar-label #\F1 "VCﾍﾙﾌﾟ")
+-VC Help --  &new{2005-03-04 21:37:40 (金)};
+
+#comment
+ monkey.l:11:(set-function-bar-label #\F2 "ﾊﾞｯﾌｧ")
+-Buffer --  &new{2005-03-04 21:37:50 (金)};
+
+#comment
+ monkey.l:12:(set-function-bar-label #\F3 "InfoView")
+-InfoView --  &new{2005-03-04 21:38:03 (金)};
+
+#comment
+ monkey.l:13:(set-function-bar-label #\F4 "ﾀｸﾞｼﾞｬﾝﾌﾟ")
+-TagJump --  &new{2005-03-04 21:38:29 (金)};
+
+#comment
+ monkey.l:14:(set-function-bar-label #\F5 "次検索/下")
+-Search Forward --  &new{2005-03-04 21:39:27 (金)};
+
+#comment
+ monkey.l:15:(set-function-bar-label #\F6 "行ﾌﾞﾛｯｸ")
+-Line Block --  &new{2005-03-04 21:43:42 (金)};
+
+#comment
+ monkey.l:16:(set-function-bar-label #\F7 "削除")
+-Delete --  &new{2005-03-04 21:39:40 (金)};
+
+#comment
+ monkey.l:17:(set-function-bar-label #\F8 "ｺﾋﾟｰ")
+-Copy --  &new{2005-03-04 21:39:52 (金)};
+
+#comment
+ monkey.l:18:(set-function-bar-label #\F9 "ﾍﾟｰｽﾄ")
+-Paste --  &new{2005-03-04 21:40:21 (金)};
+
+#comment
+ monkey.l:19:(set-function-bar-label #\F10 "ｴﾗｰ")
+-Error --  &new{2005-03-04 21:40:36 (金)};
+
+#comment
+ monkey.l:20:(set-function-bar-label #\F11 "次ｴﾗｰ")
+-Next Error --  &new{2005-03-04 21:40:50 (金)};
+
+#comment
+ monkey.l:21:(set-function-bar-label #\F12 "Redo")
+-Redo --  &new{2005-03-04 21:41:05 (金)};
+
+#comment
+ monkey.l:24:(set-function-bar-label #\S-F5 "次検索/上")
+-Search Backward --  &new{2005-03-04 21:43:00 (金)};
+
+#comment
+ monkey.l:25:(set-function-bar-label #\S-F6 "文字ﾌﾞﾛｯｸ")
+-Character Block --  &new{2005-03-04 21:44:24 (金)};
+
+#comment
+ monkey.l:26:(set-function-bar-label #\S-F9 "矩形ﾍﾟｰｽﾄ")
+-Rectangular Paste --  &new{2005-03-04 21:42:15 (金)};
+
+#comment
+ monkey.l:29:(set-function-bar-label #\C-F1 "ﾍﾙﾌﾟ")
+-Help --  &new{2005-03-04 21:37:23 (金)};
+
+#comment
+ monkey.l:30:(set-function-bar-label #\C-F2 "ﾏｰｸ")
+-Mark --  &new{2005-03-04 21:36:59 (金)};
+
+#comment

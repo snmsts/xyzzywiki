@@ -1,0 +1,982 @@
+N<>sage<>01/11/06 20:31 ID:xI7AHMbU<> html+-modeで幸せタグ打ち人生。 <>xyzzyでタグ打ってる人の数 →
+Name_Not_Found<>sage<>01/11/06 20:33 ID:NphHAYcQ<> わしも。 <>
+Name_Not_Found<><>01/11/06 20:41 ID:YiN2+1/F<> けっこういいらしいですな。 <br> 手前Macなので残念です。 <>
+N<>sage<>01/11/06 20:44 ID:xI7AHMbU<> <a href="../test/read.cgi/hp/1005046309/2" target="_blank">&gt;&gt;2</a> <br> お友達になりませう。 <br>  <br> <a href="../test/read.cgi/hp/1005046309/3" target="_blank">&gt;&gt;3</a> <br> とてもｲｲ!です。 <>
+Name_Not_Found<>sage<>01/11/06 20:45 ID:YiN2+1/F<> もともとemacs大好きなんで。興味津々です。 <br> あぁ～いいなぁ～悶えちゃうsage <>
+N<>sage<>01/11/06 20:49 ID:xI7AHMbU<> 自分もemac大好きなのでsage <>
+Name_Not_Found<>sage<>01/11/06 20:55 ID:THvwGdj6<> 某板某スレみたいに、自分の.xyzzyを貼り付けるとか。 <>
+Name_Not_Found<><>01/11/06 21:28 ID:YiN2+1/F<> <a href="../test/read.cgi/hp/1005046309/7" target="_blank">&gt;&gt;7</a> <br> ウニ板ですか？ <br> あそこの出身なので親近感湧きまくりage <>
+Name_Not_Found<><>01/11/07 01:32 ID:aKHZgUtc<> <a href="../test/read.cgi/hp/1005046309/7" target="_blank">&gt;&gt;7</a> <br>  <br>         (load-library "info") <br>  <br> (defun kill-forward-line () <br> (interactive) <br> (let ((a (point)) <br> (b (progn (goto-bol) (point)))) <br> (delete-region a b))) <br>  <br> (set-extended-key-translate-table exkey-C-backspace #\F24) <br> (global-set-key #\F24 'kill-forward-line) <br>  <br> こんだけ。 <>
+Name_Not_Found<>sage<>01/11/07 01:36 ID:C5e3RfI6<> ｽｸﾅｲﾈ... <br>  <br>  （ 。。） <br> （∩∩）φ <>
+</b> ◆xyzzyLFI <b><>sage<>01/11/08 23:40 ID:x+0eLPcY<> トリップ自慢。 どうよ。 <>
+Name_Not_Found<>sage<>01/11/09 20:19 ID:+gOpJLES<> ｺﾞｲｽｰ↑ <>
+Name_Not_Found<><>01/11/09 20:44 ID:8NeejVFD<> <a href="../test/read.cgi/hp/1005046309/11" target="_blank">&gt;&gt;11</a>　ｺﾞｲｽｰ <>
+Name_Not_Found<><>01/11/09 20:58 ID:jKUWl8qd<> xyzzyってなに？？ <>
+Name_Not_Found<>sage<>01/11/09 21:10 ID:E95n/BCJ<> スクリーン左上1pxが黒くなったら地雷アリ危険近寄るな <>
+Name_Not_Found<>sage<>01/11/09 21:18 ID:+0myWpAZ<> <a href="../test/read.cgi/hp/1005046309/15" target="_blank">&gt;&gt;15</a> <br> http://www1.mirai.ne.jp/~gyo/xyzzy/xyzzy-list.html <br> emacs っぽいエディタ。 <>
+16<>sage<>01/11/09 21:19 ID:+0myWpAZ<> <a href="../test/read.cgi/hp/1005046309/14" target="_blank">&gt;&gt;14</a> のまちがいらしいです。 あばばば。 <>
+Name_Not_Found<><>01/11/09 22:29 ID:8NeejVFD<> ｱｳﾞｧｳﾞｧｳﾞｧｰｳﾞｧｳﾞｧｳﾞｧｰｳﾞｧｳﾞｧｰ('Д´) <br>  <br> やさしいうたでした！ﾃｨﾝｺﾃｨﾝｺ(ﾟдﾟ)ﾎﾟｰﾝ <>
+Name_Not_Found<>sage<>01/11/09 22:44 ID:oGeRZaZB<> <a href="../test/read.cgi/hp/1005046309/16" target="_blank">&gt;&gt;16</a> <br> emacsってナニ？(と聞かれたらどう説明しますか) <>
+Name_Not_Found<><>01/11/10 00:08 ID:zDIr425b<> <a href="../test/read.cgi/hp/1005046309/19" target="_blank">&gt;&gt;19</a> <br> 失禁の開発環境（と１５年前は言われていた） <>
+Name_Not_Found<>age<>01/11/10 00:20 ID:pgUy+uL7<> <a href="../test/read.cgi/hp/1005046309/20" target="_blank">&gt;&gt;20</a> <br> よけいワカラン。失禁？ <br> 私はユニコードで作成せなならんページがあってxyzzyを導入したけど、 <br> それ以外では全然使用しない。emacsなんてそれまで聞いたこともなかった。 <br> いまでもよく知らん。 <br> ふだんはTeraPad愛用。 <>
+Name_Not_Found<>sage<>01/11/10 03:16 ID:eExtN5Dh<> html+-modeマンセー。 <br>  <br> ;; 一発インデント <br> (defun indent-current-buffer () <br>   (interactive) <br>   (indent-region (point-min) (point-max)) <br>   (message "indent buffer")) <br> (global-set-key #\C-F8 'indent-current-buffer) <br>  <br> 自動インデント。 <br> 論理構造に気をつけて書いてれば結構綺麗に整形される。 <br> これで人にソース見られても恥ずかしくないYO！ <br>  <br> ところで色の設定ってどうやって変えんの？ <br> &lt;h*&gt;タグが青バック白文字で読みづらくて困ってるんだけど…。 <>
+Name_Not_Found<><>01/11/10 03:17 ID:eExtN5Dh<> 最近どうも無意識的にsageてしまう…。 <br> のでage。 <>
+Name_Not_Found<><>01/11/10 03:18 ID:TjR7zyZc<> 真似あげ <>
+Name_Not_Found<>sage<>01/11/10 10:10 ID:SpKcNm8N<> <a href="../test/read.cgi/hp/1005046309/22" target="_blank">&gt;&gt;22</a> <br>  <br> htmlというキーワードファイルを書き換えればいいよ。 <br> でも、ただ書き換えるだけだとバージョンナップするたびに上書きされてしまうので、 <br> キーワードファイルのありかを指定したほうがいい。 <br>  <br> (setq *keyword-load-path* '("d:/bin/xyzzy/keyword/")) <br>  <br> とか。 <>
+Name_Not_Found<><>01/11/15 01:41 ID:JCWebNxN<> age <>
+Name_Not_Found<>sage<>01/12/04 15:16 ID:g3Ef4GfJ<> 俺もやってみよう。 <>
+Name_Not_Found<><>01/12/06 22:49 ID:57MjsSEW<> がんばれage <>
+Name_Not_Found<><>01/12/06 23:08 ID:LPA8ovpG<> html+-mode で、どう幸せになれるのー？ <br> 純粋に知りたいですー <>
+Name_Not_Found<>sage<>01/12/11 03:03 ID:YxIKtTfe<> &gt; xyzzyでタグ打ってる人の数 → (29) <br>  <br> ぴゅ ～ 。 <>
+Name_Not_Found<>sage<>01/12/11 05:16 ID:IoqosQEO<> <a href="../test/read.cgi/hp/1005046309/29" target="_blank">&gt;&gt;29</a> <br> Ctrl + . で補完してくれる。 <br> タグの閉じ忘れもチェックしてくれる。 <br> 今日から始めたんだけどさ。べんり、べんり。 <>
+Name_Not_Found<><>01/12/11 18:40 ID:O8XaHG7H<> <a href="../test/read.cgi/hp/1005046309/29" target="_blank">&gt;&gt;29</a> <br> html+-mode.l のカスタマイズしだいでは、結構validなhtmlがかける。 <br> 画像の挿入も縦横サイズ付きでできるし。（jpg,gif,png） <>
+Name_Not_Found<>sage<>01/12/11 19:08 ID:IoqosQEO<> <a href="../test/read.cgi/hp/1005046309/32" target="_blank">&gt;&gt;32</a> <br> どんな風にカスタマイズしてるの？具体例きぼーん。 <>
+Name_Not_Found<><>01/12/12 01:09 ID:fOZq82vu<> 例えば、 <br>  <br> (defvar *html+-guess-list* <br>   ; めちゃめちゃてきとー且つ自己充足的です <br>   ; DTDに完全に対応させたければここをそれなりに <br>   ; 【Sat, 12 May 2001 19:08:55 +0900】 <br>   ; 確かここを連想配列にしなかったのはいろいろと後の事を考えてだったような・・・ <br>   '(("" <br>      . ("html")) <br>     ("html" <br>      . ("head" "body")) <br>     ("head" <br>      . ("title")) <br>     ("body" <br>      . ("p" "div" "table" "dl" "ul" "ol" "blockquote")) <br>     ("blockquote" <br>      . ("p" "div" "table" "dl" "ul" "ol" "blockquote")) <br>     ("p" <br>      . ("p" "div" "table" "dl" "ul" "ol")) <br>     ("div" <br>      . ("p" "div" "table" "dl" "ul" "ol" "blockquote")) <br>     ("table" <br>      . ("tr")) <br>     ("tr" <br>      . ("th" "td")) <br>     ("dl" <br>      . ("dt" "dd")) <br>     ("ul" <br>      . ("li" "ul" "ol")) <br>     ("ol" <br>      . ("li" "ol" "ul"))) <br>   "html+-mode: 状況依存したタグの候補") <br>  <br> とか。 <>
+Name_Not_Found<>sage<>01/12/12 02:11 ID:h/TP+ynq<> <a href="../test/read.cgi/hp/1005046309/34" target="_blank">&gt;&gt;34</a> <br> そのリストを、DTDの階層構造（っていう言い方は間違ってるかも）に <br> 合わせるんですね。さんきゅ。 <>
+Name_Not_Found<><>01/12/12 17:52 ID:GY7O3rKW<> <a href="../test/read.cgi/hp/1005046309/34" target="_blank">&gt;&gt;34</a> <br>  <br> ("tr" <br> . ("td" "th")) <br>  <br> のほうがいいな。 <>
+Name_Not_Found<><>01/12/12 18:32 ID:WntAER6b<> Windows板のxyzzyスレ <br> http://pc.2ch.net/test/read.cgi/win/1008057054/l50 <>
+Name_Not_Found<><>01/12/15 02:05 ID:45/bVqgX<> あそこは、2chモードとkamailのスレだからなぁ。 <br> こっちはこっちでHTMLとCSS、JavaScript系modeなんかで、ﾏﾀｰﾘいきましょうや。 <>
+</b> ◆/a.ftuGY <b><>sage<>01/12/18 21:00 ID:GRo28Emf<> sage <>
+Name_Not_Found<><>01/12/22 23:58 ID:D1rZHbhV<> <a href="../test/read.cgi/hp/1005046309/39" target="_blank">&gt;&gt;39</a> <br> なぜ下げる? <br> ageよう！ <>
+Name_Not_Found<><>02/01/26 01:51 ID:frU40taG<> 定期age <br>  <>
+Name_Not_Found<>sage<>02/01/26 03:06 ID:/eJjR+nI<> xml-mode <br> http://sugi.pobox.ne.jp/xyzzy/library.html <br> あー、うー。 <>
+Name_Not_Found<>にゃあ<>02/01/29 19:20 ID:wJal19/M<> browserex も使うが(・∀・)ｲｲ! <br> ttp://members.tripod.co.jp/ohkubo/xyzzy/index.html#browserex <>
+Name_Not_Found<><>02/02/02 06:42 ID:vmQF0ytt<> くしっずずゆっ。 <br>  <br> で発音あってますか？ <>
+Name_Not_Found<><>02/02/02 10:23 ID:UWyi9s8P<> <a href="../test/read.cgi/hp/1005046309/44" target="_blank">&gt;&gt;44</a> <br> xyzzyスレで「くさいじじい」と言ってる人がいたよ。 <>
+Name_Not_Found<>sage<>02/02/02 12:37 ID:rlrLn3oP<> <a href="../test/read.cgi/hp/1005046309/45" target="_blank">&gt;&gt;45</a> <br> ｽﾏｿ。漏れです <>
+Name_Not_Found<><>02/02/02 14:32 ID:/727g/d7<> 儂もくさいじじいだな。 <br>  <>
+Name_Not_Found<><>02/02/02 14:57 ID:RmL7z5wW<> 英語読みするとしたら <br> ｽﾞｨｯｽﾞｲｰ <>
+Name_Not_Found<>sage<>02/02/02 15:25 ID:Ynm+ku0z<> Babylonに読ませてみたら「ヅィジィー」だった。 <>
+Name_Not_Found<><>02/02/02 15:26 ID:tC6nW7Jj<> なぜか「ざぐじー」と呼んでいる。 <>
+Name_Not_Found<><>02/02/02 17:38 ID:aeN287TJ<> えっくすわいじーじーわい <>
+Name_Not_Found<><>02/02/02 19:27 ID:lllPpH/S<> 浜崎あゆみの公式サイトをダウンさせる作戦です！  <br> すべての２ちゃんねらーへの参加を求めます！  <br> 祭り本部http://choco.2ch.net/test/read.cgi/news/1012630168/l50  <br> 来たる2002年2月2日22時22分22秒、２ちゃんねるによる本丸攻略が開始される・・・  <br> 推定３００万人のユーザーを保有するとも言われる２ちゃんねるの真価を問う時が迫る！  <br> 公式サイト　　　http://www.avexnet.or.jp/ayu/  <br> ■作戦説明【田代級の祭りを再び！】  <br> 公式サイトにアクセスし、F5キーを押しっぱなしにします。（連打じゃなく押しっぱなし）  <br> すると連続で更新され、次第に重くなります。我々の狙いは何十万ものアクセスによって  <br> サーバーをダウンさせ「事」の重大さをアピールすることです。  <br> あの勘違い運だけ女を潰すのも可能です。  <>
+Name_Not_Found<>sage<>02/02/03 01:00 ID:m/MfVADN<> <a href="../test/read.cgi/hp/1005046309/52" target="_blank">&gt;&gt;52</a> <br> がきはねとけ <>
+Name_Not_Found<><>02/02/04 21:11 ID:Jo8+PS31<> XyzzyとEmacsはどっちが優れていますか？ <>
+Name_Not_Found<><>02/02/05 07:20 ID:CAkkRzK7<> Emacslだろうな。ぼうや。 <>
+Name_Not_Found<><>02/02/05 15:00 ID:Hq7+1O1b<> Emacslって何ですか？ぼうや。 <>
+Name_Not_Found<>sage<>02/02/05 15:30 ID:sqpzb/dm<> はいそこ荒らさない。 <>
+Name_Not_Found<>sage<>02/02/05 15:32 ID:pytkmxi3<> ｖｉ <>
+Name_Not_Found<><>02/02/05 15:33 ID:U5ErXgLJ<> Emacslって何よ？いやマジで？ <>
+Name_Not_Found<>sage<>02/02/05 15:34 ID:pytkmxi3<> emacsをそうシンボリックリンクするのが流行ってます。 <br>  <>
+Name_Not_Found<>sage<>02/02/05 16:49 ID:m2wRErg1<> <a href="../test/read.cgi/hp/1005046309/59" target="_blank">&gt;&gt;59</a> <br> http://www.google.com/search?q=Emacsl&hl=ja&lr= <>
+Name_Not_Found<><>02/02/05 17:24 ID:dxMuoNYk<> <a href="../test/read.cgi/hp/1005046309/61" target="_blank">&gt;&gt;61</a> <br> 一発目がミソだよね？ﾜﾛﾀ <>
+Name_Not_Found<>sage<>02/02/07 18:03 ID:WS21Le/r<> 具体的に何が便利なのか誰か説明してください。 <>
+Name_Not_Found<>age<>02/02/07 18:03 ID:WS21Le/r<> そしてageとく <>
+Name_Not_Found<><>02/02/07 19:31 ID:98R16lG6<> Meadow（win上で動くEmacs）に比べて、xyzzyの方が軽い。 <br> とりあえず、メモ帳しか使えないタコな人でも、メモ帳より便利につかえる。 <br> ちなみに、Emacsは、素人にはおすすめできない。 <br> html書きに関していうと、xyzzy用のhtml+-mode.lは便利だ。 <br> xyzzy内にブラウザを表示させることもできる。 <br> その他作者も使ったことのない機能の数々。(w <br>  <>
+Name_Not_Found<>sage<>02/02/09 20:58 ID:BCmqSb5m<> <a href="../test/read.cgi/hp/1005046309/1" target="_blank">&gt;&gt;1</a>  <br>  xyzzy+-modeって  <br>  「xyzzyプラスマイナスモード」じゃなくて  <br>  「xyzzyプラスモード」だったんだね・・・  <br>  今日初めて気づいたヨ・・・ <>
+Name_Not_Found<><>02/02/10 19:00 ID:6XBasUmr<> <a href="../test/read.cgi/hp/1005046309/66" target="_blank">&gt;&gt;66</a> <br> xyzzy+-mode って何? <br>  <>
+Name_Not_Found<>sage<>02/02/10 22:03 ID:yqYKhanQ<> html+-modeだぁ。疑いなく読んでうんうん俺もだよなどと思ってしまった。鬱。 <>
+Name_Not_Found<>age<>02/02/11 01:52 ID:y9Ld+SOU<> <a href="../test/read.cgi/hp/1005046309/68" target="_blank">&gt;&gt;68</a> <br> 俺も同じことに一昨日くらいに気がついたよ。 <br>  <>
+Name_Not_Found<>sage<>02/02/11 09:26 ID:3IGUz//B<> ・xyzzy+-mode <br> 　xyzzyを構築するためのモードです。 <br> 　※ xyzzyはxyzzy自身でビルドして作られています <>
+Name_Not_Found<><>02/02/28 20:09 ID:7WAogCTD<> age <>
+Name_Not_Found<><>02/03/01 02:24 ID:PsTDisr1<> 漏れ、Terapadでタグ打ってるけど、それよりイイかな？ <>
+Name_Not_Found<><>02/03/01 02:25 ID:A8PeO+hz<> <a href="../test/read.cgi/hp/1005046309/72" target="_blank">&gt;&gt;72</a> <br> html+-mode使えば、自動補完とか自動インデントとか、便利ですよ。 <br> でもやっぱり敷居は高い気がする。 <>
+Name_Not_Found<><>02/03/01 02:29 ID:1evGsYAc<> TeraPadって、キーワードの強調表示とか以外に何かしてくれるの？ <br> そうでないなら、xyzzyの方がいいんじゃないの <br>  <>
+72<><>02/03/01 02:33 ID:PsTDisr1<> <a href="../test/read.cgi/hp/1005046309/73-74" target="_blank">&gt;&gt;73-74</a> <br> サンクス！早速ダウソロードしてきます～♪ <>
+Name_Not_Found<>sage<>02/03/01 02:34 ID:LQgnxKrm<> html+-modeってオレの感覚だとエディタの分際を超えてると思うよん。 <br> アドビとかマクロメディアがタグ書きエディタを出したらこんなのになるのかなって感じだ。 <>
+Name_Not_Found<>sage<>02/03/01 02:48 ID:uJbZQ0c5<> <a href="../test/read.cgi/hp/1005046309/73" target="_blank">&gt;&gt;73</a> <br> 確かに敷居はかなり高かった。 <br> xyzzy使い始めてから３ヶ月くらい経ったけど <br> 最近やっと「xyzzy」の使い方がわかってきた（気がする） <br>  <br> にしても、html+-modeはよい <>
+N<>sage<>02/03/02 12:11 ID:OjmjKjNc<> やっぱり自動インデントは良いですよね。 <br> あれのおかげで綺麗なソースが書けるようになりました。 <>
+Name_Not_Found<><>02/03/02 15:46 ID:nHKzy8hK<> やっぱりDHTMLAに戻って、xyzzyはwww-modeで動作確認に使うのみ・・・。 <br> lynxとかインストールがわからないガキでございます。 <>
+Name_Not_Found<><>02/03/02 15:59 ID:HNYO2K9X<> 補完するタグを好きなように定義できるのが良いね <br> 無駄なタグは一切出さないようにすると、楽。 <br>  <>
+Name_Not_Found<><>02/03/02 18:02 ID:elge25Um<> html+-mode で自動インデントをやめる場合はどうすればいいですか。 <br> 欲を言えば内容がPCDATAの場合のみにインデントしたいのです。 <>
+Name_Not_Found<><>02/03/02 18:12 ID:nHKzy8hK<> 行の末尾～改行間のスペースとか、TABやスペース以外何もない、 <br> いわゆるゴミな部分を自動消去出来る技ってありますか？ <>
+Name_Not_Found<>sage<>02/03/02 18:44 ID:81tAcqcf<> <a href="../test/read.cgi/hp/1005046309/81" target="_blank">&gt;&gt;81</a> <br> よくは知らんが、html+-mode.lで <br>  <br> (defvar *html+-tags-list-no-indent* <br>   '("PRE" "XMP") <br>   "html+-mode: インデント付けの対象外とするタグ") <br>  <br> ここらを適当にやればいいんでない？ <>
+Name_Not_Found<><>02/03/02 20:43 ID:WrFhi5by<> <a href="../test/read.cgi/hp/1005046309/82" target="_blank">&gt;&gt;82</a> <br> ↓こんな感じだけど、一応使えてる <br> (defun all_indent () <br>   (interactive) <br>   (indent-region <br>    (point-min) <br>    (point-max)) <br>   (untabify <br>    (point-min) <br>    (point-max)) <br>   (message "indent buffer")) <br>  <br> タブを消したくなかったら、 <br>   (untabify <br>    (point-min) <br>    (point-max)) <br> を消去 <br>  <br> ところで、行頭のタブ及び空白を全部消す＆しかし改行は消さない <br> というマクロを誰か書いて下さい。 <br> おながいします。 <br>  <>
+Name_Not_Found<>sage<>02/03/02 21:02 ID:1+BLFBX4<> TeraPadが今度のver0.73でユニコードに対応してくれたから、 <br> xyzzyはもう要りません。アンインストールします。サヨナラ。 <br> http://www2s.biglobe.ne.jp/~t-susumu/toclip/library/tpad.html <>
+Name_Not_Found<>sage<>02/03/02 21:15 ID:4Bt1mkZk<> <a href="../test/read.cgi/hp/1005046309/82" target="_blank">&gt;&gt;82</a> <br> こんな感じ？ <br> (defun foo () <br>   (interactive "*") <br>   (save-excursion <br>     (goto-char (point-min)) <br>     (while (not (eobp)) <br>       (goto-eol) <br>       (delete-trailing-spaces) <br>       (if (bolp) <br> 	  (delete-char 1) <br> 	(forward-line 1))))) <>
+Name_Not_Found<>sage<>02/03/02 22:21 ID:nHKzy8hK<> <a href="../test/read.cgi/hp/1005046309/82" target="_blank">&gt;&gt;82</a>です。 <br>  <br> <a href="../test/read.cgi/hp/1005046309/84" target="_blank">&gt;&gt;84</a> <br> <a href="../test/read.cgi/hp/1005046309/86" target="_blank">&gt;&gt;86</a> <br> 2種類も！嬉しいです。秀丸に似たようなマクロがあったので、 <br> やっぱり秀丸にしようかなと思ってたけど、良かった。 <br> html+-mode.lにコピペ追加でいいんですよね？ <br> これから試してみます。ありがとうございました。 <>
+Name_Not_Found<>sage<>02/03/02 22:41 ID:WrFhi5by<> <a href="../test/read.cgi/hp/1005046309/87" target="_blank">&gt;&gt;87</a> <br> いや、普通はそっちは弄らない <br> .xyzzyにどうぞ <br>  <>
+Name_Not_Found<>sage<>02/03/02 23:29 ID:nHKzy8hK<> <a href="../test/read.cgi/hp/1005046309/88" target="_blank">&gt;&gt;88</a> <br> はうー、そうでしたか…。 <br> とりあえず.xyzzyにコピペして、 <br> ダンプファイルとやらを消して再起動して、 <br> 色々試してみたんですが、 <br> どうやったらゴミ削除機能が発動するのかわかりません。（鬱 <br>  <br> もし良かったら使い方を教えていただけませんか？ <>
+Name_Not_Found<>sage<>02/03/02 23:43 ID:WrFhi5by<> <a href="../test/read.cgi/hp/1005046309/89" target="_blank">&gt;&gt;89</a> <br> ; 時々しか使わない場合 <br> Alt + x（Esc押した後x）としたあと、ミニバッファで関数名入れてReturn <br>  <br> ; いつも使う場合 <br> (define-key *global-keymap* '(#\c-l #\c-i) '関数名） <br>  <br> ; html+-modeでのみいつも使う場合 <br> (add-hook 'ed::*html+-mode-hook* <br>           #'(lambda () <br>               (define-key ed::*html+-mode-map* '(#\c-l #\c-i) '関数名))) <br>  <br> でしょうか。 <br> 関数名とキーバインドは合うように変えて下さい。 <br> キーバインドは上の例だと、C-l C-iとなってます。 <br>  <>
+Name_Not_Found<>sage<>02/03/02 23:59 ID:Ofz8ovbm<> <a href="../test/read.cgi/hp/1005046309/85" target="_blank">&gt;&gt;85</a> <br> 自分にあったエディタを使うのが一番だと思います。 <br> フィーリングにあったエディタの更新おめでと。 <>
+Name_Not_Found<>sage<>02/03/03 00:02 ID:XTZEbuPG<> <a href="../test/read.cgi/hp/1005046309/90" target="_blank">&gt;&gt;90</a> <br> 動きました！ <br> M-x: で「defun」の後ろの所を入力すれば良かったんですね。 <br> 「html+-modeでのみいつも使う場合」の方もうまくキー設定できました。 <br> xyzzyのことも少し勉強できましたよ。 <br> 嬉しいです。本当ありがとうございました！ <>
+Name_Not_Found<>age<>02/03/04 04:52 ID:NQ6vZKiw<> <a href="../test/read.cgi/hp/1005046309/92" target="_blank">&gt;&gt;92</a> <br>  <br> まあ、落ち着け <>
+名無し~3.EXE<>sage<>02/03/04 23:23 ID:iZnYFAbB<> マクロと言うのはどう言ったものなのでしょうか？ <br> 解説ページへのリンクでも良いので、よろしくお願いします。 <>
+Name_Not_Found<>sage<>02/03/05 02:17 ID:YudvBMYg<> &gt;&gt;マクロと言うのは <br> んなもん少しはgoogleとかで調べろ。 <br> 大体意味すらわからん君にはまだ必要ないよ。 <br> 本当に必要なら自分で何とかするべし。 <>
+Name_Not_Found<>sage<>02/03/05 12:07 ID:iMGdEb4b<> <a href="../test/read.cgi/hp/1005046309/94" target="_blank">&gt;&gt;94</a> <br> http://www.google.co.jp/search?hl=ja&lr=lang_ja&q=%83%7D%83N%83%8D%82%C6%82%CD <>
+Name_Not_Found<>sage<>02/03/06 02:01 ID:huH51Czp<> <a href="../test/read.cgi/hp/1005046309/84" target="_blank">&gt;&gt;84</a> <br>  <br> (replace-buffer "^[ \t]*" "" regexp : t) <br>  <br> とかじゃダメ? <br> めちゃめちゃ手抜きだけど <>
+Name_Not_Found<>sage<>02/03/06 02:35 ID:YbXMLp+e<> <a href="../test/read.cgi/hp/1005046309/97" target="_blank">&gt;&gt;97</a> <br> (defun foo () <br>   (interactive) <br>   (replace-buffer "^[ \t]*" "" :regexp t) <br>   (replace-buffer "[ \t]*$" "" :regexp t)) <br>  <br> ↑こんな感じで望む結果が得られたようです。 <br> ありがとうございます。 <br>  <>
+Name_Not_Found<>sage<>02/03/06 02:35 ID:LdRLaJtJ<> <a href="../test/read.cgi/hp/1005046309/97" target="_blank">&gt;&gt;97</a> <br> よいと思うんですが typo のようなので修正。 <br>  <br> ;; C-c d (どうかと思うけどとりあえずなキーバインド。 html+-mode で。) <br> (defun delete-bol-space () <br>   (interactive) <br>   (save-excursion <br>     (goto-char (point-min)) <br>     (replace-buffer "^[ \t]*" "" :regexp t))) <br> (define-key ed::*html+-mode-map* '(#\C-c #\d) 'delete-bol-space) <>
+99<>sage<>02/03/06 02:37 ID:LdRLaJtJ<> <a href="../test/read.cgi/hp/1005046309/98" target="_blank">&gt;&gt;98</a> <br> 行末もだったんですね。失礼。 <>
+Name_Not_Found<>sage<>02/03/06 02:39 ID:YbXMLp+e<> <a href="../test/read.cgi/hp/1005046309/99" target="_blank">&gt;&gt;99</a> <br> いえ、行末はさっき欲しくなりました（笑 <br>  <br> 98のだといちいち文章の先頭に移動しなきゃ駄目だったようです。 <br> <a href="../test/read.cgi/hp/1005046309/99" target="_blank">&gt;&gt;99</a>のだと多分問題無しです。ありがとうございました。 <br>  <br>  <>
+99<>sage<>02/03/06 02:45 ID:LdRLaJtJ<> <a href="../test/read.cgi/hp/1005046309/101" target="_blank">&gt;&gt;101</a> <br> <a href="../test/read.cgi/hp/1005046309/98" target="_blank">&gt;&gt;98</a> のだと行末のスペースの削除ができなかったり、ちょっと冗長だったり <br> する感じなのでこんなで。 <br>  <br> (defun delete-both-sides-spaces () <br>   (interactive) <br>   (save-excursion <br>     (goto-char (point-min)) <br>     (replace-buffer "^[ \t]+" "" :regexp t) <br>     (goto-char (point-min)) <br>     (replace-buffer "[ \t]+$" "" :regexp t))) <br> (define-key ed::*html+-mode-map* '(#\C-c #\d) 'delete-both-sides-spaces) <br>  <>
+Name_Not_Found<>sage<>02/03/06 04:18 ID:YbXMLp+e<> <a href="../test/read.cgi/hp/1005046309/102" target="_blank">&gt;&gt;102</a> <br> 何度もありがとうございます。完璧っぽいです。 <br>  <>
+97<>sage<>02/03/06 11:30 ID:iO8VDf8h<>   <br>  書き直してみた。  <br>  行末置換入り  <br>    <br>  (define-key *html+-mode-map* '(#\C-x #\d)  <br>        #'(lambda ()  <br>          (interactive)  <br>          (save-excursion  <br>            (goto-char (point-min))  <br>            (replace-buffer "^[ \t]*\\(.*[^ \t]\\)[ \t]*$"  "\\1" :regexp  t))))   <>
+99<>sage<>02/03/06 15:57 ID:kiF2ZGUR<> <a href="../test/read.cgi/hp/1005046309/104" target="_blank">&gt;&gt;104</a> <br> [^ \t] は改行文字にもマッチするため、次行がスペースのみの行だったりすると <br> 2 行に渡る置換になって、行末のスペースが削除されない場合があったりなかったり <br> なのでこんなで。 <br>  <br> (define-key *html+-mode-map* '(#\C-x #\d) <br>             #'(lambda () <br>                 (interactive) <br>                 (save-excursion <br>                   (goto-char (point-min)) <br>                   (replace-buffer "^[ \t]*\\(.*?\\)[ \t]*$"  "\\1" :regexp  t)))) <>
+97<>sage<>02/03/06 22:18 ID:huH51Czp<> <a href="../test/read.cgi/hp/1005046309/105" target="_blank">&gt;&gt;105</a> <br>  <br> ぐはっ <br> まともにテストもしないで適当に書いてみたんですが、甘かったようですね <br>  <br> なんだか99さんにはお世話になってるなぁ。 <>
+Name_Not_Found<>sage<>02/03/06 23:32 ID:QlJFtZQS<> <a href="../test/read.cgi/hp/1005046309/22" target="_blank">&gt;&gt;22</a> <br> 一行内に「&lt;!-- ～～ --&gt;」か「&lt;!--」か「--&gt;」しか存在しない場合、 <br> その行はインデントしないようにしたいんですけど、 <br> どんな感じにいじればいいでしょう？ <>
+99<>sage<>02/03/07 00:15 ID:DnzhIvQM<> <a href="../test/read.cgi/hp/1005046309/107" target="_blank">&gt;&gt;107</a> <br> やってやれないことはなかったり、モード毎のインデント関数のつくりにも <br> よったりするんですが、インデントされていない行がある場合、次行のイン <br> デントも崩れることの方が多い気がします。 <br> html+-mode、html+-mode のインデント用関数がどうなっているかはちょっと <br> 見ていないんですが、それでもよいならばきっとこんなで。 <br>  <br> (defun indent-current-buffer () <br>   (interactive "*") <br>   (save-excursion <br>     (goto-char (point-min)) <br>     (loop <br>       (unless (looking-at "[ \t\n]*\\(&lt;!--.*?--&gt;\\|&lt;!--\\|--&gt;\\)[ \t\n]*$") <br>         (goto-eol) <br>         (delete-trailing-spaces) <br>         (unless (bolp) <br>           (funcall mode-specific-indent-command))) <br>       (unless (forward-line 1) <br>         (return))))) <>
+99<>sage<>02/03/07 00:18 ID:DnzhIvQM<> <a href="../test/read.cgi/hp/1005046309/108" target="_blank">&gt;&gt;108</a> <br> &gt;  html+-mode、html+-mode のインデント用関数がどうなっているかはちょっと  <br> html-mode、html+-mode、xml-mode のインデント用関数がどうなっているか、です。 <br> 分けわからない書きこみすみません。 <>
+84<>sage<>02/03/08 04:33 ID:VoKC93AS<> <a href="../test/read.cgi/hp/1005046309/97" target="_blank">&gt;&gt;97</a>氏、<a href="../test/read.cgi/hp/1005046309/99" target="_blank">&gt;&gt;99</a>氏 <br>  <br> ありがとうございます。行頭と行末の分も一緒にできるんですね。 <br> 正規表現が自由自在に使えると、何かと便利そうですね。 <br>  <br>  <>
+Name_Not_Found<><>02/03/11 22:31 ID:vqL/n3TF<> xyzzy 便利age <br>  <>
+Name_Not_Found<>sage<>02/03/11 22:36 ID:dFNWY8I2<> でも所詮は臭いじじい... <>
+Name_Not_Found<>sage<>02/03/12 19:03 ID:ZwBUku6H<> 誰か最強のhtmlモードを作ってくれ。 <>
+Name_Not_Found<>sage<>02/03/12 19:30 ID:R/lR4++y<> html+-modeで漏れ的には最強。 <>
+Name_Not_Found<><>02/03/13 01:34 ID:Ki2Dr9zK<> ｔａｂで区切ったテキストを定義型リストにするのに、 <br> 以下のｐｅｒｌスクリプトを使っています。 <br>  <br> #!perl <br> while (&lt;&gt;) { <br>         s/([^\n])\t/$1\n\t/g; <br>         s/\t(.+)/\t&lt;dd&gt;$1&lt;\/dd&gt;/g; <br>         s/^([^\t\n]+)/&lt;dt&gt;$1&lt;\/dt&gt;/g; <br>         print; <br> } <br>  <br> これを使うと、 <br>  <br> hoge&lt;tab&gt;hage <br> foo <br> &lt;tab&gt;bar <br>  <br> を、 <br>  <br> &lt;dt&gt;hoge&lt;/dt&gt; <br> &lt;dd&gt;hage&lt;/dd&gt; <br> &lt;dt&gt;foo&lt;/dt&gt; <br> &lt;dd&gt;bar&lt;/dd&gt; <br>  <br> に変換できるんですが、これをlispでやるにはどうしたらいいのでしょう？ <br>  <>
+Name_Not_Found<><>02/03/13 03:57 ID:5ndV4k68<> <a href="../test/read.cgi/hp/1005046309/115" target="_blank">&gt;&gt;115</a> <br> (defun foo () <br>   (interactive) <br>   (save-excursion <br>     (goto-char (point-min)) <br>     (replace-buffer "\\([^\n]\\)\t" "\\1\n\t" :regexp t) <br>     (goto-char (point-min)) <br>     (replace-buffer "\t\\([^\n]+\\)" "\t&lt;dd&gt;\\1&lt;/dd&gt;" :regexp t) <br>     (goto-char (point-min)) <br>     (replace-buffer "^\\([^\t\n]+\\)$" "&lt;dt&gt;\\1&lt;/dt&gt;" :regexp t))) <>
+115<><>02/03/13 21:46 ID:UeUz+EJ3<> <a href="../test/read.cgi/hp/1005046309/116" target="_blank">&gt;&gt;116</a> <br> ありがとうございます。 <br> しかし、これだとバッファ全体が置換されてしまうので、 <br> リージョンもしくはセレクションのみ置換するようには <br> ならないでしょうか？ <br> 仕様をはっきり書かなかった私がタコです。 <br>  <>
+99<>sage<>02/03/13 21:58 ID:RkXFZb3H<> <a href="../test/read.cgi/hp/1005046309/117" target="_blank">&gt;&gt;117</a> <br> リージョン内ならば、多分こんなで。 <br>  <br> (defun foo (from to) <br>   (interactive "*r") <br>   (save-excursion <br>     (save-restriction <br>       (narrow-to-region from to) <br>       (goto-char (point-min)) <br>       (replace-buffer "\\([^\n]\\)\t" "\\1\n\t" :regexp t) <br>       (goto-char (point-min)) <br>       (replace-buffer "\t\\([^\n]+\\)" "\t&lt;dd&gt;\\1&lt;/dd&gt;" :regexp t) <br>       (goto-char (point-min)) <br>       (replace-buffer "^\\([^\t\n]+\\)$" "&lt;dt&gt;\\1&lt;/dt&gt;" :regexp t)))) <>
+Name_Not_Found<>moge<>02/03/13 21:59 ID:P3Pgu4Iu<> xyzzyのセンスのないウケ狙い言葉はどうにかならんのかね。 <>
+Name_Not_Found<><>02/03/13 22:09 ID:v/yhn8Ug<> C-x n <br> で narrowing できます <br> 戻すときは <br> C-x w <br>  <>
+Name_Not_Found<>sage<>02/03/13 22:10 ID:RkXFZb3H<> <a href="../test/read.cgi/hp/1005046309/119" target="_blank">&gt;&gt;119</a> <br> 例えばどの言葉のこと？ <>
+Name_Not_Found<>sage<>02/03/13 22:20 ID:2lo/8XkW<> <a href="../test/read.cgi/hp/1005046309/119" target="_blank">&gt;&gt;119</a>じゃないけど <br> いちいちうざい　とかだと思う <>
+Name_Not_Found<>sage<>02/03/13 22:32 ID:RkXFZb3H<> <a href="../test/read.cgi/hp/1005046309/122" target="_blank">&gt;&gt;122</a> <br> ？ <br> 「いちいちうざい」って言葉のことではなくて、「　」には人名が入る？ <>
+Name_Not_Found<>sage<>02/03/13 22:53 ID:2lo/8XkW<> いや、言葉のことだよ。 <br> 他にも「勘弁しちゃる」とか「いちいち聞くな」とかな。寒い。 <>
+Name_Not_Found<>sage<>02/03/13 23:22 ID:Z4E3JA7e<>  <br> そんなに気になるなら好きに変更すればいいと思うんだが <>
+Name_Not_Found<>sage<>02/03/13 23:53 ID:pAI5aGfE<> <a href="../test/read.cgi/hp/1005046309/125" target="_blank">&gt;&gt;125</a> <br> 禿どう。そういうエディタなんだし。 <>
+115<>sage<>02/03/14 02:26 ID:ojkuPj5K<> <a href="../test/read.cgi/hp/1005046309/118" target="_blank">&gt;&gt;118</a> <br> すばらしい！ <br>  <br> <a href="../test/read.cgi/hp/1005046309/120" target="_blank">&gt;&gt;120</a> <br> 勉強になりました。 <br>  <br> お二方、多謝。 <br>  <>
+Name_Not_Found<>sage<>02/03/14 02:36 ID:i8/BzoSP<> <a href="../test/read.cgi/hp/1005046309/125" target="_blank">&gt;&gt;125</a> <br> 今はもう使ってないから <>
+Name_Not_Found<>sage<>02/03/14 02:44 ID:ZS5Xpx6S<> それぞれが、好みにあったエディタを使うのが一番ですからね。 <>
+Name_Not_Found<>sage<>02/03/14 02:45 ID:uwfwN9ft<> 使いこなせない人が悪口を言い出しました。 <>
+Name_Not_Found<>sage<>02/03/14 02:47 ID:i8/BzoSP<> まぁ否定しないよ <br> 俺にはQXの方が合ってる <>
+Name_Not_Found<>sage<>02/03/14 03:02 ID:qNMGYm3M<> まあまあ、おまいら落ちつけ (´∀｀)y-~~ <br> QXもxyzzyも、両方いいソフトさ。 <br>  <>
+Name_Not_Found<>sage<>02/03/14 10:02 ID:q+aye3Em<> <a href="../test/read.cgi/hp/1005046309/130" target="_blank">&gt;&gt;130</a> <br> それとこれは関係ないだろ。（ｗ <>
+Name_Not_Found<>sage<>02/03/15 02:59 ID:bxCzYqIf<> http://www1.odn.ne.jp/ymtz/xyzzy.html   <br>  <br> がhtml+-modeの作者のページです <br>  <>
+Name_Not_Found<><>02/03/23 04:33 ID:d2L14A0m<> おまいら、今日もビシバシタグ打ってますか？ <br>  <>
+Name_Not_Found<>sage<>02/03/23 12:09 ID:xYMk3Zvh<> <a href="../test/read.cgi/hp/1005046309/135" target="_blank">&gt;&gt;135</a> <br> 保守THX <br>  <br> タグをビシバシ打たなくても、c-.でバシバシ補完 <br> するhtml+-modeどうもありが㌧ <>
+Name_Not_Found<><>02/03/23 12:14 ID:NEpXxtV7<> html+で打つとホント綺麗なソースになるよな。 <>
+あぼーん<>あぼーん<>あぼーん<>あぼーん<>あぼーん
+Name_Not_Found<>sage<>02/03/26 21:49 ID:qDx2aU9Y<> 君たちは WZ の XHTMLモードをしらなすぎる! <br> http://www.villagecenter.co.jp/soft/wz40/xhtml/ <br> マクロだけで html+-mode 以上のことができてるよ <>
+Name_Not_Found<><>02/03/26 23:48 ID:c7uRTlF/<> <a href="../test/read.cgi/hp/1005046309/139" target="_blank">&gt;&gt;139</a> <br> マクロだけって,html+-modeだってマクロですが。(w <br> それにWZはバグバグでしょ? <br>  <>
+Name_Not_Found<>sage<>02/03/27 00:17 ID:UdLagZ/W<> <a href="../test/read.cgi/hp/1005046309/140" target="_blank">&gt;&gt;140</a> <br> 俺は去年までWz使ってたけどバグバグって程、酷いとも思わなかったよ。 <br> 139が言ってるXHTMLモードは出たばかりなので使ってないけどね。 <br> # xyzzyに完全に移行したから使う理由もないし <>
+139<>sage<>02/03/27 18:16 ID:iHQ12dK7<> <a href="../test/read.cgi/hp/1005046309/140" target="_blank">&gt;&gt;140</a> <br> それほどバグバグじゃないよ　充分メインで使えるくらい。 <br> #マクロさえ自分で組もうと思わなければ(^-^; <br>  <br> 同じマクロだけなのに、html+-mode より WZの方が便利だ、ということを言ってるのだ <br> まあ、一番便利な <br> http://www.villagecenter.co.jp/soft/wz40/xhtml/xhtml/editwindow.html#tabviewing <br> タブによる表示制御は WZ本体の機能だけど <br> つうかこれがあれば xyzzy に乗り換えられるんだが <br>  <br> あとダイアログでタグのプロパティーやCSSを変更できるところがWZのほうが上かな <br>  <br> #info-CSS も html4-mode もダウンロードできない(;_;) <>
+Name_Not_Found<><>02/03/27 19:21 ID:D3hVqFKW<> &gt;あとダイアログでタグのプロパティーやCSSを変更できるところが <br>  <br> そういう機能がいらないのでxyzzyを使ってるんだけどな。 <br> あとmigemoに慣れてしまったので、もうWZには戻れません。 <br>  <br> つーか「～の方が便利」というのは不毛なのでやめようと思った <>
+139<>sage<>02/03/28 15:56 ID:NmNqzyRu<> <a href="../test/read.cgi/hp/1005046309/143" target="_blank">&gt;&gt;143</a> <br> &gt;つーか「～の方が便利」というのは不毛なのでやめようと思った <br>  <br> より建設的に読み替えてください <br>  <br> 　「～の方が～だから便利」 <br> 　　　　　↓ <br> 　「～の～という機能が便利なので誰か実装してください」 <>
+Name_Not_Found<><>02/03/31 12:15 ID:9TRC2+qj<> <a href="../test/read.cgi/hp/1005046309/22" target="_blank">&gt;&gt;22</a> <br> の一発インデント、便利なんですが, <br> インデントをタブでなく半角スペースでやるにはどうしたらいいのでしょう？ <br>  <>
+Name_Not_Found<><>02/03/31 15:03 ID:dv7Fs/Vi<> html+-mode　バージョンナップage <br> ツリー表示機能評価版だと。 <br> 便利ですぞ。 <br>  <>
+Name_Not_Found<><>02/03/31 19:06 ID:Amgw5Erj<> 自分のページは物凄くシンプルだから、ツリーがいまいち役に立たない（´д｀;） <br> でも、複雑なページのソース見るときとかは役に立ちますね <br>  <>
+Name_Not_Found<>sage<>02/04/01 00:30 ID:K5ZpfnQ7<> アドレスメモ <br>  <br> http://www1.odn.ne.jp/ymtz/html+-mode.html <>
+Name_Not_Found<>sage<>02/04/01 13:40 ID:IlECBMhu<> <a href="../test/read.cgi/hp/1005046309/145" target="_blank">&gt;&gt;145</a> <br> &gt;  <a href="../test/read.cgi/hp/1005046309/22" target="_blank">&gt;&gt;22</a>  <br> &gt;  の一発インデント、便利なんですが,  <br> &gt;  インデントをタブでなく半角スペースでやるにはどうしたらいいのでしょう？  <br> win 板の xyzzy 本スレの 762 とそのレスを見れ． <br>  <br> #つーか，自分もこっちに書こうかあっちに書こうか迷ったのさ <br>  <>
+Name_Not_Found<><>02/04/01 15:36 ID:qLuYNKnf<> <a href="../test/read.cgi/hp/1005046309/149" target="_blank">&gt;&gt;149</a> <br> ありがとう。うまくいったよ。 <br> あっちも見てたんだけど気がつかなかったよ。 <br>  <br> ところで、インデントが深くなるタグとかわらないタグがあるけど <br> これはどこで決めてるのかな？ <br> 具体的に書くと <br>  <br>     &lt;dl&gt; <br>         &lt;dt&gt;hoge&lt;/dt&gt; <br>         &lt;dd&gt;hage&lt;/dd&gt; <br>    &lt;/dl&gt; <br>  <br> こうなりますよね？これを <br>  <br>     &lt;dl&gt; <br>         &lt;dt&gt;hoge&lt;/dt&gt; <br>        　　　　 &lt;dd&gt;hage&lt;/dd&gt; <br>    &lt;/dl&gt; <br>  <br> こうしたいんだけど。 <br>  <>
+150<>sage<>02/04/01 15:38 ID:qLuYNKnf<> ちょっと↑の例は表示がおかしいけどわかって。 <>
+Name_Not_Found<>sage<>02/04/01 18:41 ID:g+PdLDUr<> <a href="../test/read.cgi/hp/1005046309/150" target="_blank">&gt;&gt;150</a> <br> &gt;  ところで、インデントが深くなるタグとかわらないタグがあるけど  <br> &gt;  これはどこで決めてるのかな？  <br>  <br> ネストされてるかされてないかじゃねえの？ <>
+150<>sage<>02/04/04 18:03 ID:+NmhTEoW<> <a href="../test/read.cgi/hp/1005046309/152" target="_blank">&gt;&gt;152</a> <br> よく意味がわからん。 <br> 解説ｷﾎﾞｰﾝ <br>  <>
+Name_Not_Found<>sage<>02/04/06 00:45 ID:E8ZI10t4<> <a href="../test/read.cgi/hp/1005046309/153" target="_blank">&gt;&gt;153</a> <br> 子要素かどうか。 <br>  <>
+Name_Not_Found<><>02/04/06 10:54 ID:GZkkdnRa<> &lt;table&gt;←0 <br> 　&lt;tr&gt;←1 <br> 　　&lt;td&gt;←2 <br> 　　&lt;/td&gt;←2 <br> 　&lt;/tr&gt;←1 <br> &lt;/table&gt;←0 <br>  <br> タグのにあるタグほど深くネストしてるってこと。当たり前だけど。 <br> つまり、その階層が深ければ深いほどインデントも深くなるということ。 <br> 分かりにくくてスマン <>
+150<>sage<>02/04/06 11:30 ID:vha0lJ4e<> そうか、dtとddは、dlの子要素で兄弟だからダメなんだね。 <br> 理屈としては納得いきました。 <br> でも、インデント量が同じだと読みにくいんだよね。 <br> それとインライン要素だとなんでインデントしないんだろう <br> と思っていたんですが、改行してなかったからなんですね。(w <br>  <>
+Name_Not_Found<><>02/04/08 18:42 ID:5+XpGgLh<> rubyって皆さんどうやって書いてます？ <br>  <br> &lt;ruby&gt;&lt;rb&gt;熱烈歓迎&lt;/rb&gt;&lt;rp&gt;(&lt;/rp&gt;&lt;rt&gt;ねつれつかんげい&lt;/rt&gt;&lt;rp&gt;)&lt;/rp&gt;&lt;/ruby&gt; <br>  <br> こんなやつなんですが。 <br> 楽に書く方法はないでしょうか？ <br> rewind-ime-composition とか使うんかな。 <br> 動作がよくわからんのですが。 <br>  <>
+Name_Not_Found<>sage<>02/04/09 14:30 ID:8lcHPAso<> ruby&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;C/C++ <>
+Name_Not_Found<><>02/04/09 18:26 ID:bs/jxI2k<> <a href="../test/read.cgi/hp/1005046309/157" target="_blank">&gt;&gt;157</a> <br> ruby-mode (違 <br>  <>
+age<>age<>02/04/21 11:47 ID:0wFTHLSU<> age <>
+Name_Not_Found<><>02/04/23 08:27 ID:0kVfO8Ir<> ListView.dll使ってる？ <br>  <>
+Name_Not_Found<><>02/04/23 10:13 ID:w3xAB8B/<> 使ってまーす。使いこなせてないけど。age <>
+Name_Not_Found<>sage<>02/04/25 16:41 ID:PpkngzQL<> php-modeでhtml+-modeのようなタグの補完、インデントを有効にするには <br> どうすればいいのでしょうか。 <br> すでにそういうmodeがあるのでしょうか。 <>
+Name_Not_Found<><>02/04/25 17:57 ID:Kc8+zJi+<> <a href="../test/read.cgi/hp/1005046309/163" target="_blank">&gt;&gt;163</a> <br> php用のキーワードを補完したいの？ <br> それとも、htmlのタグや何かを補完したいの？ <br>  <>
+163<>sage<>02/04/25 19:42 ID:PpkngzQL<> php中のhtmlでインデントやタグの補完をしてほしいんです。 <br> 途中でモード切り替えればいいの？ <br>  <br> あとhtml+-modeとかphp-modeでタブがちゃんと打てないんだけどこれは意味あるの？ <>
+Name_Not_Found<>sage<>02/04/25 19:48 ID:ywfZboCy<> <a href="../test/read.cgi/hp/1005046309/165" target="_blank">&gt;&gt;165</a> <br> M-x html+-mode <br> で切り替えれば。 <br> タブが打てないのは、 <br> [tab]キーに補完が割り当ててあるからでわ？ <br> 勝手にインデントするから <br> タブなんて打たなくともよし。 <br>  <>
+163<>sage<>02/04/25 20:07 ID:PpkngzQL<> <a href="../test/read.cgi/hp/1005046309/166" target="_blank">&gt;&gt;166</a> <br> タブ打たない事にするわ！ <br> でもhtml+-modeのtabの補完ってただウインドウが開いてリストが表示されるだけで <br> そこから選べる？ <br> 余計なウインドウが開くだけのような気がする。 <br>  <br> あとphp-mode中のインデントが半角スペース2個になってるんだけど、これを <br> タブ一個(幅4)に変えるにはどうしたらいいの？ <>
+Name_Not_Found<>sage<>02/04/25 20:43 ID:KIWDfLOX<> <a href="../test/read.cgi/hp/1005046309/167" target="_blank">&gt;&gt;167</a> <br> &gt;  でもhtml+-modeのtabの補完ってただウインドウが開いてリストが表示されるだけで  <br> &gt;  そこから選べる？  <br> html+-mode の補完は一意に補完できるタグが決まらないと <br> ちゃんと補完してくれない． <br> たとえば，&lt;h と打って tab を押すと，リストが表示されて， <br> そこからさらに t を打って tab を押すと，&lt;html&gt; を確定してくれる． <br>  <>
+Name_Not_Found<>sage<>02/04/25 20:51 ID:KIWDfLOX<> <a href="../test/read.cgi/hp/1005046309/167" target="_blank">&gt;&gt;167</a> <br> php-mode は使っとらんから確かじゃないけど， <br> ソース見た限りでは，.xyzzy に <br> (setq *php-indent-tabs-mode* t) <br> でいいと思うが． <br>  <>
+163<>sage<>02/04/25 21:45 ID:PpkngzQL<> <a href="../test/read.cgi/hp/1005046309/168" target="_blank">&gt;&gt;168</a> <br> なるほどー。 <br> 決定した後ってリストのウインドウ消せます？ <br>  <br> <a href="../test/read.cgi/hp/1005046309/169" target="_blank">&gt;&gt;169</a> <br> やってみたよ。 <br> ちょっと変な動きした。 <br> if(){ <br> (半2)$test="aaa"; <br> (tab)(半2)printf($test); <br> (tab)(tab)$test=""; <br> (tab)(tab)} <br> こんな感じに末広がりにインデントが・・・ <br>  <>
+163<>sage<>02/04/25 22:27 ID:PpkngzQL<> 上の(半2)ってのは半角スペース2つ <br> (tab)はタブ(4文字分)って事です。 <br> ほんとに知りたいんでお願いします！ <>
+Name_Not_Found<>sage<>02/04/25 22:55 ID:9QboaI7z<> <a href="../test/read.cgi/hp/1005046309/163" target="_blank">&gt;&gt;163</a> <br> &gt;でもhtml+-modeのtabの補完ってただウインドウが開いてリストが表示されるだけで <br> &gt;そこから選べる？ <br>  <br> こんな感じで。 <br> (setq *popup-completion-list-default* :always) <br> (setq *minibuffer-popup-completion-list* :never) <br>  <>
+Name_Not_Found<>sage<>02/04/26 00:25 ID:RcmoADXD<> <a href="../test/read.cgi/hp/1005046309/170" target="_blank">&gt;&gt;170</a> <br> うちでは， <br> (setq *php-indent-tabs-mode* t)  <br> (setq c-indent-level 4) <br> を書いたら上のやつはうまくいったぽい． <br>  <>
+163<>sage<>02/04/26 01:19 ID:tTzynJTZ<> <a href="../test/read.cgi/hp/1005046309/172" target="_blank">&gt;&gt;172</a> <br> すげーな！これ！ <br> 見た目も機能も最高じゃん！ <br> ありがとうね！！！ <br>  <br> <a href="../test/read.cgi/hp/1005046309/173" target="_blank">&gt;&gt;173</a> <br> できたよ！ <br> 綺麗にインデントしてくれたよ。 <br> とっても嬉しいありがとう！ <>
+Name_Not_Found<>sage<>02/04/26 11:16 ID:ZVrcq06C<> html+-modeで行頭とかでTABすると&が表示されるのはなぜ？ <>
+Name_Not_Found<>sage<>02/04/26 11:22 ID:rOP2OjSW<> <a href="../test/read.cgi/hp/1005046309/172" target="_blank">&gt;&gt;172</a> <br> 教えて君でごめんなさい。それはどこに挟み込めばいいのですか？ <>
+Name_Not_Found<>sage<>02/04/26 11:33 ID:I6md9zj8<> <a href="../test/read.cgi/hp/1005046309/176" target="_blank">&gt;&gt;176</a> <br> .xyzzyで良いはずですけど <br>  <>
+Name_Not_Found<>sage<>02/04/26 11:37 ID:rOP2OjSW<> <a href="../test/read.cgi/hp/1005046309/177" target="_blank">&gt;&gt;177</a> <br> 出来ました！すごい！ありがとうございます。 <>
+Name_Not_Found<>sage<>02/04/26 13:47 ID:F8MHj4Xl<> <a href="../test/read.cgi/hp/1005046309/175" target="_blank">&gt;&gt;175</a> <br> &gt;  html+-modeで行頭とかでTABすると&が表示されるのはなぜ？ <br> &amp, &gt, &lt, &quot を補完しようとするため． <>
+179<>sage<>02/04/26 13:49 ID:F8MHj4Xl<> &gt;  <a href="../test/read.cgi/hp/1005046309/175" target="_blank">&gt;&gt;175</a>  <br> &gt;  &gt;  html+-modeで行頭とかでTABすると&が表示されるのはなぜ？  <br> &gt;  &, &gt, &lt, &quot を補完しようとするため． <br> ＆amp, ＆gt, ＆lt, ＆quot <>
+175<>sage<>02/04/26 16:27 ID:ZVrcq06C<> <a href="../test/read.cgi/hp/1005046309/179" target="_blank">&gt;&gt;179</a> <br> なるほど。 <br> そういうことなんですか。 <br> 理由を理解してないけど・・・。 <br>  <br> ファイルを関連付けて開いたり、右クリックから「送る」ってやると新しくxyzzyを <br> 起動して開きますよね？ <br> これを同じxyzzy内でバッファに溜め込んでいくのは無理なんですか？ <>
+Name_Not_Found<>sage<>02/04/26 17:46 ID:t6WUdpLj<> <a href="../test/read.cgi/hp/1005046309/181" target="_blank">&gt;&gt;181</a> <br> 関連付けや送るでxyzzycli.exeに渡せば良し。 <>
+175<>sage<>02/04/26 18:06 ID:ZVrcq06C<> <a href="../test/read.cgi/hp/1005046309/182" target="_blank">&gt;&gt;182</a> <br> ありがとうございます。 <br> このxyzzycli.exeってこの為のものだったんですね。 <br> 助かりました。 <>
+Name_Not_Found<>sage<>02/04/30 12:01 ID:zSXeFpZZ<> 検索はCtrl+Sだけど置換のキーって何なの？ <>
+Name_Not_Found<>sage<>02/04/30 12:06 ID:tWMud//f<> <a href="../test/read.cgi/hp/1005046309/184" target="_blank">&gt;&gt;184</a> <br> 置換っていっても色々有りますよ <br> replace-string（普通の置換） <br> replace-regexp（正規表現置換） <br> replace-dialog（ダイアログから置換。メニューのと同じ） <br> query-replace（確認有り置換） <br> query-regexp（確認あり正規表現置換） <br> とか。 <br>  <br> あとは <br> gresreg <br> gresreg-dialog <br> query-gresreg <br> query-gresreg-regexp <br> などもあります。 <br>  <>
+Name_Not_Found<>sage<>02/04/30 12:08 ID:tWMud//f<> <a href="../test/read.cgi/hp/1005046309/184" target="_blank">&gt;&gt;184</a> <br> で、 <br>  <br> describe-key（キーに何が割り当てられているか調べる） <br> describe-bindings（キー割り当て一覧。各モードごとに変わる） <br>  <br> などで調べて下さい。 <br>  <>
+Name_Not_Found<>sage<>02/04/30 12:09 ID:tWMud//f<> <a href="../test/read.cgi/hp/1005046309/184" target="_blank">&gt;&gt;184</a> <br> キー割り当て一覧はメニューのヘルプの下からも調べられますね。 <br>  <>
+Name_Not_Found<>sage<>02/04/30 12:11 ID:tWMud//f<> 何度も連続で済みません。 <br>  <br> <a href="../test/read.cgi/hp/1005046309/184" target="_blank">&gt;&gt;184</a> <br> lispディレクトリに入ってるapp-menu.lを見ると、メニューから使える機能が <br> 実際にはなんの関数を使ってるのかが分かって便利です。 <br>  <br>  <>
+Name_Not_Found<>sage<>02/04/30 12:15 ID:tWMud//f<> ゴメンなさい。これで最後。 <br>  <br> <a href="../test/read.cgi/hp/1005046309/184" target="_blank">&gt;&gt;184</a> <br> 一番肝心なのを忘れてました。標準では <br>  <br> ESC C-r             query-replace <br> ESC r               replace-string <br>  <br> ですね。 <br>  <>
+Name_Not_Found<>sage<>02/04/30 12:19 ID:zSXeFpZZ<> <a href="../test/read.cgi/hp/1005046309/185" target="_blank">&gt;&gt;185</a> <br> 丁寧にありがとうございます。 <br> 全て解決しました。 <br> 勉強になりました。 <>
+Name_Not_Found<>sage<>02/05/01 03:36 ID:u2G7QovS<> html+-modeで、インデントせずに改行するのはどうすれば良いんでしょう？ <br> 空行あけたい時に困ってます……。 <>
+Name_Not_Found<>sage<>02/05/01 08:17 ID:OiaXXdBA<> <a href="../test/read.cgi/hp/1005046309/191" target="_blank">&gt;&gt;191</a> <br> も少し具体的にお願いします(^^;;; <br> HTMLなんで別にスペースが入ってても問題ないように思いますが <>
+Name_Not_Found<>sage<>02/05/01 22:48 ID:KTJGSEAk<> &gt;192 <br> html+-modeで普通に改行した場合、インデントがつきますよね（最上層だったらつきませんけど）。 <br> で、インデントを入れないで改行をしたいんですよ。今でも改行→インデント削除ってやっていけばできますけど、それじゃちょっと面倒くさいんで。 <br> 確かにHTMLなので半角スペースやタブが入っても関係ないんですが、空行にスペースやタブが入っているのは美意識が許さないので……。 <>
+Name_Not_Found<>sage<>02/05/01 22:56 ID:CgAGnFKb<> 僕はこんなのしてます <br>  <br> (defun html+-mode-save-file () <br>   (interactive) <br>   (indent-region <br>    (point-min) <br>    (point-max)) <br>   (untabify <br>    (point-min) <br>    (point-max)) <br>   (save-buffer)) <br>  <br>  <>
+Name_Not_Found<>sage<>02/05/01 23:11 ID:Jo1YMAXs<> <a href="../test/read.cgi/hp/1005046309/193" target="_blank">&gt;&gt;193</a> <br> C-q C-j とかも面倒？ <>
+Name_Not_Found<>sage<>02/05/01 23:17 ID:KTJGSEAk<> &gt;195 <br> は、こんなコマンドがあったなんて。 <br> これで十分です。ありがとうございました。 <>
+Name_Not_Found<>sage<>02/05/02 05:32 ID:+DifFERZ<> <a href="../test/read.cgi/hp/1005046309/196" target="_blank">&gt;&gt;196</a> <br> C-o とかもいいかも。 <>
+あげ<><>02/05/10 04:35 ID:OwWXRwWs<> あげ <br>  <>
+Name_Not_Found<><>02/05/15 21:00 ID:6dwd38r0<> age <br>  <>
+名無しさん＠Ｘｙｚｚｙ<><>02/05/16 15:15 ID:jjXwDVFh<> html+-modeで最初からhtmlを書く時にテンプレートを <br> 使いたいんだけど、そういう設定ってできるの? <br>  <>
+Name_Not_Found<>sage<>02/05/16 17:17 ID:nWVAt+bn<> <a href="../test/read.cgi/hp/1005046309/200" target="_blank">&gt;&gt;200</a> <br> 漏れは、C-x i で、用意しといたテンプレファイル呼び込んでるが。 <br> テンプレファイル決め打ちだと一見便利そうだが､ <br> それはそれで困る事が多いような気がする。 <br>  <>
+名無しさん<><>02/05/20 22:46 ID:2Unjw0HS<> <a href="../test/read.cgi/hp/1005046309/200" target="_blank">&gt;&gt;200</a> <br>  <br> こんなことしてます。 <br>  <br> (defun foo () <br>   (interactive) <br>   (message " 1：html-1  2：html-2  3：css") <br>   (new-file) <br>   (case (read-char) <br>     ((#\1) <br>      (insert-file (concat (si:system-root) "etc/template-html-1.html")) <br>      (html+-mode)) <br>     ((#\2) <br>      (insert-file (concat (si:system-root) "etc/template-2.html")) <br>      (html+-mode)) <br>     ((#\3) <br>      (insert-file (concat (si:system-root) "etc/template-1.css")) <br>      (css-mode))) <br>   (clear-message)) <>
+Name_Not_Found<>sage<>02/05/23 04:52 ID:ehDUWX/l<> &lt;h*&gt;の背景色を変えるのをどうやったら良いのかさっぱりです。 <br> 教えて頂けないでしょうか。 <>
+Name_Not_Found<>sage<>02/05/23 10:54 ID:wwgh6oxA<> <a href="../test/read.cgi/hp/1005046309/203" target="_blank">&gt;&gt;203</a> <br> &gt;  &lt;h*&gt;の背景色を変えるのをどうやったら良いのかさっぱりです。  <br> /etc/HTML を適当なディレクトリにコピー．(自分は ~/xyzzy/keyword/ に) <br> .xyzzy にこんな感じでパスを指定． <br> (setq *keyword-load-path* '("~/xyzzy/keyword/")) <br> HTML ファイルの &lt;h*&gt; の ;*6, ;*0 を変える． <br> 色の指定法なんかは Toy さんとこを参照． <br>  ttp://www.carabiner-systems.com/xyzzy/data.html <br> キーワード色や文字色は，xyzzy の「ツール」-「共通設定」-「フォント」の <br> [文字色]で確認． <br> デフォルトみたいに一行まるごと背景色を変えたい場合は， <br> ;*6 ～ ;*8 のキーワード色を使うか，;**nml (n, m = 1 ～ f, 16 進表記) <br> の m を適当に変える．l は属性 (attrib) の l. <br>  <br>  <>
+Name_Not_Found<>sage<>02/05/23 22:51 ID:DGCPYp5/<> &gt;204 <br> ご親切にありがとうございます。でもなぜかコピーしたものをいじっても効果がありません……（;´Д`） <br> 元のファイル（etc/HTML）をいじれば出来るんですが……。 <br>  <>
+Name_Not_Found<>sage<>02/05/23 23:36 ID:TBv/sw1X<> <a href="../test/read.cgi/hp/1005046309/205" target="_blank">&gt;&gt;205</a> <br> &gt;  &gt;204  <br> &gt;  元のファイル（etc/HTML）をいじれば出来るんですが……。  <br> 元のファイルをいじると、バージョンアップ時に氏ぬるんで避けたほうが <br> いいと思うんだがねぇ． <br> *keyword-load-path* をC:\ からの絶対パスで記述しても駄目? <br>  <>
+Name_Not_Found<>sage<>02/05/23 23:47 ID:DGCPYp5/<> &gt;206 <br> ああ、絶対パスで書いたら出来ました！ <br> ご教示ありがとうございます。 <>
+Name_Not_Found<>sage<>02/05/23 23:56 ID:TBv/sw1X<> <a href="../test/read.cgi/hp/1005046309/207" target="_blank">&gt;&gt;207</a> <br> &gt;  &gt;206  <br> &gt;  ああ、絶対パスで書いたら出来ました！  <br> 環境変数 XYZZYHOME がちゃんと設定されてないんじゃ? <br> C-x C-f で Find file: に ~を入力して TAB 押したら <br> 何が出てくる? <br>  <>
+Name_Not_Found<>sage<>02/05/24 17:15 ID:YOj3oCDW<> &gt;208 <br> タブ押しても何も出ませんけど、enter押したらxyzzyのフォルダが開きました。 <>
+209<>sage<>02/05/24 17:22 ID:YOj3oCDW<> あ、上手くいかなかった原因が分かりました！ <br> XYZZYHOMEがxyzzyをインストールしたフォルダなのに <br>  <br> ＞(setq *keyword-load-path* '("~/xyzzy/keyword/")) <br>  <br> のまんまやってたので、xyzzyフォルダ内のxyzzy/keyword/を指定していた訳です。 <br> 言われた通りやるだけで無く自分で考えないと駄目だなあ（鬱） <>
+Name_Not_Found<>sage<>02/05/25 07:02 ID:AckFUlcH<> テンプレートは abbrev を使ってみるとどうか。 <>
+Name_Not_Found<><>02/05/30 17:55 ID:jeXNTxR4<> <a href="../test/read.cgi/hp/1005046309/211" target="_blank">&gt;&gt;211</a> <br> どうやってやるの？ <br> 詳しく教えて! <br>  <>
+Name_Not_Found<>sage<>02/05/30 22:23 ID:UnMs2c6Z<> <a href="../test/read.cgi/hp/1005046309/212" target="_blank">&gt;&gt;212</a> <br> &gt;  <a href="../test/read.cgi/hp/1005046309/211" target="_blank">&gt;&gt;211</a>  <br> &gt;  どうやってやるの？  <br> 赤塚さんとこや「しょぼしょぼすくりぷと」んとこを参照すれ． <br> ttp://www.jsdlab.co.jp/~kei/xyzzy/xyzzy_abbrev.html <br> ttp://www.afis.to/~start/xyzzy/programing/abbreviate.html <br> 自分は今，明日の研修の資料まとめるのにいそがしんで説明できんさ． <br>  <br>  <>
+Name_Not_Found<><>02/06/02 18:54 ID:93MBFFzh<> あげ <>
+Name_Not_Found<><>02/06/02 20:09 ID:Gf2rfAE0<> お恥ずかしい質問ですが、 <br> .xyzzyに追加するという意味がさっぱりわかりません <br> xyzzy.iniってファイルに追加書き加えて保存すればいいってことですか？ <>
+Name_Not_Found<> <>02/06/02 20:16 ID:rog0bewv<> <a href="../test/read.cgi/hp/1005046309/215" target="_blank">&gt;&gt;215</a> <br> 違います。.xyzzyという初期設定ファイルを所定の場所に置いておくと、xyzzyが起動時にそれを読み込みます。 <br> 「所定の場所」は環境変数xyzzyhomeで指定します。 <br>  <br> 例えば <br> set xyzzyhome="c:\Program Files\xyzzy" <br> とか <br>  <>
+Name_Not_Found<><>02/06/02 20:16 ID:93MBFFzh<> <a href="../test/read.cgi/hp/1005046309/215" target="_blank">&gt;&gt;215</a> <br> ええｔ、「.xyzzy」というファイルをホームディレクトリに作ってください。んで、その内容に追加すると。 <br>  <br> ホームディレクトリについては、 <br> http://www.carabiner-systems.com/xyzzy/FAQ.html <br> が参考になります。 <>
+Name_Not_Found<> <>02/06/02 20:17 ID:rog0bewv<> <a href="../test/read.cgi/hp/1005046309/215" target="_blank">&gt;&gt;215</a> <br> http://www.carabiner-systems.com/xyzzy/ <br>  <br> ↑ここに初心者向けの説明がありますので、とりあえずそこを読んでください。 <br>  <>
+Name_Not_Found<>sage<>02/06/02 20:18 ID:rog0bewv<> あらまあ・・・ <br>  <>
+Name_Not_Found<>sage<>02/06/02 23:39 ID:Gf2rfAE0<> ありがとうございます。 <br> 使いこなせるよう精進いたします! <>
+Name_Not_Found<><>02/06/12 00:47 ID:F1rU43Ib<> あげ <br>  <>
+Name_Not_Found<><>02/06/12 01:34 ID:/cRcCX23<> すなおにメモ帳でいいじゃん。  <br>  へんなもの食べておなか痛くなってもしらないよー。 <>
+Name_Not_Found<>sage<>02/06/12 01:49 ID:sjn76np5<> メモ帳厨房さん、いらっしゃい <br> このスレ誰もいないので盛り上げてください。 <br>  <>
+Name_Not_Found<><>02/06/12 09:55 ID:PbekewZb<> <a href="../test/read.cgi/hp/1005046309/222" target="_blank">&gt;&gt;222</a> <br> マジで？ <br> gates.l入れるくらいでメモ帳と同じ使い勝手で100倍便利． <br> メモ帳なんて使う奴の気が知れん． <br> そういう漏れは屁たれなので、winkey.l <br>  <>
+Name_Not_Found<>sage<>02/06/12 10:46 ID:CCSo/8Tp<> メモ帳でhtml書いてるやつって、メモ帳使ってるのが自慢になるとでも思っているのかね？ <>
+Name_Not_Found<>sage<>02/06/12 14:28 ID:mACm0MnZ<> ネタにしてもしつこすぎるしな。 <>
+Name_Not_Found<><>02/06/16 19:00 ID:qa29DFbm<> xyzzyでCSS補完モードってありますか？ <>
+Name_Not_Found<>sage<>02/06/16 19:32 ID:9QXDHTOO<> 補完は無いんじゃないかな <br> dabbrevとか使うとまあいいかも <br>  <>
+Name_Not_Found<>sage<>02/06/16 22:15 ID:qa29DFbm<> <a href="../test/read.cgi/hp/1005046309/228" target="_blank">&gt;&gt;228</a>  <br>  そうですか、ないですか。ありがとうございました。 <>
+Name_Not_Found<><>02/06/17 20:16 ID:EcHq/4Sk<> <a href="../test/read.cgi/hp/1005046309/229" target="_blank">&gt;&gt;229</a> <br> cssモードで補完できるよ． <br> css-completion というのが装備されている． <br>  <>
+Name_Not_Found<><>02/06/17 20:20 ID:Ybp6Isfl<> 君たち、負け組み同志で争うのはやめたまえ。 <br> 時代は既にホームページ制作王が統治していることを忘れるな。 <>
+Name_Not_Found<>sage<>02/06/17 21:05 ID:v9JwF7p5<> メモ帳ネタ＞＞制作王ネタ <>
+228<><>02/06/17 22:20 ID:HkMe2AIh<> みなさん、いい加減なこと言っちゃってごめんなさい。 <br> <a href="../test/read.cgi/hp/1005046309/230" target="_blank">&gt;&gt;230</a>氏、サンクスです。 <br>  <br> (define-key ed::*css-mode-map* #\c-i 'ed::css-completion) <br>  <br> をcss-mode-hookに引っかけて(ﾟдﾟ)ｳﾏｰ <br>  <>
+Name_Not_Found<>sage<>02/06/17 22:23 ID:OJJ7w85W<> <a href="../test/read.cgi/hp/1005046309/230" target="_blank">&gt;&gt;230</a>  <br>  できました。超感謝です。  <br>  ESC TAB <>
+Name_Not_Found<>sage<>02/06/17 22:59 ID:OJJ7w85W<> <a href="../test/read.cgi/hp/1005046309/233" target="_blank">&gt;&gt;233</a>  <br>  キーバインド変更してみたんですが、  <br>  「変数が定義されてません」てダイアログが出ちゃいました。  <br>  で、lisp\css-mode.lを開いて  <br>    (define-key *css-mode-map* #\TAB 'css-completion)  <br>  に書き換えて、バイトコンパイルしちゃいました。  <br>   <>
+228<><>02/06/17 23:11 ID:IXrYrrdV<> <a href="../test/read.cgi/hp/1005046309/235" target="_blank">&gt;&gt;235</a> <br> (add-hook 'ed::*css-mode-hook* <br>           #'(lambda () <br>               (define-key ed::*css-mode-map* #\c-i 'ed::css-completion))) <br>  <br> で上手く逝きませんか？ <br>  <>
+228<>sage<>02/06/17 23:16 ID:IXrYrrdV<> よく考えたら、css-mode-hookにcss-mode-mapへのdefine-keyを割り当てるなんて無意味？ <br>  <>
+228<>sage<>02/06/17 23:17 ID:IXrYrrdV<> 「割り当てる」じゃなくて「ひっかけるでした」 <br>  <>
+235<><>02/06/17 23:21 ID:OJJ7w85W<> <a href="../test/read.cgi/hp/1005046309/236" target="_blank">&gt;&gt;236</a>  <br>  できました！！  <br>  なんか全部教えてもらっちゃってありがとうございました。  <br>  これでCSSも(ﾟдﾟ)ｳﾏｰです。xyzzyｻｲｺｰ  <br>    <br>   <>
+Name_Not_Found<><>02/06/19 19:34 ID:UsuKr9Cm<> Emacsのwin版使ったらいいというわけではないのね？ <>
+Name_Not_Found<>sage<>02/06/19 20:05 ID:pFY3096j<> ダイアログがあったりするからね。 <>
+Name_Not_Found<><>02/06/25 23:13 ID:8tIYLGtY<> html+-modeがﾀﾞｳｿできない・・・ <>
+Name_Not_Found<>sage<>02/06/26 00:25 ID:TRORcfCA<> <a href="../test/read.cgi/hp/1005046309/242" target="_blank">&gt;&gt;242</a> <br> 落とせますが、なにか？ <br>  <>
+242<>sage<>02/06/26 21:29 ID:10dNN/Af<> <a href="../test/read.cgi/hp/1005046309/243" target="_blank">&gt;&gt;243</a> <br> 落とせました、ｽﾏｿ。 <>
+Name_Not_Found<><>02/07/04 17:18 ID:3PdYku3z<> 保守age <br>  <>
+Name_Not_Found<><>02/07/13 12:04 ID:AxPEvE+k<> yahtmlとhtml+-modeだとどっちが便利？ <>
+Name_Not_Found<>sage<>02/07/13 12:17 ID:???<> html+-modeに慣れちゃった俺にはyahtmlは使えない <br>  <>
+Name_Not_Found<><>02/07/14 02:34 ID:SPkL0Jq3<> なるほど。 <br> じゃｽﾚ違いになるけど、meadowでhtml+-modeみたいなのは <br> 無いの？ <>
+Name_Not_Found<>sage<>02/07/17 23:43 ID:???<> むちゃくちゃさがってきたので保全しますよ <>
+Name_Not_Found<><>02/07/20 16:55 ID:IQP2fyEF<> リージョンの前後にタグを入れてくれるようなマクロはありませんか? <br>  <>
+Name_Not_Found<>sage<>02/07/20 18:03 ID:???<> <a href="../test/read.cgi/hp/1005046309/250" target="_blank">&gt;&gt;250</a>  <br>  どのような操作がいいですか？ <>
+Name_Not_Found<><>02/07/21 18:40 ID:Nw01u+B8<> html+-mode 見たいな感じでいいんだけど、前タグが確定した時点で <br> 自動的に閉じタグも入るみたいな感じでどうでしょう。 <br> もちろん補完は可ちうことで。 <br> リージョンを指定しないといけないので､ <br> 結局html+-modeで、行末まで行って閉じタグを挿入するのと大して <br> 手間はかわらんかなぁ。 <br> あるいは、起動キーを決めておいて､起動キーの後だと、リージョンと無関係に <br> 自動的にその行に対してマークアップするというのはどうかな。 <br>  <>
+Name_Not_Found<>sage<>02/07/21 20:42 ID:???<> もちろん補完は可ちう <>
+Name_Not_Found<><>02/07/22 10:27 ID:UNXFzh0z<> よく使うフィルター的なスクリプト、例えばタグを削除する､ <br>  <br> #!perl <br> while (&lt;&gt;) { <br>         s/&lt;[^&lt;]+&gt;//g; <br>         print; <br> } <br>  <br> みたいのが、いくつかあるんですが、いちいちfiter-regionで、入力するのがめんどいのです。 <br> メニューをポップアップさせて選択するみたいな形で適用させたいと思います。 <br> どうしたらいいですか。教えろゴラァ。 <br> ということで、よろしくおながいします。 <br>  <>
+Name_Not_Found<>sage<>02/07/22 16:41 ID:???<> ange-ftpって使えないの？ <br> FTP転送とかどうしてます？わざわざ別ソフトで転送めんどい。 <>
+Name_Not_Found<>age<>02/07/22 20:21 ID:???<> <a href="../test/read.cgi/hp/1005046309/255" target="_blank">&gt;&gt;255</a> <br> updateだけならftpupdate、そうでないならcftp。 <br> ange-ftpと比べてどうかは知らない（分からない）。 <br>  <br> 個人的には、ftpでディレクトリを漁るときはflashgetのサイトエクスプローラを使ってるから、 <br> その他の用途という意味では上の二つで満足してる。 <br>  <>
+Name_Not_Found<>とりあえずage<>02/08/01 09:35 ID:???<> スクロールバーを両側に設置することって可能ですか？  <br>  左側に設置するタグはあるそうですが．．．  <br>   <>
+Name_Not_Found<>sage<>02/08/01 09:36 ID:???<> すみませんどうやらスレ違いのようで <br> 鬱だ氏のう <>
+Name_Not_Found<>sage<>02/08/03 12:04 ID:???<> このｽﾚは役割を終えました。 <>
+Name_Not_Found<><>02/08/07 10:46 ID:hjc9mzLT<> そういわずにもうすこしがんばりませうage. <br>  <>
+Name_Not_Found<>age<>02/08/12 13:57 ID:???<> ♪ 明日などぉ～ ないとぉ～ 酒をあおればぁ～ <br> ♪ なお褪めてぇ～ 今日もぉ～ まだ生きていたぁ～ <br> ♪ 人生はぁ～ そんなものぉ～ <br>  <br>  <>
+Name_Not_Found<>sage<>02/08/18 00:50 ID:???<> 最近meadowばかり使ってるの、ごめんよ・・・ <>
+Name_Not_Found<><>02/08/18 20:48 ID:4jJ7eIim<> いいよね。 <>
+sage<><>02/08/18 22:35 ID:K9/ccm1e<> ♪時は流れてぇ～ ってよく知ってるな、こんな古い唄。 <>
+Name_Not_Found<>sage<>02/08/18 23:09 ID:???<> 何か質問してよ。 <>
+Name_Not_Found<><>02/08/18 23:20 ID:4jJ7eIim<> TABLEを簡単に作るコツなんぞを・・・ <>
+Name_Not_Found<><>02/08/19 06:06 ID:65XKyzJL<> ♪ そしてぇ～　あたしはぁ～　変わってしまったぁ～　 <br>  <br>  <>
+Name_Not_Found<>sage<>02/08/19 12:34 ID:???<> xyzzyでyahtmlは使えないのかyo! <>
+Name_Not_Found<>sage<>02/08/21 00:39 ID:???<> windows板で聞いても反応が無かったのでこちらで聞いてみます。 <br>  <br> www-modeで、新しいファイルを開くたびにいちいちソース開くのを止めるにはどうすれば良いのでしょうか。 <br> それから、同一バッファでブラウジングすることはできないのでしょうか。 <br>  <br> 誰か、回答お願いいたします。 <>
+Name_Not_Found<>sage<>02/08/21 22:38 ID:???<> 誰か答えてあげなよ。 <>
+Name_Not_Found<>sage<>02/08/21 22:55 ID:???<> 激しくスレ違いだと思うんですけど。まぁいいか。 <br>  <br> いちいちソース開くのなんか見たことないし、同一バッファでブラウジングしてたような気がするけどな。 <br> もう一度インストールしなおしてみてはどうでしょう？ <>
+Name_Not_Found<><>02/08/23 00:17 ID:GBlqoCug<> スレ違いなのは、禿同ですが。 <br> うまくいかないようならＭＬで聞いてみるという手もあります。 <br> まず反応があると思いますが。 <br>  <>
+Name_Not_Found<><>02/08/23 00:22 ID:GBlqoCug<> <a href="../test/read.cgi/hp/1005046309/266" target="_blank">&gt;&gt;266</a> <br> タブ区切りか、カンマ区切りで行を書いておいて、 <br> それを正規表現を使った置換でマークアップすれ。 <br> 漏れはxyzzyでなくperlで、 <br>  <br> #!perl <br> while (&lt;&gt;) { <br>         s/([^\n])\t/$1\n\t/g; <br>         s/\t(.+)/\t&lt;dd&gt;$1&lt;\/dd&gt;/g; <br>         s/^([^\t\n]+)/&lt;dt&gt;$1&lt;\/dt&gt;/g; <br>         print; <br> } <br>  <br> とかしてる。 <br>  <>
+Name_Not_Found<><>02/08/23 00:28 ID:JUCB9uH+<> <a href="../test/read.cgi/hp/1005046309/273" target="_blank">&gt;&gt;273</a> <br> なんで急にまたそんなめんどくさいことを・・・ <>
+Name_Not_Found<><>02/08/23 00:38 ID:GBlqoCug<> 常用エディタがxyzzyでないから、という理由でし。 <br>  <>
+Name_Not_Found<>sage<>02/08/23 05:37 ID:???<> viﾏﾝｾｰ <br> それ以外はクズだ！消えろ！ <>
+Name_Not_Found<>sage<>02/08/23 09:54 ID:???<>  <br> 上げるとこんなのが来るといういい見本だな <br>  <br> <a href="../test/read.cgi/hp/1005046309/276" target="_blank">&gt;&gt;276</a>  <br> あんたもなかなかの喰い付きっぷりだったよ <br> ｸﾞｯｼﾞｮﾌﾞ <>
+Name_Not_Found<><>02/08/31 14:49 ID:GIYu3FLW<> 捕手age <br>  <>
+Name_Not_Found<><>02/09/06 12:49 ID:f4I5CwNF<> kaya-html とかってのはどなの？ <br> もうサイトないんだっけ <br>  <>
+Name_Not_Found<>sage<>02/09/07 12:55 ID:???<> 使用方法があんまりわからないけど、 <br> このソフト、なんだか面白いね。 <br>  <br> タグ打つのが楽。 <>
+Name_Not_Found<><>02/09/16 19:24 ID:8zW++HGU<> <a href="../test/read.cgi/hp/1005046309/280" target="_blank">&gt;&gt;280</a> <br> たすかぬ、今までWindowsしか使ってなかったので、使用方法があまりわからないです <br> 今のところ、html+-modeで、「Ctrl+.」ぐらいしか使ってないです.... <br> もっと便利な使い方はあるんだろなぁあ... <br>  <br> あと、css+-modeなんていうのあったらイイ！！ <br>  <br> 外部CSSファイルを編集するときのモード <br>  <>
+Name_Not_Found<>sage<>02/09/16 20:13 ID:???<> Emacs があればいいじゃないか <br> あとRe って知らねえだろうな～ <>
+Name_Not_Found<>sage<>02/09/16 21:50 ID:???<> <a href="../test/read.cgi/hp/1005046309/282" target="_blank">&gt;&gt;282</a> <br> Meadowでhtml+-modeが動けばね。 <br> Reってなによ？ <>
+Name_Not_Found<>sage<>02/09/17 08:34 ID:???<> viとかね <>
+Name_Not_Found<><>02/09/20 23:02 ID:k5OjzgPV<> html+-modeなかなか良いですね、ぼくも仲間に入れてください。 <br>  <br> <a href="../test/read.cgi/hp/1005046309/281" target="_blank">&gt;&gt;281</a> <br> ぼくはCSSファイルの編集はTopStyle Liteっていうソフトを使っています。 <br> フリーソフトだけどなかなか便利です。 <>
+Name_Not_Found<>sage<>02/09/21 18:10 ID:???<> <a href="../test/read.cgi/hp/1005046309/281" target="_blank">&gt;&gt;281</a> <br> html4-modeじゃダメかい？ <>
+Name_Not_Found<><>02/09/22 00:59 ID:EYr8YMf6<> TopStyle Lite のユーザーインターフェースはけっこうよく考えられているよね。 <br> でも、あれはあくまでもGUIなcssエディタとしてのインターフェースであり、 <br> CUIなエディタ=xyzzyでの進む道とは違う気がするよ。 <br> 標準のｃｓｓモードはさして強力ではないけど、あれはあれで、進むべき道のような気がするんだ。 <br> 実際、もっと便利になるような気がするけれども、どうすればより便利になるかあまり思いつかないんだよね。 <br> cssファイルが外部ファイルになっているとして、編集中のhtmlのセレクタから <br> cssファイルの該当箇所へジャンプする仕組みがあったりすると便利かな、と今思いつきました。 <br>  <>
+Name_Not_Found<><>02/09/22 04:39 ID:p4HxNBTk<> <a href="../test/read.cgi/hp/1005046309/286" target="_blank">&gt;&gt;286</a> <br>  <br> ファイルが消されているです。 <>
+Name_Not_Found<>sage<>02/09/23 01:35 ID:???<> <a href="../test/read.cgi/hp/1005046309/288" target="_blank">&gt;&gt;288</a> <br> 再アップしてほしいです <>
+Name_Not_Found<>sage<>02/09/26 00:55 ID:???<> <a href="../test/read.cgi/hp/1005046309/289" target="_blank">&gt;&gt;289</a> <br> はげしくきぼう <>
+Name_Not_Found<><>02/09/26 01:54 ID:RkA3uFDf<> オリジナルアーカイブ持ってるけど、いる？ <br> どっかにアップしてもいいけど勝手に配布してもいいのかな? <br>  <br> 漏れはhtml+-modeのほうがいい感じなんですが.。 <br> cssもオリジナルのcss-modeで十分な気がします。 <br> <a href="../test/read.cgi/hp/1005046309/287" target="_blank">&gt;&gt;287</a> のアイディアはいいね。 <br>  <>
+名無しさん<><>02/09/30 18:08 ID:JdiK79GG<> 最近使い始めたんだけど、ちょっと不振な挙動が・・ <br>  <br> Tabキーを押すとふつうにタブが入力されるときと、タブではなく&って入力されるときがあります。 <br> これはどうしたんでしょう？ <>
+Name_Not_Found<>sage<>02/09/30 18:42 ID:???<> ttp://www.meadowy.org/users/kose/WelcomePage.html <br> meadow1.99αリリースっぽいですよ。 <>
+Name_Not_Found<><>02/10/01 03:12 ID:3Q2liyOa<> <a href="../test/read.cgi/hp/1005046309/292" target="_blank">&gt;&gt;292</a> <br> &が出るのはhtml+-modeで使っている時では? <br> 補完が効いていると思われ。 <br>  <>
+Name_Not_Found<><>02/10/01 16:51 ID:UaEtrUDH<> UTF8でページを書くとき便利 <>
+292<>sage<>02/10/02 00:04 ID:???<> <a href="../test/read.cgi/hp/1005046309/294" target="_blank">&gt;&gt;294</a> <br> &gt;  <a href="../test/read.cgi/hp/1005046309/292" target="_blank">&gt;&gt;292</a>  <br> &gt;  &が出るのはhtml+-modeで使っている時では?  <br> &gt;  補完が効いていると思われ。  <br> &gt;  <br> そーなんです。そして、タブを打ちたいときに&が入力されたりして、 <br> なかなか不便なんです。 <br> どうすれば&と入力されるのを回避できますか？ <>
+Name_Not_Found<>sage<>02/10/02 06:48 ID:???<> Ctrl+Q, Tab <>
+Name_Not_Found<><>02/10/03 01:04 ID:EDgrjanl<> xml書くとき便利。 <br> xml-mode、マンセー! <br>  <>
+Name_Not_Found<><>02/10/03 22:49 ID:JT3x1qEb<> <a href="../test/read.cgi/hp/1005046309/296" target="_blank">&gt;&gt;296</a> <br> (setf ed::*html+-completion-text-list* 'nil) <br> を .xyzzy に書いたら OK だと思う <br>  <>
+Name_Not_Found<>sage<>02/10/03 23:52 ID:???<> <a href="../test/read.cgi/hp/1005046309/299" target="_blank">&gt;&gt;299</a> <br> ついでに聞くと、&じゃなくて、text-modeのときみたく <br> 空白のタブ文字を入れるにはどうすればよいですか？ <>
+Name_Not_Found<>sage<>02/10/04 00:10 ID:???<> 失礼なヤツだな。 <>
+292<><>02/10/04 03:22 ID:vHfH0igu<> <a href="../test/read.cgi/hp/1005046309/299" target="_blank">&gt;&gt;299</a> <br> &gt;  <a href="../test/read.cgi/hp/1005046309/296" target="_blank">&gt;&gt;296</a>  <br> &gt;  (setf ed::*html+-completion-text-list* 'nil)  <br> &gt;  を .xyzzy に書いたら OK だと思う  <br> &gt;  <br> やってみました、するとまったくタブが打てなくなってしまったみたいです。 <br> (^_^;困った。 <>
+Name_Not_Found<>sage<>02/10/04 06:34 ID:???<> &gt;297!! <>
+292<>sage<>02/10/05 08:22 ID:???<> <a href="../test/read.cgi/hp/1005046309/297" target="_blank">&gt;&gt;297</a> <br> &gt;  Ctrl+Q, Tab <br>  <br> それで逝ってみますね、どーもです♪ <>
+Name_Not_Found<><>02/10/14 03:29 ID:3Bt37wcI<> html+-mode を Emacs に移植するのって無理かな？ <br> lisp 勉強する気はあるけど今は殆ど分からない香具師ですが <br>  <>
+Name_Not_Found<>sage<>02/10/14 05:11 ID:???<> <a href="../test/read.cgi/hp/1005046309/305" target="_blank">&gt;&gt;305</a> <br> 漢は不言実行あるのみ。 <>
+Name_Not_Found<>sage<>02/10/14 19:22 ID:???<> <a href="../test/read.cgi/hp/1005046309/306" target="_blank">&gt;&gt;306</a> <br> そのとおり。女の人でも。 <>
+Name_Not_Found<><>02/10/18 15:41 ID:HmnPMlf2<> 倉庫に行きませんように・・・ <>
+Name_Not_Found<><>02/10/22 02:48 ID:qPliOWxo<> CSSモードにせめてインデントが欲しいあげ。 <>
+Name_Not_Found<><>02/10/22 02:55 ID:A6IlP8O3<> css-mode ってインデント入らない？ <br>  <>
+Name_Not_Found<><>02/10/22 03:20 ID:A6IlP8O3<> 皆さん html+-mode と一緒に使ってる便利なマクロとか教えてくださいよ <br>  <>
+Name_Not_Found<>sage<>02/10/23 02:18 ID:???<> <a href="../test/read.cgi/hp/1005046309/311" target="_blank">&gt;&gt;311</a> <br> browserex.l とか。 <>
+Name_Not_Found<><>02/10/23 10:44 ID:80unLFfG<> <a href="../test/read.cgi/hp/1005046309/312" target="_blank">&gt;&gt;312</a> <br> それは勿論組み込み済みです <br>  <>
+Name_Not_Found<><>02/10/23 13:08 ID:lw/vxELs<> 本家スレpart6に出ていたこれは? <br> 新規ファイル作成時にテンプレートを挿入するというものです。 <br>  <br> ed::*html+-template*のディレクトリを掘って、テンプレートとなるファイルを入れてください。  <br>  <br> (defvar ed::*html+-template* (merge-pathnames "site-lisp/html+-template" (si:system-root)))  <br> (defvar ed::*html+-template-start* "&lt;title&gt;")  <br> (defun ed::html+-template ()  <br> (unless (file-exist-p (get-buffer-file-name))  <br> (let (lst file path)  <br> (setq lst (directory ed::*html+-template*))  <br> (setq file (handler-case (completing-read "select template: " lst)  <br> (condition (c) "")))  <br> (setq path (merge-pathnames file ed::*html+-template*))  <br> (unless (file-directory-p path)  <br> (insert-file-contents path)  <br> (set-buffer-modified-p nil)  <br> (scan-buffer ed::*html+-template-start* :tail t)  <br> (message "template ~S loaded" file)))))  <br> (add-hook 'ed::*html+-mode-hook* 'ed::html+-template)  <br>  <br>  <>
+Name_Not_Found<><>02/10/28 21:27 ID:ykzKKwFy<> <a href="../test/read.cgi/hp/1005046309/310" target="_blank">&gt;&gt;310</a> <br> 入らない…。もしや入らないのってウチだけ？ <br> div.title{ <br>   background-color: #eeeeff; <br>   font-color: #000000; <br> } <br> こんな感じのインデントが欲しいんだけど <>
+Name_Not_Found<>sage<>02/10/28 21:38 ID:???<> <a href="../test/read.cgi/hp/1005046309/315" target="_blank">&gt;&gt;315</a> <br> indent-region とか使えないですね <br>  <br>  <>
+Name_Not_Found<><>02/10/28 23:20 ID:+d2z3Xcv<> cssのばあいネストすることはありえないんだから <br> さほどインデントが必要だとは思えんのだが。 <br> すなおにタブでも打てば。 <br>  <>
+Name_Not_Found<>sage<>02/10/29 02:23 ID:???<> とりあえず CSS-mode に <br> (define-key *css-mode-map* #\RET 'c-newline-and-indent) <br> で自己解決。 <br> できれば .xyzzy あたりに書いて済ませられるといいのだが。 <>
+Name_Not_Found<>sage<>02/11/02 22:58 ID:???<> <a href="../test/read.cgi/hp/1005046309/318" target="_blank">&gt;&gt;318</a> <br> これイイですね。 <br>  <br> &gt;  できれば .xyzzy あたりに書いて済ませられるといいのだが。 <br> こんなかんじでどうでしょう。 <br> (add-hook '*css-mode-hook* <br>           #'(lambda () <br>               (define-key *css-mode-map* #\RET 'c-newline-and-indent))) <>
+Name_Not_Found<><>02/11/03 21:11 ID:xzxd47cJ<> <a href="../test/read.cgi/hp/1005046309/319" target="_blank">&gt;&gt;319</a> <br> 「名前が衝突するためexportできません: editor::*css-mode-hook*」 <br> っていって怒られるんですが、どうしたらいいの？ <br>  <>
+Name_Not_Found<>sage<>02/11/03 21:53 ID:???<> 既出かも知れないけど、liとかの閉じタグ省略時 <br> の閉じタグ補完機能が邪魔なんだけどなんか解決方法ある？ <br> 厨な質問でスマソ <br>  <>
+Name_Not_Found<>sage<>02/11/03 21:55 ID:???<> <a href="../test/read.cgi/hp/1005046309/320" target="_blank">&gt;&gt;320</a> <br> ed::'*css-mode-hook* でおｋなはず <br>  <>
+Name_Not_Found<>sage<>02/11/03 22:08 ID:???<> <a href="../test/read.cgi/hp/1005046309/321" target="_blank">&gt;&gt;321</a> <br> どうじゃまなのでしょう？ <br> &lt;li&gt;は閉じタグを補完しないで欲しいとか？ <>
+Name_Not_Found<>sage<>02/11/03 22:25 ID:???<> &gt;323 <br> そそ、でもliだけじゃなくてね。 <br> 親タグを閉じようとしてんのにliの閉じタグが勝手に出て（・д・）ﾏｽﾞｰ <br> インデントとかもちょっとおかしくなるし。（liのなかにliが入ってると勘違いされる） <>
+Name_Not_Found<>sage<>02/11/03 22:57 ID:???<> etc/HTMLの中の&lt;/で始まる行を消せば、その閉じタグの補完をしなくなります。 <br> キーワードファイルを直接書き換えるのはあまり良くないと思いますが。 <>
+Name_Not_Found<>sage<>02/11/03 23:09 ID:???<> <a href="../test/read.cgi/hp/1005046309/324" target="_blank">&gt;&gt;324</a> <br> 素直にliを閉じとけ。 <br> それで何の問題もないし、むしろ閉じる方がいいんじゃないか？ <>
+Name_Not_Found<>sage<>02/11/03 23:25 ID:???<> <a href="../test/read.cgi/hp/1005046309/320" target="_blank">&gt;&gt;320</a> <br> こんなかんじでどうでしょう。 <br> (in-package "editor") <br> (add-hook '*css-mode-hook* <br>   #'(lambda () <br>       (define-key *css-mode-map* #\RET 'c-newline-and-indent))) <br> (in-package "user") <>
+324<>sage<>02/11/04 00:11 ID:???<> &gt;325-326 <br> やっぱそうなりますか。後はHTML+の改造？俺にはそんなスキル無いしなぁ <br> 少しはLisp覚えるかな。 <br>  <br> &gt;326 <br> 中身が複数行あるやつは閉じると見難くなるってのもありますし。 <br> もともと書かない派なんで閉じた事忘れて、なんかのcミス起きるのもヤですし。 <br> とまぁその程度HTMLしか書けない自分が悪いんですが。 <>
+Name_Not_Found<>sage<>02/11/04 10:24 ID:???<> <a href="../test/read.cgi/hp/1005046309/328" target="_blank">&gt;&gt;328</a> <br> xhtmlでは、閉じタグ必須だから今後のためにも <br> 閉じておいたほうがいいと思われ。 <br> どうしても閉じたくなかったら、完成後に全置換するとよろし。 <br>  <>
+320<>sage<>02/11/04 11:11 ID:???<> <a href="../test/read.cgi/hp/1005046309/327" target="_blank">&gt;&gt;327</a> <br> うまくいきました。 <br>  <br> こんな風になります。＿はタブだと思ってください。 <br>  <br> body{ <br> ＿background-color:#000; <br> ＿color:#fff; <br> ＿} <br>  <br> ちょっと私の趣味と違うんですね。 <br>  <br> body{ <br> ＿background-color:#000; <br> ＿color:#fff; <br> } <br>  <br> こうしたいんですが、無理ですか? <br>  <br>  <br>  <>
+Name_Not_Found<>sage<>02/11/05 00:02 ID:???<> むりじゃないですが、他にもいろいろと設定したほうがよさげですね。 <br> # 列挙するだけでごめんなさい、酒が入っててサンプル示せられません。 <br> ・#\:の動作の制御（Cのラベルと見られんように） <br> ・#\{とか#\}の動作の制御（electric-insertを使う） <br> ・c-***-offset系の設定（330さんが言ってるやつです） <br>  <br> これぐらい対応するだけで、かなり便利になりそうですね。 <br> css-modeの拡張版ですが誰か作りませんか？ <>
+Name_Not_Found<>sage<>02/11/05 01:15 ID:???<> <a href="../test/read.cgi/hp/1005046309/331" target="_blank">&gt;&gt;331</a> <br> お酒を醒ましてもらうに一票。 <>
+Name_Not_Found<>sage<>02/11/05 02:53 ID:???<> あたいも1票！ <br>  <>
+Name_Not_Found<>sage<>02/11/05 04:48 ID:???<> <a href="../test/read.cgi/hp/1005046309/331" target="_blank">&gt;&gt;331</a> <br> よろしくおながいします <br>  <>
+Name_Not_Found<><>02/11/05 06:36 ID:uLaq2wLS<> C-x,C-jでイメージタグを挿入できるんだけど、 <br> http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/html+.html <br> このページによるとそのときに画像の大きさを一緒に入力してくれるとあります。 <br>  <br> でもwidth,heightはボクの環境Win2kでは出てきません。 <br> どうしてですか？ <>
+Name_Not_Found<>sage<>02/11/05 06:54 ID:???<> <a href="../test/read.cgi/hp/1005046309/335" target="_blank">&gt;&gt;335</a> <br> イメージタグ挿入は html+-insert-image です（C-x C-i）。 <br> そういうことではない？ <br>  <>
+335<>sage<>02/11/05 20:56 ID:???<> <a href="../test/read.cgi/hp/1005046309/336" target="_blank">&gt;&gt;336</a> <br>  <br> ほんとだ、できました。ごめん間違えてC-x C-jと打ち込んでいました。 <>
+Name_Not_Found<>sage<>02/11/06 00:47 ID:???<> <a href="../test/read.cgi/hp/1005046309/331" target="_blank">&gt;&gt;331</a>さん期待しとります。 <br>  <br> テキストいじってると欲しくなったので、 <br> こんなん作ってみました。 <br> キーバインドは一応 CTRL＋SHIFT＋Insert <br>  <br> ;;改行を&lt;BR&gt;にして貼り付け。 <br> (defun paste-clipboard-with-br () <br>   (interactive) <br>   (let ((start-p)) <br>     (setq start-p (point)) <br>     (insert (get-clipboard-data)) <br>     (narrow-to-region start-p (+ start-p (length(get-clipboard-data)))) <br>     (goto-char (point-min)) <br>     (replace-buffer "\n" "&lt;br&gt;\n") <br>     (widen))) <br> (global-set-key #\C-\S-\Insert 'paste-clipboard-with-br) <>
+331<>sage<>02/11/09 10:09 ID:???<> .xyzzyにこんな感じで書いてみてください。 <br> 長すぎると怒られるので2分割です。 <br>  <br> ---- part1 ---- <br>  <br> ;;; css-enhance <br>  <br> ; library <br> (load-library "css-mode") <br> ; indent (お好みでどうぞ) <br> (defvar *css-indent-level* 4) <br> (defvar *css-continued-statement-offset* 4) <br> (defvar *css-brace-offset* -4) <br> (defvar *css-brace-imaginary-offset* 0) <br> (defvar *css-argdecl-indent* 0) <br> (defvar *css-label-offset* 0) <br> ; keymap (お好みでどうぞ) <br> (define-key *css-mode-map* #\{ 'c-electric-insert) <br> (define-key *css-mode-map* #\: 'c-electric-insert) <br> (define-key *css-mode-map* #\} 'c-electric-close) <br> (define-key *css-mode-map* #\C-h 'backward-delete-char-untabify-or-selection) <br> (define-key *css-mode-map* #\TAB 'c-indent-line) <br> (define-key *css-mode-map* #\C-M-q 'indent-sexp) <br> (define-key *css-mode-map* #\RET 'c-newline-and-indent) <br>  <>
+331<>sage<>02/11/09 10:09 ID:???<> ---- part2 ---- <br>  <br> ; function for hook <br> (defun css-enhance () <br>   ;; inent command <br>   (make-local-variable 'mode-specific-indent-command) <br>   (make-local-variable 'c-comment-indent-variable) <br>   (setq c-comment-indent-variable 'c-comment-indent) <br>   (setq mode-specific-indent-command 'c-indent-line) <br>   ; indent <br>   (make-local-variable 'c-indent-level) <br>   (make-local-variable 'c-continued-statement-offset) <br>   (make-local-variable 'c-brace-offset) <br>   (make-local-variable 'c-brace-imaginary-offset) <br>   (make-local-variable 'c-argdecl-indent) <br>   (make-local-variable 'c-label-offset) <br>   (setq c-indent-level *css-indent-level*) <br>   (setq c-continued-statement-offset *css-continued-statement-offset*) <br>   (setq c-brace-offset *css-brace-offset*) <br>   (setq c-brace-imaginary-offset *css-brace-imaginary-offset*) <br>   (setq c-argdecl-indent *css-argdecl-indent*) <br>   (setq c-label-offset *css-label-offset*) <br>   ; comment <br>   (setq comment-indent-function 'c-comment-indent) <br>   (setq comment-start "/* " comment-end " */") <br>   (setq comment-start-skip "/\\(\\*+\\|/\\)[ \t]*")) <br> ; hook <br> (add-hook '*css-mode-hook* 'css-enhance) <>
+320<><>02/11/09 12:41 ID:p+HxH5Ld<> ｷﾀ━━━━━━(ﾟ∀ﾟ)━━━━━━ !!!!! <br>  <br> 331さん、ありがとう。 <br>  <>
+Name_Not_Found<>sage<>02/11/09 18:53 ID:???<> ｷﾀ━━(ﾟ∀ﾟ)━━( ﾟ∀)━━━(  　ﾟ)━━(  　)━━(ﾟ 　 )━━(∀ﾟ )━━━(ﾟ∀ﾟ)━━!!!!! <br> <a href="../test/read.cgi/hp/1005046309/331" target="_blank">&gt;&gt;331</a> さんアリガト～。 <>
+Name_Not_Found<><>02/11/13 07:17 ID:t1J1iqug<> <a href="../test/read.cgi/hp/1005046309/331" target="_blank">&gt;&gt;331</a> は神！！！ <>
+Name_Not_Found<>sage<>02/11/14 06:42 ID:???<> <a href="../test/read.cgi/hp/1005046309/331" target="_blank">&gt;&gt;331</a> <br> ので何が変わる？ <>
+Name_Not_Found<><>02/11/14 06:50 ID:NinbTepB<> <a href="../test/read.cgi/hp/1005046309/344" target="_blank">&gt;&gt;344</a> <br> (defun foo () <br>   (interactive) <br>   (save-excursion <br>     (indent-region <br>      (point-min) <br>      (point-max)) <br>     (message "indent buffer"))) <br>  <br> みたいなのを定義しておいて実行すると、一気に整形できるとか。 <br>  <br>  <>
+Name_Not_Found<><>02/11/14 06:55 ID:NinbTepB<> <a href="../test/read.cgi/hp/1005046309/338" target="_blank">&gt;&gt;338</a> の paste-clipboard-with-br もいいっすね <br> いただき <br>  <>
+Name_Not_Found<>sage<>02/11/15 23:48 ID:???<> <a href="../test/read.cgi/hp/1005046309/346" target="_blank">&gt;&gt;346</a> <br> こっちのコードのほうを採用してもらえると嬉しいのです。 <br> 面倒掛けてすんません。 <br> 勉強はじめたばっかなんでまだなんかあるかも。。ないといいな <br>  <br> ;;&lt;BR&gt;をつけて貼り付け。 <br> (defun paste-clipboard-with-br () <br>   (interactive) <br>   (when (get-clipboard-data) <br>     (insert (substitute-string (get-clipboard-data) "\n" "&lt;br&gt;\n")))) <br> ;ショートカットはお好みで。 <br> (global-set-key #\C-\S-\Insert 'paste-clipboard-with-br) <>
+Name_Not_Found<>sage<>02/11/18 19:23 ID:???<> ;;■CSS-modeで保存すると browserex で今開いているファイルを更新。 <br> (load-library "browserex") <br> (defun save-with-refresh () <br>   (define-key ed::*css-mode-map* '(#\C-x #\C-s) <br>       #'(lambda () <br>   (interactive) <br>   (save-buffer) <br>   (bx:refresh-browser)))) <br> (add-hook 'ed::*css-mode-hook* 'save-with-refresh) <>
+Name_Not_Found<>sage<>02/11/19 01:42 ID:???<> 下らない質問で悪いけどここにLisp書いてくれてる <br> 神々って本職なんなの、、？ <>
+Name_Not_Found<>sage<>02/11/19 01:46 ID:???<> 職業神 <br>  <br>  <>
+Name_Not_Found<><>02/11/20 00:54 ID:0YhH0uLs<> ひきこもり <>
+Name_Not_Found<><>02/11/25 22:55 ID:nSaKGanv<> <a href="../test/read.cgi/hp/1005046309/351" target="_blank">&gt;&gt;351</a> <br> ﾃﾞｼﾞﾄﾞｶ <>
+Name_Not_Found<>sage<>02/11/26 03:37 ID:???<> <a href="../test/read.cgi/hp/1005046309/351" target="_blank">&gt;&gt;351</a> <br> ばれたか（ｗ <>
+Name_Not_Found<>sage<>02/11/27 04:11 ID:???<> <a href="../test/read.cgi/hp/1005046309/348" target="_blank">&gt;&gt;348</a> だとフォーカスがブラウザにいったきりなんで、 <br> (bx:refresh-browser)のあとに <br> (bx:browserex-set-focus-editor)を追加するといい感じかも。 <br> # 自分の browserex.l が１月ごろのバージョンで吃驚。 <br>  <br> <a href="../test/read.cgi/hp/1005046309/351" target="_blank">&gt;&gt;351</a> <br> だいたい正解。 <>
+Name_Not_Found<><>02/12/04 15:42 ID:i1NPA++O<> METAヘッダのcharsetのところを参照して、ファイルを開くときに <br> 自動的にその文字コードで開いてくれるとうれしいですね。 <br> たまに自動認識でこけることがあるので（UTF-8のファイルなど）。 <br>  <br> でもそこまでテキストエディタに求めるのは酷かもしれません（笑） <>
+Name_Not_Found<>sage<>02/12/04 21:26 ID:???<> <a href="../test/read.cgi/hp/1005046309/355" target="_blank">&gt;&gt;355</a> <br> んなの出来るよ <br>  <>
+Name_Not_Found<>sage<>02/12/04 23:03 ID:???<> ほんまか？ <>
+Name_Not_Found<>sage<>02/12/04 23:13 ID:???<> 書けば出来るってことでしょう <br>  <>
+Name_Not_Found<><>02/12/06 23:53 ID:RZSQgdmi<> <a href="../test/read.cgi/hp/1005046309/355" target="_blank">&gt;&gt;355</a> <br> それはさすがに無理です。 <>
+Name_Not_Found<>sage<>02/12/07 02:09 ID:???<> <a href="../test/read.cgi/hp/1005046309/359" target="_blank">&gt;&gt;359</a> <br> できるようになっちゃいましたね(笑) <>
+Name_Not_Found<><>02/12/07 03:17 ID:GSOLgFNv<> ﾔﾀｰ <br> html+-mode バー　age <br>  <>
+Name_Not_Found<>sage<>02/12/07 14:49 ID:???<> <a href="../test/read.cgi/hp/1005046309/360" target="_blank">&gt;&gt;360</a> <br> ほんとだ、できるようになってた。 <br> http://www1.odn.ne.jp/ymtz/html+-mode.html <br> ＼(^-^)／バンザーイ <br>  <br> YMTZタンはこのスレ読んでるのかな。ありがとう <>
+埋造<>sage<>02/12/16 08:57 ID:???<> 保守る埋め。 <>
+Name_Not_Found<>0<>02/12/18 01:29 ID:???<> age <>
+Name_Not_Found<><>02/12/19 01:48 ID:bpDHpP4f<> キー一発で <br> どっかから拾ってきた <br> というかDWとかのHTML，CSS，JSリファレンスを <br> 引いたりできるとうれしい，，， <>
+Name_Not_Found<>sage<>02/12/19 02:22 ID:???<> 2ch-mode からのかきこみてすつ。 <br>  <br> クリップボードの中身が http:// で始まっていたら、 <br> リンクをつけてペースト。 <br>  <br> (defun insert-url-with-link () <br>   (interactive) <br>   (setq cb (get-clipboard-data)) <br>   (setq hd (substring cb 0 7)) <br>   (print hd) <br>   (if (equal "http://" hd) <br>       (insert (format nil "&lt;a href=\"~A\"&gt;~A&lt;/a&gt;" cb cb)) <br>     (message "URLではないようです") <br>     )) <br> ;;キーバインドはおこのみで。 <br> (global-set-key '(#\C-x #\S-Insert) 'insert-url-with-link) <>
+Name_Not_Found<>sage<>02/12/19 06:24 ID:???<> <a href="../test/read.cgi/hp/1005046309/366" target="_blank">&gt;&gt;366</a> <br> よけいなお世話かもしれんが添削。 <br> 変数は let で作った方がいいかと。 <br>  <br> (defun insert-url-with-link () <br>   (interactive "*") <br>   (let ((cb (get-clipboard-data))) <br>     (cond <br>      ((and (stringp cb) <br>    (string-match "\\(ht\\|f\\)tp://" cb)) <br>       (insert (format nil "&lt;a href=\"~A\"&gt;~A&lt;/a&gt;" cb cb))) <br>      (t (message "URLではないようです"))))) <br>  <>
+Name_Not_Found<>sage<>02/12/20 01:35 ID:???<> <a href="../test/read.cgi/hp/1005046309/367" target="_blank">&gt;&gt;367</a> <br> なるほどー。サンクス！ <>
+367<>sage<>02/12/20 03:07 ID:???<> 添削で間違ってりゃ世話無いね… <br> ×(string-match "\\(ht\\|f\\)tp://" cb)) <br> ○(string-match "^\\(ht\\|f\\)tp://.+" cb)) <>
+Name_Not_Found<>sage<>02/12/20 03:20 ID:???<> コメント使う必要が結構あるんですが、簡単にコメントを使ういい方法ないですかね？ <br> 普通にコメントを挿入することくらいしか思いつかない・・・ <br> それ以外ってありえないのかな <br>  <>
+Name_Not_Found<>sage<>02/12/20 04:48 ID:???<> <a href="../test/read.cgi/hp/1005046309/370" target="_blank">&gt;&gt;370</a> <br> こんなんどうでっしゃろ？ <br>  <br> ;; ミニバッファからコメントを挿入。 <br> (defun insert-comment (&optional (comment "")) <br>   (interactive "*sComment: ") <br>   (insert "&lt;!-- " comment " --&gt;")) <br>  <br> ;; リージョンをコメントアウトする。 <br> (defun region-to-comment () <br>   (interactive "*") <br>   (let ((begin (mark)) <br>         (end (point))) <br>     (unless (eq end (max begin end)) <br>       (let ((tmp begin)) <br>         (setq begin end <br>               end tmp))) <br>     (save-excursion <br>       (goto-char end) <br>       (insert " --&gt;") <br>       (goto-char begin) <br>       (insert "&lt;!-- ")))) <br>  <>
+Name_Not_Found<>0<>02/12/20 23:13 ID:???<> age <>
+370<><>02/12/21 01:24 ID:3NW5Ow1L<> <a href="../test/read.cgi/hp/1005046309/371" target="_blank">&gt;&gt;371</a> <br> ありがとうございます。 <br> insert の部分は自分に合うように変更させてもらいましたが、region-to-comment が激しく便利です。 <br> サンクス！！ <br>  <>
+Name_Not_Found<>sage<>02/12/21 12:56 ID:???<> <a href="../test/read.cgi/hp/1005046309/371" target="_blank">&gt;&gt;371</a>を改造すれば「リージョンをタグで囲む」とかできそうですね。 <br> つーわけで、やってみました。 <br> LISP初心者なんで間違いとか無駄とかありそうな上に相当手抜きですが。 <br>  <br> (defun quote-region-by-tag () <br>   (interactive "*") <br>   (setq quotetag (read-string "Tag: ")) <br>   (let ((begin (mark)) <br>         (end (point))) <br>     (unless (eq end (max begin end)) <br>       (let ((tmp begin)) <br>         (setq begin end <br>               end tmp))) <br>     (save-excursion <br>       (goto-char end) <br>       (insert (concat "&lt;/" quotetag "&gt;")) <br>       (goto-char begin) <br>       (insert (concat "&lt;" quotetag "&gt;"))))) <>
+Name_Not_Found<>sage<>02/12/21 20:45 ID:???<> <a href="../test/read.cgi/hp/1005046309/374" target="_blank">&gt;&gt;374</a> <br> interactive で文字入力が可能です。 <br> また、insert は任意個の文字列を受けるので、concat する必要もないです。 <br>  <br> (defun quote-region-by-tag (&optional (quotetag "")) <br>   (interactive "*sTag: ") ; s =&gt; 文字入力を指示する。 <br>                           ; 入力された文字列は quotetag に割り当てられる。 <br>   (let ((begin (mark)) <br>         (end (point))) <br>     (when (&gt; begin end) <br>       (let ((tmp begin)) <br>         (setq begin end <br>               end tmp))) <br>     (save-excursion <br>       (goto-char end) <br>       (insert "&lt;/" quotetag "&gt;") <br>       (goto-char begin) <br>       (insert "&lt;" quotetag "&gt;")))) <br>  <>
+Name_Not_Found<>sage<>02/12/23 03:06 ID:???<> <a href="../test/read.cgi/hp/1005046309/375" target="_blank">&gt;&gt;375</a> <br> 訂正ありがとうございます。解説まで付けてくださって、おかげで勉強になりました。 <br> interactiveはおまじないみたいな言葉だとばっかり思ってました(^^; <br>  <br> で、もう少し改造して、 <br> ・属性値とかも入力できる <br> ・＜とか＞を書いても書かなくても同じように処理する <br> という感じでやってみました。 <br> 前者は「最初の半角スペース以降を取り除いて、残ったものを閉じタグとする」 <br> ってだけですが。 <br> html+-close-match-tagを見ればいい処理が書いてありそうですが、見てもさっぱり <br> 分かりませんでした(^^; <br>  <br> (defun quote-region-by-tag (&optional (quotetag "")) <br>   (interactive "*sTag: ") <br>   (setq starttag (string-trim "&lt;&gt;" quotetag)) <br>   (setq endtag (substitute-string starttag " .*" "")) <br>   (let ((begin (mark)) <br>         (end (point))) <br>     (when (&gt; begin end) <br>       (let ((tmp begin)) <br>         (setq begin end <br>               end tmp))) <br>     (save-excursion <br>       (goto-char end) <br>       (insert "&lt;/" endtag "&gt;") <br>       (goto-char begin) <br>       (insert "&lt;" starttag "&gt;")))) <>
+Name_Not_Found<><>02/12/24 11:17 ID:mXaSVYQo<> (defun html-insert-anchor-with-blank () <br>   (interactive) <br>   (insert "&lt;a href=\"") <br>   (paste-from-clipboard) <br>   (insert "\" target=\"_blank\"&gt;")) <br>  <>
+Name_Not_Found<><>02/12/28 01:27 ID:SoHhgHRC<> age <br>  <>
+Name_Not_Found<><>03/01/01 01:22 ID:/dGLrzrP<> あけました。 <>
+Name_Not_Found<><>03/01/01 17:45 ID:kRQtnfNL<> インデント機能のトグルキボン。 <>
+Name_Not_Found<>sage<>03/01/15 01:17 ID:???<>  <br>  <br>  <br> 岡田克彦ファンクラブからのご案内です。ご高承のとおり、岡田克彦氏の卒業した早稲田大学政治経済学部 <br> と、ひろゆきの卒業した中央大学文学部は比較にならないほど差があります。中央大学文学部のような <br> ヘボい大学に共通しているのは、文化水準が低いという事です。18歳から22歳をヘボい大学で過ごすという <br> ことは、感受性において致命傷と言えます。２ちゃんねらーの大半は岡田克彦氏に比べて、著しい低学歴で <br> 頭が悪いだけでなく、感受性も愚鈍で腐っているという、取り返しのつかない状態なのです。 <br> せめて、http://www.geocities.co.jp/MusicHall-Horn/1091/で、岡田氏の作品に触れましょう。 <br>  <br>  <>
+山崎渉<>（＾＾）sage<>03/01/23 03:05 ID:???<> （＾＾）  <>
+Name_Not_Found<><>03/01/28 04:33 ID:7YyBpejC<> さがってるよ <>
+Name_Not_Found<>0<>03/02/01 01:57 ID:???<> age <>
+岡田克彦ファンクラブ<>sage<>03/02/01 12:17 ID:???<>  <br> それにいたしましても、明確になったことは、２ちゃんねらーの人達の愚鈍さと <br> 無能さでございました。 <br> ２ちゃんねらーに出来る事は、たかだか、ウェブ上で騒いだり、岡田先生のホームページ <br> （ＵＲＬ；http://www.geocities.co.jp/MusicHall/5933/） <br> のＢＢＳにエロ、グロな写真を掲載するくらいのこと。昭和54年に岡田先生が <br> 早稲田大学政治経済学部を卒業したことを取り消すなどということは出来ないの <br> ですね。もちろん、ひろゆきが、中央大学文学部夜間を卒業したことも取り消せない <br> のと同様ですけれども、いかにウェブ上で思い上がっていても阿呆に出来る事は <br> この程度なのです。阿呆は、何をしたって、阿呆どまりなのです。ハハハハハ・・・。 <br>  <>
+Name_Not_Found<><>03/02/03 03:23 ID:MXDQBQT0<> <a href="../test/read.cgi/hp/1005046309/380" target="_blank">&gt;&gt;380</a> <br> 放置っぷりが見るに堪えんので、これでもいいなら、 <br> よきにはからってくらさい。 <br> (let (flag) <br>   (defun toggle-html+-mode-ret-type () <br> (interactive) <br> (cond (flag <br>    (define-key *html+-mode-map* #\RET'html+-newline-and-indent) <br>    (setq flag nil)) <br>   (t <br>    (define-key *html+-mode-map* #\RET'newline) <br>    (setq flag t))))) <>
+386<>sage<>03/02/03 03:59 ID:???<> タブちゃんがつぶれて、つながってるとこがあるんで、貼りなおし。 <br> これでダメなら、自力で何とかしてねん。 <br> (let (flag) <br>   (defun toggle-html+-mode-ret-type () <br> (interactive) <br> (cond (flag <br>    (define-key *html+-mode-map* #\RET 'html+-newline-and-indent) <br>    (setq flag nil)) <br>   (t <br>    (define-key *html+-mode-map* #\RET 'newline) <br>    (setq flag t))))) <>
+Name_Not_Found<>sage<>03/02/05 22:22 ID:???<> html+-mode はすごくいいんだけど、&lt;pre&gt;の中でインライン要素を使ったりすると <br> インデントが変になるのが惜しい（別に大したことじゃないんだけれども）。 <br> &lt;pre&gt;の後、インライン要素を使わなければちゃんとインデントが解除されるんだけど、 <br> &lt;code&gt;とかを使って行をまたがるとインデントが挿入されてしまう。 <br>  <br> 《preのみ》 <br> 　&lt;pre&gt;ほげほげほげ <br> ふげふげふげ　　　　←インデントは解除される <br>  <br> 《pre内でインライン要素を使う》 <br> 　&lt;pre&gt;&lt;code&gt;ほげほげほげ <br> 　　ふげふげふげ　　　←ここでインデントされてしまう！ <br>  <br> 何とかできませんか？　当方Lispはさっぱりなもので、いくらコードを眺めてもわかりませぬ。 <>
+Name_Not_Found<>sage<>03/02/06 00:47 ID:???<> やたらと人をわずらわすなよ。 <>
+Name_Not_Found<>sage<>03/02/06 17:19 ID:???<> インタラクティブで、テーブル組んだりするLISPとか <br> 便利な小物放出キボン。 <br> html+-modeをDW並にしている人キボン。 <>
+Name_Not_Found<>sage<>03/02/07 11:18 ID:???<> <a href="../test/read.cgi/hp/1005046309/390" target="_blank">&gt;&gt;390</a> <br> ｲｲ! <br>  <br> が…… <br> ここって、table 要素を嫌ってる人が多数っぽいﾃﾞﾂ... <>
+Name_Not_Found<>sage<>03/02/07 11:35 ID:???<> uplevel-tag の解説ｷﾎﾞﾝ <>
+Name_Not_Found<>sage<>03/02/07 17:33 ID:???<> table使わないの？ <>
+Name_Not_Found<>sage<>03/02/07 20:01 ID:???<> DWってどんな機能があるの？ <br> テーブルの雛型でもはいるのかな？ <>
+Name_Not_Found<>sage<>03/02/08 05:19 ID:???<> <a href="../test/read.cgi/hp/1005046309/394" target="_blank">&gt;&gt;394</a> <br> Dreamweaver <br> http://www.macromedia.com/jp/software/dreamweaver/ <>
+Name_Not_Found<>sage<>03/02/09 12:51 ID:???<> <a href="../test/read.cgi/hp/1005046309/392" target="_blank">&gt;&gt;392</a> <br> サイトの方をほとんど更新していないので回答してみたりします。 <br>  <br> uplevel-tagは、閉じタグの自動補完やそれっぽいタグを挿入する場合に、条件に一致した直前のタグ情報を取得するために存在します。例えば、ABCのAの位置にカーソルがある場合に、&lt;ul&gt;の情報を取得するために用います。 <br> &lt;html&gt; <br>   &lt;body&gt; <br>     &lt;ul&gt; <br>       &lt;li&gt;flksafjdlds&lt;/li&gt; <br>       &lt;li&gt;adlfkasjd&lt;/li&gt; <br>       &lt;li&gt;aldkdfjd&lt;/li&gt; <br>       ABC <br>  <br> 呼出形式は以下のとおりです。条件として渡す引数は以下の二つです。この二つに一致するタグを探します。 <br> (uplevel-tag &optional same nobol) <br> same:  同じレベルのタグ場合を許すかどうか？許すならt <br> nobol: 行頭に無いタグを許すかどうか？許すならt <br>  <br> 返り値は多値をとります。受ける時は、multiple-value-bindを使います。 <br> (result position-of-tag name-of-tag) <br> result:          正常終了か？条件に一致するタグがあればt <br> position-of-tag: 条件に一致したタグの位置 <br> name-of-tag:     条件に一致したタグの名前 <>
+Name_Not_Found<>sage<>03/02/09 12:52 ID:???<> 以下は具体例です。 <br>  <br> 例１：sameの役割 <br>  <br> &lt;html&gt; <br>   &lt;body&gt; <br>     &lt;ul&gt; <br>               &lt;li&gt;aldfjd&lt;/li&gt; <br>       ABC <br>  <br> ABCのAの位置のカーソルがある場合にuplevel-tagを評価すると... <br> (uplevel-tag nil) =&gt; (t "ul" ...) <br> (uplevel-tag t) =&gt; (t "li" ...) <br>  <br> 例２：nobolの役割 <br>  <br> &lt;html&gt; <br>   &lt;body&gt; <br>             &lt;li&gt; <br>               &lt;ul&gt; <br>               &lt;/ul&gt;&lt;dl&gt; <br>               &lt;/dl&gt; <br>       ABC <br>  <br> ABCのAの位置のカーソルがある場合にuplevel-tagを評価すると... <br> (uplevel-tag t t) =&gt; (t "dl" ...) <br> (uplevel-tag t nil) =&gt; (t "ul" ...) <br>  <br> どうでしょうか？ <>
+Name_Not_Found<>sage<>03/02/09 12:55 ID:???<> <a href="../test/read.cgi/hp/1005046309/388" target="_blank">&gt;&gt;388</a> <br> タグの内容をインデント付けされたくないなら、以下の変数にそのタグ名を追加してみるとか。 <br> (defvar *html+-tags-list-no-indent* <br>   '("PRE" "XMP") <br>   "html+-mode: インデント付けの対象外とするタグ") <>
+392<>sage<>03/02/09 15:45 ID:???<> <a href="../test/read.cgi/hp/1005046309/396-397" target="_blank">&gt;&gt;396-397</a> <br> 解説ｱﾘｶﾞﾄﾝ <br> よくわかりました。 <>
+Name_Not_Found<>sage<>03/02/11 05:53 ID:???<> html+-mode を使うおうとして sitelisp.l で <br>  <br> (in-package "editor") <br> (export 'html+-mode) <br> (autoload 'html+-mode "html+-mode" t) <br> (pushnew '("\\.html?$" . html+-mode) *auto-mode-alist* :test 'equal) <br> ; (1) <br> (in-package "user") <br> (require "html+-mode") <br> (setq *html+-use-html-kwd* t) ; (2) <br>  <br> と書いておいて html+-mode を実行した時に、評価順序のせいか <br> *html+-tags-hash-list* が定義されていないというエラーが出ます。 <br> (2)を(1)に書いておけば大丈夫でした。 <br> autoload があるから大丈夫だと思ったんですが、 <br> なぜエラーが出るんでしょうか？ <>
+400<>sage<>03/02/11 05:54 ID:???<> sitelisp.l ではなく siteinit.l です。 <>
+Name_Not_Found<>sage<>03/02/15 14:44 ID:???<> <a href="../test/read.cgi/hp/1005046309/400" target="_blank">&gt;&gt;400</a> <br> 確かにでますね。ちょっと確認します。 <>
+401<>sage<>03/02/15 14:54 ID:???<> あー、分かりました。 <br> *html+-use-html-kwd*がライブラリのロードの前後で、値が変更された場合のことを想定していないからです。 <br> html-kwdはライブラリのロード時にその関連の変数の初期化を行うので、 <br> <a href="../test/read.cgi/hp/1005046309/400" target="_blank">&gt;&gt;400</a>のように値を変更すると、その関連の変数の初期化が行われていない状態で <br> 関数html+-modeが呼び出されるので"*html+-tags-hash-list*が無い"とエラーが出ます。 <br> 申し訳ないですが(1)の位置に書いてください。 <>
+Name_Not_Found<>sage<>03/02/15 14:54 ID:???<> あー、名前間違えた... <>
+400<>sage<>03/02/16 01:31 ID:???<> <a href="../test/read.cgi/hp/1005046309/402-404" target="_blank">&gt;&gt;402-404</a> <br> 了解しました。 <>
+Name_Not_Found<>sage<>03/02/22 04:18 ID:???<> 保守 <br>  <>
+Name_Not_Found<>sage<>03/02/28 04:27 ID:???<> 保守 <br>  <>
+Name_Not_Found<>sage<>03/02/28 22:14 ID:???<> CSVをtableタグに変換する関数を作っていただけないでしょうか。 <>
+Name_Not_Found<>sage<>03/03/01 04:27 ID:???<> <a href="../test/read.cgi/hp/1005046309/408" target="_blank">&gt;&gt;408</a> <br> すでにあるっぽい。 <>
+Name_Not_Found<>sage<>03/03/01 11:41 ID:???<> csv-mode.lではできるようですね。 <br> 別バッファに作られますが。 <>
+Name_Not_Found<>sage<>03/03/05 23:45 ID:???<> ネタギレサゲ <br>  <>
+Name_Not_Found<><>03/03/12 12:45 ID:e9xSCSVB<> 窓の手を使ってIEでソース表示したときにxyzzyで開くようにしたのですが、 <br> このままだとモードがFoundamentalになってしまいます。 <br> html+-modeで開きたいのですが何か方法があれば教えてください。 <>
+Name_Not_Found<>sage<>03/03/12 13:40 ID:???<> <a href="../test/read.cgi/hp/1005046309/412" target="_blank">&gt;&gt;412</a> <br> html+-mode.lの中身読んで見れ。 <br> install手順の三つ目に <br> 「*.htm/*.htmlを読みこんだときに自動的にhtml+-modeに <br> するために、以下のコードを追加します。」 <br> とあるはず。 <>
+412<>sage<>03/03/12 13:56 ID:???<> <a href="../test/read.cgi/hp/1005046309/413" target="_blank">&gt;&gt;413</a> <br> IEから「ソースを表示」とすると、Temporary Internet Files内の <br> 拡張子が付いていないファイルが開かれるのです。 <br>  <>
+Name_Not_Found<>sage<>03/03/12 14:23 ID:???<> ttp://sugi.pobox.ne.jp/xyzzy/#iesrc <>
+415<>sage<>03/03/12 14:28 ID:???<> こっちだった。 <br> ttp://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/html+.html#source <>
+412<>sage<>03/03/12 15:04 ID:???<> ありがとうございます。 <br>  <>
+Name_Not_Found<>sage<>03/03/17 21:55 ID:???<> 罫線で書いた表からテーブルに変換するスクリプトを書いてみました。 <br> 基本的なところはできあがってるんですが、 <br> カスタマイズのしどころ等煮詰まってます。 <br> ともかくも評価版として公開して、みなさんの意見を採り入れてみようかと思います。 <br>  <br> http://homepage3.nifty.com/~ko-ji/box-to-table.html <br>  <>
+Name_Not_Found<>sage<>03/03/17 23:47 ID:???<> <a href="../test/read.cgi/hp/1005046309/418" target="_blank">&gt;&gt;418</a> <br> 罫線ってどうやって引くの？ <>
+418<>sage<>03/03/18 00:32 ID:???<> <a href="../test/read.cgi/hp/1005046309/419" target="_blank">&gt;&gt;419</a> <br> &gt; 罫線ってどうやって引くの？ <br> 普通は <br> [M-x]box-drawings-mode[RET] <br> で、 <br> Ctrl をおしながら ↑↓←→ で書けます。 <br>  <br> box-to-table.l がインストールできてたら、 <br> [M-x]open-b2t-work-buffer[RET] <br> で、box-drawings-mode がオンになってるので <br> Ctrl を（略）書けます。 <>
+Name_Not_Found<>sage<>03/03/18 01:31 ID:???<> <a href="../test/read.cgi/hp/1005046309/418" target="_blank">&gt;&gt;418</a> <br> （・∀・）ｲｲ!!  <>
+Name_Not_Found<>sage<>03/03/18 13:13 ID:???<> 罫線モード（・∀・）ｲｲ!! <br> ていうかしらんかった、アリガトー <>
+Name_Not_Found<>sage<>03/03/19 00:26 ID:???<> <a href="../test/read.cgi/hp/1005046309/418" target="_blank">&gt;&gt;418</a> <br> box-to-table-minor-mode を OFF にするときに、 <br> box-drawings-mode も OFF になったほうが便利かも。 <>
+418<>sage<>03/03/19 20:15 ID:???<> <a href="../test/read.cgi/hp/1005046309/423" target="_blank">&gt;&gt;423</a> <br> どもです。 <br> 強制的にオフにするよりも、 <br> マイナーモードが起動する前の状態に戻す方がいいかと思いまして、 <br> そのようにしてみました。 <br>  <br> マイナーモード起動前に、 <br> box-drawings-mode がオンになっていればそのままです。 <br>  <>
+Name_Not_Found<>sage<>03/03/19 22:23 ID:???<> <a href="../test/read.cgi/hp/1005046309/424" target="_blank">&gt;&gt;424</a> <br> あら。ほんとだ。その方がいいです。 <>
+Name_Not_Found<>sage<>03/03/25 11:23 ID:???<> 保守 <br>  <>
+Name_Not_Found<><>03/03/29 17:25 ID:53Mc7Gu6<> 保守age <>
+Name_Not_Found<><>03/03/30 10:26 ID:VODIWsQC<> 揚げ王 <>
+Name_Not_Found<><>03/03/31 10:40 ID:v9XPWKDQ<> age <>
+Name_Not_Found<>sage<>03/04/01 00:07 ID:???<> html+-mode で、（でなくてもいいけど） <br> 対応するタグにジャンプする機能ってどれ？ <br>  <br> &lt;aaa&gt;xxxxx&lt;bbb&gt;ccc&lt;/bbb&gt;xxxx <br> このへん→&lt;/aaa&gt; <br>  <br> のこのへん→　の位置にカーソルがいるときにその関数を呼ぶと <br> &lt;aaa&gt;あたりまで飛んでくれる機能 <br>  <br> キー割り当てできる形ではないの？ <>
+Name_Not_Found<><>03/04/01 02:42 ID:L6WR1M8c<> <a href="../test/read.cgi/hp/1005046309/430" target="_blank">&gt;&gt;430</a> <br> C-:で出来るだろ？ <>
+Name_Not_Found<>sage<>03/04/01 21:18 ID:???<> ange-ftpきぼんぬ。 <>
+Name_Not_Found<>sage<>03/04/02 08:54 ID:???<> 良さをとくと語ってください。 <>
+Name_Not_Found<>sage<>03/04/03 23:23 ID:???<> <a href="../test/read.cgi/hp/1005046309/431" target="_blank">&gt;&gt;431</a> <br> html+-check-match-tag ? <br> これってちぇっくするだけじゃないの？ <br> 一瞬範囲の始まりのタグに飛ぶだけだが <br>  <br>  <>
+Name_Not_Found<>sage<>03/04/05 14:37 ID:???<> <a href="../test/read.cgi/hp/1005046309/430" target="_blank">&gt;&gt;430</a> <br> html+-check-match-tagをした後に、C-x C-x してみてください。 <>
+Name_Not_Found<>sage<>03/04/06 03:45 ID:???<> <a href="../test/read.cgi/hp/1005046309/435" target="_blank">&gt;&gt;435</a> <br> おお！　こんなコマンドが！ <br> 少し面倒だがまあそれは lisp 組めばいいか <br> 教えてくれてありがとう <br>  <br> で、開始タグ→終了タグにはどうすればジャンプできますか？ <>
+Name_Not_Found<>sage<>03/04/06 08:12 ID:???<> 今は機能がありません。必要ですか？ <>
+Name_Not_Found<>sage<>03/04/06 20:36 ID:???<> 聞きたいことが沢山あるんだけど、聞いてもいいかい？ <br> 神々よ。 <>
+Name_Not_Found<>sage<>03/04/06 21:18 ID:???<> <a href="../test/read.cgi/hp/1005046309/438" target="_blank">&gt;&gt;438</a> <br> あえてこのスレでやる意味があるなら。 <br> そうでなければ本スレの方がよいと思うよ。 <br>  <br> [Windows板] xyzzy Part8 <br> http://pc2.2ch.net/test/read.cgi/win/1041613876/ <>
+Name_Not_Found<>sage<>03/04/06 21:30 ID:???<> じゃあ、ここで聞いても良さ気なヤツだけ。 <br>  <br> html+-modeで、 <br> エレメントの色→「キーワード1」 <br> 属性の色→「キーワード2」 <br> 属性値の色→「文字列」 <br> で変更できるけど、「キーワード3」って何の色？ <>
+Name_Not_Found<>sage<>03/04/06 22:00 ID:???<> <a href="../test/read.cgi/hp/1005046309/440" target="_blank">&gt;&gt;440</a> <br> html+-modeは標準のetc/HTMLのキーワードファイルを使って色づけしています。 <br> etc/HTMLのキーワードファイルを見れば分かりますが、 <br> 　;*0がキーワード１→タグの色 <br> 　;*1がキーワード２→属性の色 <br> 　;*2がキーワード３→実体参照の色 <br> です。 <br> # 亀井さんもよくこのキーワードファイルを作ったなと思います。 <>
+Name_Not_Found<>sage<>03/04/06 22:18 ID:???<> <a href="../test/read.cgi/hp/1005046309/441" target="_blank">&gt;&gt;441</a> <br> なるほど実体参照ね。 <br> ありが㌧ <>
+Name_Not_Found<>sage<>03/04/07 07:52 ID:???<> その辺はユーザー側で幾らでも変えられる罠 <br>  <>
+Name_Not_Found<>sage<>03/04/09 12:01 ID:???<> <a href="../test/read.cgi/hp/1005046309/437" target="_blank">&gt;&gt;437</a> <br> 開始タグ←→終了タグ　ジャンプはかなり欲しいです <br> あと一つ上の階層のタグにジャンプとか <br>  <>
+Name_Not_Found<><>03/04/09 16:39 ID:qetk9Mxy<> すみません、質問なんですが、 <br> xyzzyで、DreamWeaverのように、エディタとブラウザを <br> 上下分割表示し、エディタで記述したら、 <br> browzer.dllを使ったブラウザに <br> すぐ反映させることってできるのでしょうか？ <br> いわゆる、リアルタイムプレビューがやりたいんです。 <br> よろしくお願いします。 <br>  <>
+Name_Not_Found<>sage<>03/04/09 17:44 ID:???<> <a href="../test/read.cgi/hp/1005046309/444" target="_blank">&gt;&gt;444</a> <br> hparen.l というので対応するタグに飛べたが、公開をやめたみたいだな。 <>
+Name_Not_Found<>sage<>03/04/09 21:33 ID:???<> <a href="../test/read.cgi/hp/1005046309/444" target="_blank">&gt;&gt;444</a> <br> 取り込めるか、ちょっと考えてみます。 <>
+Name_Not_Found<>sage<>03/04/09 21:37 ID:???<> <a href="../test/read.cgi/hp/1005046309/445" target="_blank">&gt;&gt;445</a> <br> リアルタイムプレビューがやりたいのは分かりました。 <br> 何か文字を入力した後で、数秒間入力がなければプレビューするとかでいいんでしょうか？ <br> ただし、その時にタグの整合性がとれてないと、目も当てられない状況になってしまいます。 <br> # 例えば、コメントが閉じられてないとかね。 <br> 何か操作のイメージがあれば書いてください。 <>
+Name_Not_Found<>sage<>03/04/09 22:33 ID:???<> <a href="../test/read.cgi/hp/1005046309/448" target="_blank">&gt;&gt;448</a>さん <br> レスありがとうございます。 <br>  <br> ＞何か文字を入力した後で、数秒間入力がなければプレビューするとかでいいんでしょうか？ <br> はい。 <br>  <br> ＞ただし、その時にタグの整合性がとれてないと、目も当てられない状況になってしまいます。 <br> それで良いと思います。今ある状態をブラウザ立ち上げてプレビューしたのと同じ状態が <br> リアルタイムに表示されるわけですから。 <br>  <br> ただ、タグを入力したら、終了タグを補完できれば、使い勝手が良い感じがします。 <br> どうぞよろしくお願い致します。 <br>  <>
+Name_Not_Found<>sage<>03/04/09 22:38 ID:???<> <a href="../test/read.cgi/hp/1005046309/449" target="_blank">&gt;&gt;449</a> <br> 保存したら表示更新、ぐらいでいいんじゃないの？ <>
+Name_Not_Found<><>03/04/10 00:10 ID:Q6ab0Nb7<> <a href="../test/read.cgi/hp/1005046309/450" target="_blank">&gt;&gt;450</a> <br> 現状で可能じゃん。 <>
+Name_Not_Found<>sage<>03/04/10 00:20 ID:???<> 仮にリアルタイムプレビューをするとなると、post-buffer-modified-hookを <br> 使って変更があるたびにタイマをリセットし続けて、タイムアウトしたらプレビュー実行 <br> というところでしょうか。 <>
+Name_Not_Found<><>03/04/10 01:13 ID:Q6ab0Nb7<> http://members.tripod.co.jp/ohkubo/xyzzy/index.html#browserex <br>  <br> これじゃだめなの？ <>
+Name_Not_Found<>sage<>03/04/10 01:20 ID:???<> <a href="../test/read.cgi/hp/1005046309/451" target="_blank">&gt;&gt;451</a> <br> 445はそれすらも知らねんじゃね？ <>
+Name_Not_Found<>sage<>03/04/10 20:45 ID:???<> <a href="../test/read.cgi/hp/1005046309/447" target="_blank">&gt;&gt;447</a> <br> 便乗ですが、よろしくお願い致します。 <br>  <>
+Name_Not_Found<>sage<>03/04/11 17:01 ID:???<> <a href="../test/read.cgi/hp/1005046309/447" target="_blank">&gt;&gt;447</a> <br> おお　気体 <>
+山崎渉<>（＾＾）<>03/04/17 15:35 ID:???<> （＾＾）         <>
+Name_Not_Found<>sage<>03/04/22 10:23 ID:???<> <a href="../test/read.cgi/hp/1005046309/366" target="_blank">&gt;&gt;366</a>,<a href="../test/read.cgi/hp/1005046309/367" target="_blank">&gt;&gt;367</a>を利用して <br> (defun insert-url-with-link () <br>   (interactive "*") <br>   (let ((cb (get-clipboard-data))) <br>     (cond <br>      ((and (stringp cb) <br>    (string-match "^\\(ht\\|f\\)tp://.+" cb)) <br>       (insert (format nil "&lt;a href=\"~A\" target=\"_top\"&gt;~A&lt;/a&gt;" cb cb))) <br>      (t (message "URLではないようです"))))) <br> (global-set-key '(#\C-x #\S-Insert) 'insert-url-with-link) <br> としたところ変数が定義されていません: editor::_top <br> と怒られたんですがどこを直せばいいでしょうか？ <>
+Name_Not_Found<>sage<>03/04/23 09:57 ID:???<> <a href="../test/read.cgi/hp/1005046309/458" target="_blank">&gt;&gt;458</a> <br> コピペしてlisp-interaction-modeでやってみたけど、 <br> 普通に成功したよ。 <br>  <br> もうちょっと詳しく、 <br> どういう状況で怒られたのか教えて。 <>
+458<>sage<>03/04/23 11:28 ID:???<> <a href="../test/read.cgi/hp/1005046309/459" target="_blank">&gt;&gt;459</a> <br> それがlisp-interaction-mode,html-mode,Fundamental-mode <br> ならうまくうくんですけどhtml+-modeだと怒られるんですよ。 <>
+Name_Not_Found<>sage<>03/04/24 00:57 ID:???<> <a href="../test/read.cgi/hp/1005046309/458" target="_blank">&gt;&gt;458</a> <br> うごいてそうです。もう少し情報を。 <>
+459<>sage<>03/04/24 09:50 ID:???<> <a href="../test/read.cgi/hp/1005046309/460" target="_blank">&gt;&gt;460</a> <br> 動きましたけど(html+-modeでも)。 <br> html+-modeをつついておらず、 <br> .xyzzyに458をペーストしただけですか？ <>
+460<>sage<>03/04/24 12:16 ID:???<> ペーストしただけです。 <br>  <br> 461を見た後あのあと半ヤケになって <br> (defun my-html+-mode-hook () <br> 458 <br> ) <br> (add-hook 'ed::*html+-mode-hook* 'my-html+-mode-hook) <br> とやったらhtml+-modeでは動いてくれたのでとりあえずなんとかなってます。 <br>  <>
+Name_Not_Found<>sage<>03/04/30 08:29 ID:???<> hoge <br>  <>
+名無しさん<><>03/05/01 05:40 ID:EjSynjlY<> html+-mode使ってる人は、HTMLヘッダにその旨書いていますか？ <br> たとえば <br> &lt;meta name="editor" content="xyzzy html+-mode"&gt; <br> とか <>
+Name_Not_Found<>sage<>03/05/01 12:18 ID:???<> 書くわけねーだろ <>
+Name_Not_Found<>sage<>03/05/01 15:05 ID:???<> 俺も書いてない。 <br> html作成ソースが吐き出す無駄なメタタグ見るたんびにげんなりするから。 <>
+467<>sage<>03/05/01 15:07 ID:???<> ごめん日本語になってなかった。 <br> html作成ソフトが、ね。 <>
+465<><>03/05/12 18:07 ID:V3IbY0Y+<> ｶﾞ━━(ﾟДﾟ;)━━━ﾝ!! <br> 書いてる漏れはドキュソですか？逝ってよしですか？ <>
+Name_Not_Found<>sage<>03/05/12 18:15 ID:???<> エディタ名とか書いたところであんまり意味無いしね。無駄なだけ。 <>
+Name_Not_Found<>sage<>03/05/12 18:53 ID:???<> なんのために書きたいんだか <br>  <br> たまにメモ帳とか書いてるやついるけど、ギャグのつもりでも笑えないよ。 <br>  <br>  <br> フロントページやら、ビルダーやらを使ってる人を煽ってるんだろうか？ <br>  <br> く　く　く　の　く　ー　そ　 <>
+Name_Not_Found<>sage<>03/05/12 19:47 ID:???<> &lt;meta name="GENERATOR" content="手"&gt; <br> とかなってんのを以前見た。 <>
+Name_Not_Found<>sage<>03/05/15 14:57 ID:???<> ぬお!このスレ便利! <br>  <br> それにしてもxyzzyって他のエディタには無い変な魅力があるなあ。 <br> なんつーか、極限まで使いこなしたくなる欲が沸いてくるというか。 <br> サイト更新よりカスタマイズの方が楽しくて仕方ない。って本末転倒あうあー。 <>
+465<>sage<>03/05/15 20:17 ID:???<> <a href="../test/read.cgi/hp/1005046309/471" target="_blank">&gt;&gt;471</a> <br> なんのためかと言いますと・・ <br>  <br> 漏れと同じくxyzzyを使ってる人が、もし漏れのページのソースを見たときに <br> 「お！この人も使ってるんだ～」 <br> というふうに親近感を抱いてもらおうと思って(´･ω･`) <>
+Name_Not_Found<>sage<>03/05/16 15:15 ID:???<> 逆効果だと思う <>
+Name_Not_Found<>sage<>03/05/17 03:32 ID:???<> "＜"を打った瞬間に日本語モードから英数モードに <br> 切り替わって、"＞"を打つと元に戻る、 <br> というようなことが出来たら便利だなぁ。 <br> 既に打ってあるタグの中でももちろん英数モード。 <br>  <br> あと、イメージタグを打ち込んだあと、そのイメージの <br> 縦横サイズだけリセットする機能とかも欲しい。 <br> （あとで画像を書き換えたりしません？） <>
+Name_Not_Found<>sage<>03/05/17 10:10 ID:???<> &lt;img src="画像ファイル" とまで入力して <br> 何かキーを押したらイメージサイズを自動で入力してほしい。 <br> すでに画像サイズがあれば width&hight を同じキーで更新してほしい。 <>
+477<>sage<>03/05/17 10:25 ID:???<> <a href="../test/read.cgi/hp/1005046309/477" target="_blank">&gt;&gt;477</a> <br> ごめん。C-x C-i でできた。 <>
+Name_Not_Found<><>03/05/18 22:50 ID:y9P+gJ0a<> xml-mode で書いてる人いますか？ <br>  <br> html+-mode の html+-guess-tag に当たる機能が xml-mode には無いのでしょうか？ <br>  <>
+479<><>03/05/19 07:07 ID:Dg1MhQFF<> なさそうですね。 <br>  <br> と言うわけで、自分で無理矢理 html+-mode から xml-mode へ移してしまいました。 <br> xml-guess-tag です、ってそのまま。 <br> 案外ちゃんと使えてるので良いとしよう。 <br>  <>
+bloom<><>03/05/19 07:09 ID:JTFZNP3y<> http://homepage.mac.com/ayaya16/ <>
+Name_Not_Found<>sage<>03/05/19 13:21 ID:???<> ■■■■アクセスアップの支援サービス■■■■ <br>  <br> 検索エンジン登録代行・ＢＢＳ書込み代行・メルマガ一括投稿 <br> ・ランキング登録 <br>  <br> 登録数が最大7,000件以上と、平均300件程度の他社と比べて断然多い。 <br> 0円から宣伝が可能で、有料プランも業界トップの低価格で提供。 <br> アクセスアップ裏技集・登録リストなども無料で差し上げます。 <br> 個人サイト・法人サイトのどちらからも高い評価を受けています。 <br>  <br> http://accessplus.jp/staff/in.cgi?id=11707 <br>  <br> ジャンプ出来ない場合、ブラウザのアドレス入力欄にコピー＆ <br> ペーストして下さい。 <>
+Name_Not_Found<>sage<>03/05/23 06:10 ID:???<> &gt; html+-guess-tag　 <br> 始　め　て　知　っ　た(´д⊂ <br> すげー、便利。 <br>  <br> これのxml版でつか・・・。俺も組み込んでみよ  <>
+Name_Not_Found<>sage<>03/05/26 08:03 ID:???<> xhtml-mode ｸﾙｰ!! <br> WZ-XHTML ｽｺﾞｰ <br> ソースと TODO リストがあったら手伝いたひ <>
+Name_Not_Found<>sage<>03/05/26 18:13 ID:???<> <a href="../test/read.cgi/hp/1005046309/484" target="_blank">&gt;&gt;484</a> <br> 来るって、誰か作ってるの？ <>
+Name_Not_Found<>sage<>03/05/26 21:13 ID:???<> YMTZさんが一から。 <>
+山崎渉<>（＾＾）<>03/05/28 12:59 ID:???<> 　　　 　∧＿∧ <br> ﾋﾟｭ.ｰ　(　　＾＾ ） ＜これからも僕を応援して下さいね（＾＾）。 <br> 　　＝〔~∪￣￣〕 <br> 　　＝ ◎――◎ 　　　　　　　　　　　　　　　　　　　　　山崎渉               <>
+Name_Not_Found<><>03/05/28 20:04 ID:sOwYf2eR<> 深度342なのでage <>
+Name_Not_Found<><>03/05/29 03:51 ID:enI2P170<> <a href="../test/read.cgi/hp/1005046309/484" target="_blank">&gt;&gt;484</a> <br> ttp://sugi.walker.jp/xyzzy/xml-mode.html#doc1_162 <br>  <br>  <>
+Name_Not_Found<><>03/05/31 14:27 ID:XJ7PnvSJ<> おお、山本さんが新しい html 用のメジャーモードを作りはじめたのか <br>  <br> 目次作成とかは是非お願いしたいなぁ <br> 俺そのために html+-mode から xml-mode に替えて SmartDoc 文書で書いてるんだもん <br> 当初手書きで目次と番号書いてたんだけど、項目を後で追加したら番号も <br> 全部ずらさなくちゃいけなくなって、さすがに面倒になっちゃった <br>  <>
+Name_Not_Found<><>03/06/06 00:37 ID:2Xpnr6kk<> 保守 <br>  <>
+Name_Not_Found<><>03/06/07 22:36 ID:DUDHm/Kg<> 早速xyzzyをいれてhtml+-modeをいてれ見たんだけど <br> タグ名に色がついただけ。インデントとか自動補完とか無い。 <br> バイトコンパイルもしたし、htmlを開いた時「loading htmlmode...done」 <br> って表示されるけどそれだけ。 <br>  <br> 何か俺、間違ってますか？ <>
+Name_Not_Found<>sage<>03/06/07 22:52 ID:???<> それはhtml+modeじゃなくて普通のhtmlmodeだと思う。導入失敗してるね。 <>
+Name_Not_Found<><>03/06/07 23:05 ID:DUDHm/Kg<> <a href="../test/read.cgi/hp/1005046309/493" target="_blank">&gt;&gt;493</a> <br> やっぱりなってないですか…。ｻﾝｸｽです。 <br> どういう風にやってみたかというと↓ <br>  <br> 解凍して出て来た html+-mode.l を <br> c:\xyzzy\site-lisp\ の下に移して <br>  <br> (export 'ed::html+-mode "ed") <br> (autoload 'html+-mode "html+-mode" t) <br> (pushnew '("\\.s?html?$" . html+-mode) *auto-mode-alist* :test 'equal) <br> を c:\xyzzy\site-lisp\siteini.l に書いて <br>  <br> M-x byte-compile-file <br> Byte compile file: C:\xyzzy\site-lisp\html+-mode.l <br> ついでに <br> M-x byte-compile-file <br> Byte compile file: C:\xyzzy\site-lisp\siteini.l <br> で、xyzzy再起動。 <br> こういう風にやってみた。 <>
+Name_Not_Found<>sage<>03/06/07 23:45 ID:???<> <a href="../test/read.cgi/hp/1005046309/494" target="_blank">&gt;&gt;494</a> <br> siteini.l はダンプしなおさなきゃ設定が反映されないいんじゃなかったっけ? <br> 再起動する前にダンプ消すか、再起動するときに CTRL と SHIFT 押しながら xyzzy を起動した? <>
+495<>sage<>03/06/07 23:52 ID:???<> <a href="../test/read.cgi/hp/1005046309/495" target="_blank">&gt;&gt;495</a> <br> siteini.l → siteinit.l <br> 反映されないいんじゃ → 反映されないんじゃ <br>  <br> ｽﾏｿ <>
+Name_Not_Found<>sage<>03/06/08 00:03 ID:???<> <a href="../test/read.cgi/hp/1005046309/495-496" target="_blank">&gt;&gt;495-496</a> <br> 出来たよ、ママン！激しく感謝！ <br>  <br> xyzzyで幸せになれそうです。メモ帳よ、さらば。 <>
+Name_Not_Found<><>03/06/10 20:04 ID:vrwblB5f<> 「リージョン・セレクションををタグで囲む」を便利に使っています。 <br> http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/edit.html <br>  <br> どうもありがとうございます。 <br>  <br> これを改造して、カーソルがある行をタグで囲むというのはできないでしょうか？ <br> あらかじめカーソルのある行をリージョンなりセレクションなりにしておけばいいのですが、 <br> めんどうなので、起動キー一発でできるとかなり便利なような気がするのですが。 <br>  <br> 従来のリージョン・セレクションを囲むものと併用しようと考えています。 <br> よろしくおながいします。 <br>  <>
+http://ura2ch.free-city.net/<>low<>03/06/10 21:28 ID:???<> ura2ch　ura2ch　 <>
+Name_Not_Found<>sage<>03/06/10 22:18 ID:???<> <a href="../test/read.cgi/hp/1005046309/498" target="_blank">&gt;&gt;498</a> <br> (defun quote-line-by-tag (&optional (quotetag "")) <br>   (interactive "*sTag: ") ; s =&gt; 文字入力を指示する。 <br>   ; 入力された文字列は quotetag に割り当てられる。 <br>   (setq starttag (string-trim "&lt;&gt;" quotetag)) <br>   (setq endtag (substitute-string starttag " .*" "")) <br>   (save-excursion <br>     (goto-eol) <br>     (insert "&lt;/" endtag "&gt;") <br>     (goto-bol) <br>     (insert "&lt;" starttag "&gt;"))) <br>  <br> キー設定は適当にな。 <>
+Name_Not_Found<>sage<>03/06/11 06:06 ID:???<> なーんか、xml-modeをDLして展開しようとすると、 <br> アーカイブが壊れてますよって怒られるんだけど <br> 俺だけ？ <br>  <br>  <>
+Name_Not_Found<>sage<>03/06/11 07:18 ID:???<> <a href="../test/read.cgi/hp/1005046309/501" target="_blank">&gt;&gt;501</a> <br> 今やったら大丈夫だったけど。 <>
+498<>sage<>03/06/11 11:07 ID:???<> <a href="../test/read.cgi/hp/1005046309/500" target="_blank">&gt;&gt;500</a> <br> うまくいきました。やた！ <br> これでかなり楽できそうです。 <br>  <br> ありがとうございます。 <br>  <br> ヒストリーが効くのでまぁなくてもいいんですが、 <br> ミニバッファで補完とかも効くとさらに便利なのですが、 <br> これは簡単には行かないでしょうか。 <br> 「リージョン･セレクションをタグで囲む」も含めて。 <br>  <>
+Name_Not_Found<>sage<>03/06/11 13:34 ID:???<> それだけアイディアがあるなら自分でsite-lispを <br> 修得するといい物を世に出せると思うが。 <br> 人にやらせるのではなく。 <>
+498<>sage<>03/06/11 18:32 ID:???<> <a href="../test/read.cgi/hp/1005046309/504" target="_blank">&gt;&gt;504</a> <br> 自分で書きたいのはやまやまなのですが、 <br> キーカスタマイズする程度しかlispはわからないのです。 <br> 多少のアイディアはあるので、いずれlispをいじれるようになって <br> 皆さんに少しでも恩返ししたいと思っております。 <br> ということで、いただいたlispを読んで勉強させていただきます。 <br> 今回はいろいろとありがとうございました。 <br>  <br>  <>
+Name_Not_Found<>sage<>03/06/11 20:38 ID:???<> <a href="../test/read.cgi/hp/1005046309/503" target="_blank">&gt;&gt;503</a> <br> &gt;  ヒストリーが効くのでまぁなくてもいいんですが、 <br> &gt;  ミニバッファで補完とかも効くとさらに便利なのですが、 <br> (defun quote-line-by-tag (&optional (quotetag "")) <br>   (interactive) <br>   (setf quotetag (completing-read "Tag: " <br>                                   ed::*html+-tags-list* <br>                                   :case-fold t)) <br>   ; 入力された文字列は quotetag に割り当てられる。 <br>   (setq starttag (string-trim "&lt;&gt;" quotetag)) <br>   (setq endtag (substitute-string starttag " .*" "")) <br>   (save-excursion <br>     (goto-eol) <br>     (insert "&lt;/" endtag "&gt;") <br>     (goto-bol) <br>     (insert "&lt;" starttag "&gt;"))) <br>  <br> 欠点 <br> ・ヒストリがきかない(:historyでhistory変数指定したけどなんかだめだった・・・？) <br> ・HTMLのattributeを入力できない <br> 　<a href="../test/read.cgi/hp/1005046309/500" target="_blank">&gt;&gt;500</a>だと &lt;p class="hoge"&gt;とか入力できる <br> ・html+-mode以外じゃないとえらーが出る <br> 　いや、まぁエラーを出さないようにするのは簡単だけど・・・ <br>  <br> <a href="../test/read.cgi/hp/1005046309/505" target="_blank">&gt;&gt;505</a> <br> &gt; ということで、いただいたlispを読んで勉強させていただきます。  <br> &gt; 今回はいろいろとありがとうございました。  <br>  <br> じゃあ欠点を解消した完全版を宿題ということで。 <>
+501<>sage<>03/06/11 21:49 ID:???<> 解凍ソフトを変えてみたら、エラーは出なかったけど、 <br> 今度はコンパイルができない。 <br> xmlのパッケージがねぇよって怒られる。 <br> なぜだ。 <br>  <>
+Name_Not_Found<>sage<>03/06/11 23:08 ID:???<> &gt;507 <br> ダウンロードし直してみるヨロシ <br> ファイルが途中でちょん切れてる可能性がある <>
+Name_Not_Found<>sage<>03/06/11 23:20 ID:???<> ｸｻｲ痔ｰってそんなにｲｲの？ <>
+501<>sage<>03/06/11 23:42 ID:???<> <a href="../test/read.cgi/hp/1005046309/508" target="_blank">&gt;&gt;508</a> <br> もう何度もやってんだよね。 <br> IEの所為かとも思ったから、 <br> 他のブラウザやDLソフトでも試してみたがダメだった。 <>
+Name_Not_Found<>sage<>03/06/12 00:49 ID:???<> <a href="../test/read.cgi/hp/1005046309/507" target="_blank">&gt;&gt;507</a> <br> 一度、xml-mode.lをロードしてからコンパイル。 <br>  <>
+501<>sage<>03/06/12 01:06 ID:???<> <a href="../test/read.cgi/hp/1005046309/511" target="_blank">&gt;&gt;511</a> <br> できたっぽい。ありがとう。ロードしなきゃならんかったのか。 <br> でもなんで、解凍の時点でエラーなんて起きたんだか。 <>
+Name_Not_Found<>sage<>03/06/12 05:00 ID:???<> <a href="../test/read.cgi/hp/1005046309/509" target="_blank">&gt;&gt;509</a> <br> 飯! <>
+Name_Not_Found<>sage<>03/06/12 08:46 ID:???<> <a href="../test/read.cgi/hp/1005046309/509" target="_blank">&gt;&gt;509</a> <br> 腸胃胃！ <>
+Name_Not_Found<>sage<>03/06/13 03:44 ID:???<> このxyzzy、htmlエディタとしてだけでもかなり優秀だな。 <br>  <br> html+-modeを切っ掛けに <br> win板やソフト板のスレ見て色々弄ってるけど、かなり面白い。 <br>  <>
+Name_Not_Found<>sage<>03/06/13 09:26 ID:???<> xml-modeでスタイルシートの適用ができない。。。 <br> 他の機能はちゃんと全部使えるのに、なんでだろう。 <br> これが使えないと非常に困る。 <>
+Name_Not_Found<>sage<>03/06/13 10:09 ID:???<> <a href="../test/read.cgi/hp/1005046309/506" target="_blank">&gt;&gt;506</a>  <br> 500含めてletとかしてないのはどうかと思うんだけど……。  <br> それはとにかく、ものすごく適当に作ってみた。  <br> (require "html+-mode")  <br> (defvar *html+-minibuffer-history* nil)  <br> (defun quote-line-by-tag ()  <br> (interactive)  <br> (if (equal buffer-mode 'html+-mode)  <br> (let (tag (*minibuffer-default-history*  <br> *html+-minibuffer-history*))  <br> (define-key minibuffer-local-completion-map #\SPC  <br> 'self-insert-command)  <br> (setq tag (completing-read "Tag: "  <br> *html+-completion-tags-list*  <br> :case-fold t))  <br> (save-excursion  <br> (goto-eol)  <br> (insert "&lt;/" (substitute-string (substring tag 1) "[ &gt;].*" "") "&gt;")  <br> (goto-bol)  <br> (insert tag))  <br> (define-key minibuffer-local-completion-map #\SPC  <br> 'minibuffer-complete-word)  <br> (setq *html+-minibuffer-history* *minibuffer-default-history*))))  <br>  <br> html+-modeでないと動かないようにしています。  <br> attributeが補完できないのはきつい。  <br> ヒストリは*html+-minibuffer-history*に入れていて、  <br> xyzzyを再起動すると初期化されます。  <br> （再起動してもヒストリが消えないようには出来るけど、面倒）  <br> あと、スペースがminibuffer-complete-wordに割り当てられているので、  <br> define-keyで切り替えているのがかなり無理矢理なやり方で気になるけど。  <br> 適当なので、上手く動かないかもしれません。 <>
+Name_Not_Found<>sage<>03/06/13 11:27 ID:???<> <a href="../test/read.cgi/hp/1005046309/516" target="_blank">&gt;&gt;516</a> <br> *xml-command-alist*の設定は？ <>
+516<>sage<>03/06/13 12:17 ID:???<> <a href="../test/read.cgi/hp/1005046309/518" target="_blank">&gt;&gt;518</a> <br>  <br> 簡易ガイド丸写し。 <br>  <br> (pushnew '("\\.\\(xml\\|xsl\\|html\\|sdoc\\|fo\\|rng\\|svg\\|xi\\)"  <br>  . xml-mode)  <br>  *auto-mode-alist* :test #'equal) <br>  <br> これじゃダメなのでせうか。 <>
+Name_Not_Found<>sage<>03/06/13 12:27 ID:???<> *auto-mode-alist*の話ではござらんよ。 <br>  <>
+516<>sage<>03/06/13 12:49 ID:???<> ああ、すみません、間違えた。 <br> 任意とあったから設定してないです。 <br>  <br> .xyzzyに <br>  <br> (require "xml/xml-mode") <br> (use-package 'xml) <br> (pushnew '("\\.\\(xml\\|xsl\\|html\\|sdoc\\|fo\\|rng\\|svg\\|xi\\)"  <br>  . xml-mode)  <br>  *auto-mode-alist* :test #'equal) <br> (setq *xsl-transform-command* *xsl-msxsl*) <br>  <br> と書いているだけ。 <br> c-c tで適用するときは、これだけでいいのかな、と思ったんだけど。 <br> なんか根本的な間違いをやらかしていますか。 <br>  <br> 古いバージョン（ディレクトリを用意しないでsite-lisp直下にlispを置いてたやつ）では、 <br> ちゃんと動いてたんだけど、新しいのに入れ替えたら使えなくなってしまった。 <>
+518<>sage<>03/06/13 13:45 ID:???<> <a href="../test/read.cgi/hp/1005046309/521" target="_blank">&gt;&gt;521</a> <br> (push <br>  '(xml::msxsl <br>    "msxsl ~A -pi" <br>    (get-buffer-file-name)) <br>  *xml-command-alist*) <br> とか書いてみて何か反応ないですか？ <>
+516<>sage<>03/06/13 15:11 ID:???<> <a href="../test/read.cgi/hp/1005046309/522" target="_blank">&gt;&gt;522</a> <br>  <br> ~Aはなにか自分の環境に合わせて書くんでしょうか？ <br>  <br> わからなかったのでとりあえず丸写ししたところ、 <br> command outputとcommand errorが出てきました。 <br>  <br> --- <br>  <br> Code:   0x80004005 <br> 不明な方法です。 <br>  <br> --&gt;processing-instruction('xml-stylesheet'&lt;--) <br>  <br> --- <br>  <br> 一つのxmlファイルに複数のスタイルシートを適宜適用させたいので、 <br> その都度xslファイルを選択して適用できればそれでいいんですけど。 <br>  <br> あれこれ試してみたんですが、さっぱりわからない…。 <br> そもそも、テンプレートと引数の部分に何を書けばいいのか。 <br> なんだかとっても情けなくなってきました。教えて君でごめんなさい。 <>
+518<>sage<>03/06/13 16:04 ID:???<> ~Aはそのままでよいです。formatへの引数として使われます。 <br>  <br> では代わりにこんな感じでどうですか？ <br> (push '(xml::msxsl <br> (concat *msxsl-command* " ~A ~A") <br> (get-buffer-file-name) <br> (or xml::*xml-user-option* *msxsl-default-options*)) <br>       *xml-command-alist*) <br> C-u C-c t で起動してみてください。 <>
+518<>sage<>03/06/13 16:06 ID:???<> ミニバッファにxslファイル名を入力してください。 <br> 続けてオプションも書けます。 <>
+518<>sage<>03/06/13 16:11 ID:???<> あ、他に合わせたほうが良いな。ちょと修正。 <br> (push '(xml::msxsl <br> "~A ~A ~A" <br> *msxsl-command* <br> (get-buffer-file-name) <br> (or xml::*xml-user-option* *msxsl-default-options*)) <br>       *xml-command-alist*) <>
+516<>sage<>03/06/13 16:47 ID:???<> <a href="../test/read.cgi/hp/1005046309/526" target="_blank">&gt;&gt;526</a> <br> できました！丁寧に、ありがとうございました。 <br> いろいろいじって、最終的に、 <br>  <br> (push '(xml::msxsl <br> "~A ~S ~S ~A" <br> *msxsl-command* <br> (get-buffer-file-name) <br> (read-file-name "stylesheet: " :history 'stylesheet) <br> (or xml::*xml-user-option* *msxsl-default-options*)) <br>       *xml-command-alist*) <br>  <br> これで思惑通りの挙動をしてくれるようになりました。 <br> ほんとにありがとうございました。 <>
+Name_Not_Found<>sage<>03/06/18 03:24 ID:???<> ほしゅ <br>  <>
+Name_Not_Found<>sage<>03/06/19 16:07 ID:???<> 誰かネスト具合によって&lt;hn&gt;が自動的に書き出されるのをｷﾎﾞﾝ。 <br> 例えば <br> &lt;body&gt; <br> 　&lt;h1&gt;foo&lt;h1&gt; <br> 　&lt;p&gt;hogehoge&lt;/p&gt; <br> 　　&lt;div&gt;  <br> 　　&lt;h2&gt;fooo&lt;/h2&gt; <br> 　　&lt;p&gt;hahaha&lt;/p&gt; <br> 　　&lt;blockquote&gt; <br> 　　　&lt;h3&gt;ふがふが&lt;/h3&gt; <br>  <br> みたいな感じになるようなやつがhtml+-guess-listみたいに <br> 適当なキーバインドで出来たら幸せ。 <br> どの深さまできてるのか把握するのがめんどくさいんだよねぇ <br>  <>
+Name_Not_Found<>sage<>03/06/19 16:36 ID:???<> 拡張子がphpやxml,cgiになってるサイトのソースを見る時に <br> html+-modeにしたいけど何かいい方法はあるでしょうか？ <>
+Name_Not_Found<>sage<>03/06/19 19:00 ID:???<> <a href="../test/read.cgi/hp/1005046309/530" target="_blank">&gt;&gt;530</a> <br> M - xで「html+-mode」と打つ <>
+Name_Not_Found<>sage<>03/06/19 20:44 ID:???<> <a href="../test/read.cgi/hp/1005046309/530" target="_blank">&gt;&gt;530</a> <br> http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/html+.html#source <>
+Name_Not_Found<>sage<>03/06/19 21:07 ID:???<> html+-modeで、"&lt;"の色を変える方法をご存知の方いらっしゃいますか？ <br> 既出のキーワード色変更方法だと、例えば"&lt;html&gt;"の場合、"html"の部分だけが変化して括弧の色はそのままみたいなんです。 <br>  <>
+Name_Not_Found<>sage<>03/06/19 21:52 ID:???<> <a href="../test/read.cgi/hp/1005046309/533" target="_blank">&gt;&gt;533</a> <br> キーワードでなくてタグの色を変えてみてはどうか。 <>
+534<>sage<>03/06/19 21:53 ID:???<> 補足：共通設定での話ね。 <>
+Name_Not_Found<>sage<>03/06/19 23:10 ID:???<> <a href="../test/read.cgi/hp/1005046309/534" target="_blank">&gt;&gt;534</a>,535 <br> ありがとう！解決しますた。っていうかたったこれだけ・・・申し訳なかったです。。 <br> 一生懸命 html+-mode.l とにらめっこしてたアホですた。 <>
+530<>sage<>03/06/20 01:09 ID:???<> <a href="../test/read.cgi/hp/1005046309/531-532" target="_blank">&gt;&gt;531-532</a> <br> thanx <br> MozzillaFirebirdだからうまくいかないかと思ったけど結構すんなりいけました <>
+Name_Not_Found<>sage<>03/06/27 11:06 ID:???<> 保守 <br>  <>
+Name_Not_Found<>sage<>03/07/05 17:58 ID:???<> 保守 <br>  <>
+Name_Not_Found<>sage<>03/07/10 02:00 ID:???<> 機能が多くて覚え切れないので必須の機能だけでも右クリックメニューきぼんぬ。 <>
+Name_Not_Found<>sage<>03/07/10 04:11 ID:???<> &gt;540 <br> xyzzy part2 <br> http://yasai.2ch.net/win/kako/994/994321779.html <br> の154のpopup-memoとかどうよ？てか俺はそうしてる <>
+541<>sage<>03/07/10 04:13 ID:???<> というかむしろこっちだすまん <br> ttp://members.tripod.co.jp/ohkubo/xyzzy/#popup-mode-memo <>
+Name_Not_Found<><>03/07/15 22:52 ID:J8p+8KU/<> http://www.geocities.jp/madoinu/xyzzy/note/major_mode.html <br> ここで紹介されてるcss-modeの改造なんだけど、siteinit.lに追加でいいのですか? <br> html+-modeでの文字色が効かなくなってしまいました。 <>
+Name_Not_Found<>sage<>03/07/16 14:11 ID:???<> <a href="../test/read.cgi/hp/1005046309/543" target="_blank">&gt;&gt;543</a> <br> siteinit.lでも.xyzzyでもお好きな方に。 <br>  <br> 色設定が効かなくなったことはないなぁ。役立たずでゴメソ。 <>
+Name_Not_Found<>sage<>03/07/17 12:48 ID:???<> <a href="../test/read.cgi/hp/1005046309/348" target="_blank">&gt;&gt;348</a> <a href="../test/read.cgi/hp/1005046309/354" target="_blank">&gt;&gt;354</a> 神 <>
+Name_Not_Found<>sage<>03/07/17 20:05 ID:???<> いえいえ。色のほうはいきなり正常に戻りました。 <br> ありがとう。 <>
+Name_Not_Found<>sage<>03/07/25 02:41 ID:???<> もっと使いやすいエディタ使えよ <>
+Name_Not_Found<>sage<>03/07/25 08:06 ID:???<> ↑メモ帳を卒業できない孤独のヒーロー <>
+Name_Not_Found<>sage<>03/07/25 13:22 ID:???<> 現状 xyzzy が私にとって使い易いエディタだから使ってるだけです。  <br>  あなたもわざわざ使いにくいの使わないでしょう？ <>
+Name_Not_Found<>sage<>03/07/25 20:16 ID:???<> 愛してるぜ、xyzzy ！ <br> 呼び方わからんけど。 <>
+Name_Not_Found<>sage<>03/07/26 08:19 ID:???<> イグズィズィー <br> ズィズィー <br> じじい　←おすすめ <>
+Name_Not_Found<>sage<>03/07/26 08:36 ID:???<> 口にするのが難しい＋恥ずかしい名ソフトって多い。 <>
+Name_Not_Found<>sage<>03/07/26 23:23 ID:???<> エクスワイジー <>
+Name_Not_Found<><>03/07/28 14:33 ID:zzbDlNnF<> xyzzyでasp <>
+Name_Not_Found<>sage<>03/07/31 00:15 ID:???<> えっくすわいぜっとずいー <>
+Name_Not_Found<>sage<>03/07/31 06:06 ID:???<> abccb <>
+山崎 渉<>（＾＾）sage<>03/08/02 02:18 ID:???<> （＾＾）                  <>
+Name_Not_Found<>sage<>03/08/05 02:48 ID:???<> ｴｸｽﾜｲｽﾞｨｰｽﾞｨｰﾜｲ <>
+Name_Not_Found<><>03/08/13 17:46 ID:eElBSUSq<> hoshu <>
+Name_Not_Found<>sage<>03/08/13 18:36 ID:???<> ｴｸｽｨｽﾞｨｰ <>
+Name_Not_Found<>sage<>03/08/13 18:38 ID:???<> ｴｸｼｼﾞ保栄 <>
+山崎 渉<>（＾＾）<>03/08/15 15:30 ID:???<> 　　　 (⌒V⌒) <br> 　　　│ ＾ ＾ │＜これからも僕を応援して下さいね（＾＾）。 <br> 　　⊂|　　　　|つ <br> 　　　（＿）（＿）　　　　　　　　　　　　　　　　　　　　　　山崎パン                                          <>
+Name_Not_Found<>sage<>03/09/01 03:12 ID:???<> 保 <>
+Name_Not_Found<>sage<>03/09/02 18:29 ID:???<> web日記を書いています。 <br> 毎日、毎日 <br>  <br> &lt;div class="section" id="d030902a"&gt; <br> &lt;h3&gt;&lt;a href="0309.html#d030902a"&gt;ほげ&lt;/a&gt;&lt;/h3&gt; <br>  <br> &lt;/div&gt; <br>  <br> こんなのを手で書くのはダヤいのでlisp使って一撃で入れたいです。 <br> 030902は日付で、その後ろのaは、一つ目の記事という意味です。 <br> 同じ日の二つめだと、例えば id="d030902b" みたいに自動的になってくれるとうれしいのですが <br> こんなことは可能でしょうか。 <br> 無理であれば、手で書きますので、日付から生成される id だけでもいいです。 <br>  <>
+Name_Not_Found<>sage<>03/09/02 19:05 ID:???<> <a href="../test/read.cgi/hp/1005046309/564" target="_blank">&gt;&gt;564</a> <br> diary.lを導入するとかndiary-modeを導入するとかじゃだめ？ <>
+Name_Not_Found<>sage<>03/09/03 00:12 ID:???<> <a href="../test/read.cgi/hp/1005046309/564" target="_blank">&gt;&gt;564</a> <br> (defvar *564-id-format-pattern* "id=\"d%y%m%d\\(.\\)" <br>   "id のフォーマット") <br> (defvar *564-change-of-day-hour* 6 <br>   "日付の変わる時間") <br> (defvar *564-cursor-pattern* "${cursor}" <br>   "テンプレート挿入後のカーソル位置") <br> (defvar *564-sequence-pattern* "${seq}" <br>   "テンプレートで連番に置換される") <br> (defvar *564-section-start-pattern* "&lt;div class=\"section\"" <br>    "テンプレートでの section の開始パターン") <br> (defvar *564-template* <br>   "&lt;div class=\"section\" id=\"d%y%m%d${seq}\"&gt; <br> &lt;h3&gt;&lt;a href=\"%y%m.html#d%y%m%d${seq}\"&gt;${cursor}&lt;/a&gt;&lt;/h3&gt; <br>  <br> &lt;/div&gt;") <br>  <br> (defun 564-succ (c) <br>   "564: 連番生成関数(超簡易版)" <br>   (cond ((characterp c) <br>          (string (code-char (1+ (char-code c))))) <br>         ((stringp c) <br>          (564-succ (char c 0))) <br>         (t <br>          "a"))) <br>  <>
+Name_Not_Found<>sage<>03/09/03 00:13 ID:???<> <a href="../test/read.cgi/hp/1005046309/564" target="_blank">&gt;&gt;564</a> <br> (defun hoge (title) <br>   (interactive "sTitle: ") <br>   (multiple-value-bind (second minute hour day month year) <br>       (get-decoded-time) <br>     (let* ((class "&lt;div class=\"section\" id=\"~A~A\"&gt;") <br>    (head "&lt;h3&gt;&lt;a href=\"~A#~A~A\"&gt;~A&lt;/a&gt;&lt;/h3&gt;") <br>    (filename (if (get-buffer-file-name) <br>  (file-namestring (get-buffer-file-name)) <br>        (format nil "~2,'0d~2,'0d.html" (mod year 100) month))) <br>    (anchor (format nil "d~2,'0d~2,'0d~2,'0d" (mod year 100) month day)) <br>    (re (format nil class anchor "\\(.\\)")) <br>    (char #\`)) <br>       (save-excursion <br> (goto-char (point-min)) <br> (while (scan-buffer re :regexp t :tail t) <br>   (let ((c (char-after (match-beginning 1)))) <br>     (if (char&gt; c char) <br> (setq char c))))) <br>       (setq char (code-char (1+ (char-code char)))) <br>       (insert (format nil class anchor char) #\LFD <br>       (format nil head filename anchor char title) <br>       "\n\n&lt;/div&gt;\n") <br>       (forward-char -8)))) <>
+Name_Not_Found<>sage<>03/09/03 00:14 ID:???<> <a href="../test/read.cgi/hp/1005046309/566" target="_blank">&gt;&gt;566</a> <br>  <br> (defun 564-diary () <br>   "564: 日記テンプレート挿入関数" <br>   (interactive "*") <br>   (let* ((now (- (get-universal-time) (* *564-change-of-day-hour* 60 60))) <br>          (id (format-date-string *564-id-format-pattern* now)) <br>          (opoint (point)) <br>          (seq)) <br>     (save-excursion <br>       (when (scan-buffer *564-section-start-pattern* :regexp t :reverse t) <br>         (scan-buffer id :regexp t :limit opoint) <br>         (setf seq (match-string 1)))) <br>     (save-excursion <br>       (insert (substitute-string (format-date-string *564-template* now) <br>                                  *564-sequence-pattern* <br>                                  (564-succ seq)))) <br>     (replace-buffer *564-cursor-pattern* "" :reverse t))) <br>  <>
+566<>sage<>03/09/03 00:15 ID:???<> かぶった。。。 <>
+Name_Not_Found<>sage<>03/09/03 00:19 ID:???<> <a href="../test/read.cgi/hp/1005046309/564" target="_blank">&gt;&gt;564</a> <br> 可能です。 <>
+Name_Not_Found<>sage<>03/09/03 00:23 ID:???<> <a href="../test/read.cgi/hp/1005046309/564" target="_blank">&gt;&gt;564</a> <br> モテモテだね。 <>
+564<>sage<>03/09/03 16:09 ID:???<> 566、567さん、ありがとうございます。 <br> どちらも素晴らしいです。 <br> 実は、h2要素を書くのにも似たようなことが必要だったので、 <br> 566さんのものを若干いじってh2用に、 <br> 567さんのものをh3用に使わせていただきます。 <br> ありがとうございました。 <br>  <>
+Name_Not_Found<>age<>03/09/08 21:27 ID:???<> age <>
+Name_Not_Found<>sage<>03/09/09 00:53 ID:???<> タグと呼ぶな <>
+Name_Not_Found<>sage<>03/09/09 01:31 ID:???<> じゃ、なんて呼ぶの? <br>  <>
+Name_Not_Found<>sage<>03/09/09 06:13 ID:???<> 575晒しage <>
+Name_Not_Found<>sage<>03/09/09 23:09 ID:???<> タグはタグ。要素は要素。ちゃんと使い分け出来てるんじゃない？ <>
+Name_Not_Found<><>03/09/23 19:18 ID:5OvQLqoO<> 励ましスレで質問しようかと思いましたがwebに関係してるんでこちらで。 <br>  <br> diary.lとndiaryを導入してxyzzyから日記を書けるようにしようと思ったんですが、 <br> C-c C-cをしても「まだ変換してないでしょ？」と表示されて日記ファイルがHTML化されません。 <br> 一体どうしたものでしょうか？ <br>  <br> .diaryは一応設定してありますしndiaryも単体ではきちんと動作しております。 <br> .xyzzyにキーバインドなどの設定が必要なのでしょうか。 <br>  <br> diary。lはweb上にもあまり解説が見つからないので、できれば基本的なところから教えて下さい。 <>
+Name_Not_Found<><>03/09/23 19:23 ID:x1rj2Tzf<> 加藤○いの温泉ビデオがあります。  <br> 期間限定いつまで見れるかわからない。  <br> お早めにチェックを。  <br> 無料でみれるよ。  <br> http://38.114.137.83/index.html  <br>  <>
+Name_Not_Found<>sage<>03/09/24 02:38 ID:???<> <a href="../test/read.cgi/hp/1005046309/578" target="_blank">&gt;&gt;578</a> <br> 入れたけどほとんど使ってないので思い出で書きますが、 <br> 確か .xyzzy にキーバインドの設定をした記憶があります。 <br> readme か、ソースのコメントから貼り付けたような。 <br>  <br> 少なくとも C-c C-c でそういうメッセージが出るってことは <br> デフォルトのキーバインドのままになっているのは確かです。 <br>  <>
+Name_Not_Found<>sage<>03/09/24 04:43 ID:???<> <a href="../test/read.cgi/hp/1005046309/578" target="_blank">&gt;&gt;578</a> <br> C-c C-c とするときのモードが draft ではないとか？ <br> @ や e を打ってから、C-c C-c してもだめ？ <>
+578<><>03/09/24 13:40 ID:sGIqvFrq<> ありがとうございます。言われたところを調べてみました。 <br>  <br> 581さんの言うようにdraftモードからしてませんでした。 <br> C-c C-cで保存はできるようになったのですが、HTMLは生成されません。 <br>  <br> キーバインドですがレジュメには.xyzzyに書くように指定されているのは <br> (autoload 'diary "diary/diary" t)だけでした。 <br> # もしかしてndiary-modeを導入しおくことが前提なのでしょうか？ <br>  <br> 疑問に思うのですが、xyzzyでndiary本体の場所を指定していないのにどうして <br> htmlの生成やサーバーへのアップロードができるのでしょうか？ <br> これらはどこに指定するべきなのでしょうか？ <br>  <br> よろしく御願いします。 <br> ところで便利そうに思えるlispなのに意外に使っている人は少ないのでしょうかね。 <>
+Name_Not_Found<>sage<>03/09/24 20:25 ID:???<> <a href="../test/read.cgi/hp/1005046309/582" target="_blank">&gt;&gt;582</a> <br> .diary の *diary-system*, *diary-n-command* のあたりが適切に設定されていないと <br> 思われます。 <br> 微妙にスレ違いの気がするので励ましスレの方がよいんじゃないでしょうか？ <br> むこうの方が厳しいかもしれませんが。 <>
+578<>sage<>03/09/24 20:53 ID:???<> 最後に聞いてもいいでしょうか？ <br> その二つの項目は全くいじってなかったんだけれど、何を書けばいいですか？ <br>  <br> 俺にはまだこのlispは早かったのかな・・・ <br> すれ違いすいませんでした。 <>
+Name_Not_Found<>sage<>03/09/24 21:23 ID:???<> <a href="../test/read.cgi/hp/1005046309/584" target="_blank">&gt;&gt;584</a> <br> ttp://www.est.hi-ho.ne.jp/rain/200308.html <br> を見つけました。 <>
+578<>sage<>03/09/24 23:10 ID:???<> &gt;584  ありがとうございます。ズバリそのものが書いてありましたね。 <br>  <br> (setq *diary-system* "ndiary");ndiary を使う <br> (setq *diary-n-command* "ruby F:/program/BackupAPP/ndiary/script/diary F:/program/BackupAPP/ndiary/script/ndiary.conf") <br>  <br> ってかいてみたんですが、なぜかできませんでした・・・ <br>  <br> もう少し調べてみます。難しいなー。 <>
+Name_Not_Found<>sage<>03/09/24 23:50 ID:???<> <a href="../test/read.cgi/hp/1005046309/586" target="_blank">&gt;&gt;586</a> <br> 使ってないんでわからんけど、rubyをインストールしてないとか。 <br>  <br> &gt; ってかいてみたんですが、なぜかできませんでした・・・ <br> エラーメッセージとか出なかった？ <>
+578<>sage<>03/09/25 05:57 ID:???<> おはようございます。<a href="../test/read.cgi/hp/1005046309/587" target="_blank">&gt;&gt;587</a> さすがにそれはないです。 <br> ndiaryそれ単体ではきちんと機能しています。 <br>  <br> エラーメッセージは表示されずに、単に日記としてだけ保存されていました。 <>
+Name_Not_Found<>sage<>03/09/25 08:45 ID:???<> <a href="../test/read.cgi/hp/1005046309/588" target="_blank">&gt;&gt;588</a> <br> C-x & と打ったあと <br> ruby F:/program/BackupAPP/ndiary/script/diary F:/program/BackupAPP/ndiary/script/ndiary.conf <br> を入力して RET したらどんな message が出ます。 <>
+578<>sage<>03/09/25 17:05 ID:???<>  <br> 長いですけれど以下に。 <br>  <br> -- nDiary version 0.9.2 -- <br>  <br> make 'F:\My Documents\Documents\diary\output_directory/200308.html' <br> make 'F:\My Documents\Documents\diary\output_directory/index.html' <br> make 'F:\My Documents\Documents\diary\output_directory/topics.html' <br>  <br> finish. (1.122sec.) <br> Plug-in error: whatsnew  &gt; src file not found! <br>  <br> ** error: topics skelton file: 'F:\My Documents\Documents\diary\log_directory/ndiary.html' not found. <br>  <br> ** error: topics skelton file: 'F:\My Documents\Documents\diary\log_directory/books.html' not found. <br>  <br> ということで一応作成はされてるみたいです。 <br> エラーの部分はndairyの設定に不備があったんでしょうか、今からいじってみます。 <br> C-c C-cでhtmlの生成ができないのはxyzzyの設定上の問題ですよね？ <br> .xyzzyにキーバインドを書く必要はreadmeを見ても見あたらないのですが。 <>
+Name_Not_Found<>sage<>03/09/25 19:17 ID:???<> <a href="../test/read.cgi/hp/1005046309/590" target="_blank">&gt;&gt;590</a> <br> .xyzzyにキーバインドを書く必要はないです。 <br>  <br> ;(setq *diary-system* "ndiary") <br> とかしてませんよね。 <br> (setq *diary-system* "ndiary") <br> が正解ですが。 <br>  <>
+Name_Not_Found<>sage<>03/09/25 19:40 ID:???<> <a href="../test/read.cgi/hp/1005046309/590" target="_blank">&gt;&gt;590</a> <br> あと、 <br> (setq *diary-n-html-directory* "file:///F:/My Documents/Documents/diary/output_directory") <br> (setq *diary-n-html-recent-file-name* "index.html") <br> かなあ。 <br>  <br>  <>
+578<>sage<>03/09/25 20:24 ID:???<> ご報告！ <br> 色々試行錯誤した結果どういう訳かうまく動く行くようになりました！ <br> いじりまくったのでどこが原因だったのかは分らないので申訳ないんですが、 <br> もしかしたらログなどのフォルダ指定に半角スペースが含まれていたせいかな、とか思っております。 <br>  <br> 助けて下さったお世話になりました！これで快適に暮せそうです。 <br> きちんとしたページができた際にはここで学ばせていただいたことを活かして、 <br> 初心者向けの導入解説コーナでも設けさせていただきます。 <br>  <br> いや、ほんとに助かりました。改めてありがとうございます！ <>
+Name_Not_Found<>さげ<>03/10/13 15:15 ID:???<> nDiaryの.diaryファイルに <br>  <br> にちゃんねる(http://2ch.net) <br>  <br> と書くと自動でリンクにしてくれるはずなのですが <br> この文章がそのまま表示されてしまいます。同じ症状の人いませんか？ <>
+Name_Not_Found<>sage<>03/10/13 19:37 ID:???<> <a href="../test/read.cgi/hp/1005046309/594" target="_blank">&gt;&gt;594</a> <br> その文字列の前に全角のスペースがないと駄目なんじゃなかったけか。 <br> README 読んでみれ。 <>
+Name_Not_Found<>sage<>03/10/13 20:16 ID:???<> <a href="../test/read.cgi/hp/1005046309/594" target="_blank">&gt;&gt;594</a> <br> 僕の場合。 <br> なんだかんだで使いにくいのでフィルタのautoreplace使ってます。 <br> autoreplace.txtに <br> /&lt;&lt;(.*?),(http:.*?)&gt;&gt;/i&lt;a href=\"#$2\"&gt;#$1&lt;/a&gt; <br> と書いとけば <br> &lt;&lt;にちゃんねる,http://2ch.net&gt;&gt; <br> で、リンクになります。 <br> 文章中に&lt;&lt;にちゃんねる,http://2ch.net&gt;&gt;と書いてもこれなら大丈夫。 <br> スレ違いすまぬ。 <>
+Name_Not_Found<>sage<>03/10/15 00:38 ID:???<> このスレ読んでさっそくxyzzyを導入してみました。 <br> まだ難しくてよくわかりませんが、徐々に慣れていこうと思っています。 <>
+Name_Not_Found<>sage<>03/10/15 00:55 ID:???<>  <br> 俺も新入りだけれど、HTMLに限らずいろんなものを導入するとやばいくらいに便利だよ。 <br> これ無しではPCにさわれないってぐらいにね。がんばってなれてちょ。 <>
+Name_Not_Found<>sage<>03/11/01 13:47 ID:???<> 統合環境としてxyzzyを使うとやめらんなくなるね <>
+Name_Not_Found<>sage<>03/11/07 23:21 ID:???<> C-x C-j でファイルの相対パスを入力できるわけだけど, カレント <br> 文書のあるディレクトリより上にあるファイルだとちゃんと相対パ <br> スで入力されるのに, カレント文書よりも下のディレクトリのファ <br> イルだとそのディレクトリの前に ./ がついてくれないんだけど,  <br> これってそういうもんなの? <>
+Name_Not_Found<>sage<>03/11/08 08:46 ID:???<> <a href="../test/read.cgi/hp/1005046309/600" target="_blank">&gt;&gt;600</a> <br> ./はあってもなくても同じだべ？ <>
+Name_Not_Found<>sage<>03/11/08 17:26 ID:???<> <a href="../test/read.cgi/hp/1005046309/601" target="_blank">&gt;&gt;601</a> <br> そのとおりだな <br> すまんかった <br> ずっと ./ てやってた <>
+Name_Not_Found<>sage<>03/11/08 17:34 ID:???<> どうしてもと言うならこんなかな？ <br> (defvar *org-adjust-path-func* #'ed::adjust-path) <br> (defun ed::adjust-path (f) <br>   (let ((path (funcall *org-adjust-path-func* f))) <br>     (if (string-matchp "^\\([a-z]:\\|\\.+/\\)" path) <br>         path <br>       (concat "./" path)))) <>
+Name_Not_Found<>sage<>03/11/19 18:57 ID:???<> <a href="../test/read.cgi/hp/1005046309/339-340" target="_blank">&gt;&gt;339-340</a>を別ファイルで「css+-mode.l」などと保存した場合 <br> .xyzzyにはどのように記述したらよろしいでしょうか？ <br> 「オートロードに失敗しました」っと出てしまいます。 <>
+Name_Not_Found<><>03/11/19 18:57 ID:o7qywZ/s<> age <>
+Name_Not_Found<>sage<>03/11/19 22:56 ID:???<> <a href="../test/read.cgi/hp/1005046309/604" target="_blank">&gt;&gt;604</a> <br> どういうふうに書いたの？ <br> 普通にできるけど。 <>
+Name_Not_Found<>sage<>03/11/20 00:30 ID:???<> <a href="../test/read.cgi/hp/1005046309/606" target="_blank">&gt;&gt;606</a> <br> site-lispの中にcss+-mode.lと保存して↓の用に書きました。 <br>  <br> (export 'ed::css+-mode "ed") <br> (autoload 'css+-mode "css+-mode" t) <br> (pushnew '("\\.css$" . css+-mode) *auto-mode-alist* :test 'equal) <br>  <>
+Name_Not_Found<>sage<>03/11/20 01:12 ID:???<> <a href="../test/read.cgi/hp/1005046309/607" target="_blank">&gt;&gt;607</a> <br> オートロードに失敗するのは css+-modeが定義されていないから。 <br>  <br> (defun css+-mode () <br>   (interactive) <br>   (css-mode)) <br>  <br> を君のcss+-mode.l に追加すればいいと思う。 <br>  <>
+Name_Not_Found<>sage<>03/11/20 01:36 ID:???<> <a href="../test/read.cgi/hp/1005046309/608" target="_blank">&gt;&gt;608</a> <br> サンクス!! <br> また1つしあわせになりました。ありがとう。 <br>  <>
+Name_Not_Found<><>03/11/23 13:15 ID:rij2K/Bs<> ビルダーみたいに簡単にテーブル作れる仕組みがあれば文句ないな <br> 行数と列数を指定するとズバッとみたいな <>
+Name_Not_Found<>sage<>03/11/23 13:37 ID:???<> それほしいね <>
+Name_Not_Found<>sage<>03/11/23 14:00 ID:???<> 息抜きに作ってみたけど、こんな？ <br> (defun html-make-table (&optional row col) <br>   (interactive "n行数: \nn列数: ") <br>   (save-excursion <br>     (let ((s (save-excursion (forward-line -1) (point)))) <br>       (insert "&lt;table&gt;\n") <br>       (dotimes (i row) <br>         (insert "&lt;tr&gt;\n") <br>         (dotimes (h col) <br>           (insert "&lt;td&gt;&lt;/td&gt;\n")) <br>         (insert "&lt;/tr&gt;\n")) <br>       (insert "&lt;/table&gt;\n") <br>       (ignore-errors (indent-region s (point)))))) <>
+Name_Not_Found<>sage<>03/11/23 14:04 ID:???<> えっまじで！ <br> これって.xyzzyにかけばいいのかな？ <>
+Name_Not_Found<>sage<>03/11/23 14:19 ID:???<> そうだす <>
+Name_Not_Found<>sage<>03/11/23 14:30 ID:???<> <a href="../test/read.cgi/hp/1005046309/614" target="_blank">&gt;&gt;614</a> <br> ウホッ!!たまたまのぞいたら神発見!! <br>  <br> 　　　_、_ <br> 　（　,_ﾉ` ） 　 　　　n <br> ￣　　 　 ＼　 　 （ E） ｸﾞｯｼﾞｮﾌﾞ!! <br> ﾌ 　　　 /ヽ ヽ_／／ <br>  <br>  <br>  <br>  <>
+530<>sage<>03/11/23 16:34 ID:???<> でも表書くならCSVモードで書くなぁ。 <br> その後ヘッダとフッタ付けて終了て感じにしてる <br> もしかして少数派？ <>
+Name_Not_Found<><>03/11/23 22:16 ID:rij2K/Bs<> <a href="../test/read.cgi/hp/1005046309/612" target="_blank">&gt;&gt;612</a> <br> ウホッ!!いいっすね～。まじサンクスです。 <br> インデント効くようにできれば更にいいですね。 <br> 後は、colspan,rowspanを簡単に扱えれば言うことなしなんだけど。 <br> 実はtable系ではそこの見通しが一番面倒な気がする…俺だけ？ <>
+Name_Not_Found<>sage<>03/11/24 06:16 ID:???<> <a href="../test/read.cgi/hp/1005046309/617" target="_blank">&gt;&gt;617</a> <br> box-to-table  http://homepage3.nifty.com/~ko-ji/ <>
+Name_Not_Found<>sage<>03/11/24 11:41 ID:???<> 必要以上に喜んでるﾔｼ <br> ﾃｰﾌﾞﾙﾚｲｱｳﾀｰだな？ <>
+Name_Not_Found<><>03/11/24 19:17 ID:ZDF71Ryr<> Xyzzy+html+-modeからほかのOSに移ったとき、html+-modeになれすぎて、 <br> Emacs+html-helper-modeじゃ我慢できない僕はどうすればいいですか？ <>
+Name_Not_Found<>sage<>03/11/24 19:19 ID:???<> <a href="../test/read.cgi/hp/1005046309/620" target="_blank">&gt;&gt;620</a> <br> 移植しる <br>  <>
+Name_Not_Found<>sage<>03/11/24 19:49 ID:???<> <a href="../test/read.cgi/hp/1005046309/620" target="_blank">&gt;&gt;620</a> <br> なぜベストを尽くさないのか？ <br>  <>
+Name_Not_Found<>sage<>03/11/24 19:50 ID:???<> インデント目的で TAB すると補完がなくて & が出るのですが <br> これを出さないようにできますか。 <>
+Name_Not_Found<>sage<>03/11/26 09:42 ID:???<> <a href="../test/read.cgi/hp/1005046309/623" target="_blank">&gt;&gt;623</a> <br> html+mode.lの(defun html+-do-completioｎ ... の、「; 通常空間の場合」の２行下の、 <br> (let ((from ...から (setq *this-command* 'minibuffer-complete))))) まで(660-668行)をコメント化して、 <br> 括弧３つを挿入してdefunを閉じる。その後、保存、バイトコンパイル、ロード。 <>
+624<>sage<>03/11/26 09:48 ID:???<> そういうことがしたいんじゃなかったら、すまないです。 <>
+Name_Not_Found<>sage<>03/11/26 10:08 ID:???<> (setf ed::*html+-completion-text-list* 'nil) <br> でいけないか？ <br>  <>
+623<>sage<>03/11/26 13:27 ID:???<> <a href="../test/read.cgi/hp/1005046309/624-626" target="_blank">&gt;&gt;624-626</a> <br> コメントありがとうございます。 <br> 今は下記 HTML の &lt;tr&gt; の所にカーソルがあるとき <br> TAB を押すと & が出るのですが、その & だけがいらないのです。 <br>  <br> &lt;table&gt; <br>   &lt;tr&gt; <br>     &lt;td&gt; <br>     &lt;/td&gt; <br>   &lt;/tr&gt; <br> &lt;/table&gt; <br>  <br> 626 様の方法ですと <br>  <br> &lt;table&gt; <br> &lt;tr&gt; <br> &lt;td&gt; <br> &lt;/td&gt; <br> &lt;/tr&gt; <br> &lt;/table&gt; <br>  <br> のときにインデントができなくてちょっと困ります。。。 <>
+Name_Not_Found<>sage<>03/11/26 20:19 ID:???<> ようするに、TABを入力したいということなら <br> C-q TAB <>
+Name_Not_Found<>sage<>03/11/26 21:10 ID:???<> C-q TABって打つの面倒なんでCtrl+TABとかで強制TAB入力とか出来ないですか？ <>
+Name_Not_Found<>sage<>03/11/26 21:26 ID:???<> CGIをbrowserexで見れるようにしたいと思ったんだけど <br> 自分では作れなかった。＿|￣|○ <br> こんなの可能？ <>
+Name_Not_Found<>sage<>03/11/26 22:02 ID:???<> とりあえず Perl と httpd をインストールしてみるとかそういう話？ <br> んで、適当にリスプる。 <>
+Name_Not_Found<>sage<>03/11/26 22:08 ID:???<> <a href="../test/read.cgi/hp/1005046309/631" target="_blank">&gt;&gt;631</a> <br> 実行環境はあるので <br> その「リスプ」がﾑﾘﾎﾟだた。 <>
+Name_Not_Found<>sage<>03/11/26 22:49 ID:???<> <a href="../test/read.cgi/hp/1005046309/632" target="_blank">&gt;&gt;632</a> <br> 以前、過去ログで似たような質問に答えた記憶があるよ。 <br>  <>
+Name_Not_Found<>sage<>03/11/26 23:29 ID:???<> <a href="../test/read.cgi/hp/1005046309/629" target="_blank">&gt;&gt;629</a> <br> &gt;  C-q TABって打つの面倒なんでCtrl+TABとかで強制TAB入力とか出来ないですか？ <br> こういうこと？ <br> (define-key ed::*html+-mode-map* #\C-F15 #'(lambda () <br>                                              (interactive) <br>                                              (insert "\t"))) <br> (set-extended-key-translate-table exkey-C-tab #\C-F15) <>
+Name_Not_Found<>sage<>03/11/26 23:35 ID:???<> <a href="../test/read.cgi/hp/1005046309/634" target="_blank">&gt;&gt;634</a>様 <br> すばらしいです！ありがたく使わせてもらいます。 <br> 勉強になりました。ありがとうございました。 <>
+Name_Not_Found<>sage<>03/11/27 16:08 ID:???<> <a href="../test/read.cgi/hp/1005046309/633" target="_blank">&gt;&gt;633</a> <br> お手数かけました。掘り当ててきました。 <br> 一応引用させてもらうと・・・ <br>  <br> perlなどCGIが動作する環境でbrowser.dllを利用して <br> 動作を確認する方法。 <br>  <br> 「xyzzy使い方がわからぬ人たちが励ましあうスレ」より <br>  <br> &gt; (defvar *local-host-name* "http://127.0.0.1/cgi-bin/")  <br>  <br> &gt; (defun show-cgi ()  <br> &gt; (interactive)  <br> &gt; (let ((filename (get-buffer-file-name (selected-buffer))))  <br> &gt; (if (string-equal (pathname-type filename) "cgi")  <br> &gt; (navigate  <br> &gt; (concat (append-trail-slash *local-host-name*)  <br> &gt; (file-namestring filename)))  <br> &gt; (message "cgi ではありません")  <br> &gt; )  <br> &gt; ))  <br>  <>
+1<>sage<>03/11/29 16:54 ID:???<> このスレまだあったのか・・・。 <br> 当時中学生だった僕も今では高校生。 <br> 時の流れははやいでつね。 <br>  <br> 無意味なｶｷｺなのでsage <>
+Name_Not_Found<>sage<>03/11/29 19:29 ID:???<> <a href="../test/read.cgi/hp/1005046309/637" target="_blank">&gt;&gt;637</a> <br> 相変わらずxyzzyは使ってるかい？ <>
+1<>sage<>03/11/29 20:15 ID:???<> <a href="../test/read.cgi/hp/1005046309/638" target="_blank">&gt;&gt;638</a> <br> これはもう手放せませんねー。 <>
+Name_Not_Found<>sage<>03/11/30 02:41 ID:???<> <a href="../test/read.cgi/hp/1005046309/1" target="_blank">&gt;&gt;1</a> は文字通りの厨房だったわけか。 <br>  <>
+Name_Not_Found<>sage<>03/11/30 12:23 ID:???<> 現役のと言う意味で。 <>
+Name_Not_Found<>sage<>03/11/30 20:13 ID:???<> 俺も大学時代に書いた質問が最初のほうにあるなぁ。 <br> なつかしい。 <br> そんな俺もいまは社会人か。 <>
+Name_Not_Found<>sage<>03/12/01 12:42 ID:???<> 俺も仕事してた頃のレスが一杯残ってるなぁ。 <br> なつかしい。 <br> そんな俺も今は無職　＿|￣|○ <br>  <>
+Name_Not_Found<>sage<>03/12/01 15:35 ID:???<> <a href="../test/read.cgi/hp/1005046309/643" target="_blank">&gt;&gt;643</a> <br> おぉ～同士よ～ <>
+Name_Not_Found<>sage<>03/12/01 18:12 ID:???<> 明日はきっと良い日だって、Dr.テンマが言ってた <>
+Name_Not_Found<>sage<>03/12/01 18:45 ID:???<> 誰かsyusyoku+-mode作ってください。＿|￣|○ <>
+Name_Not_Found<>sage<>03/12/01 20:29 ID:???<> <a href="../test/read.cgi/hp/1005046309/646" target="_blank">&gt;&gt;646</a> <br> 俺も切実に希望 <>
+Name_Not_Found<>sage<>03/12/01 21:08 ID:???<> <a href="../test/read.cgi/hp/1005046309/646" target="_blank">&gt;&gt;646</a> <br> 自分でなんとかしる! <>
+Name_Not_Found<><>03/12/03 07:55 ID:UevqQR9l<> 編集中のhtmlファイルを直接IEで開きたいんですが <br> そんなこと出来ますか？ <>
+Name_Not_Found<>sage<>03/12/03 07:56 ID:???<> できます <>
+Name_Not_Found<>sage<>03/12/03 08:56 ID:???<> <a href="../test/read.cgi/hp/1005046309/650" target="_blank">&gt;&gt;650</a> <br> 簡単ですか？ <>
+Name_Not_Found<>sage<>03/12/03 09:17 ID:???<> はい <>
+Name_Not_Found<>sage<>03/12/03 10:25 ID:???<> ;; バッファから送るのリスト <br> (setf *buffer-send-to-list* <br>       (list <br>        '(" Internet Explorer" . "C:/Program Files/Internet Explorer/IEXPLORE.EXE") <br>        '(" Sleipnir" . "C:/Program Files/sleipnir/Sleipnir.exe") <br>        )) <br>  <br> ;; バッファから送る <br> (defun buffer-sendto-dialog () <br>   (interactive) <br>   (let ((file (get-buffer-file-name))) <br>     (when file <br>       (multiple-value-bind (result data) <br>   (dialog-box <br>    '(dialog 0 0 219 100 <br>      (:caption "送っちゃうよ") <br>      (:font 9 "Microsoft Sans Serif") <br>      (:control <br>       (:listbox list nil #x50b10111 7 7 150 82) <br>       (:button IDOK "送る" #x50010001 162 7 50 14) <br>       (:button IDCANCEL "送らない" #x50010000 162 24 50 14))) <br>    (list (cons 'list *buffer-send-to-list*)) <br>    nil) <br> (when result <br>   (let <br>       ((cmd (cddr (assoc 'list data)))) <br>     (if cmd <br> (call-process (map-slash-to-backslash (concat cmd " " file)) :wait nil) <br>       (message "なにもえらんでない。")))))))) <br> (define-key *global-keymap* '(#\c-F7) 'buffer-sendto-dialog) <br>  <>
+Name_Not_Found<>sage<>03/12/03 10:26 ID:???<> ↑どっかで拾ったやつです。 <br>  <br>  <>
+Name_Not_Found<><>03/12/03 15:20 ID:hACR5Pkw<> ;; C-F1で編集中のファイルを関連付け実行 <br> (defun execute () <br>   (interactive) <br>   (shell-execute (get-buffer-file-name))) <br> (global-set-key #\C-F1 'execute) <br>  <>
+649<>sage<>03/12/03 23:09 ID:???<> <a href="../test/read.cgi/hp/1005046309/652" target="_blank">&gt;&gt;652</a><a href="../test/read.cgi/hp/1005046309/653" target="_blank">&gt;&gt;653</a><a href="../test/read.cgi/hp/1005046309/655" target="_blank">&gt;&gt;655</a> <br> ありがとうございました。助かります。 <>
+Name_Not_Found<><>03/12/08 21:44 ID:sFY52+5J<> とりあえずageとく <>
+Name_Not_Found<>sage<>03/12/09 19:57 ID:???<> xyzzyってどのくらいの年代の人が使ってるんだろう？ <br> 当方、大学生です。 <>
+Name_Not_Found<>sage<>03/12/09 20:59 ID:???<> 25 歳 無職。 <br>  <>
+Name_Not_Found<>sage<>03/12/09 21:27 ID:???<> <a href="../test/read.cgi/hp/1005046309/658" target="_blank">&gt;&gt;658</a> <br> ３９才フリーランス <>
+Name_Not_Found<>sage<>03/12/09 21:31 ID:???<> <a href="../test/read.cgi/hp/1005046309/659" target="_blank">&gt;&gt;659</a> <br> そういえば無色仲間がいたね。 <br>  <br> というわけで24才になったばかりの無色。 <br> web関連やってたころ使ってた。 <>
+Name_Not_Found<>sage<>03/12/09 21:36 ID:???<> まだ高校一年生です。 <br> 宿題するときに使ってます。 <>
+Name_Not_Found<>sage<>03/12/10 16:25 ID:???<> 無職ひきこもりです <>
+Name_Not_Found<>sage<>03/12/10 19:34 ID:???<> 大学生です <>
+Name_Not_Found<>sage<>03/12/10 19:35 ID:???<> 俺も25歳無職だァ。 <>
+Name_Not_Found<>sage<>03/12/10 21:21 ID:???<> 無職大杉 <>
+Name_Not_Found<>sage<>03/12/14 19:32 ID:???<> fosyu-mode <>
+Name_Not_Found<>sage<>03/12/14 22:18 ID:???<> 無息です <>
+Name_Not_Found<>sage<>03/12/14 22:29 ID:???<> チーン <>
+Name_Not_Found<>sage<>03/12/14 22:40 ID:???<> 無職のためのエディタですか……。 <br> あるいはこのエディタを使うと無職になってしまうのでしょうか…… <>
+Name_Not_Found<>sage<>03/12/14 22:59 ID:???<> ある程度、時間がないと使おうとはおもわんかもな <>
+Name_Not_Found<>sage<>03/12/19 03:54 ID:???<> あぁなるほど。納得だ。。。 <>
+Name_Not_Found<>sage<>03/12/19 04:23 ID:???<> emacs使ってる人ならすんなり使いこなせると思うけどね <>
+Name_Not_Found<>sage<>03/12/19 09:21 ID:???<> xyzzy 使えても emacs は使えないかもね。 <br> xyzzy の UI とか素晴らしすぎ。 <>
+Name_Not_Found<>sage<>03/12/19 15:12 ID:???<> <a href="../test/read.cgi/hp/1005046309/673" target="_blank">&gt;&gt;673</a> <br> 同感。 <br> でもそういう人の大半はわざわざxyzzy使うこともないんじゃない？ <br>  <br> <a href="../test/read.cgi/hp/1005046309/674" target="_blank">&gt;&gt;674</a> <br> emacsは基本的にttyの制約を受けるしなぁ。 <br> おかげでtelnetでも使えるうれしさはあるけれども。 <br>  <br> xyzzyはいいバランスでwinアプリになってるところがうれしい。 <>
+Name_Not_Found<>sage<>03/12/19 18:38 ID:???<> XEmacs と比べても xyzzy の GUI ぶりは秀逸。 <br> フォント設定の楽さは感激モノ。 <>
+Name_Not_Found<>sage<>03/12/19 20:58 ID:???<> ふぉんとふぉんと。 <>
+Name_Not_Found<>sage<>03/12/19 21:28 ID:???<> xyzzyでactionscript打ってる人の・・・　　いねえか。 <br>  <br> actionscript-modeなんてあるわけもないだろうが <br> ググってしまった。 <>
+Name_Not_Found<>sage<>03/12/20 17:42 ID:???<> <a href="../test/read.cgi/hp/1005046309/678" target="_blank">&gt;&gt;678</a> <br> ディスプレイが狭いから、FLASHのあの狭い領域じゃコードが打ちにくいので、 <br> ぜひともsctionscript-modeほしいなぁ。 <br>  <br> 文法チェッカとかついててなかなか使いやすいとは思うんだけど。 <>
+Name_Not_Found<><>03/12/20 18:49 ID:+4zbBmQL<> 作れる人いないかなあげ。 <>
+Name_Not_Found<><>03/12/20 23:28 ID:WXmjjR4W<> 秀丸+マクロでタグうちじゃだめなのかー <br> なんとなくage <>
+Name_Not_Found<>sage<>03/12/20 23:45 ID:???<> フリーじゃないし。 <>
+Name_Not_Found<>sage<>03/12/21 01:39 ID:???<> <a href="../test/read.cgi/hp/1005046309/681" target="_blank">&gt;&gt;681</a> <br> 秀丸のhtml編集マクロってたとえばどんな機能があるの? <br> ぜひとも知りたいところ。 <>
+Name_Not_Found<>sage<>03/12/21 01:52 ID:???<> <a href="../test/read.cgi/hp/1005046309/679" target="_blank">&gt;&gt;679</a> <br> での程度の機能がほしい。 <br> キーワードの色づけと補完だけなら <br> instant.lつかえば3秒でできる。 <br>  <>
+Name_Not_Found<>sage<>03/12/21 12:45 ID:???<> <a href="../test/read.cgi/hp/1005046309/684" target="_blank">&gt;&gt;684</a> <br> &gt;  での程度の機能がほしい。 <br> 「どの程度の機能がほしい?」ってことなら、 <br> ・文法チェッカ <br> ・自動インデント <br> ・キーワード色づけ+補完 (instant.lで3秒) <br> ・Ctrl+Enterでムービープレビュー <br> ・ActionScriptのリファレンスを開く <br> があったら便利かなぁ、と。 <>
+Name_Not_Found<>sage<>03/12/21 13:05 ID:???<> <a href="../test/read.cgi/hp/1005046309/683" target="_blank">&gt;&gt;683</a> <br> http://www007.upp.so-net.ne.jp/masema/hide/hide-ougi-macros.html#HTML <br> http://www.google.co.jp/search?q=lib%2Fmacro+html&hl=ja&domains=hide.maruo.co.jp&sitesearch=hide.maruo.co.jp <>
+Name_Not_Found<>sage<>03/12/21 16:50 ID:???<> 無職のためのエディタ xyzzy について語るサイトです。 <br>  <>
+Name_Not_Found<>sage<>03/12/22 04:14 ID:???<> というより、「暇を持て余してる人のためのエディタ」だな。 <br> 略して暇人エディター <>
+Name_Not_Found<>sage<>03/12/22 15:39 ID:???<> というより、「暇を持て余してる人のためのエディタ」だな。 <br> 略して暇ター <br>  <>
+Name_Not_Found<>sage<>03/12/23 05:23 ID:???<> というより、「暇を持て余してる人のためのエディタ」だな。  <br> 略して暇ダー <br>  <br>  <>
+Name_Not_Found<>sage<>03/12/26 14:47 ID:???<> というより、「暇を持て余してる人のためのエディタ」だな。 <br> 略して暇出たー  <br>  <br>  <br>  <br>  <br> ○|￣|＿ <>
+Name_Not_Found<>sage<>03/12/26 22:12 ID:???<> ユーザが作ったいくつかの超便利 lisp を <br> xyzzy 本体が標準で組み込んでくれるといいなぁ。 <>
+Name_Not_Found<>sage<>03/12/27 00:03 ID:???<> <a href="../test/read.cgi/hp/1005046309/692" target="_blank">&gt;&gt;692</a> <br> &gt;いくつかの超便利lisp <br> そんなもん使ってる人によって違うでしょう． <>
+Name_Not_Found<>sage<>03/12/27 00:15 ID:???<> そうだね。 <br> その分基本状態の起動が遅くなったらﾏｽﾞｰだし <br> そういえばHTML+-modeとか有名所を組み込んだ有志バージョンみたいなのを <br> つくるって話なかったっけ？ <>
+Name_Not_Found<>sage<>03/12/27 00:20 ID:???<> ネットインストーラがある時点であんまり意味ないような <>
+Name_Not_Found<>sage<>03/12/27 00:23 ID:???<> 連続でｽﾏﾝが、あらかじめsiteinit.lや.xyzzyが組み込まれたバージョンも <br> 初心者向けにはいいかもしれないね <br>  <br> 個人的にはnetinstaler,html+,csv,eijiro,php,maultiはあった方がいいというか、 <br> 標準でlispフォルダにあればいいと思う. <br> 他にも自動インデントや、字数カウントなんかはlispフォルダに入ってもおかしくないくらい <br> みんな使ってるんじゃない？ <>
+696=694<>sage<>03/12/27 00:24 ID:???<> ﾀｲﾐﾝｸﾞずれた。ｽﾏﾝsage <br>  <>
+Name_Not_Found<><>03/12/27 10:16 ID:ROe4uFt1<> Xyzzyなんか使ってないでさ。( ´ム_,` ) <br>  <br> 萌ディタ、発売します。 <br> http://uploader.org/normal/data/up112.jpg <br> マイナーテキストエディタ愛好会 <br> http://pc2.2ch.net/test/read.cgi/software/1010943646/ <br>  <br>  <>
+Name_Not_Found<>sage<>03/12/27 20:16 ID:???<> キモいです。超嫌いです。 <>
+Name_Not_Found<>sage<>03/12/27 23:37 ID:???<> 皆無職と言うけどフリーランサーなんでしょ？ <>
+Name_Not_Found<>sage<>03/12/28 13:16 ID:???<> フリーランスの無職やってます。。。 <br>  <br>  <br>  <br>  <br>  <br> 　　　　＿ <br> 　　 ／ ／|）　 <br> 　　 |.T | <br> 　／ ／ <br>  <>
+Name_Not_Found<>sage<>03/12/28 17:52 ID:???<> 真ん中がﾓﾉに見えるのは漏れだけか(w <>
+Name_Not_Found<>sage<>03/12/28 23:43 ID:???<> 割れ目だと思って抜いちゃったよ。 <>
+Name_Not_Found<>sage<>03/12/29 08:32 ID:???<> このｽﾚには神が多いな、と常々思ってたが <a href="../test/read.cgi/hp/1005046309/703" target="_blank">&gt;&gt;703</a>は最強 <>
+Name_Not_Found<>sage<>03/12/29 16:06 ID:???<> actionscript-modeを首を長くして待っている漏れは逝ってよしでつか？ <>
+Name_Not_Found<>sage<>03/12/29 17:36 ID:???<> FLASH買えるほど金もない。 <>
+Name_Not_Found<>sage<>03/12/29 17:43 ID:???<> なぜなら xyzzy を使っている香具師はみな <>
+Name_Not_Found<>sage<>03/12/29 21:57 ID:???<> <a href="../test/read.cgi/hp/1005046309/706" target="_blank">&gt;&gt;706</a> <br> 自分では買えないけどバイト先のPCでいじりまくってる。 <>
+Name_Not_Found<>sage<>04/01/09 16:59 ID:???<> <a href="../test/read.cgi/hp/1005046309/705" target="_blank">&gt;&gt;705</a> <br> 禿DO- 取り敢えずはjscript-modeで代用してる <br> というかキワードファイルがあればいいだけか？ <>
+Name_Not_Found<>sage<>04/01/19 22:02 ID:???<> ほーしゅ <>
+Name_Not_Found<>sage<>04/01/20 02:20 ID:???<> おまいら仕事見つかりましたか？＞ html+-mode 同好会（無職のみ）の面々 <br>  <br>  <>
+Name_Not_Found<>sage<>04/01/20 15:46 ID:???<> バイト落ちた(´･ω･`) <>
+Name_Not_Found<>sage<>04/01/20 22:38 ID:???<> 次があるさ <>
+Name_Not_Found<>sage<>04/01/22 20:01 ID:???<> browser.dll (imai)とwin-window.lって、もうないのね．．． <br> browserex.l使ってみたかったのに．．． <br>  <br>                                       ＿|￣|● <br>  <>
+Name_Not_Found<>sage<>04/01/22 22:21 ID:???<> <a href="../test/read.cgi/hp/1005046309/714" target="_blank">&gt;&gt;714</a> <br> browser.dllは↓からbrowser.lzhを落として解凍。 <br> その中のbrowsers.dllをbrowser.dllに改名して使う。 <br>  <br> browser.lzh <br> ttp://oowada.pobox.ne.jp/xyzzy/xyzzy.html <br>  <br> win-window.lはnetinstallerからしか入手できないんじゃないかな？ <br> netinstallerの「雑記帖」ってところ。 <>
+Name_Not_Found<>sage<>04/01/22 22:24 ID:???<> winn-window. は browserex には必要なくなったんじゃないのかな。 <br>  <>
+Name_Not_Found<>sage<>04/01/22 22:47 ID:???<> &gt;716 <br> &gt; win-window.l がない場合でも一部機能が使用できないだけで動作するように修正。 <br> ってことなので、あったらあったに越したことはないと思われ。 <>
+Name_Not_Found<>sage<>04/01/23 00:42 ID:???<> <a href="../test/read.cgi/hp/1005046309/714" target="_blank">&gt;&gt;714</a> <br> &gt;  browser.dll (imai) <br> ttp://web.archive.org/web/20030330163144/http://www.geocities.co.jp/HeartLand-Gaien/7295/warez/browser_.lzh <br>  <>
+714<>sage<>04/01/23 00:44 ID:???<> みなさん、お気遣いありがとございます。 <br>  <br> &gt;715 <br> &gt;ttp://oowada.pobox.ne.jp/xyzzy/xyzzy.html <br> オリジナルではなくて、いまいたけをさんという方が作った拡張版が欲しかったんですよ。 <br> 詳しくは、↓ <br> http://members.at.infoseek.co.jp/ohkubo/xyzzy/index.html#browserex <br>  <br> &gt;717 <br> &gt;ってことなので、あったらあったに越したことはないと思われ。 <br> そうなんですよ。その"越したこと"を試してみたかったんですが・・・。 <br> 残念です。 <br>  <>
+714<>sage<>04/01/23 00:56 ID:???<> <a href="../test/read.cgi/hp/1005046309/718" target="_blank">&gt;&gt;718</a> <br> ビックリしたぁ！ <br>  <br> 本当にありがとうございます。 <br> 助かります。 <br>  <br> 　 ●／|＿  ←（土下座のつもり） <>
+Name_Not_Found<>sage<>04/01/23 01:57 ID:???<> <a href="../test/read.cgi/hp/1005046309/719" target="_blank">&gt;&gt;719</a> <br> いや、Netinstall で入れればいいんでないの？ <br>  <>
+714=&gt;719<>sage<>04/01/23 02:36 ID:???<> おかげさまで、できました。 <br> win-window.l もnetinstallerでとれました。 <br> ありがとうございました。 <br>  <br> 失礼いたしました。 <>
+Name_Not_Found<>sage<>04/01/23 09:21 ID:???<> <a href="../test/read.cgi/hp/1005046309/714" target="_blank">&gt;&gt;714</a> <br> <a href="../test/read.cgi/hp/1005046309/718" target="_blank">&gt;&gt;718</a>がおとせねえっす。どっかに再うｐきぼんぬ <>
+Name_Not_Found<>sage<>04/01/23 15:03 ID:???<> <a href="../test/read.cgi/hp/1005046309/723" target="_blank">&gt;&gt;723</a> <br> 落とせるようだが <>
+723<>sage<>04/01/23 16:03 ID:???<> <a href="../test/read.cgi/hp/1005046309/724" target="_blank">&gt;&gt;724</a> <br> 落とせました。スマソ <>
+Name_Not_Found<>sage<>04/01/23 23:47 ID:???<> はてなダイアリーモードないかなぁ。 <br>  <>
+Name_Not_Found<>sage<>04/01/24 06:42 ID:???<> 俺も欲しいなあ。 <br> それあったら tdiary からはてなに乗り換えたいんだけどな。 <br> xyzzy から更新できなくても、書くだけのモードでも助かるんだけどな。 <br>  <br>  <br>  <br>  <br>  <br>  <br>  <br>  <br>  <br>  <br>  <>
+Name_Not_Found<><>04/01/28 09:30 ID:623wGMpX<> ほすage <>
+Name_Not_Found<><>04/02/04 21:05 ID:jpDtxcyU<> age <>
+Name_Not_Found<> <>04/02/08 10:49 ID:???<> site 要素、色も付かないし閉じタグ補完も効かないんですけど、 <br> キーワードファイルに site を追加するだけじゃだめなんでしょうか？ <>
+Name_Not_Found<>sage<>04/02/08 11:29 ID:???<> <a href="../test/read.cgi/hp/1005046309/730" target="_blank">&gt;&gt;730</a> <br> キーワードファイルに追加するだけで出来るはずだが <br>  <>
+Name_Not_Found<>age<>04/02/15 16:34 ID:???<> age <>
+Name_Not_Found<>sage<>04/02/15 17:11 ID:???<> <a href="../test/read.cgi/hp/1005046309/730" target="_blank">&gt;&gt;730</a>　そんな要素があったんだ。cite要素なら知ってたけど。 <>
+Name_Not_Found<>sage<>04/02/15 23:02 ID:???<> シテ要素 <>
+Name_Not_Found<>sage<>04/02/19 23:16 ID:???<> まだ使いこなせてませんが、多言語使ってhtml書いてるので、 <br> 大変重宝してます。ありがとう。 <br> ウムラウト(&uuml;とか&ouml;)の文も、クリップボードのエンコーディングまで対応してくれているので、 <br> そのままコピー出来て感激しています。マジおすすめ。 <>
+Name_Not_Found<>sage<>04/02/20 16:07 ID:???<> 以前htmlエディタを色々試してみた時期があったが <br> html+-modeが色んな意味で一番良かった <br>  <>
+Name_Not_Found<>sage<>04/02/20 16:27 ID:???<> <a href="../test/read.cgi/hp/1005046309/736" target="_blank">&gt;&gt;736</a> <br> 同感。でもただ一点、Dreamwaver みたいに <br> &lt;table&gt; の &lt;tr&gt; や &lt;td&gt; の対応関係を視覚化する機能がなくて <br> その部分は Dreamwaver を使っている。 <>
+Name_Not_Found<>sage<>04/02/20 17:26 ID:???<> テーブルやブロックレベルにボーダーを表示するような <br> ユーザースタイルシートを作っておいてそれを <br> browserex上で切りかえられればDreamwaverのように <br> 視覚化できるんでないか？と、アイデアは浮かぶが俺には作れん。 <br>  <br> それかmozillaの拡張でWeb Developerっていうのがあるんだが <br> browser gecko版でこいつをうまく移植できないだろうか・・・ <>
+Name_Not_Found<>sage<>04/02/21 02:26 ID:???<> <a href="../test/read.cgi/hp/1005046309/737" target="_blank">&gt;&gt;737</a> <br> &gt;  &lt;table&gt; の &lt;tr&gt; や &lt;td&gt; の対応関係を視覚化する機能がなくて  <br> &gt;  その部分は Dreamwaver を使っている。 <br> どんな機能？参考 URL とかあるかな？ <>
+Name_Not_Found<>sage<>04/02/21 02:33 ID:???<> <a href="../test/read.cgi/hp/1005046309/739" target="_blank">&gt;&gt;739</a> <br> <a href="../test/read.cgi/hp/1005046309/737" target="_blank">&gt;&gt;737</a>じゃないが<a href="../test/read.cgi/hp/1005046309/738" target="_blank">&gt;&gt;738</a>な感じじゃないか？ <>
+737<>sage<>04/02/21 13:15 ID:???<> <a href="../test/read.cgi/hp/1005046309/738" target="_blank">&gt;&gt;738</a> <br> ああ、そういう CSS もありですね。目から鱗。 <br> <a href="../test/read.cgi/hp/1005046309/740" target="_blank">&gt;&gt;740</a> <br> その通りです。 <br> <a href="../test/read.cgi/hp/1005046309/739" target="_blank">&gt;&gt;739</a> <br> トライアル版があるので見られますよ。 <br> ttps://service.macromedia.co.jp/membership/membership_login.asp?Parameter=DW2004_T <br> イマイチな画面写真…。 <br> ttp://www.macromedia.com/jp/software/dreamweaver/productinfo/features/static_tour/basics/#item-1 <>
+Name_Not_Found<>sage<>04/02/22 02:43 ID:???<> ようは、リンクしていない外部cssをbrowserex内で <br> 適用したり外したりができれblockやtableは視覚化できるね。 <br> 俺にも作れないけど(´･ω･`)ｼｮﾎﾞｰﾝﾇ <>
+Name_Not_Found<>sage<>04/02/22 18:25 ID:???<> じゃあ諦めな <>
+Name_Not_Found<><>04/03/04 15:55 ID:bPmjvQc2<> あげ <>
+Name_Not_Found<>sage<>04/03/04 18:15 ID:???<> xyzzyいいね。 <br> でも最近はgvim使ってる。 <br>  <>
+Name_Not_Found<>sage<>04/03/05 06:22 ID:???<> はてなダイアリーモード <br> http://www20.big.or.jp/~rin_ne/tdiary/20040225.html#p02 <>
+Name_Not_Found<>sage<>04/03/05 06:57 ID:???<> うほっ、いい感じ。 <br> はてなアカウント取ってみよう。 <br>  <>
+Name_Not_Found<>sage<>04/03/05 09:44 ID:???<> 手段と目的が逆転してる良い例だな <>
+Name_Not_Found<>sage<>04/03/05 17:16 ID:???<> <a href="../test/read.cgi/hp/1005046309/748" target="_blank">&gt;&gt;748</a> <br> 大爆笑 <>
+Name_Not_Found<>sage<>04/03/14 21:59 ID:???<> ほしゅ <>
+Name_Not_Found<>sage<>04/03/30 13:16 ID:???<> <a href="../test/read.cgi/hp/1005046309/750" target="_blank">&gt;&gt;750</a> <br> &gt;  ほしゅ <br> ぽち保守 <>
+_<>sage<>04/04/17 19:20 ID:???<> 保守 <>
+Name_Not_Found<>sage<>04/04/30 15:42 ID:???<> 保守 <>
+Name_Not_Found<>sage<>04/05/06 02:36 ID:???<> ほしゅ <>
+Name_Not_Found<>sage<>04/05/14 11:43 ID:???<> hoshu <>
+Name_Not_Found<><>04/05/26 13:01 ID:LgfFyXjO<> ファイル名っぽい文字列をカラー表示にしたいんだけどどうやればいいですか <>
+Name_Not_Found<>sage<>04/05/26 14:14 ID:???<> <a href="../test/read.cgi/hp/1005046309/756" target="_blank">&gt;&gt;756</a> <br> clickable-url.l でも参照してみたら分かるかもしれない <>
+Name_Not_Found<>sage<>04/05/26 16:25 ID:???<> 職みつかった？ <>
+Name_Not_Found<>sage<>04/05/26 16:47 ID:???<> <a href="../test/read.cgi/hp/1005046309/756" target="_blank">&gt;&gt;756</a> <br> &gt;  ファイル名っぽい文字列をカラー表示にしたいんだけどどうやればいいですか <br>  <br> 「ファイル名っぽい」と判断する仕様がはっきりしていれば簡単にできますよ。 <>
+Name_Not_Found<>sage<>04/05/27 10:25 ID:???<> <a href="../test/read.cgi/hp/1005046309/759" target="_blank">&gt;&gt;759</a> <br> そこで秀丸ですよ。 <>
+Name_Not_Found<>sage<>04/05/27 13:37 ID:???<> <a href="../test/read.cgi/hp/1005046309/756" target="_blank">&gt;&gt;756</a> <br> まずは、秀丸の仕様を確認するなりして、あなたの考える「ファイル名っぽい」の <br> 仕様をさらすのがいいんじゃないですか。 <>
+Name_Not_Found<>sage<>04/05/28 03:09 ID:???<> <a href="../test/read.cgi/hp/1005046309/758" target="_blank">&gt;&gt;758</a> <br> 4 月から正社員として働いてるよ。 <br> これで晴れて無職のための html+-mode（xyzzy）から卒業です（オイ <br>  <br>  <>
+Name_Not_Found<>sage<>04/05/28 04:29 ID:???<> <a href="../test/read.cgi/hp/1005046309/762" target="_blank">&gt;&gt;762</a> <br> そうかぁ．就職おめ． <br> おれからのお祝いを受け取ってくれないか <br>  <br> (defun filename-set-attribute-any-mode  <br>   (&key (from (point-min)) (to (point-max))) <br>   "ファイル名らしきところを強調表示" <br>   (interactive) <br>   (let ((tmp (compile-regexp-keyword-list <br>               '(("[a-zA-Z]:[\\/]\\([^?*+\\/ \n\t][^?*+\\/\n]*[\\/]\\)*\\([^ \\/\t\n][^\n\\/.]*\\.\\w*\\)?" <br>                  t (:color 4 0 :underline)))))) <br>     (make-local-variable 'regexp-keyword-list) <br>     (or <br>      (and <br>       (boundp 'regexp-keyword-list) <br>       (setq regexp-keyword-list <br>             (append regexp-keyword-list tmp))) <br>      (setq regexp-keyword-list <br>            tmp)))) <br>  <>
+Name_Not_Found<><>04/05/28 21:21 ID:UAHhIuvv<> html+-mode入れたらｃｌiｃkａｂｌｅurlがおかしくなった。 <br> そういうもん？ <>
+Name_Not_Found<>sage<>04/05/29 01:41 ID:???<> <a href="../test/read.cgi/hp/1005046309/764" target="_blank">&gt;&gt;764</a> <br> そんなことないですよー。 <>
+Name_Not_Found<>sage<>04/05/29 06:50 ID:???<> <a href="../test/read.cgi/hp/1005046309/763" target="_blank">&gt;&gt;763</a>　ｷﾀ━━━━━━(ﾟ∀ﾟ)━━━━━━ｯ !! <>
+Name_Not_Found<>sage<>04/05/29 13:12 ID:???<> <a href="../test/read.cgi/hp/1005046309/763" target="_blank">&gt;&gt;763</a> <br> (flet ((kita (x) (princ x)(princ "━━"))) <br>   (mapcar #'(lambda (x) (kita x)) <br>           '(ｷﾀ (ﾟ∀ﾟ) (∀ﾟ　) (ﾟ　　) (　　) (　　ﾟ) (　ﾟ∀) (ﾟ∀ﾟ))) <br>   (princ "!!!!!") (newline)) <br> 某スレから拝借w <>
+Name_Not_Found<>sage<>04/05/29 13:30 ID:???<> <a href="../test/read.cgi/hp/1005046309/767" target="_blank">&gt;&gt;767</a> <br> (flet ((kita (x) (princ x)(princ "━━")))  <br>   (mapcar #'kita '(ｷﾀ (ﾟ∀ﾟ) (∀ﾟ　) (ﾟ　　) (　　) (　　ﾟ) (　ﾟ∀) (ﾟ∀ﾟ))) <br>   (princ "!!!!!") (newline)) <br>  <br> 多少コンパクトにしてみました (w <>
+Name_Not_Found<>sage<>04/05/29 13:34 ID:???<> ｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗｗつまんね <>
+Name_Not_Found<>sage<>04/05/30 10:58 ID:???<> (defun kita (&optional (n 1) (wait 0.1)) <br>   (when (not (zerop n)) <br>     (mapcar #'(lambda (x) <br>                 (let ((b (point))) <br>                   (message "~A~A~A" "ｷﾀ ━━━━" x "━━━━") <br>                   (sleep-for wait))) <br>             '((ﾟ∀ﾟ) (∀ﾟ　) (ﾟ　　) (　　) (　　ﾟ) (　ﾟ∀) (ﾟ∀ﾟ))) <br>     (kita (1- n) wait))) <>
+763<>sage<>04/05/31 23:54 ID:???<> 正規表現を修正してみました． <br> (defun filename-set-attribute-any-mode () <br>   "ファイル名らしきところを強調表示"  <br>   (interactive)  <br>   (let ((tmp (compile-regexp-keyword-list  <br>       '(("\\_&lt;\\([a-zA-Z]:[\\/]\\|[\\][\\][^?*+\\/\n\t]+[\\]\\)\\([^?*+\\/ \n\t][^?*+\\/\n]*[\\/]\\)*[^ \\/?+*\t\n]*" <br>  t (:color 4 0)))))) <br>     (make-local-variable 'regexp-keyword-list)  <br>     (if (boundp 'regexp-keyword-list) <br> (setq regexp-keyword-list (append regexp-keyword-list tmp))) <br>       (setq regexp-keyword-list tmp))) <br>  <br> テキストモードで色付けしたいときはこんな感じで． <br> (add-hook '*text-mode-hook* 'filename-set-attribute-any-mode) <br>  <>
+Name_Not_Found<><>04/06/05 09:40 ID:el2nTwTv<> <a href="../test/read.cgi/hp/1005046309/763" target="_blank">&gt;&gt;763</a> <br> おーサンキュー。 <br> ちゃんと動いたよ。 <br>  <br>  <br> お返しに俺からも一つ。 <br>  <br> ;; .xyzzyを開く <br> (defun open-xyzzy () <br>   (interactive) <br>   (find-file "~/.xyzzy")) <br>  <br>  <br> 　　＿|￣|○ <br>  <>
+Name_Not_Found<>sage<>04/06/09 03:47 ID:???<> 面目ないですが教えてください。 <br> html+-mode.l <br> browserex.l <br> browser.dll <br> を使っているのですが、HTML文書を編集して、セーブして、さらにプレビュー表 <br> 示を更新して、というのが面倒くさくてたまりません。 <br> セーブ(Ctrl-x,Ctrl-s)をしたら、すぐにプレビューが画面更新してくれるよう <br> にはならないでしょうか。 <br> おおくぼさんのサイトでは、 <br> 「html+-mode では C-x C-s で保存と同時に画面更新」と書いてあるから、でき <br> そうなのですが、なぜか私の環境では、できません。なにが悪いのでしょう？ <br> すみません、なにとぞ教えてください。 <>
+Name_Not_Found<>sage<>04/06/09 09:15 ID:???<> ~/.xyzzyに <br> (require "html+-mode") <br> (add-hook '*html+-mode-hook* <br>   #'(lambda () <br>   (define-key *html+-mode-map* '(#\C-x #\C-s) <br>   #'(lambda () <br>   (interactive) <br>   (save-buffer) <br>   (bx::refresh-browser))))) <br> とか？ <>
+Name_Not_Found<>sage<>04/06/09 09:29 ID:???<> <a href="../test/read.cgi/hp/1005046309/773" target="_blank">&gt;&gt;773</a> <br> おおくぼさんの記述の通りにやればできる、としか言いようがない。 <br> 「私の環境では、できません」って言われてもそれだけじゃわからないよ。 <>
+Name_Not_Found<>sage<>04/06/10 00:26 ID:???<> <a href="../test/read.cgi/hp/1005046309/775" target="_blank">&gt;&gt;775</a> <br> やっぱり、皆さんの環境では、ちゃんと自動更新できるのですね。 <br> なんでダメなんだろう? <br>  <br> で、とりあえず、<a href="../test/read.cgi/hp/1005046309/774" target="_blank">&gt;&gt;774</a>さんの通りに.xyzzyに書き込んでみたら(ちょっと文句を <br> 言われたので、*html+-mode-hook*を、ed::*html+-mode-hook*に変えてみました <br> が)、バッチリ、自動更新できるようになりました！ありがとうございました。 <br>  <br> この書き込みをしないとうまくいかない原因については、lispの勉強をしてから <br> 出直します。とりあえず、目的は達成しました。みなさん、親切にしていただき、 <br> ありがとうございました！ <>
+Name_Not_Found<>sage<>04/06/13 22:29 ID:???<> ﾌｫｯｼｭ <>
+Name_Not_Found<>0<>04/07/01 17:49 ID:???<> ttp://village.infoweb.ne.jp/~uratachi/hp/tagukouza/tagurennsyuBBS/light.cgi <br> 改行するとCGIが&lt;br&gt;を入れてしまうから一行で仕上げよう <>
+Name_Not_Found<>sage<>04/07/15 23:04 ID:???<> hosh <>
+Name_Not_Found<>sage<>04/07/16 13:32 ID:???<> 最近マカーなのでこのソフトいじってないや。 <br> Emacsわけ分からないし。 <>
+Name_Not_Found<>sage<>04/07/16 19:08 ID:???<> Emacs はわけ分からないけれど xyzzy は簡単。 <br> フォントや色設定とか直感的で大好き。 <>
+Name_Not_Found<>sage<>04/07/23 00:33 ID:???<> ここで言ってもしかたないんだけどさ、制作のバイトしてるんだが <br> 社長が素人身障DQN。新規立ち上げの料金はタダでいいから <br> 更新を月々5ﾏｿの定額でいっぱい作ればいいとか言ってるんだよ。 <br> 本人曰く、ホームページなんてパクればいいから適当なサイトを <br> プリントアウトして色だけ変えて作れって <br> それなら3日で一本作れるからノルマにして毎日進行状況チェックして <br> できなかったら減給すればいいんだって。 <br>  <br> 会社は弱小で制作者は皆バイト。営業のターゲットは個人事業主で <br> 企業に会社の名前を出して営業すると前歴知れべられてはじかれるので <br> 会社の名前すら出せないらしい。 <br>  <br> 今月いっぱいでコアメンバーの一人が嫌気がさして辞めるし <br> この人が辞めたら仕事入ってこなくなるだろうな。 <br> だったら俺も辞めて個人でやったほうがマシだし <br> 他の人には悪いがこの会社には潰れてもらいたい。 <>
+Name_Not_Found<>sage<>04/07/23 01:43 ID:???<> で？ <>
+Name_Not_Found<>sage<>04/07/23 09:44 ID:???<> 苦しんでいるから話を聞いてほしいんだろうね。 <br> でもそれが 2ch って所が DQN。 <>
+Name_Not_Found<>sage<>04/07/28 16:01 ID:???<> コピペに反応ｶｯｺｲｲ <>
+Name_Not_Found<>sage<>04/07/28 19:20 ID:???<> <a href="../test/read.cgi/hp/1005046309/785" target="_blank">&gt;&gt;785</a> <br> お前も見事に同類。 <>
+Name_Not_Found<>sage<>04/07/28 20:09 ID:???<> その手の指摘は常に自己言及的だな。 <>
+Name_Not_Found<>sage<>04/07/29 03:18 ID:???<> しかもコピペじゃないしな。 <>
+Name_Not_Found<>sage<>04/07/31 01:12 ID:???<> <a href="../test/read.cgi/hp/1005046309/784" target="_blank">&gt;&gt;784</a>がコピペだという驚愕の新事実が明かされるのマダー？ <>
+Name_Not_Found<>sage<>04/07/31 14:08 ID:???<> <a href="../test/read.cgi/hp/1005046309/785" target="_blank">&gt;&gt;785</a>、待ってるぞw <>
+Name_Not_Found<>sage<>04/07/31 22:18 ID:???<> 書いた本人ですがコピペじゃないよ（つд｀） <>
+Name_Not_Found<>sage<>04/07/31 23:11 ID:???<> ここまでコピペ <>
+Name_Not_Found<><>04/08/20 00:02 ID:ywEtnA5q<> まだあるのかこのｽﾚ <>
+Name_Not_Found<>sage<>04/09/01 13:13 ID:???<> 二年ぶりにチェックしたらまだあったのでﾜﾗﾀ <>
+Name_Not_Found<>sage<>04/09/17 22:42:24 ID:???<> 保守 <>
+Name_Not_Found<>sage<>04/09/26 04:08:44 ID:???<> 過疎ってるねー <>
+Name_Not_Found<><>04/09/26 14:23:57 ID:HB7BbrsM<> 結構何の不満もなく使ってるのかな? <>
+Name_Not_Found<>sage<>04/09/26 15:04:22 ID:???<> まあ、強いて言うならアイコンが亀。 <>
+Name_Not_Found<> <>04/09/26 21:09:43 ID:???<> それも変更できるから不満無し。 <>
+Name_Not_Found<>sage<>04/09/26 23:21:42 ID:???<> <a href="../test/read.cgi/hp/1005046309/798" target="_blank">&gt;&gt;798</a> <br> 亀の甲羅にXYZZYって書いてあんだよっ！ <>
+Name_Not_Found<>sage<>04/09/26 23:45:30 ID:???<> <a href="../test/read.cgi/hp/1005046309/800" target="_blank">&gt;&gt;800</a> <br> 知ってるYO <>
+Name_Not_Found<>sage<>04/09/27 00:50:04 ID:???<> あ、ほんとだ・・・ <>
+Name_Not_Found<>sage<>04/09/27 00:52:42 ID:???<> うわ、初めて知った <>
+Name_Not_Found<>sage<>04/10/06 14:18:49 ID:???<> xyzzyでhtml編集してみようと思い立った漏れですが、 <br> まずは情報をと思い、いろいろ調べようとしてみたところ、 <br> それなりにリンク切れとかあったりして、 <br> かなり出遅れた予感がしないでもない。 <br>  <br> んで、html+-modeとhtml4-modeというのがあるらしいってことで、 <br> html+-modeはあったんでつが、 <br> html4-modeってのがどこを探してもなさそう。 <br>  <br> このスレの <a href="../test/read.cgi/hp/1005046309/286" target="_blank">&gt;&gt;286</a>,288-291 あたりで(ってもう2年も前か(´･ω･`)) <br> それらしい流れを見つけたのだが、 <br> だれかうぷしてくれないでしょうか。 <br> どちらも使ってみたいので禿ーしくキボン！ <br>  <br> ついでに捕手。 <>
+Name_Not_Found<><>04/10/06 21:53:46 ID:WeejE3iJ<> もう一年ほどこのエディタを使ってるけれど <br> html4-modeなんてのははじめて聞いたよ。 <br> html+-modeとは一体どう違うの? <>
+Name_Not_Found<>sage<>04/10/06 23:59:58 ID:???<> 俺もhtml4-modeは知らなかった。 <br> ちなみにxml-modeなんてのもあるよ。 <>
+Name_Not_Found<>sage<>04/10/07 01:23:54 ID:???<> html4-modeってのはあの逸見さんが作ったものだったはず。 <br> MLに何度か話題になってるみたいだけど、オレも実物はみたこと無い。 <br> もう手に入らないんじゃないかなぁ～ <>
+804<>age<>04/10/11 15:11:42 ID:???<> そーですか。ざんねんでつ。 <br> 291氏が約2年ぶりに再降臨してくれるのを気長にまってみまつ。(´･ω･`) <>
+Name_Not_Found<><>04/10/20 18:03:48 ID:QimxfOm7<> <a href="../test/read.cgi/hp/1005046309/685" target="_blank">&gt;&gt;685</a>  <br> ・文法チェッカ <br> ・自動インデント <br> ・キーワード色づけ+補完 <br> actionscript-mode  <br> ttp://emacswiki.org/elisp/ecmascript-mode.el <br> emacs-lisp-byte-compile-and-load && ecmascript-mode <br> ...? <>
+Name_Not_Found<>sage<>04/11/02 09:38:44 ID:???<> Meadow 使ってみた。 <br> yahtml-mode とかアレ…と思ったけど sgml-mode は素晴らしい。 <br> でも Meadow でも html+-mode が使えたら良いのになぁと思ったまる <>
+Name_Not_Found<>sage<>04/11/02 09:44:48 ID:???<> <a href="../test/read.cgi/hp/1005046309/810" target="_blank">&gt;&gt;810</a> <br> 重さはどう？ 軽快？ <>
+Name_Not_Found<>sage<>04/11/02 11:49:32 ID:???<> emacsとの互換性がはるかに高いということで <br> Meadowちょっとだけ使ったことがあるけれど、 <br> やっぱり立ち上がりの軽快さはxyzzyが素晴らしいと思うよ。 <br> その後はそれほど違いは感じないけれどね。 <br>  <br> 結局今はxyzzy使ってます。 <br> フォントの設定がMeadowは面倒くさかったので。 <>
+Name_Not_Found<>sage<>04/11/02 13:31:23 ID:???<> Meadow はタブや、フォント、「いろいろ」「さまざま」系の <br> 設定などの部分がイマイチで xyzzy。winkey も好きだし。 <br>  <>
+Name_Not_Found<>sage<>04/11/09 13:04:46 ID:???<> <a href="../test/read.cgi/hp/1005046309/810" target="_blank">&gt;&gt;810</a> <br> 情報Thanks <>
+Name_Not_Found<>sage<>04/11/14 14:11:09 ID:???<> <a href="../test/read.cgi/hp/1005046309/810" target="_blank">&gt;&gt;810</a> <br> そうか？ <>
+Name_Not_Found<><>04/11/19 00:21:46 ID:+c1DGYkL<> ageeeeeeeeeeee!i!i!i!i!i!i!i!i <>
+Name_Not_Found<><>04/11/19 01:29:06 ID:9sSxIZHC<> php-mode がないんだけど、どこ逝った？ <>
+Name_Not_Found<><>04/11/20 14:29:06 ID:syMI0G4/<> html4-modeってのが過去にあったのか。 <br> 「あの逸見さん」って人は有名な人なの？ <br> html4-modeってのはたとえばpsgml-modeみたいな感じだったとか、 <br> なんかそういう情報ｷﾎﾞﾝ｡ <br> できればだれかｺｿｰﾘうｐしてくれないでしょうか。 <br>  <br> <a href="../test/read.cgi/hp/1005046309/817" target="_blank">&gt;&gt;817</a> <br> ttp://xyzzy.s53.xrea.com/wiki/index.php?%A5%A2%A5%C3%A5%D7%A5%C7%A1%BC%A5%C8%A1%A6%C5%EA%B9%C6 <>
+Name_Not_Found<>sage<>04/11/20 18:12:53 ID:???<> <a href="../test/read.cgi/hp/1005046309/818" target="_blank">&gt;&gt;818</a> <br> &gt;  できればだれかｺｿｰﾘうｐしてくれないでしょうか。  <br> ここに書いた時点でコッソリですらない。 <br> するわけないでしょう。 <>
+Name_Not_Found<>sage<>04/12/05 15:51:06 ID:???<> html4-mode は昔に検討してみたけど、html+-mode より機能が少なかったんで、 <br> あんまり使わなかった。 <>
+Name_Not_Found<>sage<>04/12/21 02:45:19 ID:???<> hosh <>
+Name_Not_Found<>sage<>05/01/01 13:40:25 ID:???<> あけましておまえら今年もxyzzyでタグ打つよ <>
+Name_Not_Found<><>05/01/30 16:42:48 ID:C2outMVB<> 約1ヶ月ぶりのage <>
+Name_Not_Found<>sage<>05/02/05 09:54:49 ID:???<> もうこのスレいらんでしょ <>
+Name_Not_Found<><>05/02/05 09:57:57 ID:4QAZEI31<> じゃあ、age！ <>
+U.M.E.<>sage<>05/02/06 01:14:50 ID:???<> 一日一梅 <>
+U.M.E.<>sage<>05/02/07 03:10:57 ID:???<> 一日一梅 <>
+U.M.E.<>sage<>05/02/08 11:10:25 ID:???<> 一日一梅 <>
+Name_Not_Found<>sage<>05/02/08 11:30:41 ID:???<> 埋めんな <>
+Name_Not_Found<>sage<>05/02/08 12:24:53 ID:???<> 俺はこのスレがきっかけでxyzzyの道に足を踏み入れたんだよ <>
+Name_Not_Found<>sage<>05/02/08 23:33:33 ID:???<> <a href="../test/read.cgi/hp/1005046309/830" target="_blank">&gt;&gt;830</a> <br> 同じく。ここと励ましあえｽﾚがなきゃ使ってないなぁ <>
+Name_Not_Found<><>05/02/09 18:16:02 ID:2cLFT0x4<> HTMLタグを全部小文字に一発変換してくれるマクロ探してるんですが <br> ないですか？　alt や src なんかの属性の中身はそのままだとなお良。 <>
+832<>sage<>05/02/09 18:21:59 ID:???<> ttp://www2u.biglobe.ne.jp/~MAS/hoka/lc_tag.html <br> ってのがありましたけど、xyzzy上でできませんかね…。 <>
+タグだけ<>sage<>05/02/09 20:38:39 ID:???<> <a href="../test/read.cgi/hp/1005046309/832" target="_blank">&gt;&gt;832</a> <br> (defun lc-tag-region (s e) <br>   (interactive "*r") <br>   (if (&lt; e s) (rotatef s e)) <br>   (save-excursion <br>     (save-restriction <br>       (narrow-to-region s e) <br>       (goto-char (point-min)) <br>       (replace-buffer "\\(&lt;/?\\)\\([A-Z0-9_]+\\)" "\\1\\L\\2" :regexp t)))) <br>  <>
+832<>sage<>05/02/10 09:41:37 ID:???<> <a href="../test/read.cgi/hp/1005046309/834" target="_blank">&gt;&gt;834</a> <br> ありがとうございます！　助かりました。 <br> とはいえ、WIDTH とか属性名まではしてくれませんね…。 <br> ここまで来ると簡単には行かないと思いますんで、 <br> とりあえずこれでがんがってみます。 <>
+Name_Not_Found<>sage<>05/02/10 21:57:32 ID:???<> <a href="../test/read.cgi/hp/1005046309/835" target="_blank">&gt;&gt;835</a> <br> tidyでできないんだっけか? <>
+Name_Not_Found<>sage<>05/02/10 23:29:43 ID:???<> <a href="../test/read.cgi/hp/1005046309/835" target="_blank">&gt;&gt;835</a> <br> あんまりテストしてないから注意して使って <br>  <br> (defun hoge () <br>   (interactive "*") <br>   (long-operation <br>     (let ((count 0)) <br>       (while (scan-buffer "[A-Z/---]" :regexp t) <br>         (if (eq (parse-point-syntax) ':tag) <br>             (progn (downcase-region (progn (skip-syntax-spec-backward "w_") (point)) <br>                                     (progn (skip-syntax-spec-forward "w_") (point))) <br>             (incf count)) <br>         (scan-buffer "[^A-Z/---]" :regexp t))) <br>       (message " ~D個変換しましたゼ" count)))) <>
+Name_Not_Found<>sage<>05/02/10 23:36:11 ID:???<> 属性値が必ず " で囲ってあることを想定してます。 <>
+Name_Not_Found<>sage<>05/02/10 23:41:15 ID:???<> 全く試してないけど <br> &lt;option name="hoge" selected&gt; <br> こんなのはどうなる？ <>
+Name_Not_Found<>sage<>05/02/10 23:56:45 ID:???<> <a href="../test/read.cgi/hp/1005046309/839" target="_blank">&gt;&gt;839</a> <br> &gt;  全く試してないけど  <br> &gt;  &lt;option name="hoge" selected&gt;  <br> &gt;  こんなのはどうなる？ <br> そのままです。 <br> &lt;option name="hoge" selected&gt; <br>  <br> &lt;OPTION NAME="HOGE" SELECTED&gt; だと <br> &lt;option name="HOGE" selected&gt; になります。 <>
+Name_Not_Found<>sage<>05/02/11 10:22:18 ID:???<> (eq (parse-point-syntax) ':tag) かぁ。勉強になった。 <>
+832<><>05/02/11 16:01:16 ID:gMwqAoKl<> # なぜみんな sage るんでしょうかｗ <br>  <br> <a href="../test/read.cgi/hp/1005046309/837" target="_blank">&gt;&gt;837</a>さんありがとうございました。 <br> 単なるわがままにお付き合いいただきまして…。 <br> もっと贅沢を言うと属性値でもキーワード、 <br> 例えば &lt;area&gt; の shape="RECT" を shape="rect" に変換してくれると <br> ありがたかったりしますが（笑）、これはもう辞書がないと <br> ダメだと思うのでいいです。本当にありがとうございました。 <>
+Name_Not_Found<>sage<>05/02/12 15:25:42 ID:???<> 用もないのにageる必要ないと思うが。 <>
+Name_Not_Found<><>05/02/12 16:20:06 ID:zJM7pPc6<> 用があるから書き込むんだろ <>
+Name_Not_Found<>sage<>05/02/12 20:08:57 ID:???<> <a href="../test/read.cgi/hp/1005046309/842" target="_blank">&gt;&gt;842</a> <br> &gt;844 みたいのが寄ってこないようにするため。 <>
+Name_Not_Found<>sage<>05/02/12 21:07:54 ID:???<> それだ。 <>
+Name_Not_Found<>age<>05/02/12 23:57:26 ID:???<> プププ <>
+Name_Not_Found<>sage<>05/02/13 00:03:56 ID:???<> タグ打ちﾏﾝﾄﾞｸｾ('A`) <br> 一日一ヒットなのに。 <>
+Name_Not_Found<>sage<>05/02/13 00:52:12 ID:???<> 継続は力なり、だよ <>
+Name_Not_Found<>sage<>05/02/13 09:08:19 ID:???<> 2chブラウザ(少なくともJane系は)の類を使っていたらデフォルトでsageになるからってのもある。 <>
+Name_Not_Found<><>05/02/13 16:42:52 ID:5CseFLJm<> xyzzy使いなら2ch-modeでしょ。デフォルトはメール欄空欄だしさ。 <>
+Name_Not_Found<>sage<>05/02/14 10:23:11 ID:???<> php-mode とか 2ch-mode とか作ってる <br> ttp://www.mirai.ne.jp/~gyo/ <br> が閉鎖されて久しいのですが、新しいページないんでそか。 <>
+Name_Not_Found<>sage<>05/02/14 11:18:42 ID:???<> <a href="../test/read.cgi/hp/1005046309/852" target="_blank">&gt;&gt;852</a> <br> ないんでしょうね。 <>
+Name_Not_Found<>sage<>05/02/14 13:55:04 ID:???<> php-mode <br> http://xyzzy.s53.xrea.com/wiki/index.php?WebSite%C0%A9%BA%EE%B4%D8%CF%A2Lisp%A5%EA%A5%F3%A5%AF <br>  <>
+Name_Not_Found<><>05/02/26 16:35:22 ID:wRKaDp8+<> xyzzyx! <>
+Name_Not_Found<>sage<>05/02/28 17:52:22 ID:???<> 漢字（かんじ）-&gt; &lt;ruby&gt;&lt;rb&gt;漢字&lt;/rb&gt;&lt;rp&gt;（&lt;/rp&gt;&lt;rt&gt;かんじ&lt;/rt&gt;&lt;rp&gt;）&lt;/rp&gt;&lt;/ruby&gt; <br> みたいな感じで、リージョンを変換するというのを作ってみた <br> 漏れの初lispです。 <br>  <br> (defun markup-ruby (from to) <br> (interactive "*r") <br> (save-restriction <br> (narrow-to-region from to) <br> (goto-char (point-min)) <br> (replace-buffer "\\([^（]+\\)（\\([^）]+\\)）" "&lt;ruby&gt;&lt;rb&gt;\\1&lt;/rb&gt;&lt;rp&gt;（&lt;/rp&gt;&lt;rt&gt;\\2&lt;/rt&gt;&lt;rp&gt;）&lt;/rp&gt;&lt;/ruby&gt;" :regexp t))) <br> (define-key ed::*html+-mode-map* '(#\C-c #\r) 'markup-ruby) <br>  <>
+Name_Not_Found<><>05/03/01 14:35:47 ID:Qq+/pyP1<> ｷﾀ━━━━━━(ﾟ∀ﾟ)━━━━━━ｯ !! <>
+Name_Not_Found<>sage<>05/03/01 20:14:44 ID:???<> <a href="../test/read.cgi/hp/1005046309/856" target="_blank">&gt;&gt;856</a> <br> いい感じッスね。 <br> セレクション用が欲しい人もいるかもなので。 <br>  <br> (defun markup-ruby-selection () <br>   (interactive "*") <br>   (selection-start-end (start end) <br>     (markup-ruby start end))) <>
+Name_Not_Found<><>05/03/06 00:44:49 ID:6fF+aB0O<> age <>
+Name_Not_Found<>sage<>05/03/17 18:36:16 ID:???<> バージョンアップ　ｷﾀ━(ﾟ∀ﾟ)━ !!!  <br>  <br> Thu Mar 17 2005 Version 0.2.2.234 <br> なんかいろいろ <br>  <>
+Name_Not_Found<>sage<>05/03/18 00:24:42 ID:???<> ｷﾀ━━━━━━(ﾟ∀ﾟ)━━━━━━!! <br>  <br> で、0.2.2.233→0.2.2.234の差分は？ <>
+861<>sage<>05/03/18 00:48:54 ID:???<> 自己解決。上書きでいいのね。 <>
+Name_Not_Found<><>05/03/18 16:14:22 ID:TTeHa6/3<> ｷﾀ━━━ヽ( ﾟ∀ﾟ)人(ﾟ∀ﾟ )ﾒ( ﾟ∀ﾟ)人(ﾟ∀ﾟ )ﾒ( ﾟ∀ﾟ)人(ﾟ∀ﾟ )ﾉ━━━!!!! <>
+Name_Not_Found<><>05/03/18 16:26:07 ID:n0a7PhDT<> くさい爺 <>
+Name_Not_Found<>sage<>05/03/19 15:05:16 ID:???<> <a href="../test/read.cgi/hp/1005046309/861" target="_blank">&gt;&gt;861</a> <br> なんかいろいろ <>
+861<>sage<>05/03/19 21:51:28 ID:???<> <a href="../test/read.cgi/hp/1005046309/865" target="_blank">&gt;&gt;865</a> <br> いや、変更点の話じゃなくて、アップデートパッチみたいなのはないのかと <br> 聞きたかったんだ。確か0.2.2.233まではあったはずだから。 <br>  <br> あとで要らないと分かったんだが。 <>
+Name_Not_Found<>sage<>2005/03/22(火) 23:11:55 ID:???<> <a href="../test/read.cgi/hp/1005046309/851" target="_blank">&gt;&gt;851</a> <br> xyzzyじゃAA見るのに不便だからJaneNidaを使ってる。 <>
+Name_Not_Found<><>2005/03/23(水) 01:40:48 ID:s2FXDIRE<> AAなんかいらねー <>
+Name_Not_Found<>sage<>2005/03/27(日) 19:16:40 ID:???<> 俺にはいるんだよー <>
+Name_Not_Found<>sage<>2005/03/28(月) 14:37:37 ID:???<> osakaフォントAAをギリシャ語とキリル語に割り当てると歪み少なくていいらしいとは聞くけどどうなんだろうね？ <br> 俺は 665ttc2.TTC （ Osaka - 等幅 ） を文字サイズ8で使ってる、視認性はいいんで満足してるけどやっぱAAはずれる <br> 皆さんはどんなフォント使ってるのですか? <>
+Name_Not_Found<>sage<>2005/03/28(月) 21:10:27 ID:???<> え、プロポーショナルフォントって指定できるのか？ <>
+Name_Not_Found<>sage<>2005/03/28(月) 21:24:03 ID:???<> 指定できないことはないが表示は等幅になる <br>  <br> なのでAAは絶望的ね <>
+Name_Not_Found<>sage<>2005/03/28(月) 21:30:04 ID:???<> そうか。ありがとう。 <br> おとなしくJane使っとく。 <>
+Name_Not_Found<>sage<>2005/03/28(月) 21:46:07 ID:???<> ttp://ohkubo.s53.xrea.com/xyzzy/#2ch-dialog <br> これじゃだめなのか？ <br>  <>
+Name_Not_Found<>sage<>2005/03/30(水) 00:00:57 ID:???<> うーん2chは専用ブラウザで見てるから使ってない <br> でもoutlinemode-treeは激しく使わせてもらっております作者さんに感謝 <>
+Name_Not_Found<>sage<>2005/03/30(水) 00:07:41 ID:???<> がはっoutline-treeだったorz <>
+Name_Not_Found<>sage<>2005/04/03(日) 15:14:43 ID:???<> カーソル行にあるタグを、 <br> キーバインド一発ですべて削除するような lisp はないですか？ <br>  <>
+Name_Not_Found<>sage<>2005/04/03(日) 23:25:19 ID:???<> ・カーソル行をnarrowing <br> ・&lt;[^&lt;&gt;]+&gt;をnull文字に置換 <br> ・widing <br> という手順でよさそうな気がするので、一度ご自分で書いてみては <br> いかがでしょうか。 <br> ちょうどreferenceも更新されたことだし。 <>
+Name_Not_Found<>sage<>2005/04/04(月) 14:40:05 ID:???<> ＞・カーソル行をnarrowing <br>  <br> このやり方がよくわからなかったのですが、いろいろやったみたらできたぽいです。 <br> どっかおかしかったら添削おながいします。 <br>  <br> (defun del-line-tag () <br> (interactive "*") <br> (save-excursion <br>   (save-restriction <br>   (narrow-to-region (progn (goto-eol) (point)) (progn (goto-bol) (point))) <br>     (goto-char (point-min)) <br>     (replace-buffer "&lt;[^&lt;]+&gt;" "" :regexp t)))) <br> (define-key ed::*html+-mode-map* '(#\C-c #\d) 'del-line-tag) <br>  <>
+Name_Not_Found<>sage<>2005/04/05(火) 21:59:33 ID:???<> <a href="../test/read.cgi/hp/1005046309/879" target="_blank">&gt;&gt;879</a> <br> 合格 <>
+Name_Not_Found<>sage<>2005/04/06(水) 02:00:46 ID:???<> /&lt;[^&gt;]+&gt;/ <br> じゃないの？ <br>  <>
+Name_Not_Found<><>2005/04/06(水) 11:23:14 ID:GVxM83ID<> こんなスレがあったのか <>
+Name_Not_Found<>sage<>2005/04/06(水) 21:10:14 ID:???<> <a href="../test/read.cgi/hp/1005046309/879" target="_blank">&gt;&gt;879</a> <br> 落第 <>
+Name_Not_Found<>sage<>2005/05/21(土) 08:55:50 ID:???<> あれれ？ <>
+Name_Not_Found<>sage<>2005/05/26(木) 05:02:25 ID:???<> - html+-guess-list を変更しようと思い、 <br> site-init.l .xyzzy どちらにも書いてみましたが、 <br> 変わりません。 <br> どうしたらいいですか？ <>
+Name_Not_Found<>sage<>2005/05/26(木) 10:31:34 ID:???<> <a href="../test/read.cgi/hp/1005046309/885" target="_blank">&gt;&gt;885</a> <br> defvar のままかいていませんか。 <br> setq していますか？ <>
+885<>sage<>2005/05/27(金) 06:47:19 ID:???<> そのままコピーしただけなんですが... <br> どうしたらいいでしょうか？ <>
+Name_Not_Found<>sage<>2005/05/27(金) 07:57:34 ID:???<> <a href="../test/read.cgi/hp/1005046309/887" target="_blank">&gt;&gt;887</a> <br> defvar じゃなくて setq で書いてください。 <>
+886<>sage<>2005/05/27(金) 08:22:34 ID:???<> ありがとうございました。 <br> (defvar *html+-guess-list* <br> '(("" <br> . ("html")) <br> ("html" <br> . ("head" "body")) <br> ("head" <br> . ("title")) <br> 略 <br> ("tr" <br> . ("th" "td")) <br> ("dl" <br> . ("dt" "dd")) <br> ("ul" <br> . ("li" "ul" "ol")) <br> ("ol" <br> . ("li" "ol" "ul"))) <br> "html+-mode: 状況依存したタグの候補") <br> と書いていたため、 <br> devbar を setq ::ed <br> 最終行を削除しましたところ <br> 動作しました <>
+Name_Not_Found<>sage<>2005/06/02(木) 23:39:01 ID:???<> Made with xyzzy みたいなちっさいバナーってないんですか？ <>
+Name_Not_Found<>sage<>2005/06/03(金) 11:24:14 ID:???<> 言い出しっぺの法則により890ﾖﾛ <>
+Name_Not_Found<><>2005/06/04(土) 12:28:01 ID:y/DkeoOv<> test <>
+890<>sage<>2005/06/04(土) 22:23:01 ID:???<> <a href="../test/read.cgi/hp/1005046309/891" target="_blank">&gt;&gt;891</a> <br> 自分で作れりゃわざわざこんなところで訊かんですよ <br> ってことで誰かﾖﾛ <>
+Name_Not_Found<><>2005/06/04(土) 23:19:41 ID:y/DkeoOv<> 全然いらない。 <>
+Name_Not_Found<>sage<>2005/06/05(日) 14:03:34 ID:???<> バナーごときが作れない理由がわからない。 <>
+Name_Not_Found<>sage<>2005/06/06(月) 08:21:50 ID:???<> 坊やだからさ <>
+Name_Not_Found<>sage<>2005/06/06(月) 23:36:02 ID:???<> バナーごときが欲しい理由がわからない。 <>
+Name_Not_Found<>sage<>2005/06/07(火) 02:15:39 ID:???<> ↓これを貼っとく、とか。 <br> http://images-jp.amazon.com/images/P/4274066002.01.MZZZZZZZ.jpg <>
+Name_Not_Found<>sage<>2005/06/07(火) 02:24:04 ID:???<> <a href="../test/read.cgi/hp/1005046309/890" target="_blank">&gt;&gt;890</a> <br>  <br> ウチは、 <br> &lt;meta name="generator" content="xyzzy 0.2.2.234 html+-mode" /&gt; <br> って、ヘッダに書いてる。 <br>  <br> 閲覧者にメリットとか無くて、どうせ自己満足なんだから <br> これで充分だけどなあ。 <br> それでも、たまに書いてる人を見つけるとなんかうれしいよ。 <>
+Name_Not_Found<>sage<>2005/06/09(木) 22:16:30 ID:???<> それっぽいの作ってみたが俺センスなさ過ぎorz <>
+Name_Not_Found<><>2005/07/14(木) 23:43:08 ID:IoVoCxEg<> 俺が見てやる <br> ここに貼ってみ <>
+Name_Not_Found<><>2005/08/15(月) 01:54:11 ID:JoFwuWxv<> 盆あげ！ <>
+Name_Not_Found<>sage<>2005/08/25(木) 23:07:39 ID:???<> 明日こそ布団をホス。 <>
+Name_Not_Found<>sage<>2005/08/26(金) 00:24:34 ID:???<> 最近は自分であえてタグ打たなくても、 <br> いろいろ用意されているからかなあ～ <br> なんだかhtmlエディタ関係全般がさみし～希ガス。 <>
+Name_Not_Found<>sage<>2005/08/26(金) 01:57:02 ID:???<> できあいのブログの時代ですか… <>
+Name_Not_Found<>sage<>2005/08/26(金) 02:33:53 ID:???<> まーだあったのかこのスレ。お前ら大好きだ。 <>
+Name_Not_Found<>sage<>2005/08/26(金) 09:14:59 ID:???<> CSSが綺麗に色分けされていて(･∀･)ｲｲ!! <>
+Name_Not_Found<>sage<>2005/08/27(土) 06:24:47 ID:???<> <a href="../test/read.cgi/hp/1005046309/907" target="_blank">&gt;&gt;907</a> <br> デフォルトだと見づらくないか？ <br>  <>
+907<>sage<>2005/08/27(土) 07:47:47 ID:???<> <a href="../test/read.cgi/hp/1005046309/908" target="_blank">&gt;&gt;908</a> <br> どうやって変えるの？(´･ω･｀) <>
+Name_Not_Found<><>2005/08/27(土) 23:28:28 ID:Pka4K0qp<> etc/CSS をいじるんじゃないのかな <br>  <>
+Name_Not_Found<>sage<>2005/08/27(土) 23:44:09 ID:???<> <a href="../test/read.cgi/hp/1005046309/910" target="_blank">&gt;&gt;910</a> <br> 何か、プロパティとかが羅列されてますね。 <br> どういじるんだろう？ <>
+Name_Not_Found<>sage<>2005/08/28(日) 02:23:55 ID:???<> 「日付と時刻の挿入」を変更できますか？ <br> 05年8月28日(日)を、 <br> 05年8月28日（日）に変えたい <>
+Name_Not_Found<><>2005/08/28(日) 05:02:16 ID:tmqkAHWY<> &gt;911 <br> ttp://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/keyword.html <br> 例えばこれとか。 <br> で、あとは試行錯誤でおけ <br>  <br> &gt;912 <br> *date-formats* に "%y年%#m月%#d日 (%v)" を足すといいと思う。 <br> push とか。 <br>  <br> もしくは、(format-date-string "%y年%#m月%#d日 (%v)") を使って関数を定義する。 <br>  <>
+Name_Not_Found<>sage<>2005/08/28(日) 07:17:01 ID:???<> <a href="../test/read.cgi/hp/1005046309/913" target="_blank">&gt;&gt;913</a> <br> サンクス <>
+Name_Not_Found<>sage<>2005/08/28(日) 12:34:53 ID:???<> <a href="../test/read.cgi/hp/1005046309/913" target="_blank">&gt;&gt;913</a> <br> やってみます。ありがとう <>
+Name_Not_Found<>sage<>2005/09/01(木) 23:03:17 ID:???<> なにげにkahtmlも使える <>
+Name_Not_Found<><>2005/09/02(金) 16:08:25 ID:3YxBWszO<> ここじゃないかも知れないですが質問。 <br> なぜかCtrl+スペースでIMEモードに切り替わるようになってしまいました。 <br> xyzzyではリージョンのスタートと被ってるのでコピペに支障が出て <br> とても困ってます。Ctrl+スペースをIMEと切り離したいんですが、 <br> どうしたらいいですか？　環境はWin98SEです。 <>
+Name_Not_Found<>sage<>2005/09/02(金) 16:49:42 ID:???<> どこかで設定を変えたとしか思えない。 <br> M-x describe-key で Ctrl+スペース に何が登録されてるか調べてみて。 <br> デフォルトでは set-mark-command が登録されてるけど、多分それが変更されてる。 <br> あと、今後こういう質問は↓でどうぞ。 <br> http://pc8.2ch.net/test/read.cgi/software/1116710824/ <>
+Name_Not_Found<>sage<>2005/09/02(金) 17:15:54 ID:???<> すんません、xyzzy固有じゃないみたいです。 <br> xyzzyに渡る前にOSレベルで割り込んでるみたいで、 <br> どのアプリでもそうなります。なので他のスレですね。 <br> すんませんでした。 <>
+Name_Not_Found<>sage<>2005/09/03(土) 00:43:31 ID:???<> いいよなあxyzzy。 <br> しみじみ。 <>
+Name_Not_Found<><>2005/09/19(月) 14:38:26 ID:Q4VYuko9<> 職きまった？ <>
+Name_Not_Found<>sage<>2005/09/20(火) 14:28:36 ID:???<> 2.4K万 3LDK  <>
+Name_Not_Found<>sage<>2005/09/20(火) 23:54:42 ID:???<> <a href="../test/read.cgi/hp/1005046309/922" target="_blank">&gt;&gt;922</a> <br> どこ？都内？ <>
+Name_Not_Found<>sage<>2005/09/21(水) 02:35:58 ID:???<> <a href="../test/read.cgi/hp/1005046309/923" target="_blank">&gt;&gt;923</a> <br> 都内でも普通の価格だろ <br>  <>
+Name_Not_Found<>sage<>2005/09/21(水) 03:08:52 ID:???<> 億ションかよ <>
+Name_Not_Found<>sage<>2005/09/21(水) 08:32:14 ID:???<> そこまで馬鹿とは思わなかったよｗ <br>  <>
+Name_Not_Found<>sage<>2005/09/21(水) 17:33:18 ID:???<> BMWwwwww...... <br> ￣￣∨￣￣￣￣￣￣￣￣ <br> 　　 　 ∩ ∩ <br> 　　 ～| ∪ |　　　　　　　　　(´´ <br> 　　 ﾍﾉ　　ﾉ　　　　　　　(´⌒(´ <br> 　　(（つ　ﾉ⊃≡≡≡(´⌒;;;≡≡≡ <br> 　　￣￣￣(´⌒(´⌒;; <br> 　　　ｽﾞｽﾞｽﾞｽﾞｽﾞｻﾞｻﾞｧｧ <br>  <br>  <>
+Name_Not_Found<>sage<>2005/09/21(水) 18:09:20 ID:???<> 俺のアパートは都内で4ﾏｿ <br> 4畳半一間、流し･便所付き <br> 風呂や好きにはたまらんぜ。 <>
+Name_Not_Found<>sage<>2005/09/21(水) 19:47:24 ID:???<> <a href="../test/read.cgi/hp/1005046309/928" target="_blank">&gt;&gt;928</a> TVすらないのか？ <br> ﾈﾀナノﾆ <>
+Name_Not_Found<>sage<>2005/09/21(水) 19:53:37 ID:???<> 意味不明 <>
+Name_Not_Found<>sage<>2005/09/22(木) 17:05:42 ID:???<> 929は文盲さん <>
+Name_Not_Found<>sage<>2005/09/26(月) 17:55:55 ID:???<> quote-region-by-tagにインスパイヤされて作ったものを晒してみます。 <br> 既存のマークを変更しない様にしてあります。セレクションが好きな人向け。 <br>  <br> ; * セレクションが有る時は、前後を指定したタグで囲む <br> ; * セレクションが無い時は、カーソル位置に開始タグ・終了タグを対で挿入する <br> ; * リージョンは無視 <br> (defun html-quote-selection (tag &optional attr) <br>   (interactive "*sTag: ") <br>   (unless attr (setq attr "")) <br>   (if (pre-selection-p) <br>       (progn <br>         (kill-selection) <br>         (insert "&lt;" tag attr "&gt;") <br>         (yank-selection) <br>         (insert "&lt;/" tag "&gt;")) <br>     (progn <br>       (save-excursion <br>         (insert "&lt;/" tag "&gt;")) <br>       (insert "&lt;" tag attr "&gt;")))) <br>  <br> ; 使用例 <br> (defun html-em () <br>   (interactive "*") <br>   (html-quote-selection "em")) <br> (global-set-key #\M-e 'html-em) <>
+Name_Not_Found<>sage<>2005/09/30(金) 20:59:30 ID:???<> ひさびさにいじってたら壊れた・・・ <>
+Name_Not_Found<>sage<>2005/10/04(火) 16:01:28 ID:???<> うむ <br> ありがちなトラブルだな <>
+Name_Not_Found<>sage<>2005/10/05(水) 00:31:44 ID:???<> 俺は最近xyzzyまるごとsvnに突っ込んで管理しようかと思っている。 <br> が、まだそうしていない <br>  <br> だれかやっている日といる？ <>
+Name_Not_Found<>sage<>2005/10/06(木) 00:27:47 ID:???<> 全部はさすがにやってないな。 .xyzzyとかsiteinit.lあたりはやってるけど <>
+Name_Not_Found<>sage<>2005/10/15(土) 23:21:26 ID:???<> ソースをみるのにxyzzy使ってるんだけど、 <br> URLをダブルクリックで華麗に選択するにはどーすれば？ <br> clickable-uriだと、ページが開いちゃうんだよ。 <br> 選択だけにしたいのです。 <>
+Name_Not_Found<>sage<>2005/10/26(水) 00:20:05 ID:???<> また、xyzzyで1つサイト作っちゃたよ。 <br> やっぱ、いいねxyzzy <>
+Name_Not_Found<>sage<>2005/10/26(水) 00:28:36 ID:???<> おまえら、xyzzyでサイト作ったら、METAタグ入れようぜ <br>  <br> &lt;meta name="Generator" Content="xyzzy"&gt; <>
+Name_Not_Found<>sage<>2005/10/26(水) 13:16:15 ID:???<> やだよ。恥ずかしいもん。 <>
+Name_Not_Found<><>2005/10/26(水) 16:30:03 ID:kp+UqFuh<> C-d の html+-delete-char-or-selection の挙動がおかしい。 <br> &nbsp;class="hoge" scope="row" <br> という文字列があったとき、 <br> hogeの手前の `"' で C-d すると `"hoge" scope="row' が消えて <br> &nbsp;class=" <br> になっちゃう。 <br> 使い始めた当初はちゃんと `"hoge"' が消えてくれたような気がする。 <br> 俺が勝手に何かいじっちゃったせいかと思うけど、覚えがないし、 <br> html+-mode の lisp を見てもよくわかんね。 <br> 暇なときにもう一度見直すか、どうしょもなければ delete-char に <br> 置き換えるかしちゃおうと思ってる。 <br>  <>
+Name_Not_Found<>sage<>2005/10/26(水) 20:43:15 ID:???<> …置換したらいいのでは？ <br>  <br> ;;;■php-modeで保存すると browserex で今開いているファイルを更新。 <br> (load-library "browserex") <br> (defun save-with-refresh () <br> (define-key ed::*php-mode-map* '(#\C-x #\C-s) <br> #'(lambda () <br> (interactive) <br> (save-buffer) <br> (bx:refresh-browser)))) <br> (bx:browserex-set-focus-editor) <br> (add-hook 'ed::*php-mode-hook* 'save-with-refresh) <>
+Name_Not_Found<>sage<>2005/10/26(水) 20:44:18 ID:???<> ｺﾞﾊﾞｰｸ <>
+Name_Not_Found<>sage<>2005/10/28(金) 19:25:50 ID:???<> <a href="../test/read.cgi/hp/1005046309/937" target="_blank">&gt;&gt;937</a> <br>  <br> URLの色変更とダブルクリックで選択の機能だけだけど <br>  <br> ;;;;;;;;;;;;;;;;;; <br> ;; ■ ダブルクリックでURLを選択する <br> (in-package "editor") <br> (defun select-url-mouse-left-press () <br> &nbsp; (interactive) <br> &nbsp; (let* ((click-count 2) <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(click (mod *last-mouse-click-count* 6))) <br> &nbsp; &nbsp; (unless (and (integerp click-count) <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(= click click-count) <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(select-url))) <br> &nbsp; &nbsp; (ed::mouse-left-press))) <br>  <>
+944・つづく<>sage<>2005/10/28(金) 19:26:23 ID:???<> (defun select-url () <br> &nbsp; (let ((opoint (point)) <br> &nbsp; &nbsp; &nbsp; &nbsp; (uri-chars "-a-zA-Z0-9_/~.@?&=;+(),'$!*:#%|") <br> &nbsp; &nbsp; &nbsp; &nbsp; (uri-regexp "s?https?://[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+") <br> &nbsp; &nbsp; &nbsp; &nbsp; epoint uri from to) <br> &nbsp; &nbsp; (save-excursion <br> &nbsp; &nbsp; &nbsp; (skip-chars-forward uri-chars) <br> &nbsp; &nbsp; &nbsp; (setq epoint (point)) <br> &nbsp; &nbsp; &nbsp; (when (and (skip-chars-backward uri-chars) <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(scan-buffer uri-regexp :regexp t :case-fold t :limit epoint) <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(&lt;= (point) opoint) <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(&lt; opoint epoint)) <br> &nbsp; &nbsp; &nbsp; &nbsp; (setq uri (match-string 0) from (match-beginning 0) to (match-end 0)))) <br> &nbsp; &nbsp; (when (and from to <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(&lt; from to)) <br> &nbsp; &nbsp; &nbsp; (goto-char from) <br> &nbsp; &nbsp; &nbsp; (start-selection 2 nil) <br> &nbsp; &nbsp; &nbsp; (goto-char to))) <br> &nbsp; ) <br> (global-set-key #\LBtnDown 'select-url-mouse-left-press) <br>  <>
+944・おわり<>sage<>2005/10/28(金) 19:27:31 ID:???<> ; 強調表示 <br> (defun select-url-emphasis-default () <br> &nbsp; (let* ((keyword-color '(:color 6 0 :underline)) <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(uri-regexp "s?https?://[-_.!~*'()a-zA-Z0-9;/?:@&=+$,%#]+") <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(select-url-regexp-keyword-list <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (compile-regexp-keyword-list <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;`((,uri-regexp t ,keyword-color t))))) <br> &nbsp; &nbsp; (setq-default regexp-keyword-list <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (if (boundp 'regexp-keyword-list) <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (append regexp-keyword-list select-url-regexp-keyword-list) <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; select-url-regexp-keyword-list)))) <br> (select-url-emphasis-default) <br> (in-package "user") <br>  <>
+Name_Not_Found<>sage<>2005/10/30(日) 13:58:21 ID:???<> MeiryoTVM使ってたけど、osakaに戻した。 <>
+Name_Not_Found<>sage<>2005/11/09(水) 20:53:20 ID:???<> クリップボードの文字列が http:// とかではじまっていたらリンクを挿入 <br> 選択範囲があれば選択範囲を、なければクリップボードの中身をリンク文字列に <br>  <br> (defun insert-url-with-link () <br>   (interactive "*") <br>   (let <br>       ((cb (get-clipboard-data)) <br>        (ed (when (and (get-selection-type) <br>                       (not (eq (get-selection-type) 3))) <br>              (prog1 (buffer-substring (selection-point) (selection-mark)) <br>                (delete-region (selection-point) (selection-mark)))))) <br>     (if (and (stringp cb) <br>              (string-match "^\\(ht\\|f\\)tps?://.+" cb)) <br>       (progn (unless ed (setf ed cb)) <br>         (insert (format nil "&lt;a href=\"~A\"&gt;~A&lt;/a&gt;" cb ed))) <br>       (message "Not URL")))) <br> (define-key *html+-mode-map* #\C-S-Insert 'insert-url-with-link) <br>  <>
+Name_Not_Found<>sage<>2005/11/10(木) 02:18:26 ID:???<> <a href="../test/read.cgi/hp/1005046309/948" target="_blank">&gt;&gt;948</a> <br> これは便利かも。㌧ｸｽ。 <>
+Name_Not_Found<>sage<>2005/11/10(木) 15:07:09 ID:???<> このスレもはや四年か。 <br>  <>
+Name_Not_Found<><>2005/11/15(火) 15:20:27 ID:ahUg65bI<> うむっ <>
+1/2<>　<>2005/11/25(金) 18:00:32 ID:???<> ;;;;;;;;;;;;;;;;;; <br> ;; ■ 任意のディレクトリのイメージファイルは http://~ の形式でパスを挿入したい <br> (in-package "editor") <br> (defvar *html+-path-list* <br> &nbsp; '(("c:/webpages/example/" "http://example.net/")) <br> &nbsp; "ファイルの置き場とそれに対応するURLを指定。複数指定可") <br> (defun html+-insert-image-url (f) <br> &nbsp; (interactive "*Finsert Image Tag (GIF/JPEG/PNG only): ") <br> &nbsp; "html+-mode: URL でパスを記述した &lt;IMG&gt; タグの挿入" <br> &nbsp; (when (parse-point-syntax) <br> &nbsp; &nbsp; (message "挿入位置が適切ではないようです") <br> &nbsp; &nbsp; (return-from html+-insert-image-url nil)) <br>  <>
+2/2<>　<>2005/11/25(金) 18:01:28 ID:???<> &nbsp; (if (file-exist-p f) <br> &nbsp; &nbsp; &nbsp; (let (w h) <br> &nbsp; &nbsp; &nbsp; &nbsp; (or (multiple-value-bind (w0 h0) (get-image-size f) (setq w w0) (setq h h0)) <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (message "GIF/JPEG/PNG 形式ではないようです")) <br> &nbsp; &nbsp; &nbsp; &nbsp; (and w h <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(insert (format nil "&lt;img src=\"~A\" width=\"~D\" height=\"~D\" alt=\"\" /&gt;" <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(or (dolist (path *html+-path-list* nil) <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(when (string-matchp (concat "^" (regexp-quote (first path)) "\\(.*\\)") f) <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(return (concat (second path) (match-string 1))))) <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(adjust-path f)) <br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;w h)))) <br> &nbsp; &nbsp; (progn (message "存在しないファイルです") <br> &nbsp; &nbsp; &nbsp; (insert (format nil "&lt;img src=\"~A\" alt=\"\" /&gt;" (adjust-path f)))))) <br> (global-set-key #\F11 'html+-insert-image-url) <br> (define-key *html+-mode-map* '(#\C-x #\C-i) 'html+-insert-image-url) <br> (in-package "user") <br>  <>
+Name_Not_Found<>sage長寿スレ記念カキコ<>2005/11/29(火) 00:14:10 ID:???<> <a href="../test/read.cgi/hp/1005046309/939" target="_blank">&gt;&gt;939</a> <br> 御礼みたいなもんですな。(´∀`) <>
+Name_Not_Found<>sage<>2005/11/30(水) 21:09:27 ID:???<>  <br> perlなどCGIが動作する環境でbrowser.dllを利用して  <br> 動作を確認する方法。  <br>  <br> &gt; (defvar *local-host-name* "http://127.0.0.1/cgi-bin/")  <br>  <br> &gt; (defun show-cgi ()  <br> &gt; (interactive)  <br> &gt; (let ((filename (get-buffer-file-name (selected-buffer))))  <br> &gt; (if (string-equal (pathname-type filename) "cgi")  <br> &gt; (navigate  <br> &gt; (concat (append-trail-slash *local-host-name*)  <br> &gt; (file-namestring filename)))  <br> &gt; (message "cgi ではありません")))) <br>  <br> をPHPで動かしたいのですが、 <br> cgiの部分をphpに変えても、 <br> 関数が定義されていません navigate <br> と表示され、上手く動きません。 <br> どうしたらいいでしょうか？ <>
+Name_Not_Found<>sage<>2005/11/30(水) 21:22:02 ID:???<> <a href="../test/read.cgi/hp/1005046309/955" target="_blank">&gt;&gt;955</a> <br> browserexが入ってるか？ <br> 入ってるならnavigateをbx:navigateにすると上手くいくかも。 <>
+Name_Not_Found<><>2005/12/01(木) 02:19:54 ID:Ta2yMObH<> test <>
+955<>sage<>2005/12/01(木) 04:26:56 ID:???<> &gt;956 <br> bx:navigateにしたところ、動作しました。 <br> ありがとうございました。 <>
+Name_Not_Found<>sage<>2005/12/01(木) 20:18:36 ID:???<> PHP-modeでの <br> php_manual_ja.chmの場所指定について <br> 場所の変更を <br> .xyzzy もしくは、 siteinit.lに <br> (setq *php-doc-base-path* "D:/xyzzy/etc/php_manual_ja.chm") <br> と記入しても上手く動作しません。 <br> php-misc.lを直接書き換える以外に、 <br> 方法はないですか？ <>
+Name_Not_Found<>sage<>2005/12/01(木) 21:26:00 ID:???<> HTMLHelpの場合は *php-doc-base-path* ではなく *php-html-help-path* なので <br>  <br> (setq *php-html-help-path* "D:/xyzzy/etc/php_manual_ja.chm") <br>  <br> 見るときはS-F1。 <>
+959<>sage<>2005/12/01(木) 22:19:36 ID:???<> &gt;960 <br> 有り難うございました。 <br> 無事動作しました。 <br>  <br> もう一つ質問なんですが、 <br> multi-mode.lを導入しました。 <br>  <br> 書いてあるとおり.xyzzyに <br> (load-library "multi-mode.l") <br> (setq ed::*multi-mode-running* t) <br> ;html+-mode <br> (defun multi-html-mode () <br>   (multi-mode t "html+-mode" <br>       '("&lt;!--" "--&gt;" "text-mode") <br>       '("&lt;script" "&lt;/script&gt;" "jscript-mode") <br>       '("&lt;?php" "?&gt;" "?&gt;" "php-mode"))) <br> (add-hook 'ed*html+-mode-hook* 'multi-html-mode) <br>  <br> としても、モードの切り替えが行われません。 <br> どうしたらいいでしょうか？ <>
+959<>sage<>2005/12/01(木) 22:20:35 ID:???<> 間違えました。 <br> (load-library "multi-mode.l") <br> (setq ed::*multi-mode-running* t) <br> ;html+-mode <br> (defun multi-html-mode () <br>   (multi-mode t "html+-mode" <br>       '("&lt;!--" "--&gt;" "text-mode") <br>       '("&lt;script" "&lt;/script&gt;" "jscript-mode") <br>       '("&lt;?php" "?&gt;" "php-mode"))) <br> (add-hook 'ed*html+-mode-hook* 'multi-html-mode) <br>  <br> です。 <>
+Name_Not_Found<>sage<>2005/12/01(木) 22:56:42 ID:???<> (add-hook 'ed*html+-mode-hook* 'multi-html-mode)  <br>   ↓ <br> (add-hook 'ed::*html+-mode-hook* 'multi-html-mode) <>
+959<>sage<>2005/12/01(木) 23:13:14 ID:???<> &gt;963 <br> 修正しましたが、htmlファイルを開こうとすると <br>  <br> 名前が衝突するためexportできません: editor::*html+-mode-hook* <br>  <br> と表示されます。 <>
+959<>sage<>2005/12/01(木) 23:29:29 ID:???<> 先ほどの表示は消えました。 <br>  <br> ;; multi-mode.l <br> (load-library "multi-mode.l") <br> (setq ed::*multi-mode-running* t) <br> ;html+-mode <br> (defun multi-html-mode () <br>   (multi-mode t "html+-mode" <br>       '("&lt;!--" "--&gt;" "text-mode") <br>       '("&lt;script" "&lt;/script&gt;" "jscript-mode") <br>       '("&lt;?php" "?&gt;" "php-mode"))) <br> (add-hook 'ed::*html+-mode-hook* 'multi-html-mode) <br>  <br> やはり、動作しないようです。 <>
+963<>sage<>2005/12/02(金) 00:26:56 ID:???<> &gt;965 のコピペで動作したのでその部分には問題なさそうです。 <br> 他に原因となりそうなものは <br>  <br> 1.html+-modeが入っていない。 <br> 2.ダンプし忘れている(siteinit.lに書いている場合) <br> 3.確認したファイルがhtml+-modeで開けていない。 <br>  <br> くらいしか思いつきません。 <br>  <br>  <>
+959<>sage<>2005/12/02(金) 00:43:39 ID:???<> &gt;963 さん 有り難うございます。 <br> なぜか急に動作するようになりました。 <br>  <br> あと、質問なんですが、 <br> .xyzzyではなく、siteinit.l に書くと、 <br> html+-modeにする際、 <br> 名前が衝突するためexportできません: editor::*html+-mode-hook* <br> のエラー表示がでるのと、 <br>  <br> php部分の閉じカッコ &gt; の位置で、 <br> BSを押すと、php部分が <br> すべて消えてしまいます。 <br> どうしたらよいでしょうか？ <>
+963<>sage<>2005/12/02(金) 01:37:22 ID:???<> &gt;.xyzzyではなく、siteinit.l に書くと、html+-modeにする際、  <br> &gt;名前が衝突するためexportできません: editor::*html+-mode-hook* のエラー表示がでる <br> これはhtml+-modeが呼び出された時点ですでに <br> editor::*html+-mode-hook* が存在することが原因だったと思います。 <br> あまり詳しくないので断言できませんが、 <br> 直前に (require "html+-mode") と書いておくことで回避できると思います。 <br>  <br> &gt;php部分の閉じカッコ &gt; の位置で、 BSを押すと、php部分がすべて消えてしまいます <br> ?&gt;の直後は必ず改行という制限付きで良ければ以下で誤魔化せます。 <br>  <br> (defun multi-html-mode ()  <br>    (multi-mode t "html+-mode"  <br>        '("&lt;!--" "--&gt;" "text-mode")  <br>        '("&lt;script" "&lt;/script&gt;" "jscript-mode")  <br>        '("&lt;?php" "?&gt;\n" "php-mode"))) ;← "?&gt;"から"?&gt;\n"に変更 <br>  <>
+959<>sage<>2005/12/02(金) 02:27:35 ID:???<> &gt;963 さん、何回も有り難うございます。 <br> どうも、siteinit.lをバイトコンパイルすると <br> エラーがでるようです。 <br>  <>
+Name_Not_Found<>sage<>2005/12/23(金) 23:27:17 ID:???<> ほほう、なんだかんだで970か <>
+Name_Not_Found<><>2005/12/25(日) 13:40:48 ID:VFVhcPyg<> 丸４年 <>
+Name_Not_Found<>sage<>2006/01/01(日) 00:29:51 ID:???<> あけましてオメデトウ <>
+Name_Not_Found<>sage<>2006/01/01(日) 00:37:01 ID:???<> あけおめ。 <br> 今年も一年タグ打ちしまっせ。 <>
+ </b>【小吉】<b> <>sage<>2006/01/01(日) 14:02:19 ID:???<> あけましておめでとう。 <>
+ </b>【44円】<b>   </b>【だん吉】<b> <>sage<>2006/01/01(日) 20:04:13 ID:???<> ことしもよろしくおねがいします。 <>
+Name_Not_Found<>sage<>2006/01/19(木) 01:30:22 ID:???<> 正月から半月更新なしとは。 <>
+Name_Not_Found<>sage<>2006/02/02(木) 23:40:48 ID:???<> きずけば2月ですよ。 <>
+Name_Not_Found<><>2006/02/03(金) 19:38:05 ID:Ckz0/+9u<> ume <>
+Name_Not_Found<>sage<>2006/02/04(土) 00:35:05 ID:???<> Macに乗り換えてEmacsあるからいいやと思ってたけど・・・、 <br> 慣れもあるんだろうけど、xyzzy素晴らしすぎ。 <>
+Name_Not_Found<>sage<>2006/02/04(土) 15:05:27 ID:???<> 夢見たのか？ <>
+Name_Not_Found<>sage<>2006/02/06(月) 18:29:16 ID:???<> <a href="../test/read.cgi/hp/1005046309/979" target="_blank">&gt;&gt;979</a> <br> 同感。 <br> UNIX 上の Emacs21 が苦痛になってきた。 <br> Emacs18 から 10 年以上使っているのに。 <>
+Name_Not_Found<>sage<>2006/02/06(月) 18:50:11 ID:???<> 【夢か】MacOS X86 が流出する夢!!第4夜【現か】  <br> http://pc7.2ch.net/test/read.cgi/mac/1137524162/ <>

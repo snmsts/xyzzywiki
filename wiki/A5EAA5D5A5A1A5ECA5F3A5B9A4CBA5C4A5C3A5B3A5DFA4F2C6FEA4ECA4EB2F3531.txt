@@ -1,0 +1,53 @@
+**buffer-bar-〜* [#d104a277]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[nazoking]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-03-15 (月) 15:47:18
+-バージョン: 
+
+**メッセージ [#d4ab944f]
+ <chapter>
+   <title>*buffer-bar-context-menu*</title>
+   <type>Variable</type>
+   <description>バッファ・バー上で右クリックしたときに出てくるコンテキストメニュー。define-popup-menu で作成されている。（作成は app-menu.l）</description>
+   <package>editor</package>
+   <section>バッファ</section>
+   <file>buffer.l</file>
+ </chapter>
+ 
+ <chapter>
+   <title>*buffer-bar-context-menu-buffer*</title>
+   <type>Variable</type>
+   <description>バッファ・バー上で選択されているバッファ　ただしバッファ・バー上のコンテキストメニューで取得専用くらいしか使用できない</description>
+   <package>editor</package>
+   <section>バッファ</section>
+   <file>buffer.l</file>
+ </chapter>
+ 
+ <chapter>
+   <title>*buffer-bar-context-menu-handler*</title>
+   <type>Variable</type>
+   <description>デフォルトのバッファ・バー用コンテキストメニューハンドラ。setq-default によって定義されている標準の動作は、 *buffer-bar-context-menu-buffer* を定義し、*buffer-bar-context-menu* を返す。</description>
+   <package>editor</package>
+   <section>バッファ</section>
+   <seealso>*buffer-bar-context-menu*</seealso>
+   <file>buffer.l</file>
+ </chapter>
+ 
+ <chapter>
+   <title>*buffer-bar-selected-buffer-to-first*</title>
+   <type>Variable</type>
+   <description>non-nilなら、選択されたバッファがバッファ・バー上で一番先頭になる。キーでタブを移動した場合は移動されない。デフォルトは nil。
+ 	(setq *buffer-bar-selected-buffer-to-first* t)
+   とやって、バッファ・バーをクリックすれば分かると思います。</description>
+   <package>editor</package>
+   <section>バッファ</section>
+ </chapter>
+
+----
+-取り込みました。ありがとうございます。 -- [[山本]] &new{2004-05-20 (木) 22:11:11};
+
+#comment

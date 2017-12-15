@@ -1,0 +1,7 @@
+~->[[tips]]
+
+#ref(aa_insert.l);
+
+昔xyzzyスレに上げた 2ch-mode の AA 入力支援機能です。
+#hr
+#comment

@@ -1,0 +1,10 @@
+#contents
+このページはnavi-card-modeの紹介ページです
+
+* navi-card-modeとは [#t5a975cb]
+* 導入 [#ha984b86]
+* 基本機能 [#g8bac6aa]
+* 元記事 [#rd5185bb]
+http://www.geocities.co.jp/Technopolis-Mars/8229/navi.html
+----
+[[FrontPage]]

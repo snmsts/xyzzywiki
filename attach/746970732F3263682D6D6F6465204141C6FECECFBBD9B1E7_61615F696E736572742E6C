@@ -1,0 +1,84 @@
+; C-c C-a で AA を入れられるようにする
+; config.l の最後に (load "~/.2ch/aa_insert.l") などとして使う。
+; バイトコンパイルしてもよい。その場合は (load "~/.2ch/aa_insert.lc") と指定する。
+
+
+(eval-when (:compile-toplevel) (require "2ch/main"))
+(in-package "2ch")
+
+(defun aa-insert ()
+  (interactive)
+  (let ((*minibuffer-save-ime-status* nil)
+	(ime-status (get-ime-mode)))
+    (toggle-ime nil)
+    (minibuffer-prompt "AA ID (? - show list): ")
+    (let ((c (read-char *keyboard*))
+	  aa)
+      (cond
+       ((equal c #\?)
+	(aa-select))
+       ((setq aa (cdr (assoc (format nil "~C" c) *aa-alist* :test 'equal)))
+	(aa-insert-to-buffer aa))))
+    (toggle-ime ime-status)))
+
+(define-key *form-map* '(#\C-c #\C-a) 'aa-insert)
+
+(defun aa-select ()
+  (let (c
+	aa)
+    (save-window-excursion
+      (switch-to-buffer "*AA Select*")
+      (erase-buffer (selected-buffer))
+      (with-output-to-selected-buffer
+	(format t "~A     ~A~%" "ID" "AA"))
+      (let (item)
+	(dolist (item *aa-alist*)
+	  (insert (car item))
+	  (aa-insert-to-buffer-to-show-list (cdr item))))
+      (goto-char (point-min))
+      (let ((continue t))
+	(while continue
+	  (minibuffer-prompt "AA ID(SPC, BS: scroll): ")
+	  (setq c (read-char *keyboard*))
+	  (cond
+	   ((equal #\  c)
+	    (scroll-window (window-height)))
+	   ((equal #\C-h c)
+	    (scroll-window (* -1 (window-height))))
+	   (t
+	    (setq continue nil)))))
+      (delete-buffer (selected-buffer)))
+    (when (setq aa (cdr (assoc (format nil "~C" c) *aa-alist* :test 'equal)))
+      (aa-insert-to-buffer aa))))
+
+(defun aa-insert-to-buffer (aa)
+  (if (listp aa)
+      (progn
+	(insert (car aa))
+	(when (cdr aa)
+	  (let (item)
+	    (with-output-to-selected-buffer
+	      (dolist (item (cdr aa))
+		(format t "~%~A" item))))))
+    (insert aa)))
+
+(defun aa-insert-to-buffer-to-show-list (aa)
+  (with-output-to-selected-buffer
+    (if (listp aa)
+	(progn
+	  (format t "     ~A~%" (car aa))
+	  (when (cdr aa)
+	    (let (item)
+	      (dolist (item (cdr aa))
+		(format t "      ~A~%" item))))); スペースの数が１行目と違うので注意
+      (format t "     ~A~%" aa))))
+
+(defvar *aa-alist* '(("a" . "ヽ（｀Д´）ノ")
+		     ("A" . "(ﾟдﾟ)")
+		     ("T" . ("　∧||∧"
+			     " （　 ⌒ ヽ"
+			     " 　∪　　ﾉ"
+			     " 　　ＵＵ"))))
+
+;car は文字列でなく文字でいいような気もするが、Navi2ch との互換性を取って文字列にすることにした
+;これにより、Navi2ch のリストを流用できる

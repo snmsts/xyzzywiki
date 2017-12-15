@@ -1,0 +1,50 @@
+;;; -*- Mode: Lisp; Package: EDITOR -*-
+;;;
+; Last updated: <2003-10-09T20:19:13+09:00>
+;
+; rss/filters/tdiary.l
+(require "rss/main")
+
+(provide "rss/filters/tdiary")
+
+(in-package "rss")
+
+(defun tdiary-parse-buffer (url)
+  (let (items
+        title
+        anchor)
+    (save-excursion
+      (goto-char (point-min))
+      (while (scan-buffer "<h3><a href=\"\\([^\"]+\\)\"[^>]*><span class=\"[^\"]*\">.*</span></a>\\(.*\\)</h3>"
+                          :regexp t
+                          :tail t)
+        (setq anchor (match-string 1))
+        (setq title (match-string 2))
+        (while (string-match "\\([^<]*\\)<[^>]*>\\([^<]*\\)</[^>]*>\\(.*\\)" title)
+          (setq title (string-replace-match title "\\1\\2\\3")))
+        (setq title (ed::xmlpm-decode-special-chars title))
+        (push (rss-create-item title
+                               (concat url (substitute-string anchor "./" "")))
+              items))
+      (nreverse items))))
+
+;; フィルタ関数
+;; (チャネル, ファイルを引数にfuncallされる)
+(defun tdiary-filter (channel file)
+  (let ((url (rss-link channel))
+        (title (or (and (rss-title channel)
+                        (not (equal (rss-title channel) *rss-menu-temp-buffer-suffix*))
+                        (rss-title channel))
+                   (read-string "Site Title: ")))
+        items)
+    (save-excursion
+      (set-buffer (get-buffer-create *rss-buffer-temp*))
+      (erase-buffer (selected-buffer))
+      (insert-file-contents file)
+      (setq items (tdiary-parse-buffer url))
+      (delete-buffer (selected-buffer)))
+    ; 元のファイルを上書き
+    (convert-to-rss (rss-create title url nil items)
+                    file)))
+
+(rss-filter-regist "http://[^.]+.tdiary.net/.*" 'tdiary-filter)

@@ -1,0 +1,22 @@
+* netinstallerでエラー「パッケージマーカがトークンの終わりにあります。」 [#ebe78634]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2006-04-23 (日) 15:19:03
+
+** メッセージ [#b7fde9a3]
+netinstallerで
+
+http://ohkubo.s53.xrea.com/
+
+
+を登録しようとすると
+
+C:/Programs/xyzzy/.netinst/dat/http%3A%2F%2Fohkubo.s53.xrea.com%2F: 42:パッケージマーカがトークンの終わりにあります。
+
+とエラーが出て登録できないのですが、なぜでしょうか？
+----
+- 登録するのは http://ohkubo.s53.xrea.com/xyzzy/packages.l じゃないでしょうか？ --  &new{2006-04-23 (日) 19:16:06};
+- あぁ本当ですね入門xyzzyに書いてありましたお恥ずかしい限りです。 --  &new{2006-04-23 (日) 23:28:26};
+
+#comment

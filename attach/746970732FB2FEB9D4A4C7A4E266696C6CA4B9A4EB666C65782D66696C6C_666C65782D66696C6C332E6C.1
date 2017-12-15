@@ -1,0 +1,153 @@
+;;
+;; Last updated: <2001/03/15 10:14:23 +0900>
+;;
+;; NAKANO による変更
+;; 2003/07/23
+;; fill-columnより小さい位置で改行しても挿入されるように変更
+;; バッファ毎に設定を変えられるように変更
+;;
+;; 2003/7/24
+;; indentがされるモードでは，挿入する前にインデントを削除するように修正
+;;
+;; 挿入する文字を生成する関数を設定するように修正．より柔軟なauto-fill
+;; が可能になりました．
+#|
+
+◆ Install
+
+  siteinit.l か .xyzzy のどこかに
+                (require "flex-fill3")
+  と書いておいてください． flex-fill,flex-fill2と同時には使えませんので，使用している
+  人はアンインストールしてください．
+
+◆ Uninstall
+
+   記述した(require "flex-fill3") を消してください．
+
+◆ 設定例
+  *flexible-fill-bullet-prefix-char*
+  *flexible-fill-mode-list*
+をコメントを参考に設定してください．
+
+※java-modeの場合の一例
+(require "java")
+(define-key *java-mode-map* #\RET
+	    #'(lambda ()
+		(interactive)
+		(c-newline-and-indent)
+		(and auto-fill *auto-fill-hook
+		     (funcall *auto-fill-hook *last-command-char*))))
+(setf *flexible-fill-mode-list* '(text-mode java-mode))
+
+(defun ed::javadoc-comment-marker-string ()
+  (format nil "~A~V@{~A~:*~}"
+	  (buffer-substring (match-beginning 2) (match-end 2))
+	  (- (match-end 1) (match-end 2))
+	  " "))
+
+(add-hook '*java-mode-hook*
+  #'(lambda ()
+      (auto-fill-mode t)
+      (set fill-column 120) ; 勝手に改行する桁数
+      (setq *flexible-fill-regexp-list*
+	    '(("^\\([ \t]*\\(//\\|\\*[ \t]\\)[ \t]*\\)[^@]" . ed::matched-first-reference)
+	      ("^\\(\\([ \t]*[*][ \t]+\\)[@][a-z]+[ \t]*\\)" . ed::javadoc-comment-marker-string)))))
+
+これを.xyzzyかsiteinit.lに書いてください． これで javadoc を書くのが少し楽になるはず
+|#
+
+(provide "flex-fill3")
+
+(in-package "editor")
+
+(export '(*flexible-fill-mode-list*
+	  *flexible-fill-regexp-list*
+	  ))
+
+; ここで指定したモードのみ flex-fill
+(defvar *flexible-fill-mode-list* '(text-mode))
+
+;; (regexp . function) というペアを要素に持つリスト．行頭がregexpマッチすると，
+;; function が実行される． function は引数無しで挿入する文字を返す関数を渡す．
+;; 関数の例は下にいくつか載せておく．
+(defvar-local *flexible-fill-regexp-list* '(("^#? +" . matched-whole-region)))
+
+
+;; 文字を挿入する関数例
+
+;; マッチした文字列全体を挿入
+(defun matched-whole-region ()
+  (buffer-substring (match-beginning 0) (match-end 0)))
+
+;; マッチした文字列の1番目の後方参照を挿入
+(defun matched-first-reference ()
+  (buffer-substring (match-beginning 1) (match-end 1)))
+
+;; マッチした文字列と同じ数の文字列cを挿入する
+(defun string-filled-with (c)
+  (let (tmp)
+    (setq tmp (buffer-substring (match-beginning 0) (match-end 0)))
+    (format nil "~V@{~A~:*~}" (length tmp) c)))
+
+
+
+
+(defun set-flexible-fill-prefix ()
+  (interactive "*")
+  (when (not (and auto-fill
+		  (member buffer-mode *flexible-fill-mode-list*)))
+    (return-from set-flexible-fill-prefix nil))
+  (let ((goal-column (goal-column)) (tmp *flexible-fill-regexp-list*))
+    (save-excursion
+      (goto-bol)
+      (setq fill-prefix nil)
+      (while tmp
+;	(message (concat "testing " (caar tmp)))
+	(if (looking-at (caar tmp))
+	    (progn
+	      (setq fill-prefix (funcall (cdar tmp)))
+	      (setq tmp nil))
+	  (setq tmp (cdr tmp)))))
+    (set-goal-column goal-column)))
+
+(add-hook '*post-command-hook* 'set-flexible-fill-prefix)
+
+
+(defun do-my-auto-fill (c)
+  (unless (plusp fill-column)
+    (return-from do-my-auto-fill nil))
+  (when (or (member c '(#\LFD #\RET))
+	    (and (>= (current-column) fill-column)
+		 (or (member c '(#\TAB #\SPC))
+		     (and (or (kanji-char-p c)
+			      (kana-char-p c))
+			  (not (listen *keyboard*))))))
+    (when (and (= (save-excursion
+		    (kinsoku-goto-column fill-column *fill-kinsoku-mode*)
+		    (unless (eolp)
+		      (forward-char 1))
+		    (prog1
+			(point)
+		      (unless (member c '(#\LFD #\RET))
+			(insert #\LFD))))
+		  (point))
+	       (not (member c '(#\LFD #\RET))))
+      (forward-char 1))
+    (when fill-prefix
+      (if (bolp)
+	  (progn
+	    (message "case0")
+	    (insert fill-prefix))
+	(let (begin  tmp (p (point)))
+	  (message "case1")
+	  (goto-bol)
+	  (setq begin (point))
+	  (skip-syntax-spec-forward " ")
+	  (setq tmp (point))
+	  (delete-region begin tmp)
+	  (insert fill-prefix)
+	  (forward-char (- p tmp)))))
+    (run-hooks 'auto-fill-hook)))
+
+(setq-default *auto-fill-hook 'do-my-auto-fill)
+

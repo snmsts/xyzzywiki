@@ -1,0 +1,32 @@
+#freeze
+* M-x occur は使えないでしょうか？ [#aa29d4b0]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2007-02-05 (月) 21:29:33
+
+** メッセージ [#jf094e50]
+こんちには。
+Emacs に存在するコマンド、
+M-x occur (list-matching-lines)とその関連↓
+　　delete-non-matching-lines
+　　delete-matching-lines
+が使えたらいいなぁと思いました。
+
+すでに動くようにlispを書いている人がいらっしゃいましたら、教えていただけないでしょうか。
+
+----
+- Emacsを使っていないので違うこと言ってたらごめんなさい。occurはC-u M-x grepで、後ろの二つは[[こちら:http://white.s151.xrea.com/wiki/index.php?memo%2Fxyzzy%2Fedit]]のflush linesとkeep linesでどうでしょう。 --  &new{2007-02-05 (月) 22:05:52};
+- お世話になっております！C-u M-x grepは、ジャンプ機能がないことを除いて画面上はまったく同じように見えます。flush linesとkeep linesは、まさに求めてたものです！ありがとうございました。 --  &new{2007-02-06 (火) 22:19:52};
+- デフォルトで検索結果からF10とF11でジャンプできると思いますが、それとは違うのでしょうか？  --  &new{2007-02-06 (火) 22:37:43};
+- あぁ！すみません。F10、F11ですか。C-c C-c を押しても変化なかったので、ダメかと思ってました。これで完全に僕がやりたいことが実現できました。ありがとうございました！ --  &new{2007-02-06 (火) 22:47:39};
+- ついでにこんなのもありますよ。
+ ;; grepの時S-F11で前に戻る
+ (defun previous-error ()
+   (interactive)
+   (next-error t))
+ (global-set-key #\S-F11 'previous-error)
+~--  &new{2007-02-06 (火) 22:53:02};
+- ついでにOutlineXとかigsearchとかでも似たようなことができるかと思います。どちらともNetInstallerから入手可能です。 --  &new{2007-02-07 (水) 00:09:04};
+
+#comment

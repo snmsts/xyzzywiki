@@ -1,0 +1,34 @@
+[[L10N/english]]
+
+ register.l:40:	   (error "レジスタ~Aが設定されていません" r))
+-Register ~A is not set up. --  &new{2005-03-05 01:54:39 (土)};
+
+#comment
+ register.l:42:	   (error "レジスタにマーカが入っていません")))))
+-No markers are set in the register. --  &new{2005-03-05 01:46:24 (土)};
+
+#comment
+ register.l:54:	   (error "レジスタ~Aが設定されていません" r))
+-Register ~A is not set up. --  &new{2005-03-05 01:55:28 (土)};
+
+#comment
+ register.l:56:	   (error "レジスタにテキストが入っていません")))))
+-No texts are set in the register. --  &new{2005-03-05 01:48:16 (土)};
+
+#comment
+ register.l:69:      (error "レジスタにテキストが入っていません"))
+-No texts are set in the register. --  &new{2005-03-05 01:51:42 (土)};
+
+#comment
+ register.l:79:      (error "レジスタにテキストが入っていません"))
+-No texts are set in the register. --  &new{2005-03-05 01:48:28 (土)};
+
+#comment
+ register.l:104:	   (error "レジスタ~Aが設定されていません" r))
+-Register ~A is not set up. --  &new{2005-03-05 01:55:39 (土)};
+
+#comment
+ register.l:106:	   (error "レジスタにWindow-configurationが入っていません")))))
+-No window-configurations are set in the register. --  &new{2005-03-05 01:48:55 (土)};
+
+#comment

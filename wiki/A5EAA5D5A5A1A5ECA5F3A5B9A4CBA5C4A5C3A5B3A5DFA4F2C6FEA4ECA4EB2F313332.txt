@@ -1,0 +1,110 @@
+*message-box, msgbox [#hdf55b86]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[めもちょ]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-06-18 05:40:48 (土)
+-バージョン: 
+
+**メッセージ [#rc43e6ca]
+- 各ボタンを押したときの戻り値を追加。
+- 全角と半角の間にスペース挿入。
+- seealso 追加。
+- section を「ダイアログ」に。
+
+ <chapter>
+ <title>message-box</title>
+ <type>Function</type>
+ <arguments>message-box MESSAGE &amp;optional TITLE STYLES &amp;key :BUTTON1 :BUTTON2 :BUTTON3 :BUTTON4 :BUTTON5 :NO-WRAP</arguments>
+ <package>editor</package>
+ <description>
+ yes-or-no-p 系よりも柔軟なダイアログを表示します。
+ 
+   MESSAGE : ダイアログに表示するメッセージを指定します。
+   TITLE   : ダイアログのタイトルを指定します。
+   STYLES  : ダイアログのスタイルをリストで指定します。
+         :ok                     [OK] を表示します。
+         :ok-cancel              [OK][キャンセル] を表示します。
+         :yes-no                 [はい][いいえ] を表示します。
+         :yes-no-cancel          [はい][いいえ][キャンセル] を表示します。
+         :abort-retry-ignore     [中止][再試行][無視] を表示します。
+         :information            (i) インフォメーションマークを表示します。
+         :exclamation            (!) 感嘆符を表示します。
+         :question               (?) 疑問符を表示します。
+         :button1                ボタン 1 をデフォルト選択にします。
+         :button2                ボタン 2 をデフォルト選択にします。
+         :button3                ボタン 3 をデフォルト選択にします。
+         :button4                ボタン 4 をデフォルト選択にします。
+         :button5                ボタン 5 をデフォルト選択にします。
+   BUTTON1 : ボタン 1 のテキストを変更します。
+   BUTTON2 : ボタン 2 のテキストを変更します。
+   BUTTON3 : ボタン 3 のテキストを変更します。
+   BUTTON4 : ボタン 4 のテキストを変更します。
+   BUTTON5 : ボタン 5 のテキストを変更します。
+   NO-WRAP : MESSAGE が長すぎるときに折り返すかを制御します。
+         t       長くとも折り返さない。
+         nil     長ければ折り返す。
+ 
+ ボタンを押したときの戻り値は、それぞれ以下のとおりです。
+ 
+   :ok     [OK] を選択
+   :cancel [キャンセル] を選択
+   :yes    [はい] を選択
+   :no     [いいえ] を選択
+   :abort  [中止] を選択
+   :retry  [再試行] を選択
+   :ignore [無視] を選択
+ 
+ 使用例：
+   ;;; [はい][いいえ][キャンセル] を表示し選択させます。
+   (message-box "メールを送信しますか?" nil
+     '(:yes-no-cancel :question :button1))
+   =&gt; :yes
+ 
+   ;;; ダイアログの結果を case で場合わけしてみる
+   (case (message-box "メールを送信しますか?" nil
+                      '(:yes-no-cancel :question :button1))
+     (:yes (den8-draft-send t))
+     (:no t)
+     (t nil))
+ </description>
+ <seealso>yes-or-no-p</seealso>
+ <seealso>msgbox</seealso>
+ <section>ダイアログ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>msgbox</title>
+ <type>Function</type>
+ <arguments>msgbox FMT &amp;rest ARGS</arguments>
+ <package>editor</package>
+ <description>
+ メッセージボックスを表示します。
+ [OK] ボタンとインフォメーションアイコンが表示されます。
+ 
+   FMT  : format の出力書式と同じものを指定できます。
+   ARGS : 出力書式へのパラメタとなります。
+ 
+ 戻り値は :ok となります。
+ 
+ 使用例：
+   ;;; 出力書式で整形してみる。
+   (msgbox "このバッファは ~A です。" buffer-mode)
+   =&gt; :ok
+ </description>
+ <seealso>message-box</seealso>
+ <seealso>format</seealso>
+ <link></link>
+ <section>ダイアログ</section>
+ <file>misc.l</file>
+ </chapter>
+
+｜∀｀）どうでしょうか？
+----
+-どもです。[中止]の戻り値が抜けているみたいだったので、足しておきました。 -- [[NANRI]] &new{2005-06-18 14:39:09 (土)};
+-取り込みました→[[refwiki:msgbox]], [[refwiki:message-box]] -- [[NANRI]] &new{2005-07-23 22:12:17 (土)};
+
+#comment

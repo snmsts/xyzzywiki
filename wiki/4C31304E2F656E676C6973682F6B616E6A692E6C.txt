@@ -1,0 +1,16 @@
+[[L10N/english]]
+
+ kanji.l:31:	   (message "エンコーディングが判定できません")))
+- Unknown encoding. -- [[a]] &new{2005-12-24 (土) 11:46:57};
+- south --  &new{2005-12-30 (金) 06:29:19};
+
+#comment
+ kanji.l:117:			 (plain-error "まだ変換してないでしょ?"))
+- Hit enter to confirm. -- [[a]] &new{2005-12-24 (土) 11:53:45};
+- Hit enter to confirm. -- [[a]] &new{2005-12-24 (土) 11:53:59};
+
+#comment
+ kanji.l:132:      (plain-error "まだ変換してないでしょ?"))
+- Hit enter to confirm. -- [[a]] &new{2005-12-24 (土) 11:54:13};
+
+#comment

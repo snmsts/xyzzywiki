@@ -1,0 +1,32 @@
+*block [#m4176c08]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2003-10-20 (月) 22:39:17
+-バージョン: 
+
+**メッセージ [#t600c5b6]
+ <chapter>
+ <title>block</title>
+ <type>Special Form</type>
+ <arguments>block NAME {FORM}*</arguments>
+ <package>lisp</package>
+ <description>
+ フォームを順番に評価して最後のフォームの結果を返します。 
+ ほとんどprognですがreturn-fromやreturnで戻り値が指定できるところが違います。
+ returnやreturn-fromにぶつかったときには残りの式は評価しません。
+ </description>
+ <seealso>return-from</seealso>
+ <link></link>
+ <section>制御構造</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-取り込みました。ありがとうございます。 -- [[山本]] &new{2003-11-05 (水) 23:15:51};
+-公開しました。 -- [[山本]] &new{2004-11-15 (月) 05:25:35};
+
+#comment

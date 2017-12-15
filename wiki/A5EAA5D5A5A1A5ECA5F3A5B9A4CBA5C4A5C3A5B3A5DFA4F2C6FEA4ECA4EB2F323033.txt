@@ -1,0 +1,98 @@
+* goto-char make-marker [#b9cd1dca]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-04-21 (金) 09:01:25
+-バージョン: 
+
+** メッセージ [#ze96d9e0]
+- make-marker は補足説明と使用例を追加しました。
+- goto-char は mule の説明を消して、書き直しました。
+
+ <chapter>
+ <title>make-marker</title>
+ <type>Function</type>
+ <arguments>make-marker &amp;optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ 空のマーカーを作って返します。
+ バッファを編集することで、マーカーの位置もそれに追随して変わります。
+ マーカーは、 goto-char や buffer-substring、delete-region などのバッ
+ ファ上の位置を引数にとる関数の引数として使用できます。
+ 
+   BUFFER : マーカーを作るバッファを指定します。
+            指定しなければ、現在のバッファになります。
+ 
+ 使用例：
+   ;; スクラッチでマーカーを作る
+   (setq marker (make-marker (find-buffer "*scratch*")))
+   =&gt; #&lt;marker: *scratch*: -&gt;
+ 
+   ;; マーカーに位置を設定する
+   (set-marker marker 3)
+   =&gt; #&lt;marker: *scratch*: 3&gt;
+ 
+   ;; マーカー位置に移動する
+   (goto-char marker)
+   =&gt; t
+ 
+   ;; マーカーより手前の内容を削除する
+   (goto-char (point-max))
+   (delete-region 0 1)
+   (marker-point marker)
+   =&gt; 2
+ 
+   ;; マーカーより手前に文字列を挿入する
+   (goto-char 0)
+   (insert "abc")
+   (marker-point marker)
+   =&gt; 5
+ 
+   ;; マーカー位置に文字列を挿入する
+   (goto-char marker)
+   (insert "xyz")
+   (marker-point marker)
+   =&gt; 5
+ </description>
+ <seealso>set-marker</seealso>
+ <seealso>marker-point</seealso>
+ <seealso>goto-char</seealso>
+ <seealso>process-marker</seealso>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>goto-char</title>
+ <type>Function</type>
+ <arguments>goto-char POINT</arguments>
+ <package>editor</package>
+ <description>
+ 指定された位置にカレントバッファのカーソルを移動します。
+ この位置はpoint, point-min, point-max等のポイントを返す関数を
+ 使用することで得ることが可能です。
+ 
+   POINT: バッファ上の位置です。整数またはマーカーを利用できます。
+          移動できる最小の位置は point-min で取得でき、これよりも小さい
+          値を指定した時は point-min の位置に移動します。
+          移動できる最大の位置は point-max で取得でき、これよりも大きい
+          値を指定した時は point-max の位置に移動します。
+ 
+ 戻り値：
+   mule では、POINT が返されますが、 xyzzy では常に t です。 
+ </description>
+ <seealso>point-min</seealso>
+ <seealso>point-max</seealso>
+ <seealso>what-cursor-position</seealso>
+ <seealso>narrow-to-region</seealso>
+ <seealso>make-marker</seealso>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+--------
+- どーもです。 -- [[NANRI]] &new{2006-04-21 (金) 23:53:45};
+
+#comment

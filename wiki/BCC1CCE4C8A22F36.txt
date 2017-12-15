@@ -1,0 +1,75 @@
+* elscreenのようなものはありますか？ [#ob86e85d]
+-ページ: [[質問箱]]
+-投稿者: [[kawachi]]
+-状態: 完了
+-投稿日: 2003-11-05 (水) 14:24:44
+
+** メッセージ [#rb2d4b24]
+Emacsでは
+http://www.morishima.net/~naoto/j/software/elscreen/
+を愛用しているのですが、xyzzyでも同じようなものはないでしょうか？
+
+それっぽいキーバインディングは某所から抜き出すと以下のような感じになってます。
+
+    C-z         ElScreen prefix key
+    C-z C-c     Create new screen
+    C-z k       Kill the current screen
+    C-z C-p     Switch to the previous screen
+    C-z C-n     Switch to the next screen
+    C-z C-a     Toggle screens
+    C-z g       Jump to the specified screen
+    C-z [0-9]   Jump to the screen #
+    C-z ?       Show help
+    C-z C-f     Find file in new screen
+    C-z w       Show list of screens
+    C-z m       Show last message
+    C-z t       Show time
+    C-z A       Name the current screen
+    C-z v       Show ElScreen version
+
+これで感じはわかるでしょうか。
+
+
+----
+-フレームがそれっぽいですが違いますかね。適当なキーバインドがわかれば適当に作ってもいいかも。 -- [[佐野]] SIZE(10){2003-11-05 (水) 20:13:31}
+
+ (defvar elscreen-map (make-keymap))
+ (setf (symbol-function 'elscreen-prefix) elscreen-map)
+ 
+ (global-set-key #\C-z 'elscreen-prefix)
+ 
+ (define-key elscreen-map #\C-c 'new-pseudo-frame)
+ (define-key elscreen-map #\k 'delete-pseudo-frame)
+ (define-key elscreen-map #\C-p 'previous-pseudo-frame)
+ (define-key elscreen-map #\C-n 'next-pseudo-frame)
+ (define-key elscreen-map #\C-a 'other-pseudo-frame)
+-書きかけて思ったこととしてここから先の動作概要が良くわからないのですが…。 -- [[佐野]] &new{2003-11-06 (木) 08:48:39};
+ (dolist
+     (i    (save-excursion
+ 	    (let ((first (selected-pseudo-frame))
+ 		  st)
+ 	      (tagbody
+ 		loop
+ 		(push  (selected-pseudo-frame) st)
+ 		(next-pseudo-frame)
+ 		(unless (equal first (selected-pseudo-frame))
+ 		  (go loop)))
+ 	      st)))
+   (print i))
+-メモですフレームのリストってこういう方法以外ないのかな…。 -- [[佐野]] &new{2003-11-06 (木) 09:10:23};
+-- それっぽい変数がありました。
+ (dolist (fr ed::*pseudo-frame-list*)
+   (print (ed::pseudo-frame-name fr)))
+-私はほとんど C-z C-p, C-z C-n しか使わないので、詳しい動作については私も良くわかってません。これがあるだけでだいぶ使い物になるのですが。。 -- [[kawachi]] &new{2003-11-06 (木) 10:36:43};
+-と思いましたが、できてますね。僕的にはこれでだいぶ大丈夫です。ありがとうございます。 -- [[kawachi]] &new{2003-11-06 (木) 10:41:57};
+-C-z C-c でフレームを作った時にあたらしいフレームでは *scratch* buffer を表示した状態にしたいのですが、どうしたらいいでしょうか？ -- [[kawachi]] &new{2003-11-06 (木) 11:52:17};
+-こんな感じでしょうか？ -- [[NANRI]] &new{2003-11-06 (木) 12:53:43};
+ (define-key elscreen-map #\C-c
+             #'(lambda ()
+                 (interactive)
+                 (new-pseudo-frame (let ((ed::*prefix-args* nil))
+                                     (ed::make-pseudo-frame-name))
+                                   't)
+                 (set-buffer "*scratch*")))
+
+#comment

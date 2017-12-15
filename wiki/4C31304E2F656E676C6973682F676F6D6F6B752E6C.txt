@@ -1,0 +1,39 @@
+[[L10N/english]]
+
+ gomoku.l:625:		   "弱すぎ!!")
+- Dub!! -- [[a]] &new{2005-12-24 (土) 11:44:56};
+
+#comment
+ gomoku.l:627:		   "だからあの時やめときゃよかったのに")
+- Should've quited at that moment! -- [[kei]] &new{2009-10-23 (金) 18:05:40};
+
+#comment
+ gomoku.l:629:		   "「待った」したのに負けてやんの")
+-565]]:iuuyy2223 --  &new{2005-11-01 21:05:22 (火)};
+- You've lost even you used "Wait" -- [[kei]] &new{2009-10-23 (金) 18:06:51};
+
+#comment
+ gomoku.l:631:		   "先手で負けてちゃ話しにならんな")
+#comment
+ gomoku.l:635:		   "結構疲れた")
+#comment
+ gomoku.l:637:		   "わしの勝ち"))))
+- I won -- [[kei]] &new{2009-10-23 (金) 18:08:23};
+
+#comment
+ gomoku.l:643:	      "次は「待った」はなしね")
+#comment
+ gomoku.l:645:	      "もう一丁行く?")
+- One more game? --  &new{2006-07-23 (日) 16:52:09};
+
+#comment
+ gomoku.l:647:	      "次は先手でやらせて"))))
+#comment
+ gomoku.l:650:      (setq message "試合放棄だからわしの勝ち"))
+#comment
+ gomoku.l:656:	      "引き分け。次は「待った」はなしね")
+#comment
+ gomoku.l:658:	      "引き分け。もう一回やろ")
+#comment
+ gomoku.l:660:	      "引き分け。今度は先手でやらせろ"))))
+#comment

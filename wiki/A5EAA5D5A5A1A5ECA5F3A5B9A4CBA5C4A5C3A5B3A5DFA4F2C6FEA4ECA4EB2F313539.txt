@@ -1,0 +1,269 @@
+*rectangle 関係 [#y9bd2f41]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-10-18 21:46:22 (火)
+-バージョン: 20050929
+
+**メッセージ [#rf620719]
+矩形関係をまとめて書いてみました。
+
+seealso をどれぐらい書くべきかよく分からなかったので、必要に応じて追加・削除してください。
+
+ <chapter>
+ <title>copy-rectangle-to-register</title>
+ <type>Function</type>
+ <arguments>copy-rectangle-to-register R START END &amp;optional DELETE</arguments>
+ <package>editor</package>
+ <description>
+ START と END で指定される矩形領域をレジスタ R へコピーします。
+ DELETE が non-nil ならば同時に領域を削除します。
+ コピーした矩形領域の yank には、 insert-register を使います。 
+ </description>
+ <seealso>copy-rectangle</seealso>
+ <seealso>kill-rectangle</seealso>
+ <seealso>insert-register</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>register.l</file>
+ </chapter>
+
+ <chapter>
+ <title>string-rectangle-selection</title>
+ <type>Function</type>
+ <arguments>string-rectangle-selection STRING</arguments>
+ <package>editor</package>
+ <description>
+ 矩形選択されたセレクションの各行を文字列 STRING で置き換えます。
+ </description>
+ <seealso>string-rectangle</seealso>
+ <seealso>operate-on-rectangle-selection</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>select.l</file>
+ </chapter>
+
+ <chapter>
+ <title>string-rectangle</title>
+ <type>Function</type>
+ <arguments>string-rectangle P1 P2 STRING</arguments>
+ <package>editor</package>
+ <description>
+ P1 と P2 で指定される矩形領域の各行を文字列 STRING で置き換えます。
+ </description>
+ <seealso>string-rectangle-selection</seealso>
+ <seealso>operate-on-rectangle</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>rectangl.l</file>
+ </chapter>
+
+ <chapter>
+ <title>delete-rectangle-selection</title>
+ <type>Function</type>
+ <arguments>delete-rectangle-selection</arguments>
+ <package>editor</package>
+ <description>
+ 矩形選択されたセレクションの領域を削除します。
+ </description>
+ <seealso>kill-rectangle-selection</seealso>
+ <seealso>delete-rectangle</seealso>
+ <seealso>operate-on-rectangle-selection</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>select.l</file>
+ </chapter>
+
+ <chapter>
+ <title>delete-rectangle</title>
+ <type>Function</type>
+ <arguments>delete-rectangle P1 P2</arguments>
+ <package>editor</package>
+ <description>
+ P1 と P2 で指定される矩形領域を削除します。
+ </description>
+ <seealso>kill-rectangle</seealso>
+ <seealso>delete-rectangle-selection</seealso>
+ <seealso>operate-on-rectangle</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>rectangl.l</file>
+ </chapter>
+
+ <chapter>
+ <title>open-rectangle-selection</title>
+ <type>Function</type>
+ <arguments>open-rectangle-selection</arguments>
+ <package>editor</package>
+ <description>
+ 矩形選択されたセレクションの領域に #\SPC を挿入します。
+ </description>
+ <seealso>clear-rectangle-selection</seealso>
+ <seealso>open-rectangle</seealso>
+ <seealso>operate-on-rectangle-selection</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>select.l</file>
+ </chapter>
+
+ <chapter>
+ <title>open-rectangle</title>
+ <type>Function</type>
+ <arguments>open-rectangle P1 P2</arguments>
+ <package>editor</package>
+ <description>
+ P1 と P2 で指定される矩形領域に #\SPC を挿入します。
+ </description>
+ <seealso>clear-rectangle</seealso>
+ <seealso>open-rectangle-selection</seealso>
+ <seealso>operate-on-rectangle</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>rectangl.l</file>
+ </chapter>
+
+ <chapter>
+ <title>clear-rectangle-selection</title>
+ <type>Function</type>
+ <arguments>clear-rectangle-selection</arguments>
+ <package>editor</package>
+ <description>
+ 矩形選択されたセレクションの領域を #\SPC で上書きします。
+ </description>
+ <seealso>open-rectangle-selection</seealso>
+ <seealso>clear-rectangle</seealso>
+ <seealso>operate-on-rectangle-selection</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>select.l</file>
+ </chapter>
+
+ <chapter>
+ <title>clear-rectangle</title>
+ <type>Function</type>
+ <arguments>clear-rectangle P1 P2</arguments>
+ <package>editor</package>
+ <description>
+ P1 と P2 で指定される矩形領域を #\SPC で上書きします。
+ </description>
+ <seealso>open-rectangle</seealso>
+ <seealso>clear-rectangle-selection</seealso>
+ <seealso>operate-on-rectangle</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>rectangl.l</file>
+ </chapter>
+
+ <chapter>
+ <title>operate-on-rectangle-selection</title>
+ <type>Function</type>
+ <arguments>operate-on-rectangle-selection &amp;key :copy :delete :clear :open :string</arguments>
+ <package>editor</package>
+ <description>
+ 矩形選択されたセレクションの領域に対してキーワードで指定された操作を行
+ います。
+ 
+   :copy     コピーする
+   :delete   削除する
+   :clear    #\SPC で上書き
+   :open     #\SPC を挿入
+   :string   削除して各行に STRING を挿入
+ </description>
+ <seealso>operate-on-rectangle</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>select.l</file>
+ </chapter>
+
+ <chapter>
+ <title>operate-on-rectangle</title>
+ <type>Function</type>
+ <arguments>operate-on-rectangle P1 P2 C1 C2 &amp;key :copy :delete :clear :open :string</arguments>
+ <package>editor</package>
+ <description>
+ P1 と P2 で指定されるリージョン中の、 C1 と C2 で定まる矩形領域に対し
+ てキーワードで指定された操作を行います。
+ 
+   :copy     コピーする
+   :delete   削除する
+   :clear    #\SPC で上書き
+   :open     #\SPC を挿入
+   :string   削除して各行に STRING を挿入
+ 
+ C1, C2 には nil を指定することもできます。この場合、リージョンの開始位
+ 置と終了位置の表示桁が使われます。
+ 
+ -rectangle 系のコマンドの多くはこれを用いて実装されています。
+ 
+ 
+ 矩形についての補足：
+   例えば次の図で / がリージョンの場合 * の部分が操作の対象となります。
+          C1             C2                     C1             C2
+   -------│-------------│--------      -------│-------------│--------
+   -------│------/////////////////      -------│------*******│--------
+   ////////////////////////////////      -------│*************│--------
+   ////////////////////////////////      -------│*************│--------
+   ////////////////////////////////      -------│*************│--------
+   /////////////////////////-------      -------│*************│--------
+   -------│-------------│--------      -------│-------------│--------
+   
+   C1, C2 を明示的に指定することはあまりなく、次のいずれかの形になる場合がほとんどでしょう。
+   --------------------      --------------------
+   ------------////////      ------********//////
+   /////*******////////      //////********//////
+   /////*******////////      //////********//////
+   /////*******////////      //////********//////
+   /////*******////////      //////********//////
+   /////---------------      //////********------
+   --------------------      --------------------
+ </description>
+ <seealso>operate-on-rectangle-selection</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>rectangl.l</file>
+ </chapter>
+
+ <chapter>
+ <title>*rectangle-kill-buffer*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ コピーした矩形を格納します。
+ 中身は矩形の各行の文字列を並べたリストです。
+ </description>
+ <seealso>copy-rectangle</seealso>
+ <seealso>kill-rectangle</seealso>
+ <seealso>yank-rectangle</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>rectangl.l</file>
+ </chapter>
+
+ <chapter>
+ <title>overwrite-rectangle</title>
+ <type>Function</type>
+ <arguments>overwrite-rectangle</arguments>
+ <package>editor</package>
+ <description>
+ コピーしている矩形を貼り付けます。既存のテキストに上書きされます。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>rectangl.l</file>
+ </chapter>
+
+そういえばキーパラメータは小文字でいいんでしょうか？
+----
+-どーもです。キーパラメータは小文字でOKです。引数の説明の所を少しだけ整形しました。 -- [[NANRI]] &new{2005-10-18 22:20:23 (火)};
+-copy-rectangle-to-register の seealso に insert-register を追加してみました。(エントリがありませんが近いうちに書きます) --  &new{2005-10-20 21:46:23 (木)};
+-キーパラメータは小文字だけど引数は大文字ってことですか？＞NANRIさん　てっきり引数も含めて小文字か大文字に統一しようとしているのだと思ってました。個人的には両方とも統一してあった方がいいように思いますが…。ずいぶん前の話を蒸し返すようですいません。 -- [[Nomura]] &new{2005-10-20 23:38:46 (木)};
+--「キーパラメータのキーの部分は定義通り書く。ここだけはxyzzyがシンボルの大文字と小文字を区別するということの影響を受けるため。他の部分は影響ないので方針を変えず(大文字で)」というのが現在の方針です。で、なぜ他の部分は方針を変えなかったのかと言いますと、パッと見て関数自体のシンボルや「&optional」などのシンボルと見分けがつくのは、メリットだろうと思っているからです。引数は全部小文字(というか定義通り?)の方がよいですか? オレ自身はどっちでも構いませんが。 -- [[NANRI]] &new{2005-10-21 01:09:14 (金)};
+---そういうことでしたか。ようやく理解しました。見た目だけの問題なので、別にどちらでもかまいません。決まった方針に従います。特にほかの方の意見が無ければこのままで。 -- [[Nomura]] &new{2005-10-21 16:00:01 (金)};
+- 取り込みました。→[[refwiki:overwrite-rectangle]], [[refwiki:*rectangle-kill-buffer*]], [[refwiki:operate-on-rectangle]], [[refwiki:operate-on-rectangle-selection]], [[refwiki:clear-rectangle]], [[refwiki:clear-rectangle-selection]], [[refwiki:open-rectangle]], [[refwiki:open-rectangle-selection]], [[refwiki:delete-rectangle]], [[refwiki:delete-rectangle-selection]], [[refwiki:string-rectangle]], [[refwiki:string-rectangle-selection]], [[refwiki:copy-rectangle-to-register]] -- [[NANRI]] &new{2005-12-03 (土) 03:10:00};
+
+#comment

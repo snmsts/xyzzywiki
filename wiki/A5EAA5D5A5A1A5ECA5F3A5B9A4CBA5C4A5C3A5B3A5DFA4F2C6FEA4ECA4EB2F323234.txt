@@ -1,0 +1,289 @@
+* string-not-equal, *do-completion [#z52ec0ac]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 普通
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-08-03 (木) 09:47:24
+-バージョン: 
+
+** メッセージ [#sfc57301]
+ string-not-equal
+等しくなければt とありますが、等しくない文字のインデックスを返すようです。
+
+ *do-completion
+シンボルのパッケージ名(コロン含む)もprefixにあたるようです。
+
+--------
+- どーもです。表現をそろえておきました。 -- [[NANRI]] &new{2006-08-04 (金) 00:20:37};
+ <chapter>
+ <title>string/=</title>
+ <type>Function</type>
+ <arguments>string/= STRING1 STRING2 &amp;key :start1 :end1 :start2 :end2</arguments>
+ <package>lisp</package>
+ <description>
+ STRING1とSTRING2を比較して等しくなければ一致しない文字のインデックスを、
+ そうでなければnilを返します。
+ 英字の大文字と小文字は区別します。string=の反対の機能です。
+ </description>
+ <seealso>string=</seealso>
+ <section>文字列</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>string-not-equal</title>
+ <type>Function</type>
+ <arguments>string-not-equal STRING1 STRING2 &amp;key :start1 :end1 :start2 :end2</arguments>
+ <package>lisp</package>
+ <description>
+ STRING1とSTRING2を大文字小文字に関係なく比較して等しくなければ一致しない
+ 文字のインデックスを、そうでなければnilを返します。
+ string-equalの反対の機能です。
+ </description>
+ <seealso>string-equal</seealso>
+ <section>文字列</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>string&lt;</title>
+ <type>Function</type>
+ <arguments>string&lt; STRING1 STRING2 &amp;key :start1 :end1 :start2 :end2</arguments>
+ <package>lisp</package>
+ <description>
+ STRING1とSTRING2を比較して「&lt;」の条件を満たせば一致しない文字のインデ
+ ックスを、そうでなければnilを返します。
+ 
+ 使用例：
+   (string&lt; "aa" "aa")
+   =&gt; nil
+   (string&lt; "aa" "ab")
+   =&gt; 1
+ </description>
+ <seealso>string=</seealso>
+ <seealso>string&gt;</seealso>
+ <seealso>string&lt;=</seealso>
+ <seealso>string&gt;=</seealso>
+ <seealso>string-lessp</seealso>
+ <seealso>string-not-lessp</seealso>
+ <seealso>string-greaterp</seealso>
+ <seealso>string-not-greaterp</seealso>
+ <section>文字列</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>string-lessp</title>
+ <type>Function</type>
+ <arguments>string-lessp STRING1 STRING2 &amp;key :start1 :end1 :start2 :end2</arguments>
+ <package>lisp</package>
+ <description>
+ STRING1とSTRING2を大文字小文字に関係なく比較して「&lt;」の条件を満たせば
+ 一致しない文字のインデックスを、そうでなければnilを返します。
+ 
+ 使用例：  
+   (string-lessp "Aa" "ab")
+   =&gt; 1
+   (string-lessp "ac" "AB")
+   =&gt; nil  
+ </description>
+ <seealso>string&lt;</seealso>
+ <seealso>string&gt;</seealso>
+ <seealso>string&lt;=</seealso>
+ <seealso>string&gt;=</seealso>
+ <seealso>string-not-lessp</seealso>
+ <seealso>string-greaterp</seealso>
+ <seealso>string-not-greaterp</seealso>
+ <section>文字列</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>string&gt;</title>
+ <type>Function</type>
+ <arguments>string&gt; STRING1 STRING2 &amp;key :start1 :end1 :start2 :end2</arguments>
+ <package>lisp</package>
+ <description>
+ STRING1とSTRING2を比較して「&gt;」の条件を満たせば一致しない文字のインデ
+ ックスを、そうでなければnilを返します。
+ 
+ 使用例：
+   (string&gt; "ac" "ab")
+   =&gt; 1
+   (string&gt; "ac" "ac")
+   =&gt; nil
+   (string&gt; "AC" "ab")
+   =&gt; nil
+ </description>
+ <seealso>string&lt;</seealso>
+ <seealso>string&lt;=</seealso>
+ <seealso>string&gt;=</seealso>
+ <seealso>string-lessp</seealso>
+ <seealso>string-not-lessp</seealso>
+ <seealso>string-greaterp</seealso>
+ <seealso>string-not-greaterp</seealso>
+ <section>文字列</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>string-greaterp</title>
+ <type>Function</type>
+ <arguments>string-greaterp STRING1 STRING2 &amp;key :start1 :end1 :start2 :end2</arguments>
+ <package>lisp</package>
+ <description>
+ STRING1とSTRING2を大文字小文字に関係なく比較して「&gt;」の条件を満たせば
+ 一致しない文字のインデックスを、そうでなければnilを返します。
+ 
+ 使用例：
+   (string-greaterp "ac" "ab")
+   =&gt; 1
+   (string-greaterp "ac" "ac")
+   =&gt; nil
+   (string-greaterp "AC" "ab")
+   =&gt; 1
+ </description>
+ <seealso>string&lt;</seealso>
+ <seealso>string&gt;</seealso>
+ <seealso>string&lt;=</seealso>
+ <seealso>string&gt;=</seealso>
+ <seealso>string-lessp</seealso>
+ <seealso>string-not-lessp</seealso>
+ <seealso>string-not-greaterp</seealso>
+ <section>文字列</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>string&lt;=</title>
+ <type>Function</type>
+ <arguments>string&lt;= STRING1 STRING2 &amp;key :start1 :end1 :start2 :end2</arguments>
+ <package>lisp</package>
+ <description>
+ STRING1とSTRING2を比較して「&lt;=」の条件を満たせば一致しない文字のイン
+ デックスを、そうでなければnilを返します。
+ </description>
+ <seealso>string=</seealso>
+ <seealso>string&lt;</seealso>
+ <seealso>string&gt;</seealso>
+ <seealso>string&gt;=</seealso>
+ <seealso>string-lessp</seealso>
+ <seealso>string-not-lessp</seealso>
+ <seealso>string-greaterp</seealso>
+ <seealso>string-not-greaterp</seealso>
+ <section>文字列</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>string-not-greaterp</title>
+ <type>Function</type>
+ <arguments>string-not-greaterp STRING1 STRING2 &amp;key :start1 :end1 :start2 :end2</arguments>
+ <package>lisp</package>
+ <description>
+ STRING1とSTRING2を大文字小文字に関係なく比較して「&lt;=」の条件を満たせ
+ ば一致しない文字のインデックスを、そうでなければnilを返します。
+ </description>
+ <seealso>string&lt;</seealso>
+ <seealso>string&gt;</seealso>
+ <seealso>string&lt;=</seealso>
+ <seealso>string&gt;=</seealso>
+ <seealso>string-lessp</seealso>
+ <seealso>string-not-lessp</seealso>
+ <seealso>string-greaterp</seealso>
+ <section>文字列</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>string&gt;=</title>
+ <type>Function</type>
+ <arguments>string&gt;= STRING1 STRING2 &amp;key :start1 :end1 :start2 :end2</arguments>
+ <package>lisp</package>
+ <description>
+ STRING1とSTRING2を比較して「&gt;=」の条件を満たせば一致しない文字のイン
+ デックスを、そうでなければnilを返します。
+ </description>
+ <seealso>string&lt;</seealso>
+ <seealso>string&gt;</seealso>
+ <seealso>string&lt;=</seealso>
+ <seealso>string-lessp</seealso>
+ <seealso>string-not-lessp</seealso>
+ <seealso>string-greaterp</seealso>
+ <seealso>string-not-greaterp</seealso>
+ <section>文字列</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>string-not-lessp</title>
+ <type>Function</type>
+ <arguments>string-not-lessp STRING1 STRING2 &amp;key :start1 :end1 :start2 :end2</arguments>
+ <package>lisp</package>
+ <description>
+ STRING1とSTRING2を大文字小文字に関係なく比較して「&gt;=」の条件を満たせ
+ ば一致しない文字のインデックスを、そうでなければnilを返します。
+ </description>
+ <seealso>string&lt;</seealso>
+ <seealso>string&gt;</seealso>
+ <seealso>string&lt;=</seealso>
+ <seealso>string&gt;=</seealso>
+ <seealso>string-lessp</seealso>
+ <seealso>string-greaterp</seealso>
+ <seealso>string-not-greaterp</seealso>
+ <section>文字列</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>*do-completion</title>
+ <type>Function</type>
+ <arguments>*do-completion STRING TYPE &amp;optional WORDP LIST</arguments>
+ <package>editor</package>
+ <description>
+ 指定した文字列を条件に従い補完します。
+ 
+   STRING : 補完したい文字列
+   TYPE   : 補完する型
+         :symbol-name
+         :function-name
+         :command-name
+         :variable-name
+         :non-trivial-symbol-name
+         :exist-file-name
+         :file-name
+         :file-name-list
+         :directory-name
+         :buffer-name
+         :exist-buffer-name
+         :list
+         :list-ignore-case
+   WORD   : nilでなければ単語ごとの補完
+   LIST   : TYPE が :list か :list-ignore-case の場合の補完リスト
+ 
+ 戻り値は以下のとおりです。
+ 
+   多値で3つの値が戻ってきますので、multiple-value-bind で受け取るといい
+   でしょう。complete.lの中にある do-completion-internal を参考にしてくだ
+   さい。以下は場合分けをしています。
+ 
+         [1] 補完の候補が存在しない場合     :no-completions と nil
+         [2] マッチする候補がなかった場合   :no-match と nil
+         [3] 与えられた文字列がすでに候補の
+             いずれかと一致していて
+             補完する必要がない場合
+             [3.1] 一致した候補が一つだけ   :solo-match と list と prefix
+             [3.2] 複数と一致した場合       :not-unique と list と prefix
+         [4] 補完した場合                   補完した結果の文字列と list と prefix
+ 
+   list は、一致した候補のリスト。
+   prefix は、例えばファイル名の補完のときのディレクトリ名とか、
+   シンボルの補完のときのパッケージ修飾部分とか。
+ </description>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+
+#comment

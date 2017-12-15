@@ -1,0 +1,44 @@
+* Netinstaller終了時にエラー [#w7c36459]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2006-08-28 (月) 13:28:04
+
+** メッセージ [#xbd72a3a]
+Netinstaller終了時にqを押してサイト一覧を閉じるときに
+"不正なWindow-configurationです。"とエラーが出ます。
+NetInstのフレームからフレーム1に切り替えるときにも上記のメッセージが出ます。
+
+このエラー後に、M-x Netinstallerしても
+k:\xyzzy\.netinstaller/config.l...done
+と出てNetinstallerが起動しません。
+
+どうやらセッションファイルを開いていることに問題があるかもしれません。scratchのみの時には正常に起動終了できます。
+起動直後のtrace on errorには何も記載されていないため、正常だと思います。
+trace on errorでの内容は以下のとおりです。
+
+-----------------------------------------------------------
+ >CALL STACK 10: (set-window-configuration (window-configuration 0 ((nil nil nil ...)) ...))
+ >CALL STACK  9: (system:*byte-code ...)
+ >CALL STACK  8: (select-pseudo-frame #S(editor::pseudo-frame name "Frame 1" winconf (window-configuration 0 ((nil nil nil ...)) ...) save-p t selected-fn nil deleted-fn nil))
+ >CALL STACK  7: (system:*byte-code ...)
+ >CALL STACK  6: (other-pseudo-frame)
+ >CALL STACK  5: (system:*byte-code ...)
+ >CALL STACK  4: (delete-pseudo-frame #S(editor::pseudo-frame name "NetInst" winconf (window-configuration #<window 51254268> ((#<window 51254268> #<buffer: *scratch*> #<marker: *scratch*: 0> ...)) ...) save-p nil selected-fn nil deleted-fn nil))
+ >CALL STACK  3: (system:*byte-code ...)
+ >CALL STACK  2: (#<lexical-closure: netinst::finish>)
+ >CALL STACK  1: (command-execute netinst::finish)
+ 不正なwindow-configurationです
+-----------------------------------------------------------
+どなたか解決策のほうをご存知でしたらお願いします。
+----
+- 上記のtrace on errorは"不正なwindow-configurationです"の直後のものです。 -- [[質問者]] &new{2006-08-28 (月) 13:29:46};
+- 特定のセッションファイルを開いているときだけ起こりますか？そうであればそのセッションファイルが壊れているかもしれません。 --  &new{2006-08-28 (月) 13:49:18};
+- CALL STACK 10: の (window-configuration ...) と同じような記述がセッションファイルにあれば、おそらくそれが原因と思います。 --  &new{2006-08-28 (月) 13:51:10};
+- 同じような記述がセッション内にありました、これが原因でしょうか？-- [[質問者]] &new{2006-08-28 (月) 15:13:40};
+ '(("Frame 1" (window-configuration 0 ((nil nil nil nil nil nil nil nil nil nil nil 0 -1 0 (0 0 1 1) (0 0 766 0))) (766 0)) nil)))
+- 同じような記述がセッション内にありました、これが原因でしょうか？ -- [[質問者]] &new{2006-08-28 (月) 15:23:11};
+ '(("Frame 1" (window-configuration 0 ((nil nil nil nil nil nil nil nil nil nil nil 0 -1 0 (0 0 1 1) (0 0 766 0))) (766 0)) nil)))
+- セッションファイルが破損していたのかもしれません、ssnを評価してみたところエラーを吐きました。作成しなおして同名のもの使用しましたが、正常なようです。ありがとうございました。 -- [[質問者]] &new{2006-08-28 (月) 15:31:19};
+
+#comment

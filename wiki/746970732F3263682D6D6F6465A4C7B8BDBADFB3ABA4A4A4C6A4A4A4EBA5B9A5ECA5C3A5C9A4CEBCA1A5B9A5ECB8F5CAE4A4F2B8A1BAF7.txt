@@ -1,0 +1,116 @@
+[[tips]]
+
+
+.2ch/config.lに以下を。&br;
+他の2ch専用ブラウザにあったので、多分こんな感じかなーと思いながら書きました。&br;
+これも、多分大丈夫だと思いますが&br;
+マズイところがあれば直していただけたら、と思います。m(__)m
+
+ ;;次スレ候補検索
+ (defun search-next-thread ()
+  (interactive)
+  (let* ((bufname (buffer-name (selected-buffer)))
+         (title thread-title)
+         (title-list (if title
+                         (do ((l nil (push (match-string 1) l))
+                              (text (substitute-string
+                                     (do ((temp title (substitute-string temp (match-string 1) "")))
+                                         ((not (string-match "\\(【[^【]*】\\)" temp)) temp)) "スレ" "")
+                                    (substring text (match-end 1))))
+                             ((not (string-match "\\([一-龠]+\\|[ァ-ヴー]+\\|[a-zA-Z]+\\)" text))
+                              (nreverse l)))))
+         (regexp (list (apply #'concat (cons ".*" (mapcar #'(lambda (x) (concat x ".*")) title-list)))
+                       (substring (apply #'concat (mapcan #'(lambda(x)
+                                                              (unless (or (> 2 (length x))
+                                                                          (string-match "\\([ぱパﾊﾟ][ーｰ][とトﾄ]\\)\\|\\([ＰｐPp][AaＡａ][RrＲｒ][TtＴｔ]\\)" x))
+                                                                (list (concat x "\\|"))))
+                                                          title-list)) 0 -2))))
+    (save-window-excursion
+      (case (message-box (format nil "~A板 から次スレ候補を検索します。\n更新とか再読み込みとかする?"
+                                     thread-board) "2ch-mode"
+                         '(:question)
+                         :button1 "そのまま(&N)" :button2 "更新(&U)" :button3 "再読み込み(&R)")
+        (:button2 (board-show thread-board thread-host thread-path t))
+        (:button3 (board-show thread-board thread-host thread-path t t))))
+    (labels ((search (name host path)
+               (let (matched)
+                 (dolist (r regexp)
+                   (dolist (track (save-window-excursion (search-board r name host path)))
+                     (if (string/= (fifth track) title)
+                         (push track matched)))
+                   (when matched (return)))
+                 matched))
+             (search-category (category-menu)
+               (let (matched)
+                 (long-operation
+                   (dolist (m category-menu)
+                     (let ((host (menu-list-host m))
+                           (name (menu-list-name m))
+                           (path (menu-list-path m)))
+                       (if (file-exist-p (board-path-data host path))
+                           (let ((res (search name host path)))
+                             (if res (setq matched (append res matched))))))))
+                 matched))
+             (show (matched)
+               (split-2)
+               (search-show matched (concat " next thread : " title))
+               (goto-char (point-min))
+               (unless (local-variable-p 'mode-line-format)
+                 (make-local-variable 'mode-line-format))
+               (setq mode-line-format
+                     (format nil "[~A] の次スレ候補です・・・（ ´,_ゝ`）" title))))
+      ;板検索
+      (let ((matched (search thread-board thread-host thread-path)))
+        (if matched
+            (show matched)
+          ;カテゴリ検索
+          (let (category category-menu)
+            (dolist (c *menu-list*)
+              (unless (or (equal *favorits-name* (category-name c))
+                          (equal *tracking-name* (category-name c)))
+                (if (dolist (m (category-menu c))
+                      (when (menu-equal m (list thread-board thread-host thread-path))
+                        (setq category (category-name c))
+                        (setq category-menu (category-menu c))
+                        (return t)))
+                    (return))))
+            (when (case (message-box (format nil "[ ~A板 ]にそれっぽいのがないです。\nカテゴリ[ ~A ]の全ての板で検索してみます?"
+                                             thread-board category)
+                                     "2ch-mode"
+                                     '(:question)
+                                     :button1 "する(&Y)"
+                                     :button2 "しない(&N)"
+                                     :button3 "更新してから(&U)")
+                    (:button1 t)
+                    (:button3 (save-window-excursion
+                                (set-buffer *buffer-menu*)
+                                (category-board-update category t))))
+              (setq matched (search-category category-menu))
+              (if matched
+                  (show matched)
+                ;全板検索
+                (when (case (message-box "一応全板検索もやっときます？" "2ch-mode" '(:question)
+                                         :button1 "する(&Y)"
+                                         :button2 "しない(&N)"
+                                         :button3 "更新してから(&U)")
+                        (:button1 t)
+                        (:button3 (save-window-excursion
+                                    (set-buffer *buffer-menu*)
+                                    (menu-category-board-update-all t))))
+                  (dolist (c *menu-list*)
+                    (unless (or (equal *favorits-name* (category-name c))
+                                (equal *tracking-name* (category-name c)))
+                      (setq matched (append (search-category (category-menu c)) matched))))
+                  (if matched
+                      (show matched)
+                    (message "見つけられませんでした （´・ω・｀）")))))))))
+   (bufname (buffer-name (selected-buffer)))
+ (define-key *thread-map* #\N 'search-next-thread)
+- とても便利です〜ありがとうございます -- [[天狗さま]] &new{2006-01-02 (月) 17:19:44};
+- 閉じた時に、検索前に開いていたスレに戻る様にしてみました --  &new{2007-01-11 (木) 10:12:13};
+- 2人目のコメントの方、括弧の対応がおかしいので修正していただけませんか？ --  &new{2007-04-17 (火) 22:34:47};
+- 【】の中に"?"とかが入ってるtitleだとうまく動かないようです --  &new{2007-12-28 (金) 12:10:05};
+- あれ、括弧の対応おかしくありませんか？ -- [[Premiere]] &new{2008-01-14 (月) 17:38:23};
+- うごかないよ(;_;) --  &new{2008-04-02 (水) 10:29:07};
+
+#comment

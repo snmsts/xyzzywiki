@@ -1,0 +1,42 @@
+* looking-atの後方向版はありませんか？ [#q658cc54]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2006-06-12 (月) 01:08:18
+
+** メッセージ [#afe3ea67]
+「現在のカーソル位置で後ろ方向に正規表現でマッチしたらt、しなかったらnilを返します。」
+というような関数を探しています。
+リファレンスマニュアルを探しても見つからなかったので、よろしくお願いします。
+----
+ (defun looking-at-backward (regexp &optional case-fold)
+   (save-restriction
+     (narrow-to-region (point-min) (point))
+     (scan-buffer (format nil "~A\\'" regexp)
+                  :regexp t :case-fold case-fold
+		  :reverse t :tail t)))
+- 作ってみました --  &new{2006-06-12 (月) 09:10:28};
+- ありがとうございます。使ってみたのですが、
+abc.def
+の後に
+ (looking-at-backward "\\([a-zA-Z0-9]+\\)\\.\\([a-zA-Z0-9]*\\)")
+を行うと
+ (buffer-substring
+   (match-beginning 2)(match-end 2)))))
+で"def"が所得できるのですが、
+ (buffer-substring
+   (match-beginning 1)(match-end 1)))))
+では"c"しか取得できないようです。
+--  &new{2006-06-20 (火) 00:05:49};
+----
+ (defun looking-at-backward (regexp &optional case-fold)
+   (save-excursion
+     (save-restriction
+       (narrow-to-region (point-min) (point))
+       (goto-char (point-min))
+       (scan-buffer (format nil "~A\\'" regexp)
+                    :regexp t :case-fold case-fold))))
+- こんなで。 --  &new{2006-06-20 (火) 07:39:59};
+- 完璧です。ありがとうございました。 --  &new{2006-07-02 (日) 02:57:02};
+
+#comment

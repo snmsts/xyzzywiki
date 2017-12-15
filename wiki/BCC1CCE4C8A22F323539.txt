@@ -1,0 +1,85 @@
+* ファイル圧縮時の作成ファイル名の自動取得について [#t51f05b0]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2009-03-10 (火) 12:50:00
+
+** メッセージ [#p9e3616a]
+ファイル圧縮時の作成ファイル名の自動取得ができないものでしょうか？思考錯誤してしていますが、うまくいきませんお教えください。
+----
+- 何がしたいのかいまいち分かりませんが、こういうことでしょうか。 --  &new{2009-03-10 (火) 12:50:32};
+ (in-package "editor")
+ 
+ (defun my-filer-get-archive-name ()
+   (multiple-value-bind (result data)
+       (dialog-box '(dialog 0 0 251 95
+                     (:caption "ファイルの圧縮")
+                     (:font 9 "MS UI Gothic")
+                     (:control
+                      (:static nil "ファイル名(&N):" #x50020000 7 64 38 8)
+                      (:edit name nil #x50810080 7 74 160 14)
+                      (:button IDOK "OK" #x50010001 194 7 50 14)
+                      (:button IDCANCEL "キャンセル" #x50010000 194 24 50 14)
+                      (:static nil "作成するディレクトリ(&D):" #x50020000 8 7 64 8)
+                      (:combobox dir nil #x50210102 8 18 160 85)
+                      (:button ref "参照..." #x50010000 169 17 22 14)
+                      (:static nil "基準ディレクトリ(&B):" #x50020000 7 35 53 8)
+                      (:edit base nil #x50810080 7 45 160 14)
+                      (:button baseref "参照..." #x50010000 169 45 22 14)))
+                   (list (cons 'name (format nil "~A.lzh" (pathname-name (first (filer-get-mark-files)))))
+                         (cons 'dir (filer-get-directory))
+                         (cons 'dir *filer-archive-directory-history*)
+                         (cons 'base (filer-get-directory)))
+                   '((name :non-null "アーカイブファイル名を入力してください" :enable (IDOK))
+                     (ref :related dir :directory-name-dialog (:title "参照"))
+                     (baseref :related base :directory-name-dialog (:title "参照"))))
+     (when result
+       (let* ((dir (cdr (assoc 'dir data)))
+              (file (merge-pathnames (cdr (assoc 'name data)) dir)))
+         (add-history dir '*filer-archive-directory-history*)
+         (values (cond ((string-matchp "\\.lzh$" file) file)
+                       ((string-matchp "\\.zip$" file) file)
+                       ((string-matchp "\\.cab$" file) file)
+                       ((string-matchp "\\.tar$" file) file)
+                       ((string-matchp "\\.tar\\.gz$" file) file)
+                       ((string-matchp "\\.tar\\.bz2$" file) file)
+                       ((string-matchp "\\.tar\\.Z$" file) file)
+                       ((string-matchp "\\.tbz$" file) file)
+                       ((string-matchp "\\.tgz$" file) file)
+                       ((string-matchp "\\.taz$" file) file)
+                       ((string-matchp "\\.bza$" file) file)
+                       ((string-matchp "\\.gza$" file) file)
+                       ((string-matchp "\\.yz1$" file) file)
+                       ((string-matchp "\\.7z$" file) file)
+                       ((string-matchp "\\.exe$" file) file)
+                       (t (concat file ".lzh")))
+                 (merge-pathnames (cdr (assoc 'base data))
+                                  (filer-get-directory)))))))
+ 
+ (defun my-filer-create-archive ()
+   (let ((marks (filer-get-mark-files)))
+     (when marks
+       (multiple-value-bind (arc base)
+           (my-filer-get-archive-name)
+         (when arc
+           (filer-subscribe-to-reload (directory-namestring arc))
+           (let ((sfx (string-matchp "\\.exe$" arc)))
+             (when sfx
+               (setf (subseq arc (- (length arc) 3)) "lzh"))
+             (create-archive arc
+                             (if (string-matchp "\\.cab$" arc)
+                                 (mapcar #'(lambda (f)
+                                             (if (file-directory-p f)
+                                                 (merge-pathnames "*.*" f)
+                                               f))
+                                         marks)
+                               marks)
+                             base)
+             (when sfx
+               (convert-to-SFX arc "-gw"))
+             (filer-clear-all-marks)))))))
+ 
+ (define-key filer-keymap #\C-o 'my-filer-create-archive)
+- ありがとうございました。入力が簡単になりました -- [[りょう]] &new{2009-03-13 (金) 10:28:14};
+
+#comment

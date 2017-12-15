@@ -1,0 +1,16 @@
+[[アンケート一覧]]
+
+~IMEの選択肢が減ってきているのが現状ですが、そんな中でもこだわりを持って使われているIMEはありますか？
+~皆さんのお使いのIMEを教えてください（理由を付けていただけるとベターです。もし、項目が足りないようでしたら適当に足してやってください）。
+
+#vote([[MS-IME全般>http://office.microsoft.com/ja-jp/ime/default.aspx]][21],WXG[1],VJE[3],松茸[0],Wnn95-98-ズバリ簡単入力[0],[[SKKIME>http://www.tatari-sakamoto.jp/skkime.jis.html]][14],[[skk.l>http://www.geocities.jp/kiaswebsite/xyzzy/skk.html]][3],[[ATOK全般>http://www.atok.com/]][36],[[漢直Win>http://www.sato.kuis.kyoto-u.ac.jp/~yuse/tcode/kw/]][1],[[Google日本語入力>http://www.google.com/intl/ja/ime/]][6])
+----
+- ちょっと高いですが、SKKからATOKに乗り換えました。入力の早さではATOKに分があると思います。 --  &new{2007-01-19 (金) 17:09:11};
+- POBOXみたいなJAPANIST2002です。 --  &new{2007-02-15 (木) 22:17:13};
+- skk.l で入力して MS-Word とかに貼り付けたりしています。いつもじゃないですが。どうも MS-IME では安心できないというか、明らかにその方が早いときがあります。専門の辞書にしていないからでしょうね。その点、skk は始めから自分に合っている感じ。 --  &new{2007-06-12 (火) 19:59:54};
+- MS-IMEから漢直に移行しました。変換ミスがないのがいいです。 --  &new{2007-06-20 (水) 13:19:28};
+- Japanist2003を使用しています。 --  &new{2007-07-10 (火) 19:51:31};
+- 身体がAtokを求めていまして.... -- [[禁断症状]] &new{2008-11-21 (金) 02:56:56};
+- SKKじゃないと生きて行けない身体になってしまいました… --  &new{2009-06-23 (火) 10:11:49};
+
+#comment

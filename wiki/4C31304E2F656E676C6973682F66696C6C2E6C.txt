@@ -1,0 +1,20 @@
+[[L10N/english]]
+
+ fill.l:145:    (error "フィルカラムは4以上30000以下です"))
+-The fill columns are between 4 to 30000. --  &new{2005-03-06 02:35:50 (日)};
+-The fill column should be between 4 and 30000. 直訳じゃないほうがわかりやすいかなと。--  &new{2005-03-10 23:01:55 (木)};
+-- どぞー、ご自由に変更してください。 --  &new{2005-03-10 23:32:12 (木)};
+
+#comment
+ fill.l:147:  (message "フィルカラムは~dです" fill-column))
+-The fill columns are ~d. --  &new{2005-03-06 02:36:21 (日)};
+
+#comment
+ fill.l:153:	 (message "fill prefixをクリアしました"))
+-The fill prefix is cleared. --  &new{2005-03-06 02:36:48 (日)};
+
+#comment
+ fill.l:159:	 (message "fill prefixは\"~a\"です" fill-prefix)))
+-The fill prefix is ~A. --  &new{2005-03-06 02:37:43 (日)};
+
+#comment

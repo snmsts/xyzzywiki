@@ -1,0 +1,35 @@
+* set-mark [#te8c0da5]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-11-12 (土) 17:14:10
+-バージョン: 
+
+** メッセージ [#ed587810]
+set-mark-commandがあるのにset-markが無いのもどうかと思ったので。
+ <chapter>
+ <title>set-mark</title>
+ <type>Function</type>
+ <arguments>set-mark &amp;optional POINT</arguments>
+ <package>editor</package>
+ <description>
+ ポイントの位置にマークを設定します。
+ 
+   POINT: マークを設定する位置を指定します。
+          範囲外の値を指定してもエラーにはならないようです。
+ </description>
+ <seealso>mark</seealso>
+ <seealso>set-mark-command</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+ところでset-mark-commandのsectionはバッファになってますが、ポジションの方が分かりやすい気がします。
+--------
+- どーもです。セクションはそうしておきます。 -- [[NANRI]] &new{2005-11-13 (日) 21:29:13};
+- 取り込みました。 -- [[NANRI]] &new{2005-12-12 (月) 02:32:19};
+
+#comment

@@ -1,0 +1,103 @@
+#freeze
+* 現在 clickable-url は公開されていません。後継の cllickable-uri では対応する機能はほぼ実装済みです。 [#fd794a83]
+----
+*clickable-url-x [#top]
+
+2005/01/07, 55n88 (2004年と書きそうになる)
+
+OHKUBO Hiroshi さんが[[雑記帖:http://ohkubo.s53.xrea.com/]]で公開されている 
+[[clickable-url:http://ohkubo.s53.xrea.com/xyzzy/#clickable-url]] に次の機能をつけました。
+
+- file://<絶対パス> と file:<相対パス> が開けるように
+- wnet#://host/dir が開けるかも (# が附いているのは独自なため)
+- 上二つを xyzzy で開くか否かとか
+- urn:isbn:<ISBN> で紀伊国屋でもAmazonでも
+- 画像ビューアで開くディレクトリのフィルタ (それ以外は xyzzy のファイラの第2面で)
+
+「エラーの表示をマイルドに」しないとうるさいかも。
+
+#ref(clickable-url-x.20050107.lzh)
+
+
+**設定 [#settings]
+これは本家と同じ。
+
+ (load-library "clickable-url-x")
+ ;; キーボードでも
+ (global-set-key '(#\C-c #\C-o) 'clickable-url-open)
+ ;; URLを飾るモードたち
+ (setq *clickable-url-set-attribute-mode-list* '(fundamental-mode text-mode html-mode))
+ ;; URLは青色にアンダーラインがいいよね？  foreground 4 は共通設定の「文字4」の色
+ (setq *clickable-url-attribute* '(:foreground 4 :underline t))
+ ;; さらに開いたときには太くする
+ (setq *clickable-url-selection-attribute* '(:foreground 4 :underline t :bold t))
+ ;; 0,4秒で戻っていいよ
+ (setq *clickable-url-selection-timeout* 0.4)
+
+以下は拡張版。
+
+ ;; 関連付けに任せず xyzzy で開くファイル
+ (setq *clickable-url-owx-regexp* "\\.\\(?:txt\\|tex\\|sty\\|cls\\|log\\|l\\|xyzzy\\)$")
+ ;; 画像ビューアで開くパスの正規表現
+ (setq *clickable-url-imagedir-regexp* "/\\(?:My Pictures\\|My Videos\\|My Music\\)/")
+ ;; 愛用の画像ビューア
+ (setq *clickable-url-image-viewer* "D:/usr/lib/vix/vix.exe")
+ ;; アマゾンな人はこちら (デフォルトは紀伊国屋)
+ (setq *clickable-url-isbn-viewer* "http://www.amazon.co.jp/exec/obidos/ASIN/")
+
+他のがいい人は北村さんの
+[[urn:isbn:なリンクをオンライン書店へのリンクに変換する実験:http://www.akatsukinishisu.net/itazuragaki/isbn.html]]を参照してください。
+
+
+**ぷらすあるふぁ [#plusX]
+こんなのを siteinit.l にぶちまけて define-key filer-keymap すると幸せになれるかも。
+ファイルをころころ動かす人には不向き。
+
+ (defun filer-copy-url ()
+   (let ((str (concat "file:///" (local-url-encode (filer-get-current-file)))))
+     (copy-to-clipboard str)
+     (message "コピーしたよ： ~A" str)))
+ (defun filer-copy-url-nameonly ()
+   (let ((str (local-url-encode (filer-get-current-file))))
+     (when (string-matchp "/\\([^/]+?/?\\)$" str)
+       (setq str (string-replace-match str "\\1")))
+     (copy-to-clipboard str)
+     (message "コピーしたよ： ~A" str)))
+ 
+ (defun local-url-encode (str)
+   (progn
+     (while (string-match "^\\(.*\\)%\\(.*\\)$" str)
+       (setq str (string-replace-match str "\\1%25\\2")))
+     (while (string-match "^\\(.*\\) \\(.*\\)$" str)
+       (setq str (string-replace-match str "\\1%20\\2")))
+     (while (string-match "^\\(.*\\)&\\(.*\\)$" str)
+       (setq str (string-replace-match str "\\1%26\\2")))
+     (while (string-match "^\\(.*\\)\\[\\(.*\\)$" str)
+       (setq str (string-replace-match str "\\1%5B\\2")))
+     (while (string-match "^\\(.*\\)\\]\\(.*\\)$" str)
+       (setq str (string-replace-match str "\\1%5D\\2")))
+     (while (string-match "^\\(.*\\)^\\(.*\\)$" str)
+       (setq str (string-replace-match str "\\1%5E\\2")))
+     (while (string-match "^\\(.*\\)`\\(.*\\)$" str)
+       (setq str (string-replace-match str "\\1%60\\2")))
+     (while (string-match "^\\(.*\\){\\(.*\\)$" str)
+       (setq str (string-replace-match str "\\1%7B\\2")))
+     (while (string-match "^\\(.*\\)}\\(.*\\)$" str)
+       (setq str (string-replace-match str "\\1%7D\\2")))
+     (while (string-match "^\\(.*\\)~\\(.*\\)$" str)
+       (setq str (string-replace-match str "\\1%7E\\2")))
+     str))
+
+~* "ぷらすあるふぁ" は "+X" の誤読らしーです
+
+
+**意見・要望・報告 [#comment]
+(･∀･)ｲｲ!と思った要望には応えますが、それ以外は誰かやってください。
+-ついこの前 URL-ENCODE についてやったので少し。local-url-encode は以下のようにするのがすっきりです。 si:www-url-encode で OK ならこれを使うのがより安全だと思うのですが、エンコードしすぎですか？ -- [[NANRI]] &new{2005-01-07 (金) 12:19:48};
+ (defun local-url-encode (str)
+   (setq str (substitute-string str "%" "%25"))
+   (while (string-match "[][ &^`{}~]" str)
+     (let* ((match (match-string 0))
+            (encoded (format nil "%~:@(~2,'0x~)" (char-code (character match)))))
+       (setq str (substitute-string str (regexp-quote match) encoded))))
+   str)

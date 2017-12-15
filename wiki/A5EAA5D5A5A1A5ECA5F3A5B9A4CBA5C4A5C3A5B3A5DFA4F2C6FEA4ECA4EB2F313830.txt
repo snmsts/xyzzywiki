@@ -1,0 +1,51 @@
+* kill-line [#x4cc29c1]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-11-21 (月) 13:07:37
+-バージョン: 
+
+
+** メッセージ [#p6e6eda6]
+LINES の説明を追加しました。
+
+ <chapter>
+ <title>kill-line</title>
+ <type>Function</type>
+ <arguments>kill-line &amp;optional LINES</arguments>
+ <package>editor</package>
+ <description>
+ 行をkillします。 killした行は *kill-ring* へ追加されます。 [C-k]
+ 連続して kill-line を実行することで、複数行を一括して
+ *kill-ring* へ追加することができます。
+ 
+   LINES 
+      nil  : ポイントが行末ならば、その位置の改行コードをkillします。
+             ポイントが行末でなければ、その行の行末までkillします。
+        0  : ポイントが行頭ならば、前行の行頭までkillします。
+             ポイントが行頭でなければ、その行の行頭までkillします。
+      その他の整数 : 指定された行数 kill します。 
+ 
+ </description>
+ <seealso>*kill-ring*</seealso>
+ <seealso>kill-region</seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>cmds.l</file>
+ </chapter>
+
+--------
+- どーもです。ただ、「改行コードの直前まで」っていう表現はピンと来ません。こんな感じが分かりやすいような気がします。 -- [[NANRI]] &new{2005-11-23 (水) 23:09:01};
+   LINES 
+      nil  : ポイントが行末ならば、その位置の改行コードをkillします。
+             ポイントが行末でなければ、その行の行末までkillします。
+        0  : ポイントが行頭ならば、前行の行頭までkillします。
+             ポイントが行頭でなければ、その行の行頭までkillします。
+      その他の整数 : 指定された行数 kill します。
+- 分かりにくいという以前に， 正確でなかったかも． NANRIさんの説明で直しておきました． デフォルトのキーバインドって，こんな風に書けばよかったでしたか？ -- [[中野]] &new{2005-11-24 (木) 18:39:17};
+- 取り込みました。 -- [[NANRI]] &new{2005-12-12 (月) 02:35:20};
+
+#comment

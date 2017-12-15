@@ -1,0 +1,22 @@
+[[tips]]
+
+現在選択してるバッファの内にある "http://" "https://" で始まるURLを
+別バッファ[ *Extracted URLs* ] に出力します。
+
+バッファ内にURLが見つからなかった場合は何もしません。
+
+ (defun extract-http-link ()
+   (interactive)
+   (let ((urls ""))
+   (save-excursion
+     (goto-char 0)
+       (while (scan-buffer "\\(https?\\)\\(://[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+\\)" :regexp t :tail t)
+         (setf urls (concat urls (match-string 0) "\n" ))))
+     (if (not (equal urls ""))
+         (progn
+           (erase-buffer (switch-to-buffer "*Extracted URLs*"))
+           (setf need-not-save t)
+           (insert urls)
+           (set-buffer-modified-p nil)))))
+
+by 砂鉄

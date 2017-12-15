@@ -1,0 +1,27 @@
+#freeze
+* kyotex-mode + SKK について [#v9aa25ea]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2009-03-08 (日) 00:03:26
+
+** メッセージ [#kf535588]
+はじめまして。
+
+YaTeX では
+
+ ;; skk 対策
+ (add-hook 'skk-mode-hook
+	  (lambda ()
+	    (if (eq major-mode 'yatex-mode)
+		(progn
+		  (define-key skk-j-mode-map "\\" 'self-insert-command)
+		  (define-key skk-j-mode-map "$" 'YaTeX-insert-dollar)
+		  ))
+	    ))
+とできますが、同じようなことを kyotex-mode + SKK でしたいのですが
+どこにも書いてないので質問させてください。
+お願いします。
+----
+
+#comment

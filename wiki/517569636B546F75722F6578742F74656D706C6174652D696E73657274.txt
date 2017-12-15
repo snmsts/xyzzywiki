@@ -1,0 +1,227 @@
+#freeze
+#contents
+
+*template-insertを導入しよう [#sbcffac3]
+
+**前口上 [#d1467ee8]
+
+今回紹介するtemplate-insert.lは、テンプレート（雛形ですね）を元にして新しくファイルを作成してくれます。例えば自分の場合、htmlを書く時には、
+
+ <！DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+ <html lang="ja">
+     <head>
+     <meta http-equiv="content-type" content="text/html; charset=Shift_JIS">
+     <title>template-insertを導入しよう
+     </title>
+     </head>
+     <body>
+ 
+ （まだまだ続くけど省略）
+
+というようなものを必ずhtmlファイルに書くようにしています。template-insert.lを使うと、こういった文字列を新規にファイルを作った時に自動的に入力できるようになります。また、プログラミング言語のJavaの場合には、
+
+ public class foo {
+   public static void main(String[] args) {
+ 
+ 
+     }
+ }
+
+みたいなのを多分書く（ことが多い）と思います。((詳しくないのでもっと色々書いたり書かなかったりするのだと思いますけど。))template-insert.lはそういう毎回ファイルを作る時に必ず入力するものを自動的に入れてくれます。別にプログラミングをする人だけに限らず、xyzzyで文章を書いたりする人にも便利だと思います。
+
+おそらくtemplate-insert.lはこんな人に向いています。
+
+- xyzzyでプログラムや文章をよく書く人
+- 新しいファイルを作る時に、コメントやバージョン、最終更新日を入れたりしている人（要は、拡張子毎に有る程度フォーマットを決めて書く人）
+- 今まで古いファイルをコピペして新しいファイルを作成したりしていた人
+
+でしょうか。一応''拡張子ごと''と書いてありますが、template-insert.lは、（ファイルを作成する）フォルダ毎に違うテンプレートを使う事が可能なので、雛形はかなり柔軟に指定が可能です。多分導入すると病み付きになると思うんで、早速導入しましょう。
+
+**template-insert.lとは [#ia028010]
+
+私の説明じゃわかりづらい！！、という方のために、作者のkiaさん誤自身の説明は以下の通りです。
+
+ ;; 開いたファイルがまだ作成されていない新しいファイルであったとき、そのファ
+ ;; イル名やモードによって予め用意しておいたテキストを挿入する。また、テンプ
+ ;; レートに記述されたキーワードを指示された文字列に置き換える。
+
+言い忘れていましたが、テンプレートから入れるようにできるわけですが、テンプレート以外を使用できないわけではありません。新規にファイルを作成する時にテンプレートを使用するかしないかを選択できますので安心してください。
+
+**インストールする [#n741a131]
+
+***NetInstallerを使用する [#cd07fb57]
+
+NetInstallerの人は公開されているkiaさんのURLからダウンロードできます。
+M-x netinstallerの後、aして
+
+ http://www.geocities.jp/kiaswebsite/xyzzy/packages.txt
+
+と入力してインストールしましょう。
+
+***圧縮ファイルから手動でインストールする [#h1854c91]
+
+NetInstaller版と同様のものが、公開されているkiaさんの[[kia's website>http://www.geocities.co.jp/SiliconValley-PaloAlto/5042/]]にあります。xyzzy関連からダウンロードしてください。((禁煙らしいので喫煙者の方は注意してください :) ))
+
+ダウンロードが終了したら、template-insert.lを$XYZZY/site-lisp/に移動させます。
+
+**template-insert.lの設定 [#o23b38dc]
+
+kiaさんご自身の説明がtemplate-insert.lのところに詳しく書かれてあるので、説明するまでも無いですが、.xyzzyやsiteinit.lに以下を書き加えます。
+
+ (require "template-insert")
+ (use-package 'template-insert)
+ (setq *template-insert-directory* "~/insert/")
+
+です。最後の行の "~/insert/"と言う部分はテンプレートを読み込むフォルダの部分です。上記の場合、
+
+.xyzzyのあるフォルダ((環境変数XYZZYHOMEで指定したパスです。))のinsertフォルダとなります。
+
+**もう使える [#f1354170]
+
+一応、ここまででも使えます。指定したフォルダに雛形となるファイルを入れておきましょう。
+
+***Javaで試してみる [#x91112a1]
+
+Javaでの例を挙げておきます。自分の場合、
+
+ (setq *template-insert-directory* "~/template_insert/")
+
+としているので、フォルダ名はtemplatesとなっていますが、気にしないで下さい。 :)
+
+#br
+#br
+
+CENTER:''雛型を置いたフォルダはこんな感じ''
+CENTER:#ref(01.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){ファイル名は何でも良いです。（abc.plだろうがtest.htmlだろうが）自分は一応template.[拡張子]で統一させていますけど。};
+
+#br
+#br
+
+そしたら、試してみましょう。新しくファイルを作成します。
+
+#br
+#br
+
+CENTER:''新規ファイルを作成''
+CENTER:#ref(02.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){今回はJavaって事で。};
+
+#br
+#br
+
+そうしたらミニバッファで''テンプレートを挿入するかしないか''を聞かれます。下のようになるはず。
+
+#br
+#br
+
+CENTER:''雛形を使うか使わないかを聞かれる''
+CENTER:#ref(03.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){yなら入れます。nならばテンプレートを挿入しません（そのまんま）};
+
+#br
+#br
+
+yを押せばテンプレートが挿入されて、以下のように色々文字列が入った状態で新規ファイルができます。
+
+#br
+#br
+
+CENTER:''テンプレートが挿入された！！''
+CENTER:#ref(04.png,center,50%)
+CENTER:#img(,clear)
+
+#br
+#br
+
+こんな感じになります。他のファイルでも同様にできます。
+
+**カスタマイズなど [#f8253119]
+
+***キーワード書き換え [#q9b54847]
+
+これだけでもかなり便利ですが、他にも色々と指定できます。同じくtemplate-insert.lに詳しく記載されているので、説明するまでも無いかもしれませんが……。
+
+例えば、上と同じくJavaの場合には、
+
+ public class hoge {
+   public static void main(String[] args) {
+ 
+ 
+     }
+ }
+
+というJavaファイルがあった場合、 必ず（一行目の）''hoge''という部分はファイル名と同じにしないといけないようです。（そうしないとコンパイルできないから）例えば、ファイル名が''Test1.java''だとしたら、hogeの部分を''Test1''にしないといけないんです。
+
+せっかくテンプレートを使えるのに、その部分をイチイチ記入するのは面倒じゃありませんか。と言う事で、ファイル名をを自動的に挿入できるようにしてみましょう。それは簡単で、雛形となるファイル内で、ファイル名（から拡張子を除いた部分）を記入したい所に ''@BASEFILENAME@''を入れておけばOKです。例えば上の場合、hogeの所を@BASEFILENAME@に置き換えて、以下のようにすれば良いだけです。
+
+ public class @BASEFILENAME@ {
+   public static void main(String[] args) {
+ 
+ 
+     }
+ }
+
+こう設定しておくと、テンプレートを使う時に、@BASEFILENAME@の部分がファイル名に置き換わり、ファイル名を入力する手間が省けます。
+
+***あらかじめ用意されている置き換えキーワード [#z46d2c17]
+
+他にもいろいろ用意されています。勝手ながらtemplate-insert.lから引用しますと、以下の通りです。
+
+|キーワード	|意味				|置き換わった例					|h
+|@FILENAME@	|ファイルのパス			|C:/Program files/abc.txt（/で区切った物となる）|
+|@BASEFILENAME@	|ファイル名の拡張子以外の部分	|abc.txt|
+|@EXTENSION@	|ファイルの拡張子		|txt|
+|@DIRECTORY@	|ファイルのディレクトリ		|C:/Program files/|
+|@DATETIME@	|日時				|2003-12-09 17:53:34+09:00|
+|@DATE@		|日付				|2003-03-30|
+|@AUTHOR@	|環境変数 USERNAME の値（Documents and Settings/〜〜〜の自分の所）|tomohisa|
+|@USERNAME@	|@AUTHOR@と同じ（なぜ二つあるの？？）|tomohisa|
+|@POINT@	|キーワード置換が行われたあとのカーソル位置|（なし）|
+|@DOT@		|@POINT@に同じ（なぜ二つあるの？？）	|（なし）|
+|@@		|@自体（ xyzzy@wiki.jp は、 xyzzy@@wiki.jp と書く）|@|
+|@〜@		|上記いずれにも一致しなければ「〜」部分に名前が一致する環境変数の値|（なし）|
+
+となっています。上のを踏まえて、テンプレートを作ると、細かい部分の入力ミスが防げるので非常に便利になると思います。
+
+***置き換えキーワードを使って書いた例 [#o98fd6aa]
+
+例えばJavaの場合には、
+
+  /**
+   * @BASEFILENAME@.@EXTENSION@
+   *
+   *            INAHARA Tomohisa
+   *            最終更新:@DATETIME@
+   *            xyzzy@@wiki.jp
+   *
+   *            Version:0.00001
+   *
+   */
+  
+  import java.io.*;
+  
+  public class @BASEFILENAME@ {
+    public static void main(String[] args) {
+      @POINT@
+  
+      }
+  }
+  
+  //@BASEFILENAME@.@EXTENSION@ ends here.
+
+のようなテンプレートを用意しておけば、結構便利かもしれません。((実際私が使っている書式だったりします。))他にperlでは、
+
+ # !/usr/bin/perl-w
+ # Last Modified:Sun, 07 Dec 2003 23:28:47 +0900
+ # @BASEFILENAME@.@EXTENSION@ 
+ # @POINT@
+
+というテンプレートを用意して、--の後にキャレットを移動させて、簡単な説明を書いたり書かなかったりするようなテンプレートを使っています。
+
+**他にもいろいろあるみたいだけど [#l42706c0]
+
+template-insert.lにはまだまだ幾つか例が載っていますが、自分は上ので便利に使えているのでこれで終了です。 フォルダ毎に雛形を変更する例は、template-insert.lの63〜68行目にありますのでそれを参考にすれば多分できると思います。

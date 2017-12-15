@@ -1,0 +1,32 @@
+*tailp [#hcd9b313]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-03-24 (水) 21:40:56
+-バージョン: 20031002
+
+**メッセージ [#w681b215]
+ <chapter>
+ <title>tailp</title>
+ <type>Function</type>
+ <arguments>tailp SUBLIST LIST</arguments>
+ <package>lisp</package>
+ <description>
+ SUBLISTがLISTを構成しているconsであるか
+ 
+ 具体的にはLISTを順にcdrしていった結果とSUBLISTが
+ eqならtそうでないならnilを返す
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>リスト</section>
+ <file>list.l</file>
+ </chapter>
+
+----
+-取り込みました。ありがとうございます。 -- [[山本]] &new{2004-05-20 (木) 22:09:31};
+
+#comment

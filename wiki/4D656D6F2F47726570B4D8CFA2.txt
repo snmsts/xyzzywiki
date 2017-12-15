@@ -1,0 +1,26 @@
+*概要 [#z4147d57]
+Grep関連の情報をまとめます。
+*解説 [#a88ef56c]
+-[[Grepで一括検索>QuickTour/grep]]
+-[[Gresregで一括置換>QuickTour/gresreg]]
+*link [#adb965c5]
+-[[ggrep(ohkubo さん)>http://ohkubo.s53.xrea.com/xyzzy/index.html#ggrep]]
+-[[grep-mode.l(nazoking さん)>http://nazoking.s31.xrea.com:8080/k/grep-mode.l]]
+*Wiki にあるもの [#r599a8c0]
+-[[tips/カーソル下の単語を grep する]]
+-[[tips/grep で入力した文字列を強調表示する]]
+-[[tips/Grep結果に表示されているファイルを対象に再度Grepをかける]]
+-[[tips/grep結果を編集して元ファイルに反映させる]]
+-[[tips/xgresreg]]
+-[[tips/コンテキストを指定してgrep]]
+-[[tips/xgrep]]
+-[[tips/namazuを利用してgrep]]
+*欲しいもの [#v8f4308c]
+-コンテキストを指定してGrepしたい。(コメントを除いた部分からGrepとか)
+----
+-とりあえずまとめただけで、いろいろ抜けがあると思いますので 追加してくださいまし。
+-コンテキスト指定Grepは面白そうですね。気が付かなかったです。 -- [[OHKUBO]] &new{2004-11-09 (火) 01:02:14};
+-とりあえず作ってみました．  -- [[nakano]] &new{2004-11-09 (火) 02:44:51};
+- grep-mode のリンクが切れてますね。作者さんはライセンスをつけてくれないかな。 --  &new{2008-03-05 (水) 10:23:30};
+
+#comment

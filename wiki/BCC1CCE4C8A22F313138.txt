@@ -1,0 +1,27 @@
+* xyzzydic:指定されたパスが見つかりません [#cb096cd1]
+-ページ: [[質問箱]]
+-投稿者: [[gosia]]
+-状態: 完了
+-投稿日: 2005-10-11 08:54:05 (火)
+
+** メッセージ [#i43b5a89]
+Netinstallerを使用して、多数のマクロを使用させていただいております。なお、基本設定は入門書に従って行っております。
+1週間ほど前から、突然上記メッセージが出現し、このメッセージを見た後出ないと、ファイルが開かなくなりました。ファイルを編集するにも上記のメッセージが連発して出現します。
+xyzzyを再インストールしか正常な起動方法がないのでしょうか。他に、何らかの方法があるのでしょうか。
+----
+- -q オプションをつけて起動してもエラーが出ますか？もし出なければ .xyzzy のどこかに原因があるので最近変更した部分をコメントアウトしてみれば見当はつくと思います。 --  &new{2005-10-11 09:21:24 (火)};
+-xyzzycli.exe -q　あるいは home/xxx.txt -q でもエラーメッセージは出ません。しかし、編集しようとして、ページのどこかをクリックすると上記メッセージが出現します。.xyzzyの設定ファイルひとつづつコメントアウトしても、上記のメッセージが出現します。なお、上記の起動はコマンドプロンプトから行いました。.xyzzyでなければsiteinitを同じようにチェックする必要があるのでしょうか。 -- [[gosia]] &new{2005-10-11 11:31:00 (火)};
+-超能力者じゃないんだから、こんな漫然とした質問答えられねぇっすよ。.xyzzyとsiteinitが怪しいと思うんだったら全文転載したらどうです？ -- [[佐野]] &new{2005-10-11 12:01:16 (火)};
+-何かするたびにそれが出るのなら *post-command-hook* に何か引っかかってるんじゃないでしょうか？ --  &new{2005-10-11 12:09:25 (火)};
+-カンで原因っぽいものを検索したら autolookup というのが見つかりました。辞書ファイルがないのにこれ入れませんでしたか？ --  &new{2005-10-11 12:24:49 (火)};
+-そのエラーメッセージは「辞書がない」時に出ます。で、*post-command-hook*をあわせて考えると[[autolookup.l>http://www5e.biglobe.ne.jp/~fukafuka/xyzzy/tips/tips.html#autolookup]]が思い浮かびますが、使っていたりします？ --  &new{2005-10-11 12:25:02 (火)};
+-自分では解決能力が無いので、post-command-hookをgrep -- [[gosia]] &new{2005-10-11 12:59:40 (火)};
+//-post-command-hookでgrepした結果は以下のようになりました。etc/reference.txt:1219:■*post-command-hook*,etc/reference.txt:1256:[Seealso    ]: *post-command-hook*,etc/reference.txt:1603:*pre-command-hook* / *post-command-hook*で特別な処理をかますのに使ったり, etc/reference.txt:25272:  - *post-command-hook*,html/OOOChangeLog.html:102:<li>*post-command-hook*を追加(kei),site-lisp/autolookup.l:34:  (make-local-variable '*post-command-hook*),site-lisp/autolookup.l:36:      (add-hook '*post-command-hook* 'autolookup),site-lisp/autolookup.l:37:    (delete-hook '*post-command-hook* 'autolookup),site-lisp/paren.l:128:(add-hook '*post-command-hook* 'paren-highlight),site-lisp/watch.l:261:(add-hook '*post-command-hook* 'watch-symbol),site-lisp/www/www-view.l:100:  (make-local-variable '*post-command-hook*),site-lisp/www/www-view.l:101:  (add-hook '*post-command-hook* 'overlay-handler)が出現しました。lcファイルはコピーしませんでしたが。 -- [[gosia]] &new{2005-10-11 13:11:54 (火)};
+-post-command-hookでgrepした結果は以下のようになりました。etc/reference.txt:1219:■*post-command-hook*,etc/reference.txt:1256:[Seealso    ]: *post-command-hook*,etc/reference.txt:1603:*pre-command-hook* / *post-command-hook*で特別な処理をかますのに使ったり, etc/reference.txt:25272:  - *post-command-hook*,html/OOOChangeLog.html:102:<li>*post-command-hook*を追加(kei),site-lisp/autolookup.l:34:  (make-local-variable '*post-command-hook*),site-lisp/autolookup.l:36:      (add-hook '*post-command-hook* 'autolookup),site-lisp/autolookup.l:37:    (delete-hook '*post-command-hook* 'autolookup),site-lisp/paren.l:128:(add-hook '*post-command-hook* 'paren-highlight),site-lisp/watch.l:261:(add-hook '*post-command-hook* 'watch-symbol),site-lisp/www/www-view.l:100:  (make-local-variable '*post-command-hook*),site-lisp/www/www-view.l:101:  (add-hook '*post-command-hook* 'overlay-handler)が出現しました。lcファイルはコピーしませんでしたが。 -- [[gosia]] &new{2005-10-11 13:22:46 (火)};
+-ご迷惑をかけてすみません。何かのはずみで、同じものが更新されてしまいました。 -- [[gosia]] &new{2005-10-11 13:26:39 (火)};
+-autolookup で間違いなさそうです。あと重複部分をコメントアウトしました。
+-辞書ファイルはedictとgene95がはいっております。辞書引きモードを使用する限り、autlookupはせいじょうにきのうしております。.xyzzyとsiteinitを全文転載しようと考えましたが、コピーａｎdペーストでこのコメントの挿入に入れることができませんでした。calmemoに関する設定をsiteinitから取り除きｍｅｍｏフォルダを削除し、calmemoをアンインストールすると上記メッセージの出現頻度が少なくなりました。現在、これで編集できる程度にまで回復しましたので、満足しております。ありがとうございました。いずれ、LISPプログラミングを勉強しまして、修正したいと思っております。皆様ありがとうございました。 -- [[gosia]] &new{2005-10-11 15:35:18 (火)};
+-辞書引きモードとautolookupは無関係です。初期設定では辞書も共有していません。autolookupを正しく設定するなり、関係する記述をすべて削除するなりすればおそらく解決しますよ。 -- [[NANRI]] &new{2005-10-11 19:03:54 (火)};
+-;;; text-mode で最初から ON にする。(add-hook '*text-mode-hook* #'(lambda () (autolookup-mode t)))の設定が原因でした。いくら検索でautolookupを検索しても検索にひっかかりませんでした。多分、正規表現で検索しなければならなかったのですね。こんかいこのautolookup(2004/3/12)をnetinstallerでインストールしようとしましたが、md5が一致しませんというメッセージがでて、netinstallerからインストールできなかったことを思い出しました。それで、googleから検索してautolookupを手に入れたことを思い出しました。このautolookup.lやautolookup.lcを単純に削除しようとしましたが、xyzzyが起動してくれませんでした。どうすることもできないなと思ったとき、冒頭の(add-hook '*text-mode-hook* #'(lambda () (autolookup-mode t)))を発見しました。だめもとでコメントアウトしたら、正常に起動しました。NANRIさんほか助けていただきありがとうございました。 -- [[gosia]] &new{2005-10-12 12:04:21 (水)};
+
+#comment

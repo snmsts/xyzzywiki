@@ -1,0 +1,59 @@
+*ジャンプ [#hfdb5b4d]
+#contents
+
+**エラージャンプ [#mcb6beda]
+例えばAntなどを、execute-subprocess(C-x &)((Ctrlキーを押しながら、xキーを押し、その後&を入力))で、以下のように-emacsオプションをつけて実行した場合、"F10"、"F11"でエラーが出た場所にジャンプすることができます。
+
+ ant -emacs -buildfile c:\hoge\build.xml
+
+-参考:[[tips/エラージャンプをワンキーで]]
+
+**タグジャンプ [#n8cf9805]
+***XTAGS [#j092e351]
+メニューバーの「ツール→TAGSファイルの作成」で、TAGSファイルを作っておけば、"F4"キーでカーソル上の関数を定義した場所にジャンプ、"Shift+F4"で元の場所に復帰することができます。
+
+#ref(tags.png)
+
+***GTAGS [#o4a6a5c1]
+標準のXTAGSを使う代わりに、[[GNU GLOBAL:http://www.tamacom.com/global-j.html]]を使ってタグを生成し、gtags.lを利用する方法もあります。変数の定義元へのタグジャンプなどが可能になるようです。NetInstallerで、oojah xyzzyからインストールすることができます((別途 gtags.exe, global.exe が必要になります。))。
+
+-[[oojah xyzzy - xyzzyでGNU GLOBAL>http://xyzzy.g-artistic.net/2005/08/04/xyzzy-gnu-global-gtags/]]
+-[[www.ksworks.org - GNU Global on xyzzy>http://www.ksworks.org/memo/xyzzy/global.htm]]
+
+***CTAGS [#w668797f]
+ctagsを使う方法もあります。
+-[[WikiWiki FUN　- ctags.l>http://fun.sci.fukuoka-u.ac.jp/wiki/index.php?xyzzy#g6b2423a]]
+
+***merge-tags [#s9ed4445]
+XTAGS を差分更新したり、設定したディレクトリ以下の XTAGS を指定した場
+所に出力できるようになります。NetInstallerから入手できます。
+
+**関数一覧(list-function) [#wb596bfd]
+"M-x list-function" で、現在のバッファ中の関数一覧が表示されます。このリストをクリックするとその関数へジャンプすることができます。
+
+#ref(list-function.png)
+
+[[xyzzy Faq Page>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/]]では、
+以下のように、"C-7"に割り当てた例が載っています。''.xyzzy''ファイルなどに追加して使います。
+ (global-set-key #\c-7 #'list-function)
+
+**対応する括弧 [#wabe42f2]
+対応する括弧にジャンプします。
+-[[xyzzy:07185 % を押すと対応する括弧に飛ぶ>xyzzy-ml:07185]]
+
+ (defun match-paren (&optional arg)
+  "Go to the matching parenthesis if on parenthesis otherwise insert %."
+  (interactive "p")
+  (cond 
+    ((looking-at "[([{]") (forward-sexp 1) (backward-char))
+    ((looking-at "[])}]") (forward-char) (backward-sexp 1))
+    (t (self-insert-command (or arg 1)))))
+ (global-set-key #\% 'match-paren)
+
+**関連情報 [#te75c4be]
+-[[タグジャンプ]]
+-[[xyzzy Faq Page>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/]]
+
+**コメント [#wb328315]
+
+#comment

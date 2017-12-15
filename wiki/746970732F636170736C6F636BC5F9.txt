@@ -1,0 +1,19 @@
+[[tips]]
+
+
+最新のapi.lが必要。古いwindowsでは動かないかもしれません。というか動かない。~
+佐野
+
+ (flet ((toggle-key (key)
+          (winapi::keybd_event key #x45 1 0)
+          (winapi::keybd_event key #x45 3 0)))
+   (defun toggle-caps ()
+     (toggle-key winapi::VK_CAPITAL))
+   (defun toggle-numlock ()
+     (toggle-key winapi::VK_NUMLOCK))
+   (defun toggle-kana ()
+     (toggle-key winapi::VK_KANA))
+   (defun toggle-scrolllock ()
+     (toggle-key winapi::VK_SCROLL)))
+----
+#comment

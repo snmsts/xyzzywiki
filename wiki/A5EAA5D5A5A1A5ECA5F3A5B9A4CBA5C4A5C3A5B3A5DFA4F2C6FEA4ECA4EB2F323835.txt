@@ -1,0 +1,76 @@
+* forward-page backward-page mark-page [#j969ba91]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[中野]]
+-優先順位:   低
+-状態:       着手
+-カテゴリー: 新規項目
+-投稿日:     2007-06-03 (日) 16:22:08
+-バージョン: 
+
+** メッセージ [#y239a9d7]
+- セクションは next-page, previous-page に合わせて ウィンドウにしてあり
+ますが、全てポジションにしたほうがいいかもしれません。
+- 改ページ記号のデフォルト値が ^\L であるか、確認をお願いします。
+
+ <chapter>
+ <title>forward-page</title>
+ <type>Function</type>
+ <arguments>forward-page &optional (ARG 1)</arguments>
+ <package>editor</package>
+ <description>
+ ARG個先の改ページ記号まで移動します。[C-x []
+ 現在のポイント以降に改ページ記号が無い場合は、最後の位置へ移動します。
+ デフォルトの改ページ記号は、正規表現で ^\L です。
+ 
+   ARG   進めるページ数を指定します。デフォルトは 1 です。
+         負の値の場合、逆向きに移動します。
+ </description>
+ <seealso>backward-page</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>page.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>backward-page</title>
+ <type>Function</type>
+ <arguments>backward-page &optional (ARG 1)</arguments>
+ <package>editor</package>
+ <description>
+ ARG個前の改ページ記号まで移動します。[C-x ]]
+ 現在のポイント以降に改ページ記号が無い場合は、最後の位置へ移動します。
+ デフォルトの改ページ記号は、正規表現で ^\L です。
+ 
+   ARG   進めるページ数を指定します。デフォルトは 1 です。
+         負の値の場合、逆向きに移動します。
+ </description>
+ <seealso>forward-page</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>page.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>mark-page</title>
+ <type>Function</type>
+ <arguments>mark-page &optional (ARG 0)</arguments>
+ <package>editor</package>
+ <description>
+ ARG先の改ページ記号で区切られた領域をリージョンに設定します。[C-x C-p]
+ 改ページ記号が無い場合、バッファ全体がリージョンになります。
+ 
+   ARG   ページ位置を指定します。デフォルトは 0 です。
+ </description>
+ <seealso>forward-page</seealso>
+ <seealso>backward-page</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>page.l</file>
+ </chapter>
+
+----
+- 改ページ記号というと違和感があるんですが、ページ区切りのデフォルトは "^\f" のようです(page.l の19行目)。 --  &new{2007-06-03 (日) 22:46:32};
+- ^\f は、lisp/page.l から読み取ったものですか、それとも実際に評価した値がそれでしたか？ 評価した時に、 こちらでは、 ^\L になってしまいます。 --  &new{2007-06-05 (火) 07:06:43};
+- どーもです。改ページは制御文字です。で、"\f"というのはエスケープシーケンスでの記述の仕方、「^L」というのはつまり#\C-lで制御文字をそのまま書いた形になります。どちらも同じことです。 -- [[NANRI]] &new{2007-06-05 (火) 07:42:51};
+
+#comment

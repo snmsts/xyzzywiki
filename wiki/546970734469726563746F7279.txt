@@ -1,0 +1,291 @@
+各サイトの Tips のインデックスを作ってみました。
+
+NetInstallerでインストールできるものやHIEさんとこの[[Extended library>http://hie.s64.xrea.com/xyzzy/extlib/]]に
+載っているものは除外したつもりです。
+
+見落としやTipsじゃねえだろ！ってのがあったら修正してください。
+
+*ありがたいサイト一覧 [#r9bf7a07]
+#contents
+
+*[[xyzzyの紹介>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/index.html]]＠逸見さんのページ [#l2286898]
+-マクロプログラミング情報
+--[[CommonLispの基礎>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/common/index.html]]
+--[[EmacsLispの基礎>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/index-e.html]]
+--[[ファイル日付を文字列で得る方法>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/980609.html]]
+--[[シンタックス・テーブル>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/980630.html]]
+--[[ファイラー>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/980629.html]]
+
+-Common,Emacs共関係なくxyzzyが独自に拡張した機能
+--[[あるディレクトリ下のファイルを一括処理>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/980604.html]]
+--[[LHAをLISPで>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/980606.html]]
+--[[ダイアログ作成機能>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/971009.html]]
+--[[ダイアログ作成機能・その２>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/971010.html]]
+--[[ダイアログ作成機能・その３>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/971012b.html]]
+--[[ダイアログ作成機能・その４>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/dialog5.html]]
+--[[nadとWindows-API呼び出し>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/nad.html]]
+--[[メニュー操作関数のマニュアル>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/971018.html]]
+--[[メニューのカスタマイズ(get-menu-position)>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/971130.html]]
+--[[メニュー変更とダンプの仕組み>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/971202.html]]
+--[[インストールディレクトリを調べるには>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/971025.html]]
+
+-Windows-API呼び出し
+--[[メインのウインドウハンドルを得る>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/980211.html]]
+
+-おまけ
+--[[CommonLispのヘルプファイルを利用する>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/980605.html]]
+--[[関数一覧を調べてみよう>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/ichiran.html]]
+--[[マクロ一覧>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/editor/macros.html]]
+
+*[[xyzzy-ML Topics>http://www3.tok2.com/home/xyzzy/topics.html]] [#s8a276e5]
+
+みんなで更新しましょう→[[./xyzzy-ML_Topics]]
+#include(TipsDirectory/xyzzy-ML_Topics)
+
+*[[カスタマイズのメモ>http://amateras.sourceforge.jp/cgi-bin/fswiki/wiki.cgi/free?page=xyzzy#p2]]＠Amateras Free Wiki Area [#ec793e25]
+-Javaモードでインデントをタブにする
+-プログラムの実行結果をバッファに表示する
+-Windows風のキーバインドにする
+*[[luvtechno - xyzzy tips>http://www9.ocn.ne.jp/~y-kwsk/luvtechno/xyzzy.html]]＠KAWASAKI Yoshinoriのページ [#odb0817b]
+-[[OCamlのソースを編集したい (caml-mode)>http://www9.ocn.ne.jp/~y-kwsk/luvtechno/xyzzy.html#caml-mode]]
+-[[バッファをさくさく切り替えたい>http://www9.ocn.ne.jp/~y-kwsk/luvtechno/xyzzy.html#next-buffer]]
+-[[ウィンドウもさくさく切り替えたい>http://www9.ocn.ne.jp/~y-kwsk/luvtechno/xyzzy.html#other-window]]
+
+*[[keiのlink page>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html]]＠keiさんのページ [#iac7153a]
+-[[準備するものは？>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_jyunbi]]
+-[[動作させるには？>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_install]]
+-[[操作方法>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_howto]]
+--[[ファイルを新規に作成するには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_new]]
+--[[ファイルを開くには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_open]]
+--[[ファイルを開くには（同じフォルダにあるファイル）>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_open_current]]
+--[[漢字コード・改行コードを指定してファイルを開くには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_chartype_open]]
+--[[ファイルを保存するには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_save]]
+--[[ファイルを全て保存するには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_all_save]]
+--[[ファイルを別名で保存するには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_rename_save]]
+--[[漢字コード・改行コードを変化させてファイルを保存するには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_chartype_change_save]]
+--[[終了させるには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_exit]]
+--[[全て保存してから終了させるには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_save_exit]]
+--[[変更をキャンセルするには(Undo)・変更のキャンセルを取り消すには(Redo)>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_undoredo]]
+--[[ウィンドウを分割するには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_divide]]
+--[[ウィンドウを消すには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_divide_cancel]]
+--[[カーソルをウィンドウ間で移動させるには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_divide_move]]
+--[[複数ファイル読み込んだ時に、特定のファイルを表示するには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_select]]
+--[[ファイルの先頭・最後へ移動するには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_move]]
+--[[読み込んだファイルをバッファから削除するには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_del]]
+--[[クリップボードを利用する切り取り・コピー・張り付けを行うには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_clip]]
+--[[文字列を検索するには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_search]]
+--[[文字列を正規表現を用いて検索するには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_reg]]
+--[[文字列を置換するには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_replace]]
+--[[文字列を問い合わせながら置換するには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_query_replace]]
+--[[文字列を問い合わせながら正規表現を用いてい置換するには>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_query_replace_reg]]
+--[[キーワードを色付きで表示するには？>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_keyword]]
+-[[自分の思い通りにカスタマイズするには？>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_custom]]
+-[[初期化ファイル(.xyzzy)にて制御する方法>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_init]]
+--[[lispを書いて動作を拡張する方法>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_lisp]]
+--[[キーバインドの変更について>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_keybind]]
+--[[インデントの変更方法>http://www.jsdlab.co.jp/~kei/xyzzy/manual/basic/basic.html#basic_b_indent]]
+
+*[[kei.exe>http://www.jsdlab.co.jp/~kei/]]＠keiさんのページ [#d7189cbc]
+-xyzzy 最新チェック
+-他のウィンドウをカレントウィンドウを同じにする
+-/ を \ へ変換
+-\ を \\ に変換
+-AL-mailの形式から電信八号形式に変換して、ファイルへ落とす
+-バッファにある英単語を、日本語にしてくれるlisp
+
+*[[Freesoft Tips>http://www.sc.tutpse.tut.ac.jp/Member/OB/Umeda/fws_tips.html#xyzzy]]＠Umedaさんのページ ([[cache>http://web.archive.org/web/20040212031024/http://www.sc.tutpse.tut.ac.jp/Member/OB/Umeda/fws_tips.html]])[#p5452210]
+-[[xyzzyを使って、英文を和訳する>http://www.sc.tutpse.tut.ac.jp/Member/OB/Umeda/fws_tips.html#xyzzy.dic]]
+-[[クリップボードとxyzzyのバッファは同じほうが便利だと思うぞ>http://www.sc.tutpse.tut.ac.jp/Member/OB/Umeda/fws_tips.html#xyzzy.clipbord]]
+-[[xyzzyのキーバインドがどうしても馴染めない方へ>http://www.sc.tutpse.tut.ac.jp/Member/OB/Umeda/fws_tips.html#xyzzy.keybind]]
+-[[C-x C-wでemacs風の処理をさせるには>http://www.sc.tutpse.tut.ac.jp/Member/OB/Umeda/fws_tips.html#xyzzy.keybind2]]
+-[[ファイラーで、全ファイルを表示するのをデフォルトにしたい>http://www.sc.tutpse.tut.ac.jp/Member/OB/Umeda/fws_tips.html#xyzzy.keybind2]]
+
+*[[BlackCity.LABORATORY.xyzzy>http://brandish.xrea.jp/BlackCity/labo/labo_xyzzy.html]]＠Blackさんのページ [#p2a6642a]
+-[[タグジャンプについて >http://brandish.xrea.jp/BlackCity/labo/labo_xyzzy.html#2-1]]
+-[[find-file 時にディレクトリを作るようにする >http://brandish.xrea.jp/BlackCity/labo/labo_xyzzy.html#2-2]]
+-[[ヘッダファイル用の識別子を作る >http://brandish.xrea.jp/BlackCity/labo/labo_xyzzy.html#2-3]]
+-[[インクリメンタルサーチのサポート>http://brandish.xrea.jp/BlackCity/labo/labo_xyzzy.html#2-4]]
+
+*[[使えるLISP集>http://www.jsdlab.co.jp/~kei/xyzzy/xyzzy_useful_lisp.html]]＠赤塚 慶さんのぺージ [#k3b63240]
+-[[全てのバッファを印刷する >http://www.jsdlab.co.jp/~kei/xyzzy/xyzzy_useful_lisp.html#buffer_print]]
+-[[ファイル検索結果をテキストに出力する >http://www.jsdlab.co.jp/~kei/xyzzy/xyzzy_useful_lisp.html#search_printout]]
+-[[ファイルのフルパスを得る >http://www.jsdlab.co.jp/~kei/xyzzy/xyzzy_useful_lisp.html#get_fullpath]]
+-[[クリップボードへリージョンの内容をコピーする >http://www.jsdlab.co.jp/~kei/xyzzy/xyzzy_useful_lisp.html#copy_to_clipboard]]
+-[[タグファイルの作成 >http://www.jsdlab.co.jp/~kei/xyzzy/xyzzy_useful_lisp.html#make_tagfiles_easy]]
+-[[他のウィンドウの内容をカレントウィンドウと同じにする>http://www.jsdlab.co.jp/~kei/xyzzy/xyzzy_useful_lisp.html#equal_window]]
+
+*[[xyzzy>http://homepage2.nifty.com/seiya-suda/xyzzy.html]]＠Seiya Sudaさんのページ [#wbf51203]
+-lister2 -- または　speedbar
+-あうとらいんもどきの dialog 版  改名して　occur.l
+-save-winconf
+-後ろ向きに行削除
+-行をコピーする
+-１回で行を削除する
+-行末のスペースを削除する
+-リージョンの各行頭にスペースをいれる
+-my-open-filer
+-my-another-open-filer
+-亀井さんに作ってもらったファイル名小文字化ユーティリティ
+-特定行頭行削除
+-yank-select メニュ
+-popup-buffer
+-DDwin
+-文字列取得検索
+-ウィンドウ
+-my-kill-buffer
+-テキストの色付け
+-パラグラフのフィル
+-toggle-den8
+-ring
+
+*[[tips>http://www1.odn.ne.jp/ymtz/tips.html]]＠山本 泰三さんのページ [#wef93109]
+-Zope関連 
+-diff関連 
+-ミニバッファ関連 
+-ステータスバー関連 
+-リファレンス関連 
+-FTP関連 
+-フック変数 
+-構造 
+-起動時フロー 
+-ポップアップメニュー関連 
+-ポップアップ関連 
+-ファイラ関連 
+-Win32API関連 
+-簡易WWWサーバ 
+
+*[[ごみのような拡張>http://www1.neweb.ne.jp/wa/sinj/xyzzy/xyzzy_kakutyo.html]]＠YAMAMOTO Shinjiさんのページ ([[cache>http://www.google.com/search?q=cache:http%3A%2F%2Fwww1.neweb.ne.jp%2Fwa%2Fsinj%2Fxyzzy%2Fxyzzy_kakutyo.html]])[#g2118833]
+-単語に色をつける 
+-纏めて文字コード変換 
+-指一本で grep する 
+-過剰な Edict mode 
+-shell mode で環境変数の領域を増やす 
+-ファイラーのパスマスクリストを変更する 
+-ファイラーのジャンプリストのデフォルトを変更する 
+-リージョンをセレクションにする（なんか日本語が変？） 
+-メールの X-Face を表示してみる
+
+*[[TIPS index>http://www2.ocn.ne.jp/~cheerful/script/xyzzy/tips/index.html]]＠TKIさんのページ [#u09b24bf]
+-単語を補完して欲しい 
+-色つき のキーワードを設定したい 
+-モード切替をメニューでしたい 
+-現在のバッファー全体をインデントしたい 
+-*の付いたバッファーのみを消したい 
+-バッファをまとめて印刷したい 
+-各行の先頭に文字を入れたい 
+-特定の名前のファイルをたくさん消したい 
+-特定の拡張子を変更したい 
+-対応する括弧を自動的に入れてみたい(主にc,java) 
+-regionやselectionを定型句で囲みたい(コメントとかに利用できる,,) 
+-一定サイズ以上のファイルを開くとき聞くようにしたい 
+-bufferの名前に<2>とかでなく Dir 名付きtips/index.htmlのように表示したい 
+-静的補完したあと動的補完したい。
+-テキスト をつくりたい
+-なにか、データを作る方法。 
+-正規表現ってなにか テストしてみる 
+-ちょっと計算したい M-x calc 
+-ちょっと日付を確認したい M-x calendar ちなみに カーソルを休日に合わせるとすごいことに 
+-いちいち 日本語モードにするのは面倒。 (入力 POBOX / 検索 migemo Junk Scripts) 
+-あー今日無性に ハノイの塔見てーというとき .... ツールの (>_<)から 
+-ソースの一部だけ編集して、他のところをへんしゅうさせないようにしたい。
+-バーの表示を変えたい
+-起動時にメモ帳を開く
+*[[old>http://www.afis.to/~start/xyzzy/tips/index.html]] [#x4963607]
+
+*[[まいくろちっぷすxyzzy部門>http://members.at.infoseek.co.jp/zauberer/microtips/xyzzy.html]]＠nonentityさんのページ ([[cache>http://web.archive.org/web/20040508105039/http://members.at.infoseek.co.jp/zauberer/microtips/xyzzy.html]])[#q4ebcf51]
+-Clipboard Store 
+-*selection-ring* をクリップボードに同期させる 
+-クリップボードから辞書引き 
+-ファイラでツリー型ディレクトリ移動 
+-左クリックのWindow選択でイベントを消費しないようにする 
+-フォーカスのないウィンドウで右クリックするとそれを閉じる 
+-選択しなくてもカット/コピーできるようにする 
+-grep結果のクリックでジャンプ 
+-選択中のSPCとTABはインデント操作 
+-directory内のファイル名を挿入 
+-連番もの 
+-選択範囲のみを置換 
+-ぽっぷで選べるyank 
+-HTMLの目次を生成 
+-終了時のバッファの状態を勝手にセッション保存 
+-残りの小ネタを在庫処分 
+--Emacs風にESC-/ で dabbrev の展開
+--ESC-/にアサインされていたものを移動
+--置換もEmacsにあわせる
+--最近使ったファイルは16個まで覚えとく
+--17以上を指定すると共通設定ダイアログに怒られる
+--c-modeの整形はK&R風
+--フォーカスをマウスに追従させる
+--当然上記の「右クリックで閉じる」設定とは共存できない
+--プロセス起動時のコマンドラインシェルのオプションを追加
+--今月のファイルを開く
+
+*[[Tips-xyzzy>http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/index.html]]＠shiroさんのページ [#d9c05e9f]
+
+''各種設定''
+-キーバインド
+--キー順
+--機能順
+--カスタマイズ
+---Reference
+---C-iやC-mに別の機能を割り当てる
+---カスタマイズ例 − Windows風
+---キーボードマクロの開始・終了を同じキーに割り当てる
+-キーワード
+--Reference
+--カスタマイズ例
+-編集に関する設定
+--保持する削除バッファの数
+--対応する括弧に飛ばない
+--デフォルトのモード
+--関連づけ
+-画面表示・バッファ
+--バッファ移動をツールバー表示順にする
+--タスクバー・モード行の表示
+--ステータスバーの表示
+--特殊バッファを削除してウィンドウを１つにする
+--ミニバッファ上の補完候補リストをチップヘルプで表示する
+-メニュー追加
+
+''編集機能''
+-html+-mode
+--状況に依存したタグ候補
+--タブでインデント
+--Insert Image Tagの文字を変更
+--パス挿入のスタイルを変更
+--html+-modeでブラウザの「ソース表示」
+--文法チェック
+-詰め込み
+-長方形コマンド
+-入力補助
+--テキスト移動
+---ソート
+---カーソル行を上下に移動
+--テキスト挿入
+---Yank Selectメニュー
+---補完にポップアップ
+---リージョン・セレクションをタグで囲む
+--その他
+---リージョン・セレクションをトグルで変換する
+-検索・置換
+--xyzzyで開いているすべてのファイルに対して検索・置換
+--指定したディレクトリ以下にあるファイルに対して検索・置換
+--外部からGrep・Gresreg
+--Grep結果をダブルクリックで表示
+--インターネット検索
+-ファイル操作
+--Insert File(C-x i)の初期ディレクトリを固定
+--C-x C-fの時、F7で.xyzzyを、F8でsiteinit.lを読み込む
+--siteinit.lのバイトコンパイル＋ダンプファイル削除
+--現在のバッファ名をコピー
+--現在開いているファイルのファイル名をコピー(Win型)
+--現在開いているファイルのファイル名をコピー(UNIX型)
+--現在のファイルをバイトコンパイル
+--siteinit.lをバイトコンパイル＋ダンプファイル削除
+
+''ファイラ''
+--初期ディレクトリ
+--登録ディレクトリ
+--初期マスク
+--マスクリスト
+--ごみ箱を使って削除

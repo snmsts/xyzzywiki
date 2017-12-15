@@ -1,0 +1,14 @@
+[[L10N/english]]
+
+ typespec.l:485:       (error "ベクタ以外の配列に変換できません"))
+-cannot convert into matrix type without vector. --  &new{2005-03-04 20:33:33 (金)};
+
+#comment
+ typespec.l:507:	    (error "~Sのfunctionへの型変換はサポートされていません" object))))
+-Conversion ~S to function is not supported. --  &new{2005-03-04 20:38:58 (金)};
+
+#comment
+ typespec.l:509:     (error "~Sの~Sへの型変換はサポートされていません"
+-Conversion ~S to ~S is not supported. --  &new{2005-03-04 20:39:23 (金)};
+
+#comment

@@ -1,0 +1,31 @@
+* shell-alternate-send-input [#l0354a58]
+
+-ページ: [[patch]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 提案
+-カテゴリー: 訂正
+-投稿日: 2006-06-07 (水) 23:37:28
+-バージョン: 
+
+** メッセージ [#kcd04db5]
+入れている値から察するに*shell-echo*ではなく、*shell-ret*の値を一時的に変更したいのではないのかなという気がします。
+
+ちなみに、shell3.lなどにもこの部分は引き継がれています。
+ --- shell.l~	Mon Feb 21 02:09:07 2000
+ +++ shell.l	Wed Jun 07 23:31:37 2006
+ @@ -87,8 +87,8 @@
+  
+  (defun shell-alternate-send-input ()
+    (interactive)
+ -  (let ((*shell-echo* (if (equal *shell-echo* "\n") "\r" "\n")))
+ -    (declare (special *shell-echo*))
+ +  (let ((*shell-ret* (if (equal *shell-ret* "\n") "\r" "\n")))
+ +    (declare (special *shell-ret*))
+      (shell-send-input)))
+  
+  (setf (symbol-function 'shell-send-interrupt) #'kill-subprocess)
+
+--------
+
+#comment

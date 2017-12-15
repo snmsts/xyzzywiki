@@ -1,0 +1,13 @@
+[[用語集]]
+
+**gresregとは [#je00dc14]
+grepは文字列を探すだけですが、gresregはファイル群から文字列を探して、それを一括置換することができます。ed(unixのエディタ)の g/RE/p と g/RE/s//RE/g を意図して出来た言葉だそうです。
+
+-[[QuickTour/gresreg]]
+-[[grepとgresregの違い>http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/intro/971022.html]]
+----
+突っ込みなどあったらどうぞ。
+- ファイル郡ではなく、ファイル群では？ -- [[通りすがりの人]] &new{2013-04-12 (金) 13:50:28};
+- 直しておきました --  &new{2013-04-13 (土) 16:45:38};
+
+#comment

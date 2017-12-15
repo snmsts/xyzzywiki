@@ -1,0 +1,101 @@
+*unregister-history-variable, register-history-variable, *save-resume-info*, *history-file-name*, *save-history* [#qf209a3d]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-07-28 (水) 02:13:59
+-バージョン: 
+
+**メッセージ [#edce7807]
+history.l で export されているシンボルです。
+
+define-history-variable の項がすでにあることに気付いたので訂正。
+
+define-history-variable は「その他」のセクションに分類されていますが、自分的には「変数と定数」かなぁという気がします。
+ <chapter>
+ <title>*history-file-name*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ ヒストリを保存するファイル名です。
+ nil の場合は関数 history-file-name において
+ 適当に決定されます。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file>history.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*save-history*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ 保存するヒストリの個数です。
+ [共通設定] - [いろいろ] - [保存するヒストリの個数(S)] で値を指定することができます。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file>history.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>unregister-history-variable</title>
+ <type>Function</type>
+ <arguments>unregister-history-variable VAR</arguments>
+ <package>editor</package>
+ <description>
+ 変数をヒストリ変数の登録から削除します。
+ </description>
+ <seealso>define-history-variable</seealso>
+ <seealso>register-history-variable</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file>history.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>register-history-variable</title>
+ <type>Function</type>
+ <arguments>register-history-variable VAR</arguments>
+ <package>editor</package>
+ <description>
+ すでに定義された変数 VAR をヒストリ変数に登録します。
+ ファイルに書き込まれるため、変数の内容は readable である必要があります。
+ readable であるとは、具体的に言うと「文字、文字列、数値、シンボルと
+ それらのリストで構成されるデータ」のことです。<!-- 抜けがあったらごめんなさい -->
+ 
+   VAR : ヒストリ変数に登録する変数のシンボル、もしくはそれらのリスト
+ </description>
+ <seealso>define-history-variable</seealso>
+ <seealso>unregister-history-variable</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file>history.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*save-resume-info*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ non-nil ならば終了時の状態を保存します。
+ [共通設定] - [さまざま] - [終了時の状態を保存する(U)] で値を指定することができます。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file>history.l</file>
+ </chapter>
+
+----
+-20041115 での追加・修正を確認しました。 -- [[OHKUBO]] &new{2004-11-27 (土) 09:57:03};
+
+#comment

@@ -1,0 +1,6 @@
+[[L10N/english]]
+
+ hideif.l:81:			    "何か知らんけどcppがエラー")))))
+-Error. Maybe, the cpp setting is wrong. --  &new{2005-03-05 19:56:07 (土)};
+
+#comment

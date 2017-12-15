@@ -1,0 +1,12 @@
+* TRAMP(ange-ftpのscp版みたいなの) 
+-ページ: [[WishList]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2004-03-04 (木) 09:09:16
+
+** メッセージ 
+http://savannah.nongnu.org/projects/tramp
+が移植されるとうれしいです。
+----
+
+#comment

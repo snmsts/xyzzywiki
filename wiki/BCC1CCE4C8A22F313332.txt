@@ -1,0 +1,33 @@
+#freeze
+* xyzzy の起動時の座標を指定する方法 [#p86d2d2f]
+-ページ: [[質問箱]]
+-投稿者: [[oki]]
+-状態: 完了
+-投稿日: 2005-11-11 (金) 18:44:58
+
+** メッセージ [#j8c639b7]
+xyzzy の起動時の座標を指定する方法が分かりません。
+Emacs なら default-frame-alist に追加する 
+top とか left に該当する設定です。
+
+Emacs の場合の例(~/.emacs.d/init.el)：
+ ;; 初期フレームの設定
+ (setq default-frame-alist
+      (append (list '(foreground-color . "black")
+		    '(background-color . "LemonChiffon")
+		    '(border-color . "black")
+		    '(mouse-color . "white")
+		    '(cursor-color . "black")
+		    '(font . "private-fontset"); TrueType
+		    '(width . 80)
+		    '(height . 40)
+		    '(top . 50)
+		    '(left . 590))
+	      default-frame-alist))
+----
+- [[xyzzy-ml:03275]]に似たようなのがありますけど参考になるでしょうか。 -- [[上山完]] &new{2005-11-11 (金) 21:28:00};
+- lispでやる必要はありますか? xyzzyの場合、通常[共通設定]-[さまざま]の「起動時に〜」と「終了時に〜」で設定します。数値で設定したいのであればiniファイルを編集してください。 -- [[NANRI]] &new{2005-11-12 (土) 00:02:51};
+- ちょっと話がずれるのですが、outline-tree 起動時に xyzzy の位置指定が出来ると嬉しいと思ったりしました。 -- [[通りすがり]] &new{2005-11-12 (土) 20:22:33};
+- なるほど！そういうオプションがあったんですね。1:「終了時に位置を保存」にチェックして終了。2:先ほどのチェックをはずす。で設定できますね！ありがとうございます。 -- [[oki]] &new{2005-12-01 (木) 11:05:06};
+
+#comment

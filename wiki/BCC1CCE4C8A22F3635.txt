@@ -1,0 +1,47 @@
+* howmの予定表示範囲の設定 [#l41859ab]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 結果報告待ち
+-投稿日: 2005-02-20 23:44:50 (日)
+
+** メッセージ [#wcde28c3]
+xyzzy0.2.2.233にて、howm-wrap1.1.0.3を、快適に使わせていただいてる者です。
+（kimuraさん、ありがとうございます！）
+
+ひとつだけ気になるところが、ありまして。
+
+Menuの%scheduleで表示される予定の、日時範囲を設定しようとしたのですが
+
+(setq howm-menu-schedule-days 10)
+で、現在から9日後までの予定まで表示します。(10日ではなく）
+
+(setq howm-menu-schedule-days-before 5)
+とかは利かないようです。
+
+現在のHowmのマニュアルと大幅に違うので戸惑いました。
+これは、使ってるHowmのヴァージョンのせいでしょうか？
+ほかにも同じ症状出た人はいますか？
+
+
+----
+-[[howmの更新履歴>http://howm.sourceforge.jp/OLD.rd]]のv1.1.1を参照。 --  &new{2005-02-21 06:18:02 (月)};
+-本家のは使っていないので、めっさ適当。 --  &new{2005-08-28 06:19:04 (日)};
+ ;; 三日前まで表示
+ (defvar howm-menu-schedule-days-before -3)
+ 
+ (defun howm-schedule-menu (days)
+        (let* ((today (howm-reminder-today howm-menu-schedule-days-before))
+ 	      (limit (howm-reminder-today days))
+ 	      (howm-schedule-types "[!@]")  ;; dirty
+ 	      (raw (howm-reminder-search howm-schedule-types))
+ 	      (filtered (remove-if #'(lambda (item)
+ 				       (let ((s (howm-view-item-summary item)))
+ 					    (if (string-match "^\\(\\[.+\\]\\)" s)
+ 						(setq s (match-string 0)))
+ 					    (or (string< s today)
+ 						(string< limit s))))
+ 				   raw)))
+ 	     (howm-view-sort-items #'howm-view-item-summary #'string<
+ 				   filtered)))
+
+#comment

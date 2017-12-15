@@ -1,0 +1,211 @@
+*【記述形式】関数でも変数でもあるシンボルの扱い [#ece9bf60]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 記述形式
+-投稿日: 2004-12-18 (土) 00:26:51
+-バージョン: 
+
+**メッセージ [#u72e253e]
+どんな風に書くのが良いんでしょう？
+自分が気付いているのは今の所２つ。
+-verify-visited-file-modtime
+-lock-file
+
+　<description> にまとめて書いてしまうか、(v)・(f)とかくっつけて区別するか。
+何か良い案ありませんか？
+----
+-lispは文脈から関数か変数かを判別するのが難しいので、v,fをつけるのは正解じゃない気がします。既存のツールとどう折り合いをつけるかが勝負ですねぇ…XMLにもう少し詳しければ全体をどうするって言うのがわかるんですけど…。 -- [[佐野]] &new{2005-01-27 (木) 14:05:44};
+-調べてみました。
+ (do-all-symbols (i)
+   (and (fboundp i)
+        (boundp i)
+        (format t "~A~%" i)))
+結果
+ edict-mode
+ lock-file
+ verify-visited-file-modtime
+ c-comment-indent
+ overwrite-mode
+ abbrev-mode
+ buffer-fold-width
+ nil
+関数かつマクロって言うのはこれ以上いっぱいありました。[[佐野]]
+-どもです。７つですか。1%にも満たないということですね。となるとまじめに対処するのは大げさな気がしますね。やっぱり <description> にまとめて書いてしまうという対処でいいような気がしてきました。やるとしても <type> が複数存在することを許可するようにDTDを修正するくらいかなぁと思います。 -- [[NANRI]] &new{2005-01-31 (月) 08:52:15};
+-あと、関数かつマクロというのはマクロなのだと思います。自分が問題視していたのはCommon Lispが関数用と変数用の二つの定義空間を持っているからでしたので。(symbol-function 'when)とかして取り出せるのはマクロですし。 -- [[NANRI]] &new{2005-01-31 (月) 08:58:47};
+-楽なので変数の使われ方を一通り調べてみましたが、特に詳しく説明する必要性を感じませんでした。とりあえずの回避策として、関数の説明をメインに書いてその後ろに軽く変数の説明を載せるという感じでどうでしょう？ -- [[佐野]] &new{2005-02-01 (火) 00:54:37};
+ マイナーモードのつくり（られ）かたを知っていれば解説不要。
+ edict-mode
+ overwrite-mode
+ abbrev-mode
+ 
+ lock-file
+ :editの時は編集中のときだけロックファイルを作ります。
+ verify-visited-file-modtime
+ tの時別プロセスからの書き換えを確認しダイアログ表示をします。
+ c-comment-indent
+ c-modeでのコメントインデントの深さ
+ buffer-fold-width
+ 「指定位置で折り返し」を"GUI"から指定する時の基準桁数。
+-半分寝ながら書いていました。同じ結論のようですね…。 -- [[佐野]] &new{2005-02-01 (火) 19:26:02};
+-「関数の説明をメインに書いてその後ろに軽く変数の説明を載せる」に賛成です。<type>を積極的に使うのはrefwikiくらいだと思うので、そっちの対応は何か考えておきます。コメント文をちょっと入れれば何とかなりそう。 -- [[NANRI]] &new{2005-02-04 19:10:47 (金)};
+-こんな感じかな。 -- [[NANRI]] &new{2005-08-21 01:28:32 (日)};
+ <chapter>
+ <title>verify-visited-file-modtime</title>
+ <type>Function</type>
+ <!-- type>BufferLocal</type -->
+ <arguments>verify-visited-file-modtime &amp;optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ バッファがファイルに関連付けられていない、もしくはバッファとそれに関連付
+ けられたファイルとの更新時間が一致していると t を返します。バッファとそ
+ れに関連付けられたファイルとの更新時間が一致していない時、つまり他のプロ
+ セスによってファイルが変更された時などに nil を返します。
+ 
+ また、 verify-visited-file-modtime は buffer.l にてバッファローカル変数
+ としても定義されています。
+ バッファローカル変数としての verify-visited-file-modtime は activate 時
+ のバッファの最終更新日チェックを制御します。
+   :auto    更新されていれば自動的に読み直す
+   non-nil  チェックする
+   nil      チェックしない
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>builtin.l</file>
+ <!-- file>buffer.l</file -->
+ </chapter>
+-コメントかぁ…XML以外の形式に移せないなぁ… -- [[佐野]] &new{2005-08-21 13:22:13 (日)};
+-コメントはrefwiki用です。現在のDTDではこう書くしかないかと。 -- [[NANRI]] &new{2005-08-21 19:12:19 (日)};
+-あぁコメントが無茶気になる。 -- [[佐野]] &new{2005-08-22 05:58:06 (月)};
+-佐野さんが何を気にしてらっしゃるのかオレには分かりません。将来的にやっぱりDTDを修正するという可能性も考えて、コメントにデータを備忘として残しておくのは個人的に必然なのですが。descriptionにも情報の不足がないように書いているつもりですし。 -- [[NANRI]] &new{2005-08-23 01:23:08 (火)};
+-むずはゆいというか気持ちが悪いというか…その程度です。発言するべきじゃなかったですね。 -- [[佐野]] &new{2005-08-23 01:35:10 (火)};
+-や、いいんですが。多少の気持ち悪さは今のところは我慢してください。ちゃんと対応しようとするとデータフォーマットが複雑になってきますので。例えば、DTDをこんな感じにしないときちんと対応できないと思います。 -- [[NANRI]] &new{2005-08-23 01:42:32 (火)};
+
+ <!DOCTYPE book [
+ <!ELEMENT book (chapter*)>
+ <!ELEMENT chapter (title,package,section,(function|specialform|macro)?,(variable|bufferlocal|keyword)?,misc?,tips?)>
+ <!ELEMENT title (#PCDATA)>
+ <!ELEMENT package (#PCDATA)>
+ <!ELEMENT section (#PCDATA)>
+ <!ELEMENT function (arguments,description,file,seealso*,link*)>
+ <!ELEMENT specialform (arguments,description,file,seealso*,link*)>
+ <!ELEMENT macro (arguments,description,file,seealso*,link*)>
+ <!ELEMENT variable (description,file,seealso*,link*)>
+ <!ELEMENT bufferlocal (description,file,seealso*,link*)>
+ <!ELEMENT keyword (description,file,seealso*,link*)>
+ <!ELEMENT misc (arguments?,description,file?,seealso*,link*)>
+ <!ELEMENT tips (description,seealso*,link*)>
+ <!ELEMENT arguments (#PCDATA)>
+ <!ELEMENT description (#PCDATA)>
+ <!ELEMENT file (#PCDATA)>
+ <!ELEMENT seealso (#PCDATA)>
+ <!ELEMENT link (#PCDATA)>
+ ]>
+
+ <chapter>
+ <title>verify-visited-file-modtime</title>
+ <package>editor</package>
+ <section>バッファ</section>
+ <function>
+ <arguments>verify-visited-file-modtime &amp;optional BUFFER</arguments>
+ <description>
+ バッファがファイルに関連付けられていない、もしくはバッファとそれに関連付
+ けられたファイルとの更新時間が一致していると t を返します。バッファとそ
+ れに関連付けられたファイルとの更新時間が一致していない時、つまり他のプロ
+ セスによってファイルが変更された時などに nil を返します。
+ <description>
+ <file>builtin.l</file>
+ <seealso></seealso>
+ <link></link>
+ </function>
+ <bufferlocal>
+ <description>
+ activate 時のバッファの最終更新日チェックを制御します。
+   :auto    更新されていれば自動的に読み直す
+   non-nil  チェックする
+   nil      チェックしない
+ </description>
+ <file>buffer.l</file>
+ <seealso></seealso>
+ <link></link>
+ </bufferlocal>
+ </chapter>
+-最初の方でDTDをいじらずこのままいこう的なことを言っといてこういうことを言うのも何ですが、今の心境的にはDTD変更後の方が素敵に見えます。７ヵ月後のリリースの時には考えてもいいんですかね？DTDをいじる機会があるならばdescriptionも細分化したいと思っています。 -- [[佐野]] &new{2005-08-23 03:08:46 (火)};
+-chapter二つ書けばいいんじゃないですか？titleが重複したらダメってこともないでしょうし。なんのためのtype? --  &new{2005-08-23 10:48:21 (火)};
+-あぁ。うーん。titleの重複は望ましくないなぁ(refwikiの実装とかひとつってことに頼りきった変換とかで）思っていましたが、意味で考えるとチャプター分けた方が自然ですねぇ…セクションが変わりそうな名前の重複がないのは幸運に拠るところのような気もしますし。 -- [[佐野]] &new{2005-08-23 13:44:03 (火)};
+-ツールとDTDならば、まずはツールの修正を考えるのがスジではないでしょうか。これはDTDがダメというよりデータ構造の使い方をどうするかってだけだと思いますし。あるいはどうせDTDを変えるなら、ユニークID付けておくとか。そすればseealsoもIDで書けるかもしれないですね。 --  &new{2005-08-23 14:28:22 (火)};
+-なるほど、xmlから各フォーマットへ変換する際に頑張れば何とかなりますね。chapter要素2つに分けて書くことにします。refwikiの対応はそんなにかからないと思います。 -- [[NANRI]] &new{2005-08-23 21:09:06 (火)};
+-対応しました。デモンストレーションとして→[[verify-visited-file-modtime>refwiki:verify-visited-file-modtime]] -- [[NANRI]] &new{2005-08-23 21:33:22 (火)};
+-目安として4週後のリリースを目指したいところですけど、各種形式はどうしましょうか？さしあたっての懸案はhtmlとtxt…MSXMLを使う環境でのチェックは全くしていないんですけど…っていうのはまずそうですねぇ -- [[佐野]] &new{2005-09-01 19:03:34 (木)};
+- txt, HTML はこんな感じの出力になっていればよいかと思います。refer-forについてはrefer-forに頑張ってもらうつもりでした。勘ですけどあんまり影響はない気がしています。致命的な影響があるようだとpatchを作ることを考えないといけませんね。 -- NANRI
+
+ ■verify-visited-file-modtime
+ [Type       ]: Function
+ [Arguments  ]: verify-visited-file-modtime &optional BUFFER
+ [Package    ]: editor
+ [File       ]: builtin.l
+ [Section    ]: バッファ
+ [Description]: 
+ バッファがファイルに関連付けられていない、もしくはバッファとそれに関連付
+ けられたファイルとの更新時間が一致していると t を返します。バッファとそ
+ れに関連付けられたファイルとの更新時間が一致していない時、つまり他のプロ
+ セスによってファイルが変更された時などに nil を返します。
+ 
+ 
+ [Type       ]: BufferLocal
+ [Package    ]: editor
+ [File       ]: buffer.l
+ [Section    ]: バッファ
+ [Description]: 
+ activate時のバッファの最終更新日チェックを制御します。 
+   :auto    更新されていれば自動的に読み直す 
+   non-nil  チェックする
+   nil      チェックしない 
+ 
+ 
+
+ <a name="verify-visited-file-modtime"></a>
+ <hr>
+ <h3>verify-visited-file-modtime</h3>
+ <span class="element">Type</span>: <span class="pcdata">Function</span><br>
+ <span class="element">Arguments</span>: <span class="pcdata">verify-visited-file-modtime &amp;optional BUFFER</span><br>
+ <span class="element">Package</span>: <span class="pcdata">editor</span><br>
+ <span class="element">File</span>: <span class="pcdata">builtin.l</span><br>
+ <br>
+ <pre>
+ バッファがファイルに関連付けられていない、もしくはバッファとそれに関連付
+ けられたファイルとの更新時間が一致していると t を返します。バッファとそ
+ れに関連付けられたファイルとの更新時間が一致していない時、つまり他のプロ
+ セスによってファイルが変更された時などに nil を返します。</pre>
+ <br>
+ <br>
+ <span class="element">Type</span>: <span class="pcdata">BufferLocal</span><br>
+ <span class="element">Package</span>: <span class="pcdata">editor</span><br>
+ <span class="element">File</span>: <span class="pcdata">buffer.l</span><br>
+ <br>
+ <pre>
+ activate時のバッファの最終更新日チェックを制御します。 
+   :auto    更新されていれば自動的に読み直す 
+   non-nil  チェックする
+   nil      チェックしない </pre>
+ <br>
+ <br>
+ <span class="menu">
+ [ <a href="intro.html" target="right">Intro</a>
+  | <a href="contents.html" target="left">目次</a>
+  | <a href="allindex.html" target="left">索引</a>
+  | <a href="tips.html" target="left">目的別</a>
+  | <a href="buffer-index.html" target="left">バッファ</a>
+  ]
+ </span>
+-その方向に進んでみます…。xml2xxx.lもリリースしないと…いけないかも。 -- [[佐野]] &new{2005-09-02 01:44:10 (金)};
+-とりあえずの変換結果を/reference/archive/tmp/に…これでいいんかな？info-modokiのタグジャンプが死んじゃったし…次回までにはいろいろ考えたいところ… -- [[佐野]] &new{2005-09-05 17:22:45 (月)};
+-お疲れ様です。チェックしてみます。 -- [[NANRI]] &new{2005-09-05 19:18:57 (月)};
+-変換系を公開せずにチェックしてもらうのも変なので公開しておきました。本当のところ色々と恥ずかしいのですが。 -- [[佐野]] &new{2005-09-05 19:39:22 (月)};
+-ソースが公開ってことは文句をつける時は代替コードが要りますね&smile; とりあえず、キーワードから。あとは、こっちで[[tips/リファレンスの変換]] -- [[NANRI]] &new{2005-09-06 20:02:11 (火)};
+
+#comment

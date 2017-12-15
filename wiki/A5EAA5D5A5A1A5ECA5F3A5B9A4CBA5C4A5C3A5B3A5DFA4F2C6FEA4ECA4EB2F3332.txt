@@ -1,0 +1,34 @@
+*labels
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 保留
+-カテゴリー: ツッコミをいれる
+-投稿日: 2003-10-20 (月) 23:08:07
+-バージョン: 
+
+**メッセージ
+ <chapter>
+ <title>labels</title>
+ <type>Special Form</type>
+ <arguments>labels ({(NAME LAMBDA-LIST {declaration}* [doc-string] {FORM}*)}*) {FORM}*</arguments>
+ <package>lisp</package>
+ <description>
+ ローカルな関数を定義してフォームを評価します。
+ label 構造はfletと同じ書式を持ちます。
+ これらの構造の違いはscopeにありますfletはbodyの中で有効でlabelsはそれを定義した関数内で有効です
+ つまりl相互に呼び合う再起関数を作るのにlabelsは使え,fletは使えないということです。
+ fletを使用して作った関数はローカルにグローバル関数名を再定義し新しい関数内ではグローバルに宣言した
+ 関数を参照することが出来ます。labelsを用い同じ構造を作ってもそのような参照は出来ません。
+ </description>
+ <seealso>macrolet</seealso>
+ <seealso>flet</seealso>
+ <link></link>
+ <section>リスト</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+
+#comment

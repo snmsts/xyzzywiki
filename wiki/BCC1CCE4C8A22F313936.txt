@@ -1,0 +1,65 @@
+* セッションの自動保存ができません [#f3eca2c2]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2006-11-03 (金) 16:12:13
+
+** メッセージ [#hab28c2e]
+siteinit.l に以下の項目を設定すると、セッションを開いたときに自動保存が選択できなくなってしまいます。
+どうしてでしょうか？
+
+ ; *scratch* を削除する find-file-hook
+ (defun my-find-file-hook ()
+   (interactive)
+   (if (find-name-buffer "*scratch*")
+       (delete-buffer "*scratch*")))
+ (add-hook '*find-file-hooks* #'my-find-file-hook)
+
+----
+- 書き込み失敗してしまいました。ごめんなさい。 -- [[anonymous?]] &new{2006-11-03 (金) 16:15:13};
+- セッションファイルの中に *scratch* の状態が保存されてるからじゃないでしょうか。開いた直後に「削除されたバッファです」って出てません？
+- 確かに「削除されたバッファです」は出てきました。そこで、セッションファイルを作り直しましたが結果は同じでした。 --  &new{2006-11-04 (土) 20:33:41};
+- *scratch* が存在しない状態で作り直してもダメですか？
+- セッションファイルを何度作り直しても「削除されたバッファです」が出てしまいます --  &new{2006-11-05 (日) 20:55:09};
+- こちらで作成したファイルを添付しました。参考になればよいのですが・・・ --  &new{2006-11-05 (日) 21:15:33};
+- よく分からんけど、こうしてみるとか。 --  &new{2006-11-05 (日) 22:07:38};
+ (defun my-find-file-hook ()
+   (interactive)
+   (ignore-errors
+     (if (find-name-buffer "*scratch*")
+         (delete-buffer "*scratch*"))))
+ (add-hook '*find-file-hooks* #'my-find-file-hook)
+- ありがとうございます。こちらで試して見ましたが結果は同じで「削除されたバッファです」が出てしまいます。 --  &new{2006-11-05 (日) 23:13:51};
+
+- 下のを .xyzzy か siteinit.l に書いてください。  --  &new{2006-11-06 (月) 00:01:58};
+ (in-package "editor")
+ (defun restore-buffer-info (info)
+   (let ((obuffer (selected-buffer)))
+     (mapc #'(lambda (i)
+               (let ((file (pop i)))
+                 (when (file-exist-p file)
+                   (handler-case
+                       (let ((point (pop i))
+                             (mode (pop i))
+                             (minor nil))
+                         (when (listp mode)
+                           (setq minor (cdr mode))
+                           (setq mode (car mode)))
+                         (let ((*find-file-auto-mode-function* mode))
+                           (find-file file))
+                         (goto-char point)
+                         (mapc #'(lambda (f) (and (fboundp f) (funcall f))) minor)
+                         (mapc #'(lambda (x)
+                                   (when (and (car x) (symbolp (car x)))
+                                     (make-local-variable (car x))
+                                     (set (car x) (cdr x))))
+                               (pop i)))
+                     (file-error (c)
+                       (si:*print-condition c))))))
+           info)
+     (if (not (deleted-buffer-p obuffer)) ; バッファを戻すのに、この条件を追加
+         (set-buffer obuffer))))
+ (in-package "user")
+- ありがとうございました。無事解決しました。 --  &new{2006-11-07 (火) 17:45:02};
+
+#comment

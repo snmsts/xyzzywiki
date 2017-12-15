@@ -1,0 +1,10 @@
+[[FrontPage]]
+
+05/11/26 єґМо
+
+ (defun download-irvine (url)
+   (let ((ole (ole-create-object "Irvine.Api")))
+     #{ole.AddUrl[url 0]}))
+
+----
+#comment

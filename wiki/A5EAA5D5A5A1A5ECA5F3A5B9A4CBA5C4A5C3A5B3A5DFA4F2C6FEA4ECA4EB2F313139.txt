@@ -1,0 +1,20 @@
+*match-stringの説明 [#v0fbe397]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-05-02 23:36:07 (月)
+-バージョン: 
+
+**メッセージ [#v27b89f5]
+ (buffer-substring (match-beginning 0) (match-end 0))に一致します。
+となっていますが、
+ (buffer-substring (match-beginning REGNUM) (match-end REGNUM))に一致します。
+が正しいと思います。
+
+----
+-ご指摘、どもです。[[refwiki:match-string]] -- [[NANRI]] &new{2005-05-21 13:34:33 (土)};
+
+#comment

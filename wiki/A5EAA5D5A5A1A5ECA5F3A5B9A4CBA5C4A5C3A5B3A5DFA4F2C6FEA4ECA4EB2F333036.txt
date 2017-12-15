@@ -1,0 +1,30 @@
+* *initial-buffer-mode* [#m1057fce]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[lambda]]
+-優先順位:   普通
+-状態:       着手
+-カテゴリー: ツッコミをいれる
+-投稿日:     2010-01-18 (月) 10:29:07
+-バージョン: 
+
+** メッセージ [#m9a2b7a7]
+xyzzy起動時の*scratch*バッファのモードを設定。
+また、最後のバッファが削除されると、*initial-buffer-mode*がfuncallされる。
+----
+- どーもです。 -- [[NANRI]] &new{2010-04-29 (木) 04:35:39};
+ <chapter>
+ <title>*initial-buffer-mode*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ xyzzy起動時の*scratch*バッファのモードを設定です。
+ また、最後のバッファが削除された時に新たに作られる
+ *scratch*バッファのモード設定でもあります。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>モード</section>
+ <file></file>
+ </chapter>
+#comment

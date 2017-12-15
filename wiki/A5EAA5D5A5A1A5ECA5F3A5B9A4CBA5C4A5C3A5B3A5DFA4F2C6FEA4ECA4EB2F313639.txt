@@ -1,0 +1,219 @@
+*cmds.l テキスト関係 [#n572f4ea]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-11-08 18:55:45 (火)
+-バージョン: 20050929
+
+**メッセージ [#k360ded7]
+テキスト関係はこれで全部でしょうか。
+clear-all-text-colors は obsolete なのですが set-text-color が入ってるので一応。
+indent-for-comment は詳細をよく知らないので書ける方は補足願います。
+
+ <chapter>
+ <title>indent-for-comment</title>
+ <type>Function</type>
+ <arguments>indent-for-comment</arguments>
+ <package>editor</package>
+ <description>
+ 行末にコメント文字列 (comment-start, comment-end) を挿入します。[ESC ;]
+ コメント位置は comment-indent-function を呼び出した結果で決まります。
+ 
+ コメント挿入後のカーソル位置は comment-start-skip か
+ comment-start-skip-function で指定できます。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>clear-all-text-colors</title>
+ <type>Function</type>
+ <arguments>clear-all-text-colors</arguments>
+ <package>editor</package>
+ <description>
+ set-text-color で付けた属性を消します。
+ 
+ 補足:
+   この関数は Version 0.0.0.92 にて set-text-color とともに obsolete と
+   なりました。
+ </description>
+ <seealso>delete-text-attributes</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>indent-relative</title>
+ <type>Function</type>
+ <arguments>indent-relative</arguments>
+ <package>editor</package>
+ <description>
+ 半角スペースやタブ以外の文字を後方へ向かって検索し、最初に見つかった
+ 場所の行のインデント幅と同じだけ現在行をインデントします。
+ 
+ ちなみに emacs の同名のコマンドとは挙動が違います。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>tabify</title>
+ <type>Function</type>
+ <arguments>tabify FROM TO</arguments>
+ <package>editor</package>
+ <description>
+ FROM と TO の間にある半角スペースを可能な限りタブ文字で置き換えます。
+ </description>
+ <seealso>untabify</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>untabify</title>
+ <type>Function</type>
+ <arguments>untabify FROM TO</arguments>
+ <package>editor</package>
+ <description>
+ FROM と TO の間にあるタブ文字を適当な数の半角スペースで置き換えます。
+ </description>
+ <seealso>tabify</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>transpose-region</title>
+ <type>Function</type>
+ <arguments>transpose-region MOVER ARG</arguments>
+ <package>editor</package>
+ <description>
+ リージョンを入れ換えます。入れ換えるリージョンは MOVER を funcall して
+ 決定されます。
+ 
+ 使用例： 
+   (transpose-region 'forward-paragraph arg)
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>transpose-lines</title>
+ <type>Function</type>
+ <arguments>transpose-lines &amp;optional (ARG 1)</arguments>
+ <package>editor</package>
+ <description>
+ カーソルのある行の一つ前の行と、そこから ARG 行先の行とを入れ換えます。[C-x C-t]
+ ただし ARG が 0 の場合にはマークの前の行と入れ換えます。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>delete-blank-lines</title>
+ <type>Function</type>
+ <arguments>delete-blank-lines</arguments>
+ <package>editor</package>
+ <description>
+ カーソルのある行またはその次の行の前後に続く空行を削除します。[C-x C-o]
+ 複数の空行が続く場合は改行文字を一つだけ残します。
+ 
+ なお空行とは半角スペースおよびタブのみからなる行のことです。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>just-one-space</title>
+ <type>Function</type>
+ <arguments>just-one-space</arguments>
+ <package>editor</package>
+ <description>
+ カーソル位置の前後にある半角スペースとタブを削除した後、半角スペース
+ をひとつだけ挿入します。[ESC /]
+ </description>
+ <seealso>delete-horizontal-spaces</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>backward-delete-char-untabify-or-selection</title>
+ <type>Function</type>
+ <arguments>backward-delete-char-untabify-or-selection &amp;optional (N 1)</arguments>
+ <package>editor</package>
+ <description>
+ セレクションで選択中ならばセレクション全体を、そうでなければカーソルの
+ 後方の文字を untabify しつつ指定文字数分だけ削除します。
+ </description>
+ <seealso>delete-backward-char</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>backward-delete-char-untabify</title>
+ <type>Function</type>
+ <arguments>backward-delete-char-untabify &amp;optional (ARG 1)</arguments>
+ <package>editor</package>
+ <description>
+ カーソル後方の文字を untabify しつつ指定文字数分だけ削除します。
+ </description>
+ <seealso>delete-backward-char</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>delete-backward-char</title>
+ <type>Function</type>
+ <arguments>delete-backward-char &amp;optional (N 1)</arguments>
+ <package>editor</package>
+ <description>
+ カーソル後方の文字を指定文字数分だけ削除します。
+ </description>
+ <seealso>delete-char</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>cmds.l</file>
+ </chapter>
+
+----
+-indent-for-commentは行末にコメント文字列（comment-start、comment-end）を挿入する命令ですね。デフォルトではM-;にバインドされてます。内部でcomment-indent-functionを呼び出してコメントをcomment-columnの位置にそろえてくれたります。あと、コメント挿入後にカーソルをどこに置くかをcomment-start-skipかcomment-start-skip-functionで指定できます。 --  &new{2005-11-08 20:00:46 (火)};
+-どーもです。これから詳しく見ておきます。 -- [[NANRI]] &new{2005-11-08 21:10:21 (火)};
+--tabify, untabifyでの「インデント幅は変わりません。」は蛇足のような気がします。インデントという言葉は行頭の字下げの意味だと思いますが、これらの関数の効果は行頭に限りませんので。 -- [[NANRI]] &new{2005-11-08 21:13:35 (火)};
+-- そう言われてみるとインデントという言い方は変ですね。消しておきました。 --  &new{2005-11-08 23:25:53 (火)};
+-indent-for-comment 書き換えました。ありがとうございました。 --  &new{2005-11-08 23:42:14 (火)};
+-seealsoはこんな感じの様な気がします。 -- [[NANRI]] &new{2005-11-10 01:03:07 (木)};
+-「空白」・「空白文字」・「空白行」における「空白」の指すものが揺れているのが気になります。（まとめて見ているからでしょうが）　「空白文字（#\SPC）」など補足説明を足したほうがよさそうな気がします。 -- [[NANRI]] &new{2005-11-10 01:08:01 (木)};
+-空白文字というと syntax-whitespace-p を満たす文字、とも取れてしまいそうですね。単純にスペース、或いは半角スペースとした方が紛れが少ないように思います。空白行に関しては syntax-whitespace-p を満たす文字のみ含む行、ということですよね。空行との用語法の違いが判り難いように思えます。その点についても注釈を付した方が無難かもしれません。 --  &new{2005-11-10 03:02:37 (木)};
+- 確かに「空白」というと whitespace のように読めますね・・・。とりあえず「空白文字」は「半角スペース」に替えておきました。 --  &new{2005-11-10 (木) 09:52:19};
+- 修正してみました。「空行」の定義は[[GNU Emacs Lisp リファレンスマニュアル>http://www.bookshelf.jp/cgi-bin/goto.cgi?file=elisp&node=User-Level%20Deletion]]に合わせました。 --  &new{2005-11-10 (木) 19:09:10};
+- キーバインドの記述をちょっと追加しました。 --  &new{2005-11-13 (日) 21:20:53};
+- 取り込みました。 -- [[NANRI]] &new{2005-12-12 (月) 02:31:04};
+
+#comment

@@ -1,0 +1,31 @@
+*mode-specific-indent-commmand [#y237a25d]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2003-11-15 (土) 22:13:42
+-バージョン: 20031002
+
+**メッセージ [#g73d962f]
+こうゆうエントリはまずいですかね…。
+ <chapter>
+ <title>mode-specific-indent-command</title>
+ <type>BufferLocal</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ indent-region参照のこと
+ </description>
+ <seealso>indent-region</seealso>
+ <link></link>
+ <section>モード</section>
+ <file></file>
+ </chapter>
+
+----
+-ちーと、indent-regionの本体ということでサンプルを追加してみます。ここら辺は、本当はモード作成のチュートリアルとかで説明した方がよいのでしょうね。 -- [[山本]] &new{2003-12-06 (土) 18:54:47};
+-行頭が"ラベル："だとインデント無しで、それ以外だと8桁でインデントみたいな例。(progn (make-local-variable 'mode-specific-indent-command) (setq mode-specific-indent-command #'(lambda () (save-excursion (goto-bol) (delete-horizontal-spaces) (or (looking-at "^\\w*:") (indent-to 8)))))) -- [[山本]] &new{2003-12-06 (土) 19:06:30};
+
+#comment

@@ -1,0 +1,87 @@
+;; file-info
+
+(defvar file-info-name-format-function nil
+  "ファイル名を受け取って出力用に変換する関数")
+(defvar file-info-attribute-format-function nil
+  "ファイル属性を受け取って出力用に変換する関数")
+(defvar file-info-size-format-function nil
+  "ファイルサイズを受け取って出力用に変換する関数")
+(defvar file-info-time-format-function nil
+  "ファイル最終更新日時を受け取って出力用に変換する関数")
+(defvar file-info-format-function nil
+  "directory で得られたファイル情報を変換する関数")
+(defvar file-info-output-heading-format-string nil
+  "出力の最初の行に表示される見出しのフォーマット")
+(defvar file-info-line-format-string nil
+  "出力のファイルデータ行のフォーマット")
+(defvar file-info-format-string nil
+  "出力全体のフォーマット")
+
+(setq file-info-name-format-function
+      #'(lambda (name) name))
+(setq file-info-attribute-format-function
+      #'(lambda (attr)
+	  (concat
+	   (if (zerop (logand attr ed::*file-attribute-readonly*)) "-" "R")
+	   (if (zerop (logand attr ed::*file-attribute-hidden*)) "-" "H")
+	   (if (zerop (logand attr ed::*file-attribute-system*)) "-" "S")
+	   (if (zerop (logand attr ed::*file-attribute-directory*)) "-" "D")
+	   (if (zerop (logand attr ed::*file-attribute-archive*)) "-" "A")
+	   (if (zerop (logand attr ed::*file-attribute-compressed*)) "-" "C"))))
+(setq file-info-size-format-function
+      #'(lambda (size) size))
+(setq file-info-time-format-function
+      #'(lambda (time)
+	  (format-date-string "%y/%m/%d(%a) %H:%M:%S" time)))
+(setq file-info-format-function
+      #'(lambda (files-info &key test before after)
+	  (let (b-info d-info)
+	    (setq b-info
+		  (if before (funcall before files-info)
+		    files-info))
+	    (setq d-info
+		  (remove nil (mapcar #'(lambda (info) (decode-file-info info test)) b-info)))
+	    (if after (funcall after d-info)
+	      d-info))))
+(setq file-info-output-heading-format-string
+      (concat "~2TAttrib" "~10TSize(Bytes)" "~22TLast Modified" "~47TName~%"))
+(setq file-info-line-format-string
+      (concat "~2T~A" "~10T~A" "~22T~A" "~47T~A~%"))
+(setq file-info-output-format-string
+      (concat file-info-output-heading-format-string
+	      "~:{"
+	      file-info-line-format-string
+	      "~}"))
+
+(defun decode-file-info (info &optional test)
+  (if (or (null test)
+	  (funcall test info))
+      (list
+       (funcall file-info-attribute-format-function (second info))
+       (funcall file-info-size-format-function (fourth info))
+       (funcall file-info-time-format-function (third info))
+       (funcall file-info-name-format-function (first info)))))
+
+(defun file-info (targetdir &key absolute recursive wild depth file-only show-dots count directory-only before test after)
+  "targetdir の中にあるファイル、ディレクトリの情報を *file list* バッファに表示します。
+
+get-file-info で取得できるものと同じファイル情報のリストのリストを引数にして
+:before, :test, decode-file-info, :after
+の順に関数を呼んだ結果を整形したものが出力となります。"
+  (interactive "DTarget directory: ")
+  (with-output-to-temp-buffer ("*file list*")
+    (let ((files-info (directory targetdir
+				 :absolute absolute
+				 :recursive recursive
+				 :wild wild
+				 :depth depth
+				 :file-only file-only
+				 :show-dots show-dots
+				 :count count
+				 :directory-only directory-only
+				 :file-info t)))
+      (format t file-info-output-format-string
+	      (funcall file-info-format-function files-info
+		       :test test
+		       :before before
+		       :after after)))))

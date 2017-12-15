@@ -1,0 +1,21 @@
+
+CVS で管理しているあるプロジェクトの main trank を
+
+-D:/Hoge/
+
+にチェックアウトして、そのブランチを
+
+-D:/Hoge-maintenance/
+
+にチェックアウトしているときに使うと便利かな。
+
+ (defun find-file-substitute (pattern replacement)
+   (interactive "*sReplace string: \nswith: ")
+   (let ((filename (get-buffer-file-name)))
+     (if filename
+         (find-file (substitute-string filename pattern replacement))
+       (message "ファイル名がないよん"))))
+ (global-set-key '(#\C-c #\f) 'find-file-substitute)
+
+----
+#comment

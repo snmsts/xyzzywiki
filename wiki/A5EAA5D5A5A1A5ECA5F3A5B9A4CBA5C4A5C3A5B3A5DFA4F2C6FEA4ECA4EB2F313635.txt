@@ -1,0 +1,18 @@
+*set-syntax-end-multi-comment [#je6cde78]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[Kmu]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: typo
+-投稿日: 2005-10-27 22:50:22 (木)
+-バージョン: 
+
+**メッセージ [#vcf94b40]
+set-syntax-end-multi-comment の説明が、何故かset-syntax-start-multi-comment と同じです。
+
+あと、 set-syntax-start-multi-comment から set-syntax-end-multi-comment にリンクすると、双方向リンクになって解り易いかと。
+----
+-あれっ!? ホントだ。ってことで、さくっと採用です。どーもでした。  [[refwiki:set-syntax-end-multi-comment]], [[refwiki:set-syntax-start-multi-comment]] -- [[NANRI]] &new{2005-10-27 23:06:05 (木)};
+
+#comment

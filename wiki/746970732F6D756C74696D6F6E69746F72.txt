@@ -1,0 +1,5 @@
+*multimonitor [#xbb802de]
+マルチモニターを使用している環境で，xyzzyが表示されているモニターを変更する．
+
+ここにおいておきますよ
+#ref(multimonitor.l)

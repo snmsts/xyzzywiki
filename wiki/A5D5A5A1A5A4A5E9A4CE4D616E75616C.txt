@@ -1,0 +1,372 @@
+*起動 [#c88e19e5]
+
+-[ツール]→[ファイラ]を選択
+
+もしくは
+
+-C-c C-f
+
+でファイラが起動します。
+
+*設定 [#g51d882e]
+ファイラの設定は[ツール]→[共通設定]→[ファイラ]で行うことができます。
+
+*キー操作 [#o8acbb4d]
+** RET (filer-ok) [#b481b47d]
+-ファイルを選択している場合は、そのファイル全てをxyzzyで開きます。
+-ディレクトリを一つだけ選択していている場合は、そのディレクトリに移動します。
+-何も選択していない場合は、カーソルがファイル上にあればそのファイルをxyzzyで開き、ディレクトリ上にあればそのディレクトリに移動します。
+-ディレクトリを複数選択している場合は、何も選択していないときと同じ動作をします。
+
+** SPC (filer-toggle-mark-and-forward-line) [#l3d04097]
+-ファイルを選択し、カーソルを一つ下へ移動します。
+
+** C-SPC, C-@ (filer-toggle-mark) [#a63b7036]
+-ファイルを選択します。
+
+** Down, C-n (filer-forward-line) [#obe133f9]
+-カーソルを一つ下に移動します。
+
+** Up, C-p (filer-backward-line) [#m503a5c5]
+-カーソルを一つ上に移動します。
+
+** Left, C-b (filer-scroll-or-left-window-or-up) [#mf4fae76]
+-左のウィンドウにカーソルがある場合は、上のディレクトリへ移動します。
+-右のウィンドウにカーソルがある場合は、左のウィンドウへカーソルが移ります。
+-一画面ファイラで横スクロールバーが現れている場合は、表示を左に動かします。
+
+** Right, C-f (filer-scroll-or-right-window-or-up) [#pa034347]
+-右のウィンドウにカーソルがある場合は、上のディレクトリへ移動します。
+-左のウィンドウにカーソルがある場合は、右のウィンドウへカーソルが移ります。
+-一画面ファイラで横スクロールバーが現れている場合は、表示を右に動かします。
+
+** TAB, C-i (filer-swap-windows) [#f1589c0f]
+-もう一方のウィンドウへフォーカスが移ります。
+
+** PageDown, C-v (filer-forward-page) [#b4c426d0]
+-カーソルを一ページ分下へ移動します。
+
+** PageUp, C-z (filer-backward-page) [#z45643da]
+-カーソルを一ページ分上へ移動します。
+
+** < (filer-goto-bof) [#vaa9f665]
+-カーソルをウィンドウの先頭に移動します。
+
+** > (filer-goto-eof) [#qe793305]
+-カーソルをウィンドウの最後に移動します。
+
+** A (filer-modify-attributes) [#n35010c1]
+-ファイルの属性や更新日時等の情報を変更します。
+
+CENTER:#ref(filer-modify-attributes.png,center,nolink)
+CENTER:#img(,clear)
+
+#br
+#br
+
+** B (filer-byte-compile) [#me505344]
+-選択したファイルをバイトコンパイルします。
+
+** C (filer-copy) [#o07e7511]
+-選択したファイルをもう一方のウィンドウへコピーします。
+
+** D (filer-delete) [#h35483dc]
+-選択したファイルを消します。
+-削除マスクが設定されている場合、そのマスクに該当するファイルのみを削除します。
+
+** E (filer-extract-archive) [#c3a0d0b7]
+-選択した圧縮ファイルを解凍します。
+
+** F (filer-search) [#m42a4f0c]
+-ファイルを検索します。
+CENTER:#ref(filer-search.png,center,nolink)
+CENTER:#img(,clear)
+CENTER:「*mode.l」を検索すると
+#br
+#br
+CENTER:#ref(filer-search1.png,center,nolink)
+CENTER:#img(,clear)
+CENTER:結果が表示されます。ファイルを選択するとそのファイルの位置にカーソルが移動します。
+#br
+#br
+
+** G (filer-search-name) [#xb89b7d0]
+-ファイルを現在のディレクトリの中で検索します。
+
+CENTER:#ref(filer-search-name.png,center,nolink)
+CENTER:#img(,clear)
+#br
+#br
+
+** I (filer-delete-mask) [#r2d96367]
+-削除マスクを設定します。
+
+CENTER:#ref(filer-delete-mask.png,center,nolink)
+CENTER:#img(,clear)
+CENTER:削除マスクが設定されている場合「マスク(M)」の欄の初期値として入ります。
+#br
+#br
+
+** J (filer-jump-directory) [#y03e9b34]
+-ディレクトリを移動します。
+
+CENTER:#ref(filer-jump-directory.png,center,nolink)
+CENTER:#img(,clear)
+
+#br
+#br
+
+** K (filer-create-directory) [#f74202ee]
+-ディレクトリを作成します。
+
+CENTER:#ref(filer-create-directory.png,center,nolink)
+CENTER:#img(,clear)
+
+#br
+#br
+
+** L (filer-change-drive) [#t752ed14]
+-ドライブを変更します。
+
+** M (filer-move) [#m7ad4456]
+-選択したファイルをもう一方のウィンドウへ移動します。
+
+** N (filer-input-file-name) [#u582d26b]
+-ファイルを作成します。
+
+CENTER:#ref(filer-input-file-name.png,center,nolink)
+CENTER:#img(,clear)
+
+#br
+#br
+
+** O (filer-create-archive) [#ld8536bd]
+-選択したファイルを圧縮します。
+
+CENTER:#ref(filer-create-archive.png,center,nolink)
+CENTER:#img(,clear)
+
+#br
+#br
+
+** P (filer-sync-with-primary) [#h6140270]
+-もう一方のウィンドウのディレクトリをフォーカスがある側と同じにします。
+
+** Q (filer-cancel) [#u30e584f]
+-ファイラを閉じます。
+
+** R (filer-rename) [#c3da972a]
+-名前を変更します。
+
+CENTER:#ref(filer-rename1.png,center,nolink)
+CENTER:#img(,clear)
+CENTER:対象とするファイルが一つだけの場合
+#br
+#br
+CENTER:#ref(filer-rename2.png,center,nolink)
+CENTER:#img(,clear)
+CENTER:対象とするファイルが複数の場合
+#br
+#br
+CENTER:#ref(filer-rename3.png,center,nolink)
+CENTER:#img(,clear)
+CENTER:複数のファイルの名前を変更する場合、実行する前に変更前後のファイル名を確認できます。
+#br
+#br
+
+** S (filer-sync-with-secondary) [#fb34fb4e]
+-フォーカスのあるウィンドウのディレクトリをもう一方と同じにします。
+
+** T (filer-create-shortcut-to-desktop) [#d2d50fa9]
+-選択したファイルのショートカットをデスクトップに作成します。
+
+** U (filer-calc-directory-size) [#ta462e7f]
+-選択したディレクトリのディスク使用量を計算します。
+
+CENTER:#ref(filer-calc-directory-size.png,center,nolink)
+CENTER:#img(,clear)
+
+#br
+#br
+
+** V (filer-list-archive) [#h2bd5651]
+-選択した圧縮ファイルの中身を見ます。
+
+CENTER:#ref(filer-list-archive.png,center,nolink)
+CENTER:#img(,clear)
+
+#br
+#br
+
+** W (filer-viewer) [#m711858c]
+-カーソルのあるファイルの最初の方を見ることができます。
+
+CENTER:#ref(filer-viewer.png,center,nolink)
+CENTER:#img(,clear)
+
+#br
+#br
+
+** X (filer-shell-execute) [#ja7cb49a]
+-Windowsの関連付けの設定に従ってファイルを実行します。
+
+** Y (filer-create-shortcut) [#uec7f757]
+-選択したファイルのショートカットをもう一方のディレクトリに作成します。
+
+** Z (filer-file-property) [#p41b54f9]
+-プロパティを出します。
+
+** &#42; (filer-load-file) [#le3d469a]
+-Lispファイルをロードします。
+
+** . (filer-set-path-mask) [#jcd59039]
+-表示のパスマスクを変更します。
+
+CENTER:#ref(filer-set-path-mask.png,center,nolink)
+CENTER:#img(,clear)
+
+#br
+#br
+
+** / (filer-mark-path-mask) [#je4b58c0]
+-まとめて選択するパスマスクを指定します。
+
+CENTER:#ref(filer-mark-path-mask.png,center,nolink)
+CENTER:#img(,clear)
+
+#br
+#br
+
+** @ (filer-copy-as) [#a398338b]
+-別名でコピーします。
+
+CENTER:#ref(filer-copy-as.png,center,nolink)
+CENTER:#img(,clear)
+
+#br
+#br
+
+** \ (filer-goto-root) [#kbf88704]
+-ルートに移動します。
+
+** = (filer-compare-file) [#m3cbd591]
+-左右のウィンドウのカーソルで指定したファイルを比較します。
+
+** ^ (filer-eject-media) [#d5ed9ccb]
+-メディアをガコッと出します。
+
+** ] (filer-send-to) [#a2985f92]
+-選択したファイルをアプリケーションに送ります。
+
+** C-g (filer-close-modal) [#m6f02f97]
+-モーダルなファイラの場合、ファイラを閉じます。
+
+** BackSpace, C-h (filer-up-directory) [#cfd1b9c9]
+-上のディレクトリへ移動します。
+
+** C-r (filer-isearch-backward) [#o59a9065]
+-ファイル名を上方向へインクリメンタルサーチします。
+
+** C-s (filer-isearch-forward) [#z9b4877d]
+-ファイル名を下方向へインクリメンタルサーチします。
+
+** C-u (filer-calc-directory-byte-size) [#m32c7527]
+-選択したディレクトリのファイルサイズの合計を計算します。
+
+CENTER:#ref(filer-calc-directory-byte-size.png,center,nolink)
+CENTER:#img(,clear)
+
+#br
+#br
+
+** M-g (filer-grep) [#y7d15975]
+-選択したファイルでgrepします。
+
+CENTER:#ref(filer-grep.png,center,nolink)
+CENTER:#img(,clear)
+
+#br
+#br
+
+** M-r (filer-gresreg) [#ze0dde6d]
+-選択したファイルでgresregします。
+
+CENTER:#ref(filer-gresreg.png,center,nolink)
+CENTER:#img(,clear)
+
+#br
+#br
+
+** M-v (filer-view-file) [#x1bd9e98]
+-ファイルを書込み禁止で開きます。
+
+** Home, F5 (filer-toggle-mark-files) [#ze46e1a6]
+-選択と未選択の状態を入れ替えます。
+
+** S-Home (filer-clear-all-marks) [#f5600420]
+-全ての選択を解除します。
+
+** C-Home (filer-toggle-all-marks) [#w9a70606]
+-ディレクトリもファイルも全て選択します。
+
+** S-C-Home (filer-mark-all-files) [#d7e5539e]
+-ファイルのみを全て選択します。
+
+** End (filer-reload) [#o8c794ab]
+-ファイラの表示を更新します。
+
+** F3 (filer-execute-application) [#x77bb19d]
+-Windowsプログラムを実行します。入力欄の初期値にはカーソル位置のファイル、マークされたファイルという順で値が入っているようです。
+
+CENTER:#ref(filer-execute-application.png,center,nolink)
+CENTER:#img(,clear)
+
+#br
+#br
+
+** F6 (filer-sort-items) [#t2c1b0e3]
+-表示順を変更します。
+
+CENTER:#ref(filer-sort-items.png,center,nolink)
+CENTER:#img(,clear)
+
+#br
+#br
+
+|ソート方法|どの項目をキーにしてソートするか選択します|
+|降順でソート(R)|昇順でソートするか、降順でソートするか|
+|大文字小文字を区別する(C)|区別すると大文字の方が先になります|
+|ディレクトリを特別扱いしない(I)|ディレクトリを先にもってくることをしなくなります|
+|数値を考慮する(U)|ファイル名で単純にソートすると「1, 10, ..., 2, ...」という順になりますが、数値を考慮すると「1, 2, ..., 10, ...」という順になります|
+|両方の窓(B)|両方のウィンドウでソートを実行します|
+** Apps, S-F10 (filer-context-menu) [#a7912ee0]
+-コンテキストメニューを出します。
+
+** C-1〜4 (filer-modify-column-width) [#fd4a49b9]
+-列幅を広げます。(1:ファイル名、2:サイズ、3:更新日時、4:属性)
+
+** C-M-1〜4 (filer-modify-column-width) [#s5e563b4]
+-列幅を縮めます。(1:ファイル名、2:サイズ、3:更新日時、4:属性)
+
+*未バインド [#tfcabe99]
+-filer-scroll-left-or-left-window
+-filer-scroll-right-or-right-window
+-filer-extract-archive-to-current
+
+* Note [#redc570f]
+** 関連ページ [#nd40a041]
+- [[xyzzy QandA>http://hie.s64.xrea.com/xyzzy/qanda/html/filer.html]] by Hieさん
+- http://hie.s64.xrea.com/xyzzy/note/filer.html by Hieさん
+- http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/filer.html by shiroさん
+- http://www1.odn.ne.jp/ymtz/tips.html#filer by 山本 泰三さん
+- http://members.at.infoseek.co.jp/zauberer/microtips/xyzzy.html#select_directory by nonentityさん
+
+----
+Toyさんところのファイラの解説はこんなでしたっけ？　一通り網羅したつもりですが、おかしなところは直してください。よろしくお願いいたします。-- 2003-06-26 (木)
+-** *と書くと*が一個落ちるみたいなので、とりあえず回避（あんまり美しくないけれど） -- [[NANRI]] SIZE(10){2003-07-06 (日) 06:53:00}
+-「コピー or 移動時の注意点」について、いつからか忘れましたが、2画面ファイラでのコピー時、両方が同じディレクトリを指してたら、自動的に"@"(filer-copy-as)が呼ばれるようになったはずです。（いつからやったかは古いバージョンのアーカイブを見ないと分からないけど、少なくともVersion 0.0.0.77以降………かと） -- [[わじ]] &new{2004-08-17 (火) 12:53:55};
+-- なるほど、確かに。それでは、「コピー or 移動時の注意点」の所は消しておきましょう。 -- [[NANRI]] &new{2004-08-20 (金) 00:36:47};
+-数値参照文字列&#42;を使ってみました。あんまり変わらんけど。 --  &new{2004-09-11 (土) 23:01:13};
+-列幅の変更キーを追加しました -- [[nYama]] &new{2004-09-18 (土) 23:41:50};
+
+#comment

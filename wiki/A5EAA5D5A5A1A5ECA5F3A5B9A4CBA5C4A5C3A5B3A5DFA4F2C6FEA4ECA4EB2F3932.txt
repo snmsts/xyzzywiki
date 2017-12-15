@@ -1,0 +1,68 @@
+*delete-window [#ua4a1c60]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[OHKUBO]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-11-25 (木) 02:01:23
+-バージョン: 20041115
+
+**メッセージ [#f6766dbf]
+ <chapter>
+ <title>delete-window</title>
+ <type>Function</type>
+ <arguments>delete-window</arguments>
+ <package>editor</package>
+ <description>
+ 現在カーソルがあるウィンドウを削除します。
+ ミニバッファウィンドウは削除できません。
+ また、ミニバッファウィンドウ以外のウィンドウが現在のウィンドウのみの場合
+ は simple-error を発生します。
+ 
+ ウィンドウ削除後は、以下の条件のうち、最も優先度の高い条件を満たすミニ
+ バッファウィンドウ以外のウィンドウの領域を広げ、そのウィンドウを
+ set-window します。
+   1. 削除ウィンドウの左辺と、右辺が一致したウィンドウ
+   2. 削除ウィンドウの右辺と、左辺が一致したウィンドウ
+   3. 削除ウィンドウの上辺と、底辺が一致したウィンドウ
+   4. 削除ウィンドウの底辺と、上辺が一致したウィンドウ
+ 
+ 戻り値：
+   t     ウィンドウ削除成功
+   nil   ウィンドウ削除失敗
+ 
+ 補足：
+   本関数はコマンドで、初期設定では C-x 0 にバインドされています。
+   
+   xyzzy 0.2.2.233 では (delete-buffer X) に対して (deleted-buffer-p X)
+   が存在しますが、(delete-window X) に対して (deleted-window-p X) は存在
+   しません。
+   ;;; deleted-buffer-p を模した deleted-window-p の定義
+   (in-package "editor")
+   (export '(deleted-window-p))
+   (defun deleted-window-p (window)
+     (unless (windowp window)
+       (error 'lisp::type-error :datum window :expected-type 'window))
+     (handler-case
+         (progn
+           (window-buffer window)
+           t)
+       (program-error (c)
+         nil)))
+ </description>
+ <seealso>set-window</seealso>
+ <seealso>delete-other-windows</seealso>
+ <seealso>minibuffer-window-p</seealso>
+ <seealso>delete-buffer</seealso>
+ <seealso>deleted-buffer-p</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-deleted-window-p が定義されていないことについて追記しました。 -- [[OHKUBO]] &new{2004-11-27 (土) 00:56:00};
+-取り込みました->[[refwiki:delete-window]] -- [[NANRI]] &new{2005-03-02 00:50:37 (水)};
+
+#comment

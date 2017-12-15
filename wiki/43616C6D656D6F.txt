@@ -1,0 +1,43 @@
+このページは拡張Lisp Calmemoモードについて理解を深めるために設けました。
+
+-Calmemoはひえさんがつくっておられます。
+http://hie.s64.xrea.com/xyzzy/mylib/index.html#calmemo
+-カレンダー形式のメモを扱うモードです
+-Calmemoを使う前にChangeLog形式について理解すると便利です。
+-CalmemoにはpFarmとFolderとcategoryがあります。３つの使い分け方がわかりません
+**Download [#aa91defb]
+http://hie.s64.xrea.com/xyzzy/mylib/index.html#calmemo
+**Install [#jfb5c2a6]
+-インストールは他の拡張Lispと同様、load-libraryを行います
+-バージョンアップはちょっとややこしいです
+-NetInstallもできます
+**Configration [#ya42f1a5]
+-.calmemoファイルに書き込みます。
+-.calmemoファイルの場所は決まっています
+-.calmemoファイルの内容はダウンロードしたフォルダにあるsample.calmemoやdefs.lを参考に作成します
+-カレンダーには土曜日、日曜日、休日１、休日２、特別な日の計５種類の色が付けられます
+**ChangeLog形式 [#aff5f986]
+-ChangeLog形式は*と:の間にcategoryを書いて記事にジャンルを設けます
+**このページの更新履歴 [#l750a4a1]
+-2004-02-25 (水) 04:21 Akira51 Calmemoについての知識を整理するために用意
+-2004-03-05 (金) 16:41 勝手に要望３件が追加
+**このページについての感想 [#td8b6d9a]
+ここは勝手口ではありません。
+発言の識別用にハンドルネームで結構ですので名前を記入してください。
+-Calmemo起動時に今まで書いたmemoをランダムに表示させる用になりませんか？ -- [[tara]] &new{2005-09-27 19:39:11 (火)};
+
+#comment
+#vote(役に立った[4],このまま置いておいて欲しい[14],趣旨が違う[1],Memoに移せ[2],内容が理解できない[1])
+----
+-終了時にいちいち聞かないオプションが欲しい -- [[勝手に要望]] &new{2004-03-05 (金) 16:41:30};
+-(add-hook '*calmemo-exit-hook* 'kill-xyzzy)が効かないのが悲しい -- [[勝手に要望2]] &new{2004-03-05 (金) 16:42:00};
+-view系のモードのときはkamailみたいにSPC連打で読みすすめたい 
+--今は.calmemoに
+ ;;SPCで読みすすませる
+ (define-key *calmemo-view-mode-map* #\SPC 'next-page)
+ (define-key *calmemo-view-mode-map* #\M-SPC 'previous-page)
+ (define-key *calmemo-list-mode-map* #\SPC 'next-page)
+ (define-key *calmemo-list-mode-map* #\M-SPC 'previous-page)
+と書いて我慢してるけど…-- [[勝手に要望3]] &new{2004-03-05 (金) 16:43:01};
+----
+[[FrontPage]]

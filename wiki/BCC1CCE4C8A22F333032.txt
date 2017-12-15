@@ -1,0 +1,42 @@
+* 接頭辞 [#db15d3fc]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2012-07-06 (金) 15:05:11
+
+** メッセージ [#b029cce7]
+M-x prefixrest
+でなんらかのかたちで接頭辞(例えばpre)と,一連の文字列(例えばhoge, foo, fuga)を受け取って
+prehoge
+prefoo
+prefuga
+のように出力したいのですがどうすればよいでしょうか?
+----
+
+-- とりあえず書いてみました。もっと素敵に書ける人がいたら追加や修正などをしてください。
+
+  (defun prefixrest (prefix next)
+    (interactive "sPrefixを入力してね :\ns変換したい文字を入力してね :")
+    (setq next (substitute-string next ",\\( +\\)" (concat "\\1" prefix)))
+    ;; 先頭は置換できてないのでconcatで足している(置換できなくもないけど)
+    (insert (concat prefix next)))
+  
+  ;; 
+  ;; 以下は別の方法で書いてみた
+  ;; mapを使って書こうとしたものの、理解が及ばず（いろいろと冗長な感じになっている。多分）
+  ;; 
+  (defun hoge (prefix next)
+    (interactive "sInput: \nsほかの文字 :")
+    (insert (format nil "~{~a ~}"
+          (map 'list #'concat (return-list prefix (length next)) (split-string next #\, nil " ")))))
+  
+  (defun return-list (prefix size)
+    (let ((l nil)
+        (i 0))
+      (while (< i size)
+        (setq l (cons prefix l))
+        (setq i (+ 1 i)))
+      l))
+- おお神よ^o^これが欲しかったものです --  &new{2012-07-06 (金) 18:20:42};
+
+#comment

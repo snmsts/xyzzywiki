@@ -1,0 +1,137 @@
+#freeze
+もともと xyzzy には文頭のどこかに（長い文章の文末だと駄目ですexactな制限は興味があったらソース(ry
+ -*- mode: lisp; Encoding: UTF-8 -*-
+などとすると lisp モードかつ UTF-8 で開きます。その文章なりのコメントにはさんでおくと
+文字コード判定が心基ないときには重宝します。
+
+問題があるのはいくつかの xyzzy で使えるであろうはずの Encoding に使うための
+名前がついていないことです。
+私は utf8n で安定して保存しようと思ったらできませんでした。
+
+仕組み的には全ての encoding を使えるはずなので名前をつけてみることにしました（ここを初期化ファイルなどに……
+
+ (do-symbols (i (find-package"editor"))
+   (when (string-match "\\*encoding-\\(.*\\)\\*" (symbol-name i))
+     (setf (gethash (match-string 1) *mime-charset-name-hash-table*) (symbol-value i))))
+
+この結果 Encoding のあとの文字コード指定に使うことができるのは
+ big5
+ binary
+ default-euc
+ default-imap4
+ default-iso-2022
+ default-utf16
+ default-utf16be
+ default-utf16be-bom
+ default-utf16le
+ default-utf16le-bom
+ default-utf5
+ default-utf7
+ default-utf8
+ default-utf8n
+ euc-gb
+ euc-jp
+ euc-jp-ibmext
+ euc-jp-necext
+ euc-jp-open
+ euc-kr
+ imap4
+ imap4-big5
+ imap4-cn
+ imap4-gb
+ imap4-kr
+ iso-2022-cn
+ iso-2022-jp-2
+ iso-2022-jp-2-ibmext
+ iso-2022-jp-2-necext
+ iso-2022-jp-2-open
+ iso-2022-kr
+ iso-8859-1
+ iso-8859-10
+ iso-8859-13
+ iso-8859-2
+ iso-8859-3
+ iso-8859-4
+ iso-8859-5
+ iso-8859-7
+ iso-8859-9
+ iso-8bit-cn
+ iso-8bit-jp
+ iso-8bit-jp-ibmext
+ iso-8bit-jp-necext
+ iso-8bit-jp-open
+ iso-8bit-kr
+ jis
+ jis-ibmext
+ jis-necext
+ jis-open
+ jis-sio
+ jis8
+ koi8r
+ koi8u
+ sjis
+ std-imap4
+ std-utf16
+ std-utf16be
+ std-utf16be-bom
+ std-utf16le
+ std-utf16le-bom
+ std-utf5
+ std-utf7
+ std-utf8
+ std-utf8n
+ utf16
+ utf16-big5
+ utf16-cn
+ utf16-gb
+ utf16-kr
+ utf16be
+ utf16be-big5
+ utf16be-bom
+ utf16be-bom-big5
+ utf16be-bom-cn
+ utf16be-bom-gb
+ utf16be-bom-kr
+ utf16be-cn
+ utf16be-gb
+ utf16be-kr
+ utf16le
+ utf16le-big5
+ utf16le-bom
+ utf16le-bom-big5
+ utf16le-bom-cn
+ utf16le-bom-gb
+ utf16le-bom-kr
+ utf16le-cn
+ utf16le-gb
+ utf16le-kr
+ utf5
+ utf5-big5
+ utf5-cn
+ utf5-gb
+ utf5-kr
+ utf7
+ utf7-big5
+ utf7-cn
+ utf7-gb
+ utf7-kr
+ utf8
+ utf8-big5
+ utf8-cn
+ utf8-gb
+ utf8-kr
+ utf8n
+ utf8n-big5
+ utf8n-cn
+ utf8n-gb
+ utf8n-kr
+ windows-baltic
+ windows-cyrillic
+ windows-greek
+ windows-latin1
+ windows-latin2
+ windows-turkish
+となりました。どれが何のことだかよく解りませんが
+encoding.l をじっと眺めていると解るかもしれません。カンが働くといいね。
+
+2006/11/19 佐野

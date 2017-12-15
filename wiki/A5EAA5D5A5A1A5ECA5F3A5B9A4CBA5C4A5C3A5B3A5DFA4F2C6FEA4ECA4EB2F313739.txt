@@ -1,0 +1,49 @@
+* execute-subprocess [#o1cc0fce]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-11-20 (日) 21:13:51
+-バージョン: 
+
+** メッセージ [#j2f53440]
+ <chapter>
+ <title>execute-subprocess</title>
+ <type>Function</type>
+ <arguments>execute-subprocess CMD &amp;optional ARG BUFNAME ENVIRON DIRECTORY</arguments>
+ <package>editor</package>
+ <description>
+ プログラムを BUFFNAME で指定したバッファ上で実行します。
+ 結果は， BUFFNAME で指定されたバッファ上に表示されます。
+ 
+   CMD        : 実行するコマンドをオプション付で指定します。
+   ARG        : (詳細不明)
+   BUFNAME    : 関連付けるバッファ名を指定します。デフォルトは "*Command Output*" です。
+                指定したバッファが存在しないとき，新しくバッファを作ります。
+   ENVIRON    : 設定する環境変数を連想リスト形式で渡します。
+                   (("HOME" . "C:/applications/xyzzy/")
+                    ("TOPDIR" . "C:/spool/"))
+   DIRECTORY  : 実行するディレクトリを指定します。 
+ 
+ 指定されたバッファは command-output-mode になります。
+ 使用例：
+   ;;; cmd.exe をバッファ上で実行します。 シンプルなシェルとして動作します。
+   (execute-subprocess "cmd.exe")
+   =&gt;#&lt;buffer: *Command Output*&gt;
+ </description>
+ <seealso>make-process</seealso>
+ <seealso>execute-shell-command</seealso>
+ <seealso>command-output-mode</seealso>
+ <seealso>shell-command-line</seealso>
+ <section>プロセス</section>
+ <file>process.l</file>
+ </chapter>
+
+--------
+- どーもです。 -- [[NANRI]] &new{2005-11-20 (日) 23:16:17};
+- 一番重要なところ(最初の1行)が間違っていたので直しました．(汗 -- [[中野]] &new{2005-11-28 (月) 21:49:35};
+- 取り込みました。 -- [[NANRI]] &new{2005-12-12 (月) 02:34:56};
+
+#comment

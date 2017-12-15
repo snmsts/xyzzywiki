@@ -1,0 +1,54 @@
+;;; -*- Mode: Lisp; Package: EDITOR -*-
+;;;
+; Last updated: <2004-08-21T05:02:40+09:00>
+;
+; rss/filters/bby.l
+(require "rss/main")
+
+(provide "rss/filters/bby")
+
+(in-package "rss")
+
+(defvar *bby-items-max* 30)
+
+(defun bby-parse-buffer (url)
+  (let (items
+        time
+        title
+        anchor)
+    (save-excursion
+      (goto-char (point-min))
+      (while (scan-buffer "^\\([0-9/: ]+\\)<a href=\\([^>]+\\)>\\(.*\\)"
+                          :regexp t
+                          :tail t)
+        (setq time (match-string 1))
+        (setq anchor (match-string 2))
+        (setq title (match-string 3))
+        (setq title (concat time (ed::xmlpm-decode-special-chars title)))
+        (push (rss-create-item title anchor) items))
+      (setq items (nreverse items))
+      ;; 最大件数以下切り捨て
+      (when (and *bby-items-max*
+                 (< *bby-items-max* (list-length items)))
+        (setq items (butlast items (- (list-length items) *bby-items-max*))))
+      )
+    items))
+
+;; フィルタ関数
+;; (チャネル, ファイルを引数にfuncallされる)
+(defun bby-filter (channel file)
+  (let ((url (rss-link channel))
+        (title (or (and (rss-title channel)
+                        (not (equal (rss-title channel) *rss-menu-temp-buffer-suffix*))
+                        (rss-title channel))
+                   (read-string "Site Title: ")))
+        items)
+    (save-excursion
+      (set-buffer (get-buffer-create *rss-buffer-temp*))
+      (erase-buffer (selected-buffer))
+      (insert-file-contents file)
+      (setq items (bby-parse-buffer url))
+      (delete-buffer (selected-buffer)))
+    ; 元のファイルを上書き
+    (convert-to-rss (rss-create title url nil items)
+                    file)))

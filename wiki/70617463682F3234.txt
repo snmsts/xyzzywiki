@@ -1,0 +1,73 @@
+* www-mode で「上のディレクトリに移動」機能を追加 [#w83fe9be]
+-ページ:     [[patch]]
+-投稿者:     [[OMA]]
+-優先順位:   低
+-状態:       提案
+-カテゴリー: 機能追加
+-投稿日:     2007-05-12 (土) 16:45:34
+-バージョン: 
+
+** メッセージ [#i9117551]
+www-mode の右クリックメニューに上のディレクトリに移動する機能を追加します。~
+既存のメニュー表示関数の修正が必要なため、Tipsではなく、こちらに置きます。~
+本体に取り込んでもらえれば、嬉しいです。~
+
+---
+★追加
+
+ ;; 一つ上のディレクトリを返す
+ (defun www-url-1up-string (url)
+   (if (string-match "^http://" url)
+       (and (setq url (reverse url))
+            (setq url (string-left-trim "/" url))
+            (setq url (substring url (string-match "/" url)))
+            (setq url (reverse url))
+            (if (string-not-equal url "http://")
+                url))))
+
+ ;; ディレクトリ一覧ポップアップメニュー
+ (defun www-url-up-list-popup-menu ()
+   (let ((menu (create-popup-menu nil))
+         (url www-url))
+     (while (setq url (www-url-1up-string url))
+       (let ((item url))
+         (add-menu-item menu 'url-up-list
+                        (format nil "~A" item)
+                        #'(lambda ()
+                            (interactive)
+                            (www-history-back-add)
+                            (www-open item)))
+         );let
+       );while
+     menu
+     ))
+
+右クリックメニューの追加先は、「進む」機能の
+下辺りでしょうか。
+---
+
+★修正
+
+ (defun www-view-popup-menu ()
+   (interactive)
+   (let ((menu (create-popup-menu nil))
+ 〜〜〜省略〜〜〜
+     (add-menu-item menu nil "戻る"
+ 		   'www-history-back
+ 		   #'(lambda () (unless *www-history-back-list* :disable)))
+     (add-menu-item menu nil "進む"
+ 		   'www-history-next
+ 		   #'(lambda () (unless *www-history-forward-list* :disable)))
+     (add-menu-separator menu)                                                    ;Add
+     (add-popup-menu menu (www-url-up-list-popup-menu) "上のディレクトリへ移動")  ;Add
+     (add-menu-separator menu)
+     (add-menu-item menu nil "ページをリロード"
+ 		   'www-view-reload)
+ 〜〜〜省略〜〜〜
+     (track-popup-menu menu :button2)
+   ))
+
+----
+- 同一ディレクトリも表示するように変更しました。 -- [[OMA]] &new{2007-05-12 (土) 19:32:16};
+
+#comment

@@ -1,0 +1,14 @@
+*NetInstaller [#o1d48fdb]
+**導入 [#b728f32c]
+NetInstallerの導入は[[こちら>QuickTour/ext/NetInstaller]]を参照ください。
+**本題 [#v0e9f0b2]
+NetInstallerに関しての要望などをお願いします。
+-[[利用者向け機能>NetInstaller/利用者向け機能/Comment]]
+-[[配布者向け機能>NetInstaller/配布者向け機能/Comment]]
+-[[配布パッケージ一覧>NetInstaller/配布パッケージ一覧]]
+-[[カテゴリー分類>NetInstaller/カテゴリー分類]]
+-[[その他>NetInstaller/その他/Comment]]
+----
+#ref(getni.lzh)
+----
+#pcomment(NetInstaller/Comment,10,reply)

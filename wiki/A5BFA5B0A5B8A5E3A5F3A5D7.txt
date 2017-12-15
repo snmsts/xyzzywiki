@@ -1,0 +1,105 @@
+#freeze
+*概要 [#dd8b414d]
+ソースコードを読んでいるときに、この関数がどうなっているのか知りたいと思うことがあると思います。
+
+そういう場合に、xyzzyのタグジャンプ機能を使うと、その関数の実体のある場所にすぐにジャンプして表示させることができるようになります。
+
+プログラミングが楽になるので、xyzzyでプログラムを読み書きするなら使わなきゃ損です。
+
+*使い方 [#l4fceb3e]
+**下準備 [#sea60609]
+[ツール]→[TAGSファイルの作成]を選択します。
+
+タグジャンプ機能を使いたいソースのある、ルートディレクトリを指定します。
+/hoge/foo/と/hoge/bar/というディレクトリにタグジャンプ機能を使いたいソースがまたがっているなら、/hoge/を指定してください。
+このとき、サブディレクトリも対象にするなら「ついでにサブディレクトリも」を忘れずにチェックしてください。
+
+「TAGSファイルの作成」が終了するとXTAGSというファイルが作成されるはずです。
+これで下準備は完了です。
+
+**使ってみる [#j3e4ae54]
+ int main(int argc,char *argv[])
+ {
+   foo();
+   bar();
+ }
+というソースがあるとします。ここでfoo()の中身が見たい場合は、fooにカーソルを合わせて
+F4を押してください。そうするとfooが定義されている場所へジャンプできるはずです。
+ジャンプした先から元の場所に戻りたいときは Shift+F4 を押してください。元の場所に戻れます。
+
+メニューのツールから「タグジャンプ」、「バックタグジャンプ」を選択しても同じです。
+
+ジャンプしたけど、場所がおかしいという場合には再度「TAGSファイルの作成」を実行してください。
+XTAGSを作成したあとにソースを編集などするとジャンプ先がずれてしまう場合があります。
+
+また direct-tag-jump を使用することでキーボードから名前を入力して、
+定義されている場所へジャンプすることも出来ます。この時補完もしてくれるので
+便利です。
+
+*対応している言語 [#n41d4cd4]
+-C/C++
+-Java
+-Lisp
+-BASIC
+-Perl
+-Ruby
+--[[ruby-mode>http://www7a.biglobe.ne.jp/~hat/xyzzy/ruby-mode.html]]をインストールすると使えるようになります。
+-PHP
+--[[php-mode>http://www7a.biglobe.ne.jp/~hat/xyzzy/php-mode.html]]をインストールすると使えるようになります。
+-COBOL
+--[[cobol-mode>http://www1.odn.ne.jp/ymtz/cobol-mode.html]]をインストールすると使えるようになります。
+-BNF
+--[[bnf-mode>http://miyamuko.s56.xrea.com/bnf-mode.html]]をインストールすると使えるようになります。
+-InstallScript
+--[[is-mode>http://miyamuko.s56.xrea.com/is-mode.html]]をインストールすると使えるようになります。
+-NSIS
+--[[nsis-mode>http://miyamuko.s56.xrea.com/nsis-mode.html]]をインストールすると使えるようになります。
+-MOF
+--[[mof-mode>http://miyamuko.s56.xrea.com/mof-mode.html]]をインストールすると使えるようになります。
+-アセンブラ
+--[[asm-mode>http://homepage2.nifty.com/jyube/muto/xyzzy_asm.htm]]をインストールすると使えるようになります。
+-AWK
+--[[awk-mode>http://homepage2.nifty.com/jyube/muto/xyzzy_awk.htm]]をインストールすると使えるようになります。
+-HSP
+--[[hsp-mode>http://kadd.hp.infoseek.co.jp/xyzzy.html]]をインストールすると使えるようになります。
+-FORTRAN77
+--[[fortran>http://homepage2.nifty.com/seiya-suda/fortran.html]]([[mirror>http://raido.sakura.ne.jp/southly/xyzzy/site-lisp/fortran-20050913.lzh]]), [[f77fns.l>tips/FORTRANの関数一覧]]をインストールすると使えるようになります。
+
+
+他にもあるかも
+
+*おまけ [#e78c8ead]
+他にもXTAGSを必要としないジャンプ機能を使うことができます。
+
+**grep [#i4b09e0d]
+grepを使うと *grep* というバッファが作成されます。
+このとき*grep*の任意の行でF10を押すと、その場所にジャンプすることができます。
+
+F11を押すと、次の行の場所へジャンプします。
+
+**エラーメッセージによるジャンプ [#pd4a652b]
+xyzzy上からプログラムをコンパイルした場合などにバッファにエラーメッセージが表示されるとおもいます。そのときにそのエラーメッセージ上でF10を押すとその場所にジャンプできます。
+
+F11を押すと次のメッセージの場所へジャンプします。
+
+もしマイナーなコンパイラを使用していてうまく飛べない時は自分でパターンを
+追加することも出来ます。例えば日立のSHコンパイラでは以下のようにします。
+ ; エラーパターンで日立の出力に対応
+ (push (list (compile-regexp "^\"\\([^\"\n]+\\)\", line \\([0-9]+\\):") 1 2)
+   ed::*error-regexp-list*)
+
+**list-function [#t6170a75]
+M-x list-functionで同一ソース内の関数リストが出てきます。なかなか便利です。
+
+*他サイト [#l3b29c66]
+Blackさんによる説明
+- [[タグジャンプについて>http://brandish.xrea.jp/BlackCity/labo/labo_xyzzy.html#2-1]]
+
+赤塚さんによる説明
+- [[タグファイルの作成 >http://www.jsdlab.co.jp/~kei/xyzzy/xyzzy_useful_lisp.html#make_tagfiles_easy]]
+
+----
+-わかりにくいとか説明が変なところはどんどん直しちゃってください。対応している言語は他に知らないのですが、知っている方追加していってください -- [[rufein]] SIZE(10){2003-07-22 (火) 21:12:10}
+-知ってるところを足しました。可読言語がC/C++,lisp,最近Ruby(ちょっとしたcgiを書くのに利用),php4(pukiwiki読んでるだけ)なのでbasicやperlが本当にうまく動くのかはよく知りません。*maketags-list*を見ただけです。 -- [[佐野]] SIZE(10){2003-07-22 (火) 21:30:08}
+-*maketags-list* を見て追加してみました。言語名が正確じゃなかったりしたらごめんなさい。 -- [[NANRI]] SIZE(10){2003-08-21 (木) 17:29:33}
+-direct-tag-jumpについて追加してみました -- [[や]] SIZE(10){2003-08-21 (木) 23:53:43}

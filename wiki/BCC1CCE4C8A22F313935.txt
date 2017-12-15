@@ -1,0 +1,37 @@
+* NetInstallerでダウンロードサイトに接続できません [#t5235d53]
+-ページ: [[質問箱]]
+-投稿者: [[超　初心者]]
+-状態: 結果報告待ち
+-投稿日: 2006-10-27 (金) 11:20:27
+
+** メッセージ [#g0e3ffed]
+現在xyzzyにNetInstallerをインストールしようと
+設定をしております。
+
+本サイトの導入ページを見ながら、設定を行い
+NetInstallerをsite-lisp上にコピーした後、
+.xyzzyファイルに
+
+ ;; PROXYを通す場合
+ (setq ni::*http-proxy-host* "proxy.host")  ; PROXY のホスト
+ (setq ni::*http-proxy-port* 8080)          ; PROXY のポート
+
+を追加しましたが。
+xyzzy起動後M-x:netinstallerで起動した後
+a:ダウンロードサイトのURL　を入力するも、
+「Operation Timed out」というエラーが出てしまい
+ダウンロードサイトに接続できません。
+.xyzzyの書き方が間違っていると考えています。
+
+たとえば、プロキシサーバーのアドレスが proxy.abc.ac.jp
+ポートが8080の場合、
+ (setq ni::*http-proxy-host* "proxy.abc.ac.jp")
+ (setq ni::*http-proxy-port* 8080)  
+と書くだけでは不十分でしょうか？
+
+ご教授お願いいたします。
+----
+- proxyはよく解らないのですが[[NetInstaller/配布パッケージ一覧]]のURI全部が（実際は2,3でいいと思いますが）失敗するようなら駄目かもしれません。服部さんの古いurlを試したのではないかと推測してます。 -- [[佐野]] &new{2006-10-27 (金) 17:24:04};
+- (setq ni::*http-debug* t) と書いておくと通信のリクエストとレスポンスが見れます。これで何か分かるかもしれません。 -- [[NANRI]] &new{2006-10-28 (土) 03:52:53};
+
+#comment

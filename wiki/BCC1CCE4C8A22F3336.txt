@@ -1,0 +1,62 @@
+* ソケット接続のバイナリモード 
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2004-08-04 (水) 10:03:32
+
+** メッセージ 
+xyzzy, lispともに初心者なのですが。
+
+Webからバイナリデータをダウンロードしたいと思い、
+以下の様なコードをテストしてみました。
+ (with-open-stream (s (connect "www.bekkoame.ne.jp" 80))
+  (format s "GET ~a HTTP/1.0~%~%" "/ha/hahaha/data2004/20040701.LZH")
+  (with-open-file (os "e:/temp/hoge.lzh"
+		      :direction :output
+		      :if-exists :overwrite
+		      :if-does-not-exist :create
+		      :encoding :binary)
+    (let (line c)
+      (setq line (read-line s nil))
+      (unless (string-match "200 OK" line)
+	(msgbox "invalid status ~S" line)
+	(return))
+      (while (setq line (read-line s nil))
+	(if (string= line "") (return)))
+      (while (setq c (read-char s nil))
+	(write-char c os)))))
+
+ここで(read-char時に?)CRLFがLFに変換されてしまいます。
+この変換を止めさせる方法はありますでしょうか？
+
+宜しくお願い致します。
+
+----
+ (with-open-stream (s (connect "www.bekkoame.ne.jp" 80))
+   (format s "GET ~a HTTP/1.0~%~%" "/ha/hahaha/data2004/20040701.LZH")
+   (with-open-file (os "~/temp/hoge.lzh"
+                       :direction :output
+                       :if-exists :overwrite
+                       :if-does-not-exist :create
+                       :encoding :binary)
+     (let (line c)
+       (setq line (read-line s nil))
+       (unless (string-match "200 OK" line)
+         (msgbox "invalid status ~S" line)
+         (return))
+       (while (setq line (read-line s nil))
+         (if (string= line "") (return)))
+       (set-stream-encoding s :binary)
+       (set-stream-encoding os :binary)
+       (while (setq c (read-char s nil))
+         (write-char c os)))))
+-原理はよく分かっていないのですが、NetInstaller はできているのでその辺り処理を眺めて勘でやってみたらできました。(set-stream-encoding STREAM :binary) が必要みたいです。 -- [[NANRI]] &new{2004-08-04 (水) 16:30:30};
+->(set-stream-encoding STREAM :binary) が必要みたいです --  &new{2004-08-04 (水) 22:06:35};
+-あらら？間違ってEnterキー押してしまった様です。すいません。ありがとうございました。set-stream-encodingはリファレンスには載ってないみたいですね。やっぱりlispディレクトリの下を読まないといけないですね。それにしてもxyzzyは凄いです。バイナリ取るのは無理なのかなと半分諦めてましたが。良かった、良かった。また宜しくお願いします。 --  &new{2004-08-04 (水) 22:13:17};
+-全然別の話なんですが、このコードのread-charのところでサーバがレスポンスを返さない状態だった時にタイムアウトさせる方法ってないでしょうか？自分で使うには問題ないんだけど、他人にあげるのにはちょっとなぁ…。 --  &new{2004-08-06 (金) 17:42:06};
+-open-network-stream + set-process-filter （もちろん設定できるencoding は全て :bianry にして）で試してみましたけど、filter関数に渡る文字列の時点で改行コードの変換が既に行われちゃってるんですよね…。 --  &new{2004-08-06 (金) 17:44:25};
+-これまた勘なんですが、lispディレクトリをtimeoutでgrepしてみたら、socket-stream-set-timeoutという関数を見つけました。使用例はkamailにありました。それっぽい使われ方をしているように見受けられますが、自信はないです。 -- [[NANRI]] &new{2004-08-06 (金) 18:32:53};
+-２つ前で質問した者です。NANRIさん紹介の関数で動作確認してみたところ、期待の動作をしてくれました。ありがとうございます。ちなみにtimeoutの単位は秒のようです。 --  &new{2004-08-19 (木) 00:01:48};
+-- ネットワーク関係には疎くて動作確認ができず、的外れだったかなと思っていたのですが、うまくいってなによりでした。 -- [[NANRI]] &new{2004-08-20 (金) 00:43:26};
+
+#comment

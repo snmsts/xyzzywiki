@@ -1,0 +1,30 @@
+[[L10N/english]]
+
+ gmark.l:74:    (:caption "ﾏｰｸ")
+-Global Mark --  &new{2005-03-04 21:28:41 (金)};
+
+#comment
+ gmark.l:75:    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-04 21:33:14 (金)};
+
+#comment
+ gmark.l:78:     (:button go "移動(&G)" #x50030001 205 5 52 14)
+-&Go --  &new{2005-03-04 21:29:11 (金)};
+
+#comment
+ gmark.l:79:     (:button add "追加(&A)" #x50030000 205 22 52 14)
+-&Add --  &new{2005-03-04 21:29:22 (金)};
+
+#comment
+ gmark.l:80:     (:button delete "削除(&D)" #x50030000 205 39 52 14)
+-&Delete --  &new{2005-03-04 21:29:38 (金)};
+
+#comment
+ gmark.l:81:     (:button clear "全削除(&L)" #x50030000 205 56 52 14)
+-C&lear --  &new{2005-03-04 21:29:56 (金)};
+
+#comment
+ gmark.l:82:     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50030000 205 73 52 14))))
+-Cancel --  &new{2005-03-04 21:30:09 (金)};
+
+#comment

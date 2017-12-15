@@ -1,0 +1,40 @@
+*window-columns [#v5377fe8]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[OHKUBO]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-11-23 (火) 18:59:52
+-バージョン: 20041115
+
+**メッセージ [#f4938dd8]
+ <chapter>
+ <title>window-columns</title>
+ <type>Function</type>
+ <arguments>window-columns &amp;optional WINDOW</arguments>
+ <package>editor</package>
+ <description>
+ ウィンドウの文字を表示可能な領域の幅をキャラクタ単位で返します。
+ window-width が対象とする幅から、必要に応じて「行番号」表示領域、「折り
+ 返し」マーク表示領域を除いた幅を計算対象とします。
+ キャラクタ幅に満たない幅については切り捨てますが、返す最小値は 1 です。
+ 
+ 補足：
+   具体的には、window-width の返す値から、「行番号」表示時は、行番号表示
+   桁数 (xyzzy 0.2.2.233 では 6) ＋境界線分 (1) が引かれます。
+   さらに、「折り返し」表示かつ、テキストの折り返しが「ウィンドウ幅」の場
+   合には、「折り返し」マーク分 (1) が引かれます。
+ </description>
+ <seealso>window-width</seealso>
+ <seealso>window-lines</seealso>
+ <seealso>window-height</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-取り込みました->[[refwiki:window-columns]] -- [[NANRI]] &new{2005-03-02 00:48:52 (水)};
+
+#comment

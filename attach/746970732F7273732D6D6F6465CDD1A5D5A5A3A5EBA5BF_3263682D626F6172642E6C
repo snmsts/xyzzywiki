@@ -1,0 +1,55 @@
+;;; -*- Mode: Lisp; Package: EDITOR -*-
+;;;
+; Last updated: <2004-08-21T05:45:54+09:00>
+;
+; rss/filters/2ch-board.l
+(require "rss/main")
+
+(provide "rss/filters/2ch-board")
+
+(in-package "rss")
+
+(defvar *2ch-board-items-max* 30)
+
+(defun 2ch-board-parse-buffer (url)
+  (let (items
+        time
+        title
+        anchor)
+    (save-excursion
+      (goto-char (point-min))
+      (while (scan-buffer "^\\([^<>]+\\)<>\\(.*\\)"
+                          :regexp t
+                          :tail t)
+        (setq anchor (match-string 1))
+        (setq title (match-string 2))
+        (setq title (ed::xmlpm-decode-special-chars title))
+        (setq anchor (concat (substring url 0 (- (length url) (length "subject.txt")))
+                             (pathname-name anchor) "/"))
+        (push (rss-create-item title anchor) items))
+      (setq items (nreverse items))
+      ;; 最大件数以下切り捨て
+      (when (and *2ch-board-items-max*
+                 (< *2ch-board-items-max* (list-length items)))
+        (setq items (butlast items (- (list-length items) *2ch-board-items-max*))))
+      )
+    items))
+
+;; フィルタ関数
+;; (チャネル, ファイルを引数にfuncallされる)
+(defun 2ch-board-filter (channel file)
+  (let ((url (rss-link channel))
+        (title (or (and (rss-title channel)
+                        (not (equal (rss-title channel) *rss-menu-temp-buffer-suffix*))
+                        (rss-title channel))
+                   (read-string "Site Title: ")))
+        items)
+    (save-excursion
+      (set-buffer (get-buffer-create *rss-buffer-temp*))
+      (erase-buffer (selected-buffer))
+      (insert-file-contents file)
+      (setq items (2ch-board-parse-buffer url))
+      (delete-buffer (selected-buffer)))
+    ; 元のファイルを上書き
+    (convert-to-rss (rss-create title url nil items)
+                    file)))

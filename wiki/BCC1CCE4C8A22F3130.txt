@@ -1,0 +1,63 @@
+* migemoについて [#xe3a5608]
+-ページ: [[質問箱]]
+-投稿者: [[NANRI]]
+-状態: 完了
+-投稿日: 2003-12-08 (月) 00:15:08
+
+** メッセージ [#c9c10fac]
+tipsに書こうか迷ったのですが、ここで。
+
+xyzzy と vim の正規表現の表記の違いにより検索に失敗することがあるみたいです。
+
+ (in-package "editor")
+ (defun migemo-query (query)
+   (let (result
+         regexp)
+     (setq *isearch-regexp* *migemo-on*)
+     (migemo-open)
+     (unwind-protect
+         (progn
+           (migemo-message "converting ...")
+           (setq result (migemo-query-func *migemo-session*
+                                           (si:make-string-chunk query)))
+           (setq regexp (si:unpack-string
+                         (si:make-chunk nil *migemo-query-buf* nil result)
+                         0))
+           (migemo-message "converting ... done."))
+       (when result
+         (migemo-release-func *migemo-session* result)))
+     (setq regexp (substitute-string regexp "\\]\\*\\+" "\\]\\*\\\\\\+"))
+     (setq regexp (substitute-string regexp "\\]\\*\\?" "\\]\\*\\\\\\?"))
+     ))
+てきとうですが、とりあえずこんな感じで"+"と"?"は大丈夫になると思います。
+migemo.dll のソースを眺めた感じでは"["とか"]"とかも何とかする必要があるような気がするのですが、正規表現が書けなかったのでとりあえず保留です。"/"もちょっと怪しいかも。
+
+migemo.dll側で対応してもらうのが一番ハッピーだと思うのですが。
+----
+-migemo.lを配布しているサイトが消失していて探すのに困ったので、こちらに代わりを配布している方のURLを載せておきます。[[migemo.zipのありか:http://www.annie.ne.jp/~hachi/aketekure/0501diary.shtml#050119]] -- [[ななし]] &new{2005-02-28 18:34:06 (月)};
+
+-ここに一緒に書かせて頂きます。
+--isearch中に空文字を渡すとxyzzy自体が落ちてしまいました。(例えばバッファの終端で、C-s C-w(isearch-yank-word)を実行)
+#br
+migemo_queryに空文字("")を渡すとNULLで返ってくるために
+si:unpack-stringするあたりで落ちているようです。
+#br
+とりあえず下記で回避しています。[[ななし２]]
+
+ --- site-lisp\migemo.l.orig	2003-06-18 12:51:14.000000000 +0900
+ +++ site-lisp\migemo.l	2005-04-09 21:42:26.390625000 +0900
+ @@ -135,6 +135,8 @@
+  (defun migemo-query (query)
+    (let (result
+  	regexp)
+ +	(when (= (length query) 0)
+ +	  (return-from migemo-query ""))
+      (setq *isearch-regexp* *migemo-on*)
+      (migemo-open)
+      (unwind-protect
+-patchに移動してよいでしょうか？ -- [[佐野]] &new{2005-06-13 17:28:01 (月)};
+-オレの書いた部分についてはおっけーです。 -- [[NANRI]] &new{2005-06-13 19:44:54 (月)};
+-了解しました。できれば根こそぎ持っていきたいところです。 -- [[佐野]] &new{2005-06-13 20:12:43 (月)};
+- 0.0.0.7で取り込まれたようです。 -- [[NANRI]] &new{2005-11-28 (月) 21:32:30};
+
+#comment

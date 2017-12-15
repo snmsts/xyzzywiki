@@ -1,0 +1,262 @@
+*Changelog から記述を拾ってみた [#tb1e8596]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-08-24 21:20:08 (水)
+-バージョン: 
+
+**メッセージ [#e183ff34]
+ <chapter>
+ <title>*lisp-popup-completion-list*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ lisp-complete-symbol 時の補完候補をポップアップ表示するかを設定します。 
+ 
+ 動作:
+   *lisp-popup-completion-list*
+     :always   ポップアップ表示
+     :never    *Completion*バッファで表示
+ 
+     *popup-completion-list-default*
+       :always ポップアップ表示
+       :never  *Completion*バッファで表示
+ 
+     non-nil   ポップアップ表示
+     nil       *Completion*バッファで表示
+ </description>
+ <seealso>lisp-complete-symbol</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file>lispmode.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*filer-mark-file-size-unit*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ ファイラのマークファイルの合計サイズの単位を指定できます。
+ #\B, #\K, #\M, #\G, #\T で設定することができます。
+ ただし、例えば#\Kが設定されたとき、サイズが1K未満ならバイト単位になります。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラ</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-goto-file</title>
+ <type>Function</type>
+ <arguments>filer-goto-file STRING &amp;optional START REVERSE WILD-P</arguments>
+ <package>editor</package>
+ <description>
+ ファイラにてファイル名が STRING の位置にカーソルを移動します。
+ 
+   STRING  : 検索するファイル名
+   START   : 検索を開始する位置
+      nil      先頭から
+      t        現在位置から
+      それ以外 現在位置の次から
+   REVERSE : 探す方向
+      nil      前方向
+      non-nil  後方向
+   WILD-P  : ワイルドカードを有効にするか
+      nil      無効
+      t        有効
+      それ以外 有効かつ先頭一致(末尾に"*"を補う)
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイラ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>decode-escape-sequence</title>
+ <type>Function</type>
+ <arguments>decode-escape-sequence STRING REGEXPP</arguments>
+ <package>editor</package>
+ <description>
+ エスケープシーケンスをデコードします。
+ 
+   STRING ：デコードするエスケープシーケンス
+   REGEXPP：STRING が正規表現か否かを指定します。
+ 
+ 使用できるエスケープシーケンスは以下の通りです。
+   \t     タブ
+   \n     改行
+   \r     復帰
+   \f     改頁
+   \v     垂直タブ
+   \xNN   2桁までの16進数
+   \XNNNN 4桁までの16進数
+ 
+ 使用例：
+   ;;; [\thoge]という6文字をデコードして5文字にする。
+   "\\thoge"
+   =&gt; "\\thoge"
+   (decode-escape-sequence "\\thoge" nil)
+   =&gt; "  hoge"
+   (length "\\thoge")
+   =&gt; 6
+   (length (decode-escape-sequence "\\thoge" nil))
+   =&gt; 5
+ </description>
+ <link>[xyzzy:04201]</link>
+ <section>文字列</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>si:www-url-encode</title>
+ <type>Function</type>
+ <arguments>www-url-encode INPUT-STRING-OR-STREAM &amp;optional OUTPUT-STREAM LITERAL-CHARS</arguments>
+ <package>system</package>
+ <description>
+ RFC1738 に基づき文字列の URL エンコードを行います。
+ 
+   INPUT-STRING-OR-STREAM : 入力の文字列または入力ストリームを指定します。
+   OUTPUT-STREAM          : 出力ストリームです。
+                            t を指定した場合は標準出力へ出力します。
+                            省略もしくは nil を指定すると戻り値になります。
+   LITERAL-CHARS          : エンコードしない文字群を指定します。
+      t                       すべての文字をエンコードする
+      nil                     "-A-Za-z0-9$_.+!*'(|),"と同値
+ 
+ 使用例:
+   ; 標準では Shift_JIS としてエンコード
+   (si:www-url-encode "かめ")
+   =&gt;"%82%A9%82%DF"
+   
+   ; EUC-JP としてエンコード
+   (si:www-url-encode (map-internal-to-euc "かめ"))
+   =&gt;"%A4%AB%A4%E1"
+   
+   ; 変換しない文字群を明示する
+   (si:www-url-encode "www-url-encode" nil "0-9A-Za-z")
+   =&gt;"www%2Durl%2Dencode"
+ 
+ 補足:
+   RFC1738は現在RFC3986によって更新されています。
+   RFC3986で定義されている unreserved な文字の種類は "0-9A-Za-z---._~" です。
+ 
+   xyzzy 0.2.2.233 では builtin.l 中の引数の記述が間違っています。
+   0.2.2.234 で修正されました。
+ </description>
+ <seealso>si:www-url-decode</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>si:www-url-decode</title>
+ <type>Function</type>
+ <arguments>www-url-decode INPUT-STRING-OR-STREAM &amp;optional OUTPUT-STREAM</arguments>
+ <package>system</package>
+ <description>
+ URL デコードを行います。
+ 
+   INPUT-STRING-OR-STREAM : 入力の文字列または入力ストリームを指定します。
+   OUTPUT-STREAM          : 出力ストリームです。
+                            t を指定した場合は標準出力へ出力します。
+                            省略もしくは nil を指定すると戻り値になります。
+ 
+ 使用例:
+   (si:www-url-decode "%82%D9%82%B0%82%D9%82%B0" nil)
+   =&gt;"ほげほげ"
+ 
+ 補足:
+   xyzzy 0.2.2.233 では builtin.l 中の引数の記述が間違っています。
+   0.2.2.234 で修正されました。
+ </description>
+ <seealso>si:www-url-encode</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>set-local-window-flags</title>
+ <type>Function</type>
+ <arguments>set-local-window-flags WINDOW-OR-BUFFER FLAGS ON-OR-OFF</arguments>
+ <package>editor</package>
+ <description>
+ ウィンドウもしくはバッファの各種表示を制御します。
+ 
+  BUFFER-OR-WINDOW : バッファかウィンドウのいずれかを指定します。
+  FLAG             : 下のフラグのどれかを指定します。
+         *window-flag-alternate-vscroll-bar* バッファ全体表示できている
+                                             場合の垂直スクロールバー
+         *window-flag-cursor-line*           行カーソル
+         *window-flag-eof*                   EOF
+         *window-flag-fold-line*             折り返しライン
+         *window-flag-fold-mark*             折り返し
+         *window-flag-full-width-space*      全角スペース
+         *window-flag-half-width-space*      半角スペース
+         *window-flag-hscroll-bar*           水平スクロールバー
+         *window-flag-just-inverse*          （詳細不明）
+         *window-flag-line-number*           行番号
+         *window-flag-mode-line*             モード行
+         *window-flag-newline*               改行
+         *window-flag-ruler*                 ルーラ
+         *window-flag-scrolling*             描画位置の計算でジャンプスクロール
+         *window-flag-tab*                   タブ
+         *window-flag-vscroll-bar*           垂直スクロールバー
+         *window-flag-zenkaku-space*         全角スペース
+  ON-OR-OFF       : 変更後の値を設定します。
+         t        フラグをonにします。
+         nil      フラグをoffにします。
+         それ以外 デフォルトに戻します。
+ 
+ 使用例：
+   ;;; カレントバッファの行番号を表示しないようにする。
+   (set-local-window-flags (selected-buffer)
+                           *window-flag-line-number* nil)
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*gmark-keep-column*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ non-nilなら、gmarkとback-tag-jumpで行頭に移動しないようになります。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>gmark.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*print-option-show-dialog*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ nilの場合は、-pオプションでダイアログを表示しません。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>その他</section>
+ <file>estartup.l</file>
+ </chapter>
+----
+-inverse-cursor-lineとか？まだありそうですね。 -- [[レム]] &new{2005-08-25 05:39:50 (木)};
+-拾い出し作業自体は終わっていて、現在文章の推敲中です。上にあるのもあらためて見ると気に入らないので、いずれ手直しするでしょう。inverse-cursor-lineはnon-nilにすると折り返し線あたりにごみが残るような気がするので保留中です。 -- [[NANRI]] &new{2005-08-25 19:20:16 (木)};
+-取り込みました。→[[refwiki:*print-option-show-dialog*]], [[refwiki:*gmark-keep-column*]], [[refwiki:set-local-window-flags]], [[refwiki:si:www-url-decode]], [[refwiki:si:www-url-encode]], [[refwiki:decode-escape-sequence]], [[refwiki:filer-goto-file]], [[refwiki:*lisp-popup-completion-list*]]。[[refwiki:*filer-mark-file-size-unit*]]はすでに書いてあったのでskip。 -- [[NANRI]] &new{2005-10-23 00:38:43 (日)};
+
+#comment

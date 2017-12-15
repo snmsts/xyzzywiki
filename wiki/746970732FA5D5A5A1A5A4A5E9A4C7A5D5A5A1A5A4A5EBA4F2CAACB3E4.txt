@@ -1,0 +1,178 @@
+[[tips/ファイラでファイルを分割]]
+
+ファイラでファイルを分割します。~
+
+[[質問箱/22]]で教えていただいた方法で実装したものを公開します。~
+
+----
+
+■設定~
+１．コードを「.xyzzy」か「siteinit.l」にコピペする~
+
+----
+
+■作成方法~
+１．ファイラで分割するファイルを選択する~
+２．[ALT]+d を押下する~
+３．1MByteのサイズに分割したファイルが作成される~
+４．分割されたファイル「ファイル名の末尾にドットと数字3桁の連番が付加」と復元用のバッチファイル「ファイル名の末尾に ".bat" が付加」を複写する~
+
+◆復元方法~
+１．すべての分割したファイルとバッチファイルを同じフォルダに置く~
+２．復元用バッチファイルを実行する~
+※コマンドプロンプトから実行するとエラーがあった場合に確認できるかも？~
+
+----
+
+■制限~
+１．ページのコードは、分割サイズが1MByte固定です~
+　　⇒ ダイアログで分割サイズを指定できるようにしたい~
+２．分割サイズは、読込みバッファの整数倍を指定する必要がある~
+
+----
+
+ ;; ファイルを分割する
+ ;; http://xyzzy.s53.xrea.com/wiki/index.php?tips%2F%A5%D5%A5%A1%A5%A4%A5%E9%A4%C7%A5%D5%A5%A1%A5%A4%A5%EB%A4%F2%CA%AC%B3%E4
+ (in-package "editor")
+ (defun filer-make-divide-file-write (divsize ifname &optional ofolder restorer (bufsize (* 1024 4)))
+   "分割ファイル生成"
+   (and (<= bufsize 0)
+        (message-box "読込みバッファサイズが不正です。")
+        (return-from filer-make-divide-file-write))
+   (and (/= (mod divsize bufsize) 0)
+        (message-box "分割サイズが不正です。")
+        (return-from filer-make-divide-file-write))
+   (and (and ifname (or (not (file-exist-p ifname)) (file-directory-p ifname)))
+        (message-box "分割対象ファイルが不正です。")
+        (return-from filer-make-divide-file-write))
+   (and (and ofolder (or (not (file-exist-p ofolder)) (not (file-directory-p ofolder))))
+        (message-box "出力フォルダが不正です。")
+        (return-from filer-make-divide-file-write))
+   (and (not ofolder)
+        (setq ofolder (directory-namestring ifname)))
+   (let* ((name (file-namestring ifname))              ;分割元ファイル名
+          (fsize (caddr (get-file-info ifname)))       ;ファイルサイズ
+          (fno 0)                                      ;ファイル番号
+          (files nil)                                  ;ファイルリスト
+          (current 0)                                  ;現ファイル出力サイズ
+          (total 0)                                    ;総出力サイズ
+          (ofname (format nil "~A.~3,'0D" name fno))   ;分割ファイル名
+          (os nil)                                     ;出力ストリーム
+          (buffer nil))                                ;読込みバッファ
+     (and (> (ceiling fsize divsize) 1000)
+          (message-box "分割サイズが小さすぎます。")
+          (return-from filer-make-divide-file-write))
+     (and (<= fsize divsize)
+          (message-box "ファイルサイズが小さすぎます。")
+          (return-from filer-make-divide-file-write))
+     (handler-case
+         (progn
+           (setq buffer (make-vector bufsize :element-type 'character :fill-pointer 0))
+           (with-interval-message (100)
+             (with-open-stream (is (open ifname :direction :input :encoding :binary))
+               (setq os (open (merge-pathnames ofname ofolder)
+                              :direction :output :encoding :binary))
+               (setq files (cons ofname files))
+               (while (read-into buffer is nil)
+                 (if (>= current divsize)
+                     (progn
+                       (and os (close os) (setq os nil))
+                       (setq current 0)
+                       (incf fno)
+                       (setq ofname (format nil "~A.~3,'0D" name fno))
+                       (setq os (open (merge-pathnames ofname ofolder)
+                                      :direction :output :encoding :binary))
+                       (setq files (cons ofname files))
+                       ))
+                 (princ buffer os)
+                 (incf current (length buffer))
+                 (incf total (length buffer))
+                 (message "file dividing ... ~D% (~D/~D)"
+                          (floor (* 100 (/ total fsize))) total fsize)
+                 )
+               (and os (close os) (setq os nil))
+               ))
+           (message "file dividing ... ~D% (~D/~D)"
+                    (floor (* 100 (/ total fsize))) total fsize)
+           (setq files (nreverse files))
+           (and restorer
+                (not (sleep-for 1.01))
+                (setq ofname (format nil "~A.bat" name))
+                (with-open-stream (os (open (merge-pathnames ofname ofolder)
+                                            :direction :output :encoding :text))
+                  (let ((item (car files)))
+                    (format os "@ECHO OFF~%")
+                    (format os "IF EXIST \"~A\" GOTO EXIST~%" name)
+                    (dolist (item files)
+                      (format os "IF NOT EXIST \"~A\" GOTO LACK~A~%" item (substring item -3)))
+                    (format os "COPY /B \"~A\" \"~A\" >NUL~%" item name)
+                    (dolist (item (cdr files))
+                      (format os "COPY /B \"~A\"+\"~A\" \"~A\" >NUL~%" name item name))
+                    ;(dolist (item files) (format os "DEL \"~A\" >NUL~%" item)) ;delete files
+                    (format os "GOTO END~%")
+                    (format os ":EXIST~%")
+                    (format os "ECHO STOP: already exist [~A]~%" name)
+                    (format os "GOTO END~%")
+                    (dolist (item files)
+                      (format os ":LACK~A~%" (substring item -3))
+                      (format os "ECHO STOP: lacking [~A]~%" item)
+                      (format os "GOTO END~%"))
+                    (format os ":END~%")
+                    ))
+                (setq os nil)
+                (setq files (nreverse files))
+                (setq files (cons ofname files))
+                (setq files (nreverse files))
+                )
+           )
+       (quit (c)
+         (and os (close os) (setq os nil))
+         (and (yes-or-no-p "分割が中止されました。~%生成物を削除しますか？")
+              (dolist (item files t)
+                (delete-file (merge-pathnames item ofolder)))
+              (setq files nil))
+         )
+       (condition (c)
+         (and os (close os) (setq os nil))
+         (msgbox "~a" (si:*condition-string c))
+         (setq files nil)
+         )
+       )
+     files)
+   )
+ (defun filer-make-divide-file ()
+   "分割ファイル実行"
+   (let* ((name (filer-fetch-file t))
+          (dname (concat name ".000"))
+          (bname (concat name ".bat"))
+          (ofolder (directory-namestring name))
+          (divsize (* 1024 1024))
+          (readsize (* 4 1024))
+          (filesize (caddr (get-file-info name)))
+          (files nil)
+          )
+     (and (file-directory-p name)
+          (message "フォルダはできません.")
+          (return-from filer-make-divide-file))
+     (and (<= filesize divsize)
+          (message "ファイルサイズが小さすぎます.")
+          (return-from filer-make-divide-file))
+     (when (or (null *filer-query-before-process*)
+               (if (or (file-exist-p dname) (file-exist-p bname))
+                   (no-or-yes-p "~A~%の分割ファイルが既にあります.~%続行しますか?" name)
+                 (yes-or-no-p "~A~%の分割ファイルを生成しますか?" name)))
+       (long-operation
+         (message "file dividing ...")
+         (setq files (filer-make-divide-file-write divsize name ofolder t readsize))
+         (filer-reload)
+         (and (filer-dual-window-p)
+              (filer-reload nil t))
+         (and files
+              (message "divide done."))
+         ))))
+ (define-key filer-keymap #\M-d 'filer-make-divide-file)
+ (in-package "user")
+
+----
+
+#comment

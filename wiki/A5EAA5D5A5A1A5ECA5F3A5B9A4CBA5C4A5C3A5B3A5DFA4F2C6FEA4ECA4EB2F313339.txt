@@ -1,0 +1,68 @@
+*keywordp [#k8c29178]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-07-23 15:47:41 (土)
+-バージョン: 
+
+**メッセージ [#f67e4f8e]
+keywordpについて
+
+> 与えられたオブジェクトOBJECTがキーワードか否かを返します。多分、keyword-hash-tableを参照して、登録されているか否かを返すのだと思います
+
+とありますが、これはOBJECTがシンボルであり、かつkeywordパッケージに所属するときにtを返しているようです。
+
+ (symbol-package 'a)
+ #<package: user>
+ (symbol-package :a)
+ #<package: keyword>
+ 
+ (symbolp 'a)
+ t
+ (keywordp 'a)
+ nil
+ 
+ (symbolp :a)
+ t
+ (keywordp :a)
+ t
+
+----
+-どもです。ソースを見てもそんな感じのような気がします。修正しておきます。 -- [[NANRI]] &new{2005-07-23 17:16:10 (土)};
+
+ <chapter>
+ <title>keywordp</title>
+ <type>Function</type>
+ <arguments>keywordp OBJECT</arguments>
+ <package>lisp</package>
+ <description>
+ 与えられたオブジェクト OBJECT がキーワードか否かを返します。 OBJECT がシ
+ ンボルであり、かつ keyword パッケージに所属するときに t を返しているよう
+ です。
+ 
+   (symbol-package 'a)
+   =&gt;#&lt;package: user&gt;
+   (symbol-package :a)
+   =&gt;#&lt;package: keyword&gt;
+   
+   (symbolp 'a)
+   =&gt;t
+   (keywordp 'a)
+   =&gt;nil
+   
+   (symbolp :a)
+   =&gt;t
+   (keywordp :a)
+   =&gt;t
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>データ型</section>
+ <file>builtin.l</file>
+ </chapter>
+-取り込みました→[[keywordp>refwiki:keywordp]] -- [[NANRI]] &new{2005-08-24 00:09:05 (水)};
+
+#comment

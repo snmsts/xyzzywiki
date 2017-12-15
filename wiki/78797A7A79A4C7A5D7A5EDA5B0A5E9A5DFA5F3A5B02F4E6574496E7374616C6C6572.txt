@@ -1,0 +1,36 @@
+*NetInstaller [#o666be45]
+#contents
+
+**概要 [#ja7decab]
+NetInstallerを使うと、xyzzy用の便利な拡張Lispを簡単な操作でネットからインストールすることができます。
+
+#ref(netinstaller.png)
+
+**インストール [#nde11d3d]
+[[NetInstaller>http://www7a.biglobe.ne.jp/~hat/xyzzy/ni.html]]からダウンロード、解凍して*.lファイルを、以下の場所に移動します。
+ (xyzzyをインストールした場所)/site-lisp/ni
+
+あとは、readme.txtや、[[QuickTour/ext/NetInstaller>QuickTour/ext/NetInstaller#x0d75a85]]にあるように、.xyzzyなどに設定を記入します。
+
+**パッケージの追加 [#jcdf5ff3]
+[[tips/ネットインストーラのsiteを無理やり最新に]]を使えば、[[NetInstaller/配布パッケージ一覧]]に公開されているパッケージを一気に登録、更新することができます。
+
+**NetInstallerで拡張Lispをインストール [#vf9e2810]
+"M-x netinstaller" で起動し、パッケージ一覧を開いてインストール、アンインストールします。
+ Space: パッケージ詳細を表示
+ i: パッケージをインストール
+ d: パッケージをアンインストール
+
+-以下のようなエラーが発生する場合は、[[caldix>http://www.kmonos.net/lib/caldix.html]](全自動でDLLのダウンロードとインストールしてくれるフリーソフト) などで、統合アーカイバDLLをインストールする必要があります。
+ エラーが発生しました: *****
+ 指定したファイルはアーカイブファイルではありません
+
+**関連情報 [#i60f4466]
+-[[xyzzy NetInstaller>http://www7a.biglobe.ne.jp/~hat/xyzzy/ni.html]]
+-[[NetInstaller]]
+-[[NetInstaller/配布パッケージ一覧]]
+-[[QuickTour/ext/NetInstaller(NetInstallerを導入しよう)>QuickTour/ext/NetInstaller]]
+-[[tips/ネットインストーラのsiteを無理やり最新に]]
+
+**コメント [#caee4980]
+#comment

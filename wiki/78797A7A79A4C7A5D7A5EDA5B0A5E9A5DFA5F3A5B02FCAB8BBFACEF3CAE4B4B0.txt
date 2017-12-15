@@ -1,0 +1,62 @@
+*文字列補完 [#i977e8f7]
+#contents
+
+**概要 [#ce422369]
+基本的な、abbrev、dabbrev。dabbrev-expand(C-x /) での順次補完、dabbrev-popup(C-x \) での補完候補ポップアップ、ac-modeを導入しての候補を選択について紹介しています。
+
+**abbrev(静的補完)とdabbrev(動的補完) [#f504c7f4]
+基本的な補完機能には、予め登録したキーワードを展開する静的補完と、現在編集しているファイルを読み取って補完候補を表示する動的補完の2種類があります。
+-詳細情報
+--[[QuickTour/abbrev (abbrevとdabbrev〜文字を補完〜)>QuickTour/abbrev]]
+
+**expand-abbrev [#p6fdd5b6]
+expand-abbrev（C-x '）で静的補完を展開します。設定するキーワードはモードごと分かれているので、プログラミングの場合、その言語に予め決められている予約語などを登録して展開する事もできます。キーワードは M-xlist-abbrevs M-x edit-abbrevsなどで編集が出来ます。
+
+**dabbrev-expand(順次補完)、dabbrev-popup(補完候補一覧) [#v227b71e]
+dabbrev-expand(C-x /) で順次補完、dabbrev-popup(C-x \) で補完候補の一覧をポップアップ表示して選択することができます。
+
+#ref(dabbrev.png)
+
+上のように、xyzzyが開いているファイル内容から補完候補を提示してくれます。[[JavaTinyConsole>http://www1.odn.ne.jp/ymtz/jtc.html]]のコード補完の対象にならないローカル変数などの補完に使うと、大変便利です。
+
+-詳細情報
+--[[QuickTour/abbrev (abbrevとdabbrev〜文字を補完〜)>QuickTour/abbrev]]
+--%%[[プログラミング時の変数名の入力を楽に(OKA@Komoda-Lab. -- Propagate Xyzzy --)>http://www-komo.ise.eng.osaka-u.ac.jp/~oka/xyzzy.html#dabbrev]]%%
+---↑元は404なので[[こちらのarchiveを参照してください。>http://web.archive.org/web/20050523225208/http://www-komo.ise.eng.osaka-u.ac.jp/~oka/xyzzy.html#dabbrev]]
+--[[tips/過剰なdabbrev-popup]]
+--[[質問箱/112 ( Dabbrevで、ある開いていないファイルのみを読み込んで補完する方法 )>質問箱/112]]
+
+**ac-mode(インクリメンタル補完) [#j6dbc6ea]
+[[script/ac-mode>http://white.s151.xrea.com/wiki/index.php?script%2Fac-mode]]([[silog>http://white.s151.xrea.com/wiki/]])を導入すると、バッファ内の関数やXTAGSなどからのインクリメンタルな補完を行うことができます(ほかにもparenなどを考慮したインデントやsnippetの展開などの多彩な機能があります)。
+NetInstallerでインストールすることもできます。
+
+#ref(ac-mode.png)
+
+ac-mode(M-x ac-mode)にして、TAB(C-i) を押すと 上のような補完候補が表示されて、候補の選択などが出来ます。
+
+-詳細情報
+--[[silog - script/ac-mode>http://white.s151.xrea.com/wiki/index.php?script%2Fac-mode]]
+
+**その他の補完 [#p442dec8]
+-[[dmc.l>http://raido.sakura.ne.jp/southly/xyzzy/site-lisp/dmc.l]]
+『C++とかJavaとかのメンバをdabbrevライクに補完するものです。「変数名.」とか「変数名->」まで書いてはじめて補完できます。』 [[参照元>http://d.hatena.ne.jp/himadatanode/20070115/p1]]
+-[[snippet>http://white.s151.xrea.com/wiki/index.php?cmd=read&page=script%2Fsnippet]]
+TextMateのSnippetのような動きをする補完
+-[[kakko-ex>http://xyzzy.s53.xrea.com/extlib/apart/kakko-ex.l]]
+対応する括弧を補完します。lispなどの括弧が多い言語の入力を支援します。
+-[[surround>http://white.s151.xrea.com/wiki/index.php?script%2Fsurround]]
+"や'などを補完して閉じる。他の機能も付いているが、補完とは余り関係が無い。
+-[[is-mode>http://miyamuko.s56.xrea.com/xyzzy/is-mode/intro.htm]]
+--詳細情報　[[is-mode>http://xyzzy.s53.xrea.com/extlib/apart/is-mode]]
+
+**コメント [#ifd4b654]
+- 静的補完の話は無くても良いんでしょうか。 -- [[ななしさん]] &new{2007-03-03 (土) 20:00:45};
+-- 追加で書き込みよろしくお願いしますm(_ _)m > 静的補完の話 --  &new{2007-03-04 (日) 16:50:21};
+- 追加してみましたよ。補完の拡張自体は他にもたくさんありそうですが余り知らないので他の人に任せます。 -- [[ななしさん]] &new{2007-03-19 (月) 01:47:37};
+-- 追加かありがとうございます。まだこんなにあったんですね。奥が深いなぁ。 --  &new{2007-03-20 (火) 15:45:13};
+- Emmet(Zen-coding)っぽいもの作ったんですけど、興味あるひといるかな。 -- [[おかゆん]] &new{2014-03-27 (木) 21:51:16};
+- Emmet!　今、興味があって検索したらヒットしました！ -- [[manozo]] &new{2014-03-28 (金) 11:30:50};
+- もしご興味があれば。zenexpand-minor-mode です。 codebreak.com/git/okayun/xyzzy-zenexpand/ -- [[おかゆん]] &new{2014-03-29 (土) 11:32:09};
+- ありがとうございます！ -- [[manozo]] &new{2014-03-31 (月) 22:17:44};
+
+#comment

@@ -1,0 +1,36 @@
+* *brackets-is-wildcard-character* [#d058c961]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[OHKUBO]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-12-08 (水) 00:23:12
+-バージョン: 20041115
+
+**メッセージ [#af571a46]
+ <chapter>
+ <title>*brackets-is-wildcard-character*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>lisp</package>
+ <description>
+ non-nil ならばファイルパスとして渡した文字列中の [...] をワイルドーカー
+ ドとして扱います。
+ [共通設定] - [さまざま] - [[...]はワイルドカード(I)] で値を指定すること
+ ができます。
+ xyzzy ソース内で定義されており、デフォルト値は t です。
+ 具体的には、wild-pathname-p, pathname-match-p 関数での判定の際に
+ *brackets-is-wildcard-character* の値が考慮されます。
+ </description>
+ <seealso>wild-pathname-p</seealso>
+ <seealso>pathname-match-p</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file></file>
+ </chapter>
+
+----
+-取り込みました->[[refwiki:*brackets-is-wildcard-character*]] -- [[NANRI]] &new{2005-03-02 00:52:46 (水)};
+
+#comment

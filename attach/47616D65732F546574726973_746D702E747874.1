@@ -1,0 +1,330 @@
+(require "tetris")
+(in-package "editor")
+(add-hook '*init-app-menus-hook*
+	  #'(lambda ()
+	      (setq *app-menu*
+		    (define-menu
+		      (:popup 'file "ﾌｧｲﾙ(&F)"
+		       (:item nil "新規作成(&N)"
+			'new-file)
+		       (:item nil "開く(&O)..."
+			'open-file-dialog)
+		       (:item nil "閉じる(&C)"
+			'close-selected-buffer
+			#'(lambda ()
+			    (if (= (count-buffers) 1) :disable)))
+		       (:item nil "上書き保存(&S)"
+			'save-buffer-dialog :modified)
+		       (:item nil "名前を付けて保存(&A)..."
+			'save-as-dialog)
+		       (:item nil "ﾌｧｲﾙの挿入(&I)..."
+			'insert-file-dialog)
+		       (:item nil "名前の変更(&R)..."
+			'rename-dialog)
+		       (:item nil "全て保存(&V)"
+			'save-all-buffers)
+		       :sep
+		       (:item nil "ｾｯｼｮﾝを開く(&D)..."
+			'open-session-dialog)
+		       (:item nil "ｾｯｼｮﾝの保存(&W)..."
+			'save-session-dialog)
+		       (:item nil "ｾｯｼｮﾝの自動保存(&T)"
+			'toggle-session-auto-save
+			'update-session-auto-save-ui)
+		       (:item nil "ｾｯｼｮﾝを閉じる(&Y)"
+			'close-session-dialog)
+		       :sep
+		       (:item nil "印刷(&P)..."
+			'print-selected-buffer-dialog)
+		       :sep
+		       (:menu nil "最近使ったﾌｧｲﾙ(&F)"
+			*recent-file-popup-menu*)
+		       (:menu nil "最近使ったｾｯｼｮﾝ(&L)"
+			*recent-session-popup-menu*)
+		       :sep
+		       (:item nil "保存して終了(&E)"
+			'save-all-buffers-kill-xyzzy)
+		       (:item nil "終了(&X)"
+			'kill-xyzzy))
+		      (:popup 'edit "編集(&E)"
+		       (:item nil "元に戻す(&U)"
+			'undo :undo)
+		       (:item nil "やっぱり元に戻さない(&R)"
+			'redo :redo)
+		       :sep
+		       (:item nil "切り取り(&T)"
+			'kill-selection-to-clipboard :modify-any-selection)
+		       (:item nil "ｺﾋﾟｰ(&C)"
+			'copy-selection-to-clipboard :any-selection)
+		       (:item nil "貼り付け(&P)"
+			'paste-from-clipboard :clipboard)
+		       (:item nil "貼り付け - 矩形(&G)"
+			'paste-rectangle-from-clipboard :clipboard)
+		       (:menu nil "ｸﾘｯﾌﾟﾎﾞｰﾄﾞｴﾝｺｰﾃﾞｨﾝｸﾞ(&E)"
+			*clipboard-char-encoding-popup-menu*)
+		       (:item nil "削除(&L)"
+			'delete-selection :modify-any-selection)
+		       (:item nil "全てを選択(&S)"
+			'selection-whole-buffer)
+		       :sep
+		       (:menu nil "矩形(&N)"
+			*app-rectangle-popup-menu*)
+		       (:popup nil "変換(&V)"
+			(:item nil "大文字(&U)"
+			 'upcase-selection :selection)
+			(:item nil "小文字(&L)"
+			 'downcase-selection :selection)
+			(:item nil "単語の先頭を大文字(&C)"
+			 'capitalize-selection :selection)
+			:sep
+			(:item nil "ｽﾍﾟｰｽ -> ﾀﾌﾞ(&T)"
+			 'tabify-selection :selection)
+			(:item nil "ﾀﾌﾞ -> ｽﾍﾟｰｽ(&S)"
+			 'untabify-selection :selection)
+			:sep
+			(:popup nil "全角 -> 半角(&H)"
+			 (:item nil "すべて(&A)"
+			  'map-all-to-half-width-selection :selection)
+			 (:item nil "英数･ひらがな･カタカナ(&S)"
+			  'map-to-half-width-selection :selection)
+			 (:item nil "英数･ひらがな(&R)"
+			  'map-ascii-and-hiragana-to-half-width-selection :selection)
+			 (:item nil "英数･カタカナ(&T)"
+			  'map-ascii-and-katakana-to-half-width-selection :selection)
+			 (:item nil "英数(&N)"
+			  'map-ascii-to-half-width-selection :selection)
+			 (:item nil "ひらがな(&H)"
+			  'map-hiragana-to-half-width-selection :selection)
+			 (:item nil "カタカナ(&K)"
+			  'map-katakana-to-half-width-selection :selection)
+			 (:item nil "ギリシア文字(&G)"
+			  'map-greek-to-half-width-selection :selection)
+			 (:item nil "キリル文字(&C)"
+			  'map-cyrillic-to-half-width-selection :selection))
+			(:popup nil "半角 -> 全角(&Z)"
+			 (:item nil "すべて(ｶﾅ -> ひらがな)(&A)"
+			  'map-all-to-full-width-hiragana-selection :selection)
+			 (:item nil "すべて(ｶﾅ -> カタカナ)(&L)"
+			  'map-all-to-full-width-katakana-selection :selection)
+			 (:item nil "英数･ｶﾅ(ｶﾅ -> ひらがな)(&R)"
+			  'map-to-full-width-hiragana-selection :selection)
+			 (:item nil "英数･ｶﾅ(ｶﾅ -> カタカナ)(&T)"
+			  'map-to-full-width-katakana-selection :selection)
+			 (:item nil "英数(&N)"
+			  'map-ascii-to-full-width-selection :selection)
+			 (:item nil "ｶﾅ -> ひらがな(&H)"
+			  'map-kana-to-full-width-hiragana-selection :selection)
+			 (:item nil "ｶﾅ -> カタカナ(&K)"
+			  'map-kana-to-full-width-katakana-selection :selection)
+			 (:item nil "ギリシア文字(&G)"
+			  'map-greek-to-full-width-selection :selection)
+			 (:item nil "キリル文字(&C)"
+			  'map-cyrillic-to-full-width-selection :selection))
+			(:popup nil "漢字ｺｰﾄﾞ(&K)"
+			 (:item nil "自動判定(&A)"
+			  'map-char-encoding-selection :selection)
+			 (:item nil "JISから(&J)"
+			  'map-jis-selection :selection)
+			 (:item nil "EUCから(&E)"
+			  'map-euc-selection :selection)))
+		       (:popup nil "段落(&H)"
+			(:item nil "前の段落(&B)"
+			 'backward-paragraph)
+			(:item nil "次の段落(&F)"
+			 'forward-paragraph)
+			(:item nil "選択(&S)"
+			 'selection-paragraph)
+			(:item nil "削除(&L)"
+			 'kill-paragraph)
+			(:item nil "入れ替え(&T)"
+			 'transpose-paragraphs)
+			(:item nil "詰め込み(&I)"
+			 'fill-paragraph))
+		       :sep
+		       (:item nil "変更ﾏｰｸを消す(&M)"
+			'not-modified :modified)
+		       (:item nil "最初からやり直し(&O)"
+			'revert-buffer))
+		      (:popup 'search "検索(&S)"
+		       (:item nil "検索(&F)..."
+			'search-dialog)
+		       (:item nil "次を検索(&N)"
+			'repeat-forward-search
+			#'(lambda () (or *last-search-p* :disable)))
+		       (:item nil "前を検索(&P)"
+			'repeat-backward-search
+			#'(lambda () (or *last-search-p* :disable)))
+		       (:item nil "置換(&R)..."
+			'replace-dialog)
+		       (:item nil "一致する文字列を数える(&C)..."
+			'count-matches-dialog)
+		       :sep
+		       (:item nil "最初のﾀｸﾞ(&I)"
+			'first-error)
+		       (:item nil "次のﾀｸﾞ(&E)"
+			'next-error)
+		       :sep
+		       (:item nil "指定行(&J)..."
+			'goto-line-dialog)
+		       (:item nil "ﾌｧｲﾙの先頭(&T)"
+			'beginning-of-buffer)
+		       (:item nil "ﾌｧｲﾙの最後(&B)"
+			'end-of-buffer)
+		       (:item nil "ﾏｰｸ(&M)..."
+			'mark-dialog-box)
+		       (:item nil "関数の先頭(&D)"
+			'beginning-of-defun)
+		       (:item nil "関数の最後(&U)"
+			'end-of-defun)
+		       :sep
+		       (:item nil "Gresreg(&S)..."
+			'gresreg-dialog)
+		       (:item nil "Grep(&G)..."
+			'grep-dialog))
+		      (:popup 'view "表示(&V)"
+		       (:item nil "折り返さない(&N)"
+			'set-buffer-fold-type-none
+			'set-buffer-fold-type-none-update)
+		       (:item nil "指定位置で折り返す(&C)"
+			'set-buffer-fold-type-column
+			'set-buffer-fold-type-column-update)
+		       (:item nil "ｳｨﾝﾄﾞｳ幅で折り返す(&W)"
+			'set-buffer-fold-type-window
+			'set-buffer-fold-type-window-update)
+		       :sep
+		       (:menu nil "ﾂｰﾙﾊﾞｰ(&Q)" *command-bar-popup-menu*)
+		       :sep
+		       (:item nil "新しいﾌﾚｰﾑ(&F)"
+			'new-pseudo-frame 'new-pseudo-frame-menu-update)
+		       (:item nil "現在のﾌﾚｰﾑを閉じる(&D)"
+			'delete-pseudo-frame 'pseudo-frame-menu-update)
+		       (:item nil "次のﾌﾚｰﾑ(&T)"
+			'other-pseudo-frame 'pseudo-frame-menu-update)
+		       (:item nil "前のﾌﾚｰﾑ(&R)"
+			'previous-pseudo-frame 'pseudo-frame-menu-update))
+		      (:popup 'window "ｳｨﾝﾄﾞｳ(&W)"
+		       (:item nil "横に分割(&S)"
+			'split-window 'split-window-menu-update)
+		       (:item nil "縦に分割(&V)"
+			'split-window-vertically 'split-window-menu-update)
+		       (:item nil "他のｳｨﾝﾄﾞｳを閉じる(&O)"
+			'delete-other-windows 'close-window-menu-update)
+		       (:item nil "現在のｳｨﾝﾄﾞｳを閉じる(&C)"
+			'delete-window 'close-window-menu-update)
+		       (:item nil "次のｳｨﾝﾄﾞｳ(&N)"
+			'other-window 'move-window-menu-update)
+		       (:item nil "前のｳｨﾝﾄﾞｳ(&P)"
+			'move-previous-window 'move-window-menu-update)
+		       :sep
+		       (:item nil "次のxyzzy(&X)"
+			'next-xyzzy-window
+			#'(lambda () (if (< (count-xyzzy-instance) 2) :disable)))
+		       (:item nil "前のxyzzy(&Y)"
+			'previous-xyzzy-window
+			#'(lambda () (if (< (count-xyzzy-instance) 2) :disable)))
+		       (:item nil "xyzzy選択(&Z)..."
+			'select-xyzzy
+			#'(lambda () (if (< (count-xyzzy-instance) 2) :disable)))
+		       :sep
+		       (:item nil "ﾊﾞｯﾌｧ選択(&B)..."
+			'select-buffer))
+
+		      (:popup 'tools "ﾂｰﾙ(&T)"
+		       (:item nil "ｺﾝｿｰﾙﾌﾟﾛｸﾞﾗﾑを非同期で実行(&A)..."
+			'execute-subprocess-dialog)
+		       (:item nil "非同期ﾌﾟﾛｸﾞﾗﾑを死なす(&K)"
+			'kill-subprocess
+			#'(lambda ()
+			    (let ((proc (buffer-process (selected-buffer))))
+			      (unless (and proc
+					   (eq (process-status proc) :run))
+				:disable))))
+		       (:item nil "ｺﾝｿｰﾙﾌﾟﾛｸﾞﾗﾑの実行(&P)..."
+			'pipe-command-dialog)
+		       (:item nil "Windowsﾌﾟﾛｸﾞﾗﾑの実行(&W)..."
+			'launch-application-dialog)
+		       (:item nil (if (featurep :windows-nt)
+				      "NTﾌﾟﾛﾝﾌﾟﾄ(&D)"
+				    "DOSﾌﾟﾛﾝﾌﾟﾄ(&D)")
+			'run-console)
+		       :sep
+		       (:item nil "ｷｰﾎﾞｰﾄﾞﾏｸﾛ記録開始(&S)"
+			'start-kbd-macro)
+		       (:item nil "ｷｰﾎﾞｰﾄﾞﾏｸﾛ記録終了(&E)"
+			'end-kbd-macro
+			:end-macro)
+		       (:item nil "ｷｰﾎﾞｰﾄﾞﾏｸﾛ実行(&X)"
+			'call-last-kbd-macro
+			#'(lambda () (if (null *last-kbd-macro*) :disable)))
+		       (:popup nil "ｷｰﾎﾞｰﾄﾞﾏｸﾛおまけ(&O)"
+			(:item nil "保存(&V)..."
+			 'save-last-kbd-macro
+			 #'(lambda () (if (null *last-kbd-macro*) :disable)))
+			(:item nil "読み込み(&L)..."
+			 'load-kbd-macro)
+			(:item nil "ﾌｧｲﾙへ保存(&S)..."
+			 'save-kbd-macro-to-file))
+		       :sep
+		       (:item nil "共通設定(&C)..."
+			'option-property-sheet)
+		       (:item nil "ﾛｰｶﾙ設定(&L)..."
+			'local-option-property-sheet)
+		       :sep
+		       (:item nil "罫線ﾓｰﾄﾞ(&R)"
+			'box-drawings-mode
+			#'(lambda () (if *box-drawings-mode* :check)))
+		       (:item nil "太い罫線(&T)"
+			'box-drawings-toggle-line-type
+			#'(lambda ()
+			    (values (unless *box-drawings-mode*
+				      :disable)
+				    (if (eq *box-drawings-line-type* '*box-drawings-thick-line*)
+					:check))))
+		       :sep
+		       (:item nil "日付と時刻の挿入(&M)..."
+			'insert-date-string)
+		       (:item nil "ﾌｧｲﾗ(&F)..."
+			'open-filer)
+		       (:menu nil "辞書(&I)"
+			*dictionary-popup-menu*)
+		       :sep
+		       (:item nil "TAGSﾌｧｲﾙの作成(&G)..."
+			'make-tags-file-dialog)
+		       (:item nil "ﾀｸﾞｼﾞｬﾝﾌﾟ(&J)"
+			'jump-tag
+			#'(lambda () (unless (and tags-find-target tags-find-point) :disable)))
+		       (:item nil "ﾀﾞｲﾚｸﾄﾀｸﾞｼﾞｬﾝﾌﾟ(&U)"
+			'direct-tag-jump
+			#'(lambda () (unless (and tags-find-target tags-find-point) :disable)))
+		       (:item nil "ﾊﾞｯｸﾀｸﾞｼﾞｬﾝﾌﾟ(&B)"
+			'back-tag-jump
+			#'(lambda () (if (null *global-mark-list*) :disable)))
+		       :sep
+		       (:popup nil "(>&_<)"
+			(:item nil "ﾆﾌﾃｨのﾛｸﾞを読む(&N)"
+			 'view-nifty-log)
+			(:item nil "電卓(&T)"
+			 'calc)
+			(:item nil "ｶﾚﾝﾀﾞｰ(&A)"
+			 'calendar)
+			(:item nil "ﾊﾉｲの塔(&H)"
+			 'hanoi)
+			(:item nil "五目(&G)"
+			 'gomoku)
+			(:item nil "ﾗｲﾌ(&L)"
+			 'life)
+			(:item nil "C曲線(&C)"
+			 'c-curve)
+			(:item nil "ﾄﾞﾗｺﾞﾝ曲線(&R)"
+			 'dragon-curve)
+			(:item nil "Tetris(&T)"
+			 'tetris)))
+		      (:popup 'help "ﾍﾙﾌﾟ(&?)"
+		       (:item nil "ｷｰ割り当て一覧(&K)"
+			'describe-bindings)
+		       (:item nil "最近入力したｷｰ(&L)"
+			'view-lossage)
+		       :sep
+		       (:item nil "について(&A)..."
+			'about-dialog))))))
+(in-package "user")

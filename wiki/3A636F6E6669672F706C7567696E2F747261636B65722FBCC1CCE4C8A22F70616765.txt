@@ -1,0 +1,11 @@
+* [summary] 
+-ページ: [_refer]
+-投稿者: [name]
+-状態: [state]
+-投稿日: [_date]
+
+** メッセージ 
+[body]
+----
+
+#comment

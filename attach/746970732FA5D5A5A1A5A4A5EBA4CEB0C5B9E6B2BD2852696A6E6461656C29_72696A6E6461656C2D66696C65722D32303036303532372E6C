@@ -1,0 +1,55 @@
+;;; rijndael-filer.l
+;;;
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (require "rijndael"))
+
+(in-package "editor")
+
+(defun filer-encrypt-file-with-rijndael ()
+  (let ((file (filer-fetch-file)))
+    (multiple-value-bind (result data)
+        (dialog-box '(dialog 0 0 210 71
+                      (:caption "ファイルの暗号化")
+                      (:font 9 "MS UI Gothic")
+                      (:control
+                       (:static nil "パスワード:" #x50020000 7 38 116 8)
+                       (:edit pass nil #x508100a0 7 48 144 14)
+                       (:button IDOK "OK" #x50010001 153 7 50 14)
+                       (:button IDCANCEL "キャンセル" #x50010000 153 24 50 14)
+                       (:static nil "出力ファイル名:" #x50020000 7 7 116 8)
+                       (:edit out nil #x50810080 7 17 144 14)))
+                    (list (cons 'out (file-namestring (concat file ".rjn"))))
+                    '((out :non-null "出力ファイル名を入力して" :enable (IDOK))))
+      (when result
+        (filer-subscribe-to-reload (filer-get-directory))
+        (rijndael:encrypt-file file
+                               (merge-pathnames (cdr (assoc 'out data)) (filer-get-directory))
+                               (cdr (assoc 'pass data)))))))
+
+(defun filer-decrypt-file-with-rijndael ()
+  (let* ((file (filer-fetch-file))
+         (out-file (file-namestring (if (string-equal file ".rjn" :start1 (- (length file) 4) :end1 (length file))
+                                        (substring file 0 -4)
+                                      (concat file ".dec")))))
+    (multiple-value-bind (result data)
+        (dialog-box '(dialog 0 0 210 71
+                      (:caption "ファイルの復号")
+                      (:font 9 "MS UI Gothic")
+                      (:control
+                       (:static nil "パスワード:" #x50020000 7 38 116 8)
+                       (:edit pass nil #x508100a0 7 48 144 14)
+                       (:button IDOK "OK" #x50010001 153 7 50 14)
+                       (:button IDCANCEL "キャンセル" #x50010000 153 24 50 14)
+                       (:static nil "出力ファイル名:" #x50020000 7 7 116 8)
+                       (:edit out nil #x50810080 7 17 144 14)))
+                    (list (cons 'out out-file))
+                    '((out :non-null "出力ファイル名を入力して" :enable (IDOK))))
+      (when result
+        (let ((new (merge-pathnames (cdr (assoc 'out data)) (filer-get-directory))))
+          (when (or (not (file-exist-p new))
+                    (no-or-yes-p "~aは既に存在します。上書きしますか?" file))
+            (filer-subscribe-to-reload (filer-get-directory))
+            (rijndael:decrypt-file file
+                                   new
+                                   (cdr (assoc 'pass data)))))))))

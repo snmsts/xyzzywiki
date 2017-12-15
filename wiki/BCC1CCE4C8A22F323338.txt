@@ -1,0 +1,33 @@
+#freeze
+* SumatraPDF [#r9026da0]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2014-08-08 (金) 18:25:35
+
+** メッセージ [#p35b89b8]
+xyzzy 付属の LaTeX モードで SumatraPDF で PDF ファイルを表示して forward search するために以下のように設定しました。~
+
+ (defun sumatrapdf-forward-search ()
+   (interactive)
+   (let* ((tex-file (get-buffer-file-name))
+          (pdf-file (concat (car (split-string (get-buffer-file-name) "\\.")) ".pdf"))
+          (line (format nil "~D" (current-line-number)))
+          (cmd "rundll32 shell32,ShellExec_RunDLL SumatraPDF")
+          (args))
+     (setq args (concat "-reuse-instance \"" pdf-file "\" -forward-search \"" tex-file "\" " line))
+     (message (concat cmd " " args))
+     (call-process (concat cmd " " args)
+                   :exec-directory (directory-namestring tex-file))))
+ 
+ (add-hook 'editor::*LaTeX-mode-hook*
+           #'(lambda ()
+               (define-key editor::*LaTeX-mode-map* '(#\C-c #\s) 'sumatrapdf-forward-search)))
+
+C-c s で SumatraPDF が起動しますが forward search ができません。~
+対処法の心当たりがあれば教えてください。
+
+----
+- SyncTeX を有効にすると forward search するようになりました。-synctex=1 オプションを追加していなかったのが原因でした。自己勘違い。 -- [[zyam56]] &new{2014-08-08 (金) 23:56:58};
+
+#comment

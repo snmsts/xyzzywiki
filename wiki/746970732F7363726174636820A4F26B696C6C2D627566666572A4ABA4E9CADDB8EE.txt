@@ -1,0 +1,13 @@
+scratch を保存する設定にしてメモ代わりに使っている時に、
+うっかりkill-bufferしてあせってしまうあわてんぼうさんへ。
+
+ ;; *scratch* な場合は nil を返してkillさせない
+ (add-hook '*query-kill-buffer-hook*
+           #'(lambda ()
+               (if (and (not *kill-buffer-kills-scratch*)
+                        (equal (buffer-name (selected-buffer))
+                               "*scratch*"))
+                   nil
+                 t)))
+
+----

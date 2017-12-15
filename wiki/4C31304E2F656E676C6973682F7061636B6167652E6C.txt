@@ -1,0 +1,38 @@
+[[L10N/english]]
+
+ package.l:17:      (error "パッケージが存在しません: ~S" name))
+- Non-existing package: ~S
+
+#comment
+ package.l:27:      (error "パッケージが見つかりません: ~S" p))
+- Package not found: ~S
+
+#comment
+ package.l:41:		    (error "~Sと~Sで~Aが2回以上指定されています" o option x)))
+- (error "~A was specified twice in ~S and ~S" x o option)))  どういう状況かいまいち分かってないですが。
+
+#comment
+ package.l:68:	      (error "~Sにシンボル~Aが見つかりません" p n))
+- (error "Symbol ~A not found in ~S" n p))
+
+#comment
+ package.l:84:	(error "defpackageのオプションの形式が不正です: ~S" opt))
+- Invalid option format for defpackage: ~S
+
+#comment
+ package.l:94:						     (error "同じ名前のパッケージが存在します: ~S" x)))
+- Package of the same name already exists: ~S
+
+#comment
+ package.l:123:	       (error "未サポートのオプションです: ~S" x)))))
+-"Not yet supported option: ~S" またはシンプルに "Unsupported option: ~s" --  &new{2005-09-16 14:39:42 (金)};
+
+#comment
+ package.l:267:    (error "symbol-typeが指定されていません"))
+- symbol-type must be non-nil.
+
+#comment
+ package.l:283:	(t (error "未定義のシンボルタイプです: ~S" x))))
+- Undefined symbol type: ~S
+
+#comment

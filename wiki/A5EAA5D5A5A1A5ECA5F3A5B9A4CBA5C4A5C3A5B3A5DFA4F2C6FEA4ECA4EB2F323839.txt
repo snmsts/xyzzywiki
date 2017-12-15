@@ -1,0 +1,76 @@
+* parse-char-encoding-region parse-char-encoding-string [#jaa00838]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[甘栗]]
+-優先順位:   普通
+-状態:       着手
+-カテゴリー: 新規項目
+-投稿日:     2007-08-27 (月) 18:50:03
+-バージョン: 
+
+** メッセージ [#heab90e9]
+**builtin.l [#v1bc5ba5]
+**parse-char-encoding-region (accept-char-encoding from to) [#z9428508]
+
+この関数はリージョン内の文字セットを返すようです。~
+accept-char-encoding には t か 文字セットのリストを与えます。~
+accept-char-encoding が t の場合、そのバッファで使われている文字セットをリスト形式で返します。~
+accept-char-encoding が'(:us-ascii :cp932) などの文字セットのリスト形式の場合、
+指定された文字セット内で使われている文字セットを返します。~
+
+判別できない文字セットがあった場合、その文字への位置を返します。(integer)
+
+**parse-char-encoding-string (accept-char-encoding string &key :start :end)~[#yf8a1b1d]
+
+この関数はリージョンの代わりに、文字列を引数として受けとります。~
+使い方は parse-char-encoding-region と同様だと思います。
+
+----
+- どーもです。利用例がなくて難しいのですが、自分も確認してみます。 -- [[NANRI]] &new{2007-08-27 (月) 21:22:57};
+ <chapter>
+ <title>parse-char-encoding-region</title>
+ <type>Function</type>
+ <arguments>parse-char-encoding-region ACCEPT-CHAR-ENCODING FROM TO</arguments>
+ <package>editor</package>
+ <description>
+ リージョン内で使用されている文字の文字セットを返します。
+ 
+   ACCEPT-CHAR-ENCODING : 文字セットのリストを指定します。
+                          tを指定するとすべての文字セットを指定したことになります。
+ 
+ 戻り値
+   使用されている文字セットがリスト形式で返ります。
+   判別できない文字がある場合やACCEPT-CHAR-ENCODINGで指定された文字セット
+   以外の文字がある場合はその文字のポイントが返ります。
+ 
+ 指定可能な文字セットは以下のとおりです。
+ :us-ascii :jisx0201-kana :iso8859-1 :iso8859-2 :iso8859-3 :iso8859-4 
+ :iso8859-5 :iso8859-7 :iso8859-9 :iso8859-10 :iso8859-13 :jisx0212 
+ :gb2312 :ksc5601 :big5 :cp932
+ 他にもあるかもしれませんが詳細は不明。
+ </description>
+ <seealso>parse-char-encoding-string</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>parse-char-encoding-string</title>
+ <type>Function</type>
+ <arguments>parse-char-encoding-string ACCEPT-CHAR-ENCODING STRING :START :END</arguments>
+ <package>editor</package>
+ <description>
+ 文字列で使用されている文字の文字セットを返します。
+ parse-char-encoding-regionを参照。
+ 
+   ACCEPT-CHAR-ENCODING : 文字セットのリストを指定します。
+                          tを指定するとすべての文字セットを指定したことになります。
+   STRING               : 対象の文字列
+ </description>
+ <seealso>parse-char-encoding-region</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>builtin.l</file>
+ </chapter>
+
+#comment

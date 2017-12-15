@@ -1,0 +1,883 @@
+#freeze
+* howm本体1.2.1対応 howm-wrap [#v4bae1e8]
+-ページ:     [[patch]]
+-投稿者:     [[deecay]]
+-優先順位:   低
+-状態:       提案
+-カテゴリー: その他
+-投稿日:     2007-08-28 (火) 18:55:57
+-バージョン: 1
+
+** メッセージ [#e4c28109]
+
+ちょっと作ってみました。
+-本体の*.elを*.lにしてsite-lisp/howmにリネーム。
+-howm-wrapのファイル三つにpatchを適用。
+-三つをbyte-compile-file
+-xyzzy再起動
+
+ diff -u old/elisp-lib.l new/elisp-lib.l
+ --- old/elisp-lib.l	Thu Jan 08 20:13:46 2004
+ +++ new/elisp-lib.l	Sun Sep 02 23:44:09 2007
+ @@ -136,25 +136,19 @@
+  (eval-when (:compile-toplevel :load-toplevel :execute)
+    (shadow '(defun)))
+  (eval-when (:compile-toplevel :load-toplevel :execute)
+ -  (defmacro defun (name (&rest var) &body form)
+ -    (lisp::let ((form2 form))
+ -      (when (stringp (car form2)) (pop form2))
+ -      (when (and var
+ -		 (consp (car form2))
+ -		 (eq 'interactive (car (car form2)))
+ -		 (stringp (cadr (car form2))))
+ -	(lisp::let ((iarg (schar (cadr (car form2)) 0)))
+ -	  (when (or (char= #\p iarg)
+ -		    (char= #\P iarg))
+ -	    (lisp::setq var (remove-if #'(lambda (x) (eq '&optional x)) var))
+ -	    (when (and (char= #\p iarg)
+ -		       (or (not (consp (car var)))
+ -			   (null (cdar var))))
+ -	      (setf (car var)
+ -		    (list (if (consp (car var)) (caar var) (car var)) 1)))
+ -	    (lisp::setq var (append (list '&optional) var)))))
+ -      `(lisp::defun ,name (,@var)
+ -	 ,@form))))
+ +  (defmacro defun (name (&rest lambda-list) &body body)
+ +  (or (eq (symbol-package name) (find-package "elisp-lib"))
+ +      (error "conflict defun: ~S" name))
+ +  (let (decl intr)
+ +    (multiple-value-setq (decl body)
+ +      (lisp::find-declaration body))
+ +    (multiple-value-setq (intr body)
+ +      (lisp::find-interactive body))
+ +    `(lisp::defun ,name ,lambda-list
+ +       ,@decl
+ +       ,@(lisp::if (and intr (stringp (cadar intr)))
+ +             `((,@(car intr) :emacs t)) intr)
+ +			 ,@body))))
+  
+  ;; elisp のキー表現を xyzzy のキー表現に。
+  (eval-when (:compile-toplevel :load-toplevel :execute)
+ @@ -241,7 +235,8 @@
+    (defmacro make-local-variable (sym)
+      `(unless (lisp::member ,sym *localize-symbols* :test #'eq)
+         (push ,sym *localize-symbols*)
+ -       (ed::make-local-variable ,sym))))
+ +			 (ed::make-local-variable ,sym))
+ +		sym))
+  
+  ;; n がマイナスなら 0 番目を。
+  (eval-when (:compile-toplevel :load-toplevel :execute)
+ @@ -753,7 +748,9 @@
+  	    (push (ed::find-file-internal file) result)))
+        (if (= (length result) 1)
+  	  (car result)
+ -	result))))
+ +         ;ファイルがなくてもバッファは作る。 for howm-write-history in 1.2.1
+ +      (or result
+ +        (ed::find-file-internal filename))))))
+  
+  ;;; 検索
+  
+ @@ -1044,7 +1041,7 @@
+  	       (arg `(,(concat program " "
+  			       (or (mapconcat #'(lambda (x)
+  						  (if (find #\SPC x)
+ -						      (concat "'" x "'")
+ +						      (concat "\"" x "\"")
+  						    x))
+  					      args " ")
+  				   ""))
+ @@ -1060,7 +1057,7 @@
+  			  (if (and (consp destination)
+  				   (null (second destination)))
+  			      (list :error nil)))
+ -		      :show :minimize
+ +		      :show :hide
+  		      :wait ,wait)))
+      (unwind-protect
+  	(prog1
+ @@ -1474,3 +1471,256 @@
+  
+  ;(export '(elisp-load elisp-compile))
+  ;(import '(elisp-load elisp-compile) "user")
+ +
+ +
+ +(defvar system-type (os-platform))
+ +(defvar minor-mode-map-alist nil)
+ +(defvar interpreter-mode-alist nil)
+ +(defvar inhibit-first-line-modes-regexps nil)
+ +(defvar inhibit-first-line-modes-suffixes nil)
+ +(defvar enable-local-variables nil)
+ +(defvar default-directory (default-directory))
+ +
+ +(si:*fset 'defconst #'defconstant)
+ +(si:*fset 'downcase #'string-downcase)
+ +(si:*fset 'copy-sequence #'copy-seq) ;;is copy-list better??
+ +(si:*fset 'defsubst #'defun)
+ +(si:*fset 'set-syntax-table #'use-syntax-table)
+ +
+ +(defun eval-and-compile (&rest body) nil) ;used in code for xemacs
+ +(defun event-convert-list (&rest body) nil) ;used in code for xemacs
+ +;(remove (string-to-char "_") "!@~") ;無視。もしくはあとで再定義。
+ +(defun string-to-char (str) nil)
+ +
+ +(defun add-to-list (list-sym item)
+ +  (if (member item (symbol-value list-sym))
+ +      (symbol-value list-sym)
+ +    (set list-sym (cons item (symbol-value list-sym)))))
+ +
+ +(defun one-window-p ()
+ +	(eq (count-windows) 1))
+ +
+ +(defun memq (object list)
+ +  (lisp::member object list :test #'eq))
+ +
+ +(defun file-name-sans-versions (name) ;not sure.
+ +	(save-match-data
+ +	(ed::substring name 0
+ +						 (or (ed::string-match "\\.~[0-9]+~\\'" name)
+ +								 (ed::string-match "~\\'" name)
+ +								 (ed::length name)))))
+ +
+ +(defun regexp-opt (strings &optional paren)
+ +  (let ((open-paren (if paren "\\(" ""))
+ +        (close-paren (if paren "\\)" "")))
+ +    (concat open-paren
+ +            (mapconcat 'regexp-quote strings "\\|")
+ +            close-paren)))
+ +
+ +(defun call-process-region (start end program &optional delete buffer destination &rest args)
+ +	(lisp::let* ((infile (make-temp-file-name "elisp")))
+ +		(write-region start end infile)
+ +		(when delete
+ +			(delete-region start end))
+ +		(when buffer
+ +			(setq destination t))
+ +		(apply 'call-process program infile destination nil args)
+ +		(delete-file infile)))
+ +
+ +(defun put (symbol propname value)
+ +	(setf (get symbol propname) value))
+ +
+ +(defun defalias (symbol definition &optional docstring)
+ +	(if (symbolp definition)
+ +			(si:*fset symbol (symbol-function definition))
+ +		(si:*fset symbol definition)))
+ +
+ +(defun string-to-list (string)
+ +	(ed::map 'list #'ed::character string))
+ +
+ +(defun char-to-string (char)
+ +	(ed::format nil "~A" char))
+ +
+ +(defun read-event ()
+ +	(read-char *keyboard* nil nil nil))
+ +
+ +(defun replace-regexp-in-string (regexp rep string &optional fixedcase literal subexp start)
+ +	(substitute-string string regexp rep))
+ +
+ +(defmacro save-selected-window (&rest form)
+ +	`(let ((w (selected-window)))
+ +		 ,@form
+ +		 (set-window w)))
+ +
+ +(defmacro shell-command (cmd)
+ +	`(let ((s (selected-buffer))
+ +				 (b (get-buffer-create "*Shell Command Output*")))
+ +		 ;map-slash の適切な置き場所はどこか
+ +		 ;日本語のファイル名・スペースの入ったファイル名のチェック
+ +		 (prog1
+ +				 (execute-shell-command (map-slash-to-backslash ,cmd) nil b)
+ +			 (switch-to-buffer s))))
+ +
+ +
+ +;; derived-mode
+ +(defun derived-mode-map-name (mode)
+ +  "Construct a map name based on a MODE name."
+ +  (intern (concat (symbol-name mode) "-map")))
+ +(defsubst derived-mode-hook-name (mode)
+ +  "Construct the mode hook name based on mode name MODE."
+ +  (intern (concat (symbol-name mode) "-hook")))
+ +
+ +(defsubst derived-mode-map-name (mode)
+ +  "Construct a map name based on a MODE name."
+ +  (intern (concat (symbol-name mode) "-map")))
+ +
+ +(defsubst derived-mode-syntax-table-name (mode)
+ +  "Construct a syntax-table name based on a MODE name."
+ +  (intern (concat (symbol-name mode) "-syntax-table")))
+ +
+ +(defsubst derived-mode-abbrev-table-name (mode)
+ +  "Construct an abbrev-table name based on a MODE name."
+ +  (intern (concat (symbol-name mode) "-abbrev-table")))
+ +
+ +(defun derived-mode-make-docstring (parent child &optional docstring)
+ +  "Construct a docstring for a new mode if none is provided."
+ +
+ +  (let ((map (derived-mode-map-name child))
+ +	(syntax (derived-mode-syntax-table-name child))
+ +	(abbrev (derived-mode-abbrev-table-name child))
+ +	(hook (derived-mode-hook-name child)))
+ +
+ +    (unless (stringp docstring)
+ +      ;; Use a default docstring.
+ +      (setq docstring
+ +	    (format "Major mode derived from `%s' by `define-derived-mode'.
+ +It inherits all of the parent's attributes, but has its own keymap,
+ +abbrev table and syntax table:
+ +
+ +  `%s', `%s' and `%s'
+ +
+ +which more-or-less shadow %s's corresponding tables."
+ +		    parent map abbrev syntax parent)))
+ +  
+ +    (unless (string-match (regexp-quote (symbol-name hook)) docstring)
+ +      ;; Make sure the docstring mentions the mode's hook
+ +      (setq docstring
+ +	    (concat docstring
+ +		    (if (eq parent 'fundamental-mode)
+ +			"\n\nThis mode "
+ +		      (concat
+ +		       "\n\nIn addition to any hooks its parent mode "
+ +		       (if (string-match (regexp-quote (format "`%s'" parent))
+ +					 docstring) nil
+ +			 (format "`%s' " parent))
+ +		       "might have run,\nthis mode "))
+ +		    (format "runs the hook `%s'" hook)
+ +		    ", as the final step\nduring initialization.")))
+ +    
+ +    (unless (string-match "\\\\[{[]" docstring)
+ +      ;; And don't forget to put the mode's keymap
+ +      (setq docstring (concat docstring "\n\n\\{" (symbol-name map) "}")))
+ +
+ +    docstring))
+ +
+ +(defmacro define-derived-mode (child parent name &optional docstring &rest body)
+ +
+ +  (when (and docstring (not (stringp docstring)))
+ +    ;; Some trickiness, since what appears to be the docstring may really be
+ +    ;; the first element of the body.
+ +    (push docstring body)
+ +    (setq docstring nil))
+ +
+ +  (unless parent (setq parent 'fundamental-mode))
+ +
+ +  (let ((map (derived-mode-map-name child))
+ +	(syntax (derived-mode-syntax-table-name child))
+ +	(abbrev (derived-mode-abbrev-table-name child))
+ +	(hook (derived-mode-hook-name child))
+ +	(docstring (derived-mode-make-docstring parent child docstring)))
+ +	 
+ +    `(progn
+ +       (defvar ,map (make-sparse-keymap))
+ +       (defvar ,syntax (make-syntax-table))
+ +       (defvar ,abbrev nil)
+ +       (define-abbrev-table ',abbrev nil)
+ +       (put ',child 'derived-mode-parent ',parent)
+ +     
+ +       (defun ,child ()
+ +	 ,docstring
+ +	 (interactive)
+ +					; Run the parent.
+ +	 ;; (combine-run-hooks
+ +
+ +	  (,parent)
+ +					; Identify special modes.
+ +	  (if (get (quote ,parent) 'special)
+ +	      (put (quote ,child) 'special t))
+ +					; Identify the child mode.
+ +	  (setq major-mode (quote ,child))
+ +	  (setq mode-name ,name)
+ +					; Set up maps and tables.
+ +				 (setq ,map (append ,map (cdr (local-keymap))))
+ +#|	  (unless (keymap-parent ,map)
+ +	    (set-keymap-parent ,map (current-local-map)))
+ +	  (let ((parent (char-table-parent ,syntax)))
+ +	    (unless (and parent (not (eq parent (standard-syntax-table))))
+ +	      (set-char-table-parent ,syntax (syntax-table))))
+ +	  (when local-abbrev-table
+ +	    (mapatoms
+ +	     (lambda (symbol)
+ +	       (or (intern-soft (symbol-name symbol) ,abbrev)
+ +		   (define-abbrev ,abbrev (symbol-name symbol)
+ +		     (symbol-value symbol) (symbol-function symbol))))
+ +	     local-abbrev-table))
+ +  |#     
+ +	  (use-local-map ,map)
+ +	  (set-syntax-table ,syntax)
+ +	  (setq local-abbrev-table ,abbrev)
+ +					; Splice in the body (if any).
+ +	  ,@body
+ +	  ;; )
+ +					; Run the hooks, if any.
+ +	 (run-hooks ',hook)))))
+ +
+ +
+ +;require howm in howm-mode.el 対策.
+ +(eval-when (:compile-toplevel :load-toplevel :execute)
+ +  (shadow '(featurep)))
+ +(defun featurep (feature)
+ +	(ed::member (symbol-name feature) *modules* :test #'string=))
+ +
+ +(eval-when (:compile-toplevel :load-toplevel :execute)
+ +  (shadow '(random)))
+ +(defun random (&optional num)
+ +	(cond ((numberp num)
+ +				 (ed::random num))
+ +				(t
+ +				 (make-random-state t)
+ +				 (ed::random 99999))))
+ +
+ +(eval-when (:compile-toplevel :load-toplevel :execute)
+ +  (shadow '(buffer-substring-no-properties)))
+ +(defun buffer-substring-no-properties (from to)
+ +	(buffer-substring (or from 0) (or to 0)))
+ +
+ +(eval-when (:compile-toplevel :load-toplevel :execute)
+ +  (shadow '(read-string)))
+ +(defun read-string (prompt &optional init hist)
+ +	(interactive)
+ +	(save-window-excursion
+ +		(let ((init (cond ((consp init) (car init))
+ +											((stringp init) init)
+ +											(t nil))))
+ +			(ed::read-string prompt :default init :history (car hist)))))
+ +
+ +(defun file-name-sans-extension (filename)
+ +  (save-match-data
+ +    (let ((file (file-name-sans-versions (file-name-nondirectory filename)))
+ +          directory)
+ +      (if (and (string-match "\\.[^.]*\\'" file)
+ +         (not (eq 0 (match-beginning 0))))
+ +    (if (setq directory (file-name-directory filename))
+ +        (concat directory (substring file 0 (match-beginning 0)))
+ +      (substring file 0 (match-beginning 0)))
+ +  filename))))
+ diff -u old/howm-migemo.l new/howm-migemo.l
+ --- old/howm-migemo.l	Sun Dec 28 05:03:54 2003
+ +++ new/howm-migemo.l	Wed Aug 08 05:05:42 2007
+ @@ -8,13 +8,16 @@
+  (defun howm-list-migemo2 (&optional completion-p)
+    (interactive "P")
+    (if completion-p
+ -      (howm-grep t)
+ +      (howm-list-grep t)
+      (lisp::let* ((roma (read-from-minibuffer "Search all (migemo): "))
+  		 (e-reg (get-migemo-regexp roma))
+ +		 (g-reg (if howm-view-use-grep
+ +								(get-migemo-regexp roma :egrep)
+ +							e-reg))
+  		 (hilit `((,e-reg . 'howm-view-hilit-face)))
+  		 (howm-view-use-grep nil))
+        (declare (special howm-view-use-grep))
+ -      (if e-reg
+ +			(if (and e-reg g-reg)
+  	  (progn
+  	    (howm-view-search e-reg howm-directory nil nil nil hilit)
+  	    (howm-list-normalize e-reg))
+ diff -u old/howm-wrap.l new/howm-wrap.l
+ --- old/howm-wrap.l	Mon Jan 26 08:53:40 2004
+ +++ new/howm-wrap.l	Thu Sep 13 02:19:14 2007
+ @@ -17,9 +17,12 @@
+  (defpackage "canna"
+    )
+  (in-package "canna")
+ -(export '(*fence-mode* *select-mode*))
+ +(export '(*fence-mode* *select-mode* enter-canna-mode quit-canna-mode))
+  (defvar *fence-mode* nil)
+  (defvar *select-mode* nil)
+ +(defun enter-canna-mode (around action-lock-fix activate))
+ +(defun quit-canna-mode (around action-lock-fix activate))
+ +
+  
+  #|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+  ;; egg ？
+ @@ -41,7 +44,7 @@
+  ;; font-lock
+  |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||#
+  
+ -(defvar font-lock-defaults nil)
+ +(defvar font-lock-defaults '(nil))
+  (defvar font-lock-mode-on-hook nil)
+  (defvar font-lock-mode-off-hook nil)
+  
+ @@ -150,7 +153,40 @@
+  |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||#
+  
+  
+ -(setq howm-keyword/ref-regexp-format "\\(%s\\)[ \t\r\n]*\\([^ \t\r\n].*\\)$")
+ +(defun font-lock-compile-keywords (&optional arg)	)
+ +
+ +(defun howm-xemacsp () nil)
+ +
+ +(setq howm-view-window-initializer #'delete-other-windows)
+ +
+ +(make-variable-buffer-local 'howm-view-item-list) ;もっとうまい方法はないの？
+ +(make-variable-buffer-local 'action-lock-rules)
+ +(make-variable-buffer-local 'riffle-item-list)
+ +(make-variable-buffer-local 'riffle-contents-end)
+ +
+ +(make-variable-buffer-local 'action-lock-original-font-lock-keywords)
+ +(make-variable-buffer-local 'action-lock-original-return)
+ +(make-variable-buffer-local 'howm-date-current)
+ +(make-variable-buffer-local '*howm-menu-shortcut-markers*)
+ +(make-variable-buffer-local 'howm-menu-previous-buffer)
+ +(make-variable-buffer-local 'howm-menu-next-expiry-time)
+ +(make-variable-buffer-local 'howm-menu-last-time)
+ +(make-variable-buffer-local 'howm-menu-buffer-file)
+ +(make-variable-buffer-local 'howm-menu-buffer-file-place)
+ +(make-variable-buffer-local 'howm-menu-mode-local-map)
+ +(make-variable-buffer-local 'action-lock-mode-before-canna)
+ +(make-variable-buffer-local 'howm-list-title-previous)
+ +(make-variable-buffer-local 'riffle-name)
+ +(make-variable-buffer-local 'riffle-item-list)
+ +(make-variable-buffer-local 'riffle-controller)
+ +(make-variable-buffer-local 'riffle-summary-last-line)
+ +(make-variable-buffer-local 'riffle-contents-end)
+ +
+ +
+ +
+ +;(setq howm-keyword/ref-regexp-format "\\(%s\\)[ \t\r\n]*\\([^ \t\r\n].*\\)$")
+ +;(setq howm-keyword/ref-regexp-format "\\(%s\\)[ \t]*\\([^ \t\r\n].*\\)$")
+ +
+  #|
+  (setq howm-menu-key-regexp
+        "\\(\\([^\n\r\f]\\)[^\n\r\f]*\\)\\(>\\)?\\[")
+ @@ -165,27 +201,26 @@
+  (when (file-exist-p "~/howm-pre-init.l")
+    (lisp::load "~/howm-pre-init.l"))
+  
+ +(defun get-require-list (path)
+ +	(let (req)
+ +		(with-open-file (fp (merge-pathnames "howm.l" path))
+ +			(let ((line nil))
+ +				(while (setq line (read-line fp nil nil nil))
+ +					(when (string-matchp "^(require '\\([^)]*\\)" line)
+ +						(setq file (merge-pathnames (concat (match-string 1) ".l") path))
+ +						(unless (member (match-string 1) '("cl" "easy-mmode" "font-lock") :test #'string=)
+ +							(push file req))))))
+ +		(when (or (file-exist-p (merge-pathnames (concat "howm-migemo" ".l") path))
+ +							(file-exist-p (merge-pathnames (concat "howm-migemo" ".lc") path)))
+ +			(push "howm-migemo" req))
+ +		(reverse req)))
+ +
+  (let ((path (let ((file (locate-library "howm-wrap.lc")))
+  	      (when file
+  		(directory-namestring file))))
+ -      migemo-l)
+ +      menu-l migemo-l mode-l)
+    (when path
+ -    (dolist (file (append
+ -		   (delete-if
+ -		    #'(lambda (x)
+ -			(let ((name (pathname-name x)))
+ -			  ;; コンパイル、ロードされてまずいものを除く。
+ -			  (or (string-matchp "howm-wrap" name)
+ -			      (string-matchp "howm-install" name)
+ -			      (string-matchp "howm-uninstall" name)
+ -			      (and (string-matchp "howm-migemo" name)
+ -				   (setq migemo-l (list x))))))
+ -		    (sort (or
+ -			   (directory path :file-only t :absolute t :wild "*.l")
+ -			   (directory path :file-only t :absolute t :wild "*.lc"))
+ -			  #'string-lessp))
+ -		   ;; migemo.l は最後にコンパイル、ロードされるようにする。
+ -		   migemo-l))
+ +    (dolist (file (get-require-list path))
+        (if (string-equal (pathname-type file) "l")
+  	  (lisp::let ((file-c (concat file "c")))
+  	    (if (or (and (boundp 'renew-elib)
+ @@ -193,6 +228,7 @@
+  		    (not (file-exist-p file-c))
+  		    (file-newer-than-file-p file file-c))
+  		(progn
+ +			;;todo menu is jis
+  		  (elisp-compile file (if (string-matchp "howm-migemo" file)
+  					  *encoding-sjis*))
+  		  (lisp::load file-c))
+ @@ -205,8 +241,98 @@
+  ;; howm が動くようにいろいろと設定。
+  |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||#
+  
+ -(defun howm-view-string<= (a b)
+ -  (string-lessp b a))
+ +;(defun howm-view-string> (a b)
+ +;	(string-lessp b a))
+ +
+ +
+ +;; howm-read-string from howm-common.l
+ +
+ +(defun howm-ret-key-event () #\RET)
+ +
+ +(setq howm-ret-key-event (howm-ret-key-event))
+ +
+ +(defun howm-event-to-character (event)
+ +	(if (eq event #\RET)
+ +			nil
+ +		event))
+ +
+ +(defun howm-characterp (x)
+ +	(characterp x))
+ +
+ +(defun howm-read-string (prompt &optional immediate-chars continued-chars
+ +																pass-through pass-ret-through)
+ +	(minibuffer-prompt (quote-string prompt #\~ #\~))
+ +	(let* ((ev (howm-read-event))
+ +				 (ch (howm-event-to-character ev)))
+ +		(howm-read-string-sub ev ch
+ +													prompt immediate-chars continued-chars
+ +													pass-through pass-ret-through)))
+ +
+ +(defun howm-read-string-sub (event char
+ +                             prompt immediate-chars continued-chars
+ +                             pass-through pass-ret-through)
+ +  (let* ((ichars (string-to-list (or immediate-chars "")))
+ +         (cchars (string-to-list (or continued-chars "")))
+ +         (first-char char)
+ +         (first-str (char-to-string first-char)))
+ +    (cond ((member first-char ichars)
+ +           first-str)
+ +          ((member first-char cchars)
+ +					 (let ((ans first-char))
+ +						 (loop
+ +							 (minibuffer-prompt
+ +								(ed::format  nil "~A:~A" (quote-string prompt #\~ #\~) ans))
+ +							 (let ((c (read-char *keyboard*)))
+ +								 (case c
+ +									 (#\RET (return ans))
+ +									 (#\C-g (quit))
+ +									 (t (setq ans (ed::format nil "~a~c" ans c))))))))
+ +								 
+ +          (t
+ +           (howm-read-string-fail event pass-through pass-ret-through)))))
+ +
+ +
+ +(defun howm-menu-here-var (expr beg end)
+ +	(setq expr (find-symbol (symbol-name expr) (find-package "elisp-lib")))
+ +  (if (boundp expr)
+ +      (howm-replace-region beg end (symbol-value expr))
+ +    (message "Unknown symbol: %s" expr)))
+ +
+ +
+ +; howm-menu-here は lisp-mode-syntax でないのにforward-sexp を使う
+ +; howm-menu-here は menu-hook より前によばれるのでこうするしかない。
+ +
+ +(defun howm-menu-here ()
+ +	(let ((syntab (syntax-table)))
+ +		(use-syntax-table ed::*lisp-mode-syntax-table*)
+ +  (let* ((beg (match-beginning 0))
+ +         (expr-beg (match-end 0))
+ +         (expr-end (progn (forward-sexp) (point)))
+ +         (expr (read (buffer-substring-no-properties expr-beg expr-end))))
+ +    (cond ((symbolp expr) (howm-menu-here-var expr beg expr-end))
+ +          ((listp expr) (howm-menu-here-func (car expr) (cdr expr)
+ +                                              beg expr-end))
+ +          (t (message "Unknown expr: %s" expr))))
+ +		(use-syntax-table syntab)))
+ +
+ +
+ +;; howm-menu-here-func の (member func howm-menu-allow) でこけるから
+ +;; func はintern されてない素のシンボルだから intern しておく
+ +;; ed::の関数はどうする?
+ +(defun howm-menu-here-func (func args beg end)
+ +;;   (let ((allowed (or (eq howm-menu-allow t) (member func howm-menu-allow))))
+ +	(let* ((func (intern (symbol-name func) "elisp-lib"))
+ +				 (allowed (member func howm-menu-allow)))
+ +    (cond ((not allowed) (message "Not allowed: %s" func))
+ +          ((not (fboundp func)) (message "Unknown function: %s" func))
+ +          (t (howm-replace-region beg end (apply func args))))))
+ +
+ +;; howm-date   %a はxyzzyでは%v
+ +(defun howm-datestr-day-of-week (date)
+ +  (format-time-string "%v" (howm-datestr-to-time date)))
+ +
+ +
+ +
+  
+  (defun howm-menu-action (function-table arg)
+    (let* ((func (car function-table))
+ @@ -221,7 +347,7 @@
+  			  (prog1
+  			      ,s-apply
+  			    (setq buf (current-buffer)))))))
+ -        `(lambda ()
+ +        `(lambda (&optional ,howm-menu-action-arg)
+             (let ((a ,arg)
+                   (cur (current-buffer))
+                   (prev (if (howm-buffer-alive-p howm-menu-previous-buffer)
+ @@ -259,7 +385,7 @@
+           (end (match-end 0))
+           (wbeg (match-beginning howm-menu-key-regexp-word-pos))
+           (wend (match-end  howm-menu-key-regexp-word-pos))
+ -         (word (match-string-no-properties howm-menu-key-regexp-word-pos))
+ +;;         (word (match-string-no-properties howm-menu-key-regexp-word-pos))
+           (key (match-string-no-properties howm-menu-key-regexp-key-pos))
+  ;;         (key (substring word 0 1)) ;; first letter
+           (move-only (match-beginning howm-menu-key-regexp-moveonly-pos))
+ @@ -281,28 +407,48 @@
+        (toggle-read-only r))
+  ;;     (delete-region beg end)
+  ;;     (insert label)
+ -    (let ((p (point)))
+ -      (define-key howm-menu-mode-map key
+ -        `(lambda ()
+ -           (interactive)
+ -           (let ((pos ,p)
+ -		 (buf))
+ -             (if ,move-only
+ -                 (goto-char pos)
+ -	       (progn
+ -		 (save-excursion
+ -		   (goto-char pos)
+ -		   (let ((case-fold-search nil)) ;; temporaly
+ -		     (when (null (action-lock-get-action))
+ -		       (action-lock-goto-next-link)))
+ -		   (action-lock-invoke)
+ -		   (setq buf (current-buffer)))
+ -		 (when buf (set-buffer buf))))))))
+ +    (let ((p (howm-menu-shortcut-get-marker)))
+ +      (define-key howm-menu-mode-local-map key
+ +        (howm-menu-shortcut-func p move-only)))
+      (when (member key *howm-menu-shortcut-keys*)
+        (setq *howm-menu-shortcut-multidef-keys*
+              (cons key *howm-menu-shortcut-multidef-keys*)))
+      (setq *howm-menu-shortcut-keys*
+            (cons key *howm-menu-shortcut-keys*))))
+ +(defun howm-menu-shortcut-func (p move-only)
+ +  `(lambda (arg)
+ +     (interactive "P")
+ +		 (let ((pos ,p) (buf))
+ +       (if ,move-only
+ +           (goto-char pos)
+ +         (save-excursion
+ +           (goto-char pos)
+ +           (prog1 (let ((case-fold-search nil)) ;; temporaly
+ +             (when (null (action-lock-get-action))
+ +               (action-lock-goto-next-link))
+ +             (action-lock-invoke arg))
+ +						 (setq buf (current-buffer))))
+ +				 (when buf (set-buffer buf))))))
+ +
+ +(setq elib::howm-menu-display-rules
+ +  `(
+ +    ;; static
+ +    ("%sdays"    . "%here%howm-menu-schedule-days")
+ +    ("%tnum"     . "%here%howm-menu-todo-num")
+ +    ("%schedule" . "%here%(howm-menu-schedule)")
+ +    ("%todo"     . "%here%(howm-menu-todo)")
+ +    ("%reminder" . "%here%(howm-menu-reminder)")
+ +    ("%recent"   . "%here%(howm-menu-recent)")
+ +    ("%random"   . "%here%(howm-menu-random)")
+ +    ;; dynamic
+ +    ("%here%" . ,#'howm-menu-here)
+ +    (,howm-menu-key-regexp . ,#'howm-menu-shortcut)
+ +    ))
+ +
+ +; menu のtoggle-invisible機能はデフォルトでオフ
+ +(setq howm-menu-toggle-invisible nil)
+ +; shell-command はこうしないとうごかない
+ +(setq howm-abbreviate-file-name nil)
+  
+  (defvar-local action-lock-original-font-lock-keywords nil)
+  (defvar-local action-lock-original-return nil)
+ @@ -320,11 +466,16 @@
+      (make-local-variable 'howm-view-item-list)
+      (unless howm-view-item-list
+        (setq howm-view-item-list nil))
+ -    (ed::add-hook '*post-command-hook* 'howm-view-summary-check))
+ +    (ed::add-hook '*post-command-hook* 'riffle-post-command))
+     ((eq buffer-mode 'howm-view-contents-mode)
+ -    (ed::add-hook '*post-command-hook* 'font-lock-fontify-hook))))
+ +    (ed::add-hook '*post-command-hook* 'font-lock-fontify-hook))
+ +	 ;((eq buffer-mode 'riffle-summary-mode)
+ +	;	(ed::add-hook '*post-command-hook* 'riffle-post-command))
+ +	 ))
+  (ed::add-hook 'howm-view-summary-mode-hook '*howm-init-summary-and-contents)
+  (ed::add-hook 'howm-view-contents-mode-hook '*howm-init-summary-and-contents)
+ +(ed::add-hook 'riffle-mode-hook '*howm-init-summary-and-contents)
+ +
+  
+  (defun *action-lock-mode-init ()
+    (make-local-variable 'action-lock-original-return)
+ @@ -349,10 +500,12 @@
+  (ed::add-hook 'howm-mode-on-hook '*howm-mode-init-vars)
+  
+  (defun howm-menu-mode-init ()
+ -  (howm-view-save-window-configuration))
+ +  ;(howm-view-save-window-configuration)
+ +	)
+  (ed::add-hook 'howm-menu-hook 'howm-menu-mode-init)
+  
+  ;; action-lock-open に不正な正規表現があるので修正。
+ +#|
+  (setq action-lock-default-rules
+    (list (action-lock-switch '("{ }" "{*}" "{-}"))
+  	(action-lock-date "{_}" "[%Y-%m-%d %H:%M]")
+ @@ -363,7 +516,7 @@
+  	(action-lock-browse "\\(http://\\([^> \r\n]*\\)\\)"
+  			    1) ;; http://...
+  	))
+ -
+ +|#
+  ;; 色の設定。
+  ;; ツール>共通設定>表示色             '(文字色 背景色 装飾（複数指定可）)
+  ;;                                                    :underline
+ ----
+- C-c , , すると、「変数が定義されていません: default-directory」と表示されたり、メニューの表示のところでフリーズしたりするようです。 --  &new{2007-08-30 (木) 19:44:38};
+- elisp-lib の最後に (defvar default-directory (default-directory)) を追加してbyte-compile-file したあと~
+site-lisp/howm フォルダにあるhowm-wrap.lc, elisp-lib.lc, howm-migemo.lc 以外の lc ファイルを削除。さらにhowm-init.l に
+ (setq howm-menu-toggle-invisible nil)
+を追加してxyzzy再起動でどうなるでしょうか。もしだめならエラーがでたとき、もしくはフリーズをC-gで止めたときのtrace-outputを貼ってもらえますか？ -- [[deecay]] &new{2007-08-31 (金) 00:53:24};
+- 回答ありがとうございます。ご指摘のコードを追加したところこれらの問題は発生しなくなりました。フリーズしていたのは(defun howm-menu の
+ (let ((m (howm-keyword-search howm-menu-top)))
+の部分のようです。 --  &new{2007-08-31 (金) 04:40:51};
+- 了解です。　keyword-search のなかの可視・不可視を切り替える部分が問題でした。いまからpatchを直します。 -- [[deecay]] &new{2007-08-31 (金) 18:35:34};
+- default-directory と invisible の設定をhowm-wrap.l と elisp-lib.l に統合しました。howm-initに書かなくてもpatchを適用するだけでよくなったはずです。 -- [[deecay]] &new{2007-09-01 (土) 01:23:32};
+- ありがとうございます。動作確認しました。1.2.1用の howm-helper も公開していただけると嬉しいです。 --  &new{2007-09-01 (土) 09:42:14};
+- これはhowmのバグのようですが、howm-history-fileがnilのときにhowm-historyを実行するとエラーになるようです。また、メニューに%recentなどを書くとエラーになるようです（file-name-sans-extensionをemacsから持ってこなければならない？）。 --  &new{2007-09-01 (土) 17:47:55};
+- ％recent はfile-name-sans-extensionを移植したら大丈夫でした。以下をelisp-libに追加、byte-compile、howm-wrap/elisp-lib/migemo以外のlcファイル削除、再起動でいけるはずです。OKなら上のpatchを直します。
+ (defun file-name-sans-extension (filename)
+ 	(save-match-data
+     (let ((file (file-name-sans-versions (file-name-nondirectory filename)))
+ 					directory)
+       (if (and (string-match "\\.[^.]*\\'" file)
+ 	       (not (eq 0 (match-beginning 0))))
+ 	  (if (setq directory (file-name-directory filename))
+ 	      (concat directory (substring file 0 (match-beginning 0)))
+ 	    (substring file 0 (match-beginning 0)))
+ 	filename))))
+
+howm-history-file のエラーもemacsで確認しました。情報ありがとうございます。本体でそうなっているものはxyzzyでhowmを使う上で致命的なものなら直そうと思いますがこれはいいんじゃないかと思っています。でもエラーの情報は今後も書き込んでください。 -- [[deecay]] &new{2007-09-02 (日) 00:13:00};
+- 対応ありがとうございます。％recent は動作確認しました。howm-history-file はデフォルトを "~/.howm-history" にすればいいような気がします。それと、バックアップファイルを作るを有効にしていても、.howm-history のバックアップが作成されないようにできませんでしょうか。現在1.2.1 に移行中ですが、1.2.4 の wrapper を作るのは難しそうでしょうか？1.2.1 でもバグがいくつかあるようなので、それを直す必要があると思います。 --  &new{2007-09-02 (日) 01:14:06};
+- history関係は何も手をつけていないので全く機能していないと思います。ちょっと見てみます。バックアップをとらないようにする変数設定を入れ込むタイミングがあるかも調べてみます。1.2.4はやる気はあったのですがコロンを関数名に使っていろいろやっているので「こりゃムリだ」と思ってあきらめました。そこがなんとかなればいけるかもしれません。 -- [[deecay]] &new{2007-09-02 (日) 01:59:14};
+- patch更新しました。shell-command, リマインダのカスタマイズ, howm-history などがきちんと動くようになったと思います。以下に自分のhomw-init.l の一部をおいておきます。
+ 
+ ;サマリの色付け
+ (setq *howm-view-font-lock-keywrods* '((t nil)))
+ (setq *howm-my-face* '(nil 1))
+ (setq howm-view-summary-font-lock-keywords '(("^.*|.* = \\(.+*\\)" (1 howm-mode-title-face prepend))
+ 							 ("^= \\(.+*\\)" (1 howm-my-face prepend))))
+ 
+ 
+ ;grep.exe
+ (defvar howm-view-grep-encoding *encoding-utf8n*
+   "メモの文字コード。*encoding-sjis*, *encoding-utf8n*など。")
+ 
+ (setq howm-view-file-list-length 400)
+ 
+ 
+ (setq howm-view-grep-command "grep -E")
+ (setq howm-view-fgrep-command "grep -F")
+ 
+ 
+ (defun howm-view-real-grep-single (str file-list
+                                        &optional fixed-p force-case-fold)
+   "Call grep and parse its result.
+ '((file line-number line) (file line-number line) ...)
+ "
+   (let ((grep-command (if fixed-p
+                           howm-view-fgrep-command
+                         howm-view-grep-command))
+         (opt (list howm-view-grep-option))
+         (eopt (and howm-view-grep-expr-option
+                    (list howm-view-grep-expr-option)))
+         (case-fold (or force-case-fold
+                        (not (let ((case-fold-search nil))
+                               (string-match "[A-Z]" str))))))
+     (when (and case-fold howm-view-grep-ignore-case-option)
+       (setq opt (cons howm-view-grep-ignore-case-option opt)))
+     (with-temp-buffer
+       (let* ((fs (mapcar #'expand-file-name file-list))
+              (lines (howm-view-real-grep-sub grep-command
+ 																						 opt eopt str fs))
+              (parsed (mapcar 'howm-view-grep-parse-line lines)))
+         (remove nil parsed)))))
+ 
+ (defun howm-view-real-grep-sub (grep-command opt eopt str fs)
+   "execute grep.exe . Split argument in to multiple lists if needed.
+ Encode query to defined encoding if Japanese character is included."
+   (let ((limit howm-view-file-list-length)
+ 				(str (if (string-match "[\X8200-\X9fff\Xe000-\Xfcff]" str)
+					   (prin1-to-string
+ 						(convert-encoding-from-internal howm-view-grep-encoding str))
+ 					 str))
+ 		result)
+ 	(dotimes (n (/ (length fs) limit) result)
+ 	  (let ((sub-fs (subseq fs (* n limit) (* (1+ n) limit))))
+ 		(setq result (append result
+ 							 (howm-view-call-process grep-command
+ 											`(,@opt ,@eopt ,str ,@sub-fs))))))))
+ 
+ 
+ (compile 'howm-view-real-grep-single)
+ (compile 'howm-view-real-grep-sub)
+ 
+ ;(setq howm-view-use-grep nil)
+ (setq howm-view-use-grep #'howm-view-real-grep-single)
+ 
+ ; フレーム
+ (defvar howm-frame-name "howm"
+   "howm用のフレームの名前")
+ 
+ 
+ (defun howm-buffer-in-pseudo-frame (buf)
+   "Hooked to create-buffer-hook. New function for howm-helper."
+   (interactive)
+   (and (string-match "\\.howm$\\|\\*howm[MCS].*" (buffer-name buf))
+        (string/= (ed::pseudo-frame-name (selected-pseudo-frame)) howm-frame-name)
+        (select-pseudo-frame (or (find-pseudo-frame howm-frame-name)
+ 												(new-pseudo-frame howm-frame-name)))))
+ 
+ (add-hook 'ed::*create-buffer-hook* 'howm-buffer-in-pseudo-frame)
+ 
+ (defun howm-delete-xyzzy-pframe ()
+ 	"New function for howm-helper."
+   (let ((frame (find-pseudo-frame howm-frame-name)))
+     (when frame
+       (delete-pseudo-frame frame))))
+ 
+ (defun howm-kill-all-xyzzy (&optional force-p)
+ 	(interactive "P")
+ 	(howm-kill-all force-p)
+ 	(howm-delete-xyzzy-pframe))
+ 
+ (global-set-key '(#\C-c #\, #\q) 'howm-kill-all-xyzzy)
+ 
+ 
+ ;; 新しい型のリマインダ「*」を定義する例:
+ ;; 「[2004-07-11]* ほげ」は, 指定日まで上昇し, そのあと下降.
+ ;; (旬度 = - |遅れ / 猶予日数|. 猶予日数のデフォルトは 3)
+ ;; 1. 旬度関数を準備 (遅れと猶予日数(とアイテム)を食って旬度を吐く)
+ ;;    遅れ: 指定日から今日までの日数. まだならマイナス.
+ ;;    猶予: 「[2004-07-11]*8」なら 8. 「[2004-07-11]*」だけなら nil.
+ ;;    旬度: 大きいほど上. 「覚書」なら初日が 0 で毎日 1 ずつ減る.
+ ;;    (アイテム: ふつうは使わないけどついでに. howm-backend.el 参照)
+ (defun my-priority (late lazy item)
+   (let ((r (howm-todo-relative-late late lazy 3)))
+     ;; r = late / lazy. 無指定時は lazy = 3.
+     (- (abs r))))
+ ;; 2. face を準備
+ (setq *my-face* '(9 9))
+ ;; 3. 記号, 旬度関数, face を登録.
+ ;; 残りの引数二つは, 「予定表に表示するか」「todo リストに表示するか」.
+ ;(howm-define-reminder "&" #'my-priority 'my-face nil t)
+ 
+ 
+ 
+ ;; howm-history-file はbackupを作らないように
+ (defun howm-write-log (message fmt file)
+   "Write MESSAGE with format FMT to the top of FILE.
+ FORMAT must have two %s; the formar is time and the latter is message."
+   (save-excursion
+     (with-current-buffer (find-file-noselect file)
+ 			(ed::make-local-variable 'make-backup-files)
+ 			(ed::setq make-backup-files nil)
+       (goto-char (point-min))
+       (insert (format fmt
+                       (format-time-string howm-dtime-format (current-time))
+                       message)
+               "\n")
+       (howm-basic-save-buffer))))
+- ~yymmdd(repeat)で~を打った瞬間に制御文字列が途中で終わっていますとエラーがでてしまいます --  &new{2009-09-13 (日) 03:36:34};
+- むむむ。ちょっと調べます -- [[deecay]] &new{2009-09-21 (月) 18:38:07};

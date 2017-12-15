@@ -1,0 +1,42 @@
+*standard-char-p [#v0422be3]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[OHKUBO]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-11-21 (日) 01:33:16
+-バージョン: 20041115
+
+**メッセージ [#v7bd0725]
+ <chapter>
+ <title>standard-char-p</title>
+ <type>Function</type>
+ <arguments>standard-char-p CHAR</arguments>
+ <package>lisp</package>
+ <description>
+ 文字が、改行文字もしくは [ -~] かどうかを判定します。
+ 表示可能な文字は SJIS 文字コードで 10, 32-126 です。
+ 
+   CHAR : 判定する文字
+ 
+ 戻り値：
+   t   standard-char である
+   nil standard-char でない
+ 
+ 補足：
+   ;;; 改行文字(SJIS 10) 以外の standard-char 文字一覧出力 (SJIS 32-126)
+   (do ((i (char-code #\SPC) (1+ i)))
+       ((= i (char-code #\DEL)))
+     (format t "~A" (code-char i)))
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>データ型</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-[[refwiki:standard-char-p]] に取り込みました。 -- [[NANRI]] &new{2004-12-18 (土) 01:42:49};
+
+#comment

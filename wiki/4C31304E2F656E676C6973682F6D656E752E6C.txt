@@ -1,0 +1,16 @@
+[[L10N/english]]
+
+ menu.l:24:			  (error ":popupの形式が不正です: ~S" i))
+- Invalid popup format: ~S --  &new{2014-06-24 (火) 10:43:00};
+
+#comment
+ menu.l:31:			  (error ":itemの形式が不正です: ~S" i))
+#comment
+ menu.l:35:			  (error ":menuの形式が不正です: ~S" i))
+- Invalid menu format: ~S --  &new{2014-06-24 (火) 10:43:17};
+
+#comment
+ menu.l:38:			(error "未サポートのオプションです: ~S" (car i))))
+- unsupported option: ~S -- [[名無し]] &new{2008-08-19 (火) 03:00:50};
+
+#comment

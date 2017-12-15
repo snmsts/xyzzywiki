@@ -1,0 +1,28 @@
+* xyzzyでMAXIMA 
+-ページ: [[WishList]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2003-10-23 (木) 03:45:04
+
+** メッセージ 
+Common Lispとのことですが移植は無理でしょうか？
+xyzzy上で数値・数式処理みたいなことができれば便利だと思うのですが。
+http://www.bekkoame.ne.jp/~ponpoko/Math/maxima/MaximaMAIN.html
+----
+-mathematica なら mathematica.el を移植したものがあるのですが。
+http://www5e.biglobe.ne.jp/~fukafuka/xyzzy/index.html~
+mathematica をお持ちでしたらどうぞ。-- fukae
+
+-うーんすごい。Lispわかんないんですが他のcommonlispよりemacslispの移植のほうが今は簡単でしょうか。 --  SIZE(10){2003-10-24 (金) 01:57:21}
+
+-elisp の移植はこれが初めてで、xyzzy 以外のCLについては全く知らないのでわかんないです。~
+ただ maxima を windows 上で動かせれば、mathematica.el のようなプロセスの結果を取ってくる elisp の移植はそんなに難しくないと思います。~
+maxima.el で検索してみたら maxima.el(maxima-symbols.el,maxima-font-lock.el) というものが見つかりました。~
+maxima.el, maxima-font-lock.el は http://www.anc.ed.ac.uk/~stephen/emacs/ell.html にありました。-- fukae
+-tterm.lを使ってCygwinで動くmaximaを使うことはできますが、これも xyzzy 上ってことになりますかね〜？ --  SIZE(10){2003-10-30 (木) 13:53:01}
+-ということは，tterm.l を使って FreeBSD で動く Emacs を使うこともできるので，xyzzy 上で emacs lisp も使えるということに？ -- [[ひえ]] SIZE(10){2003-10-30 (木) 22:58:56}
+-なるほど、そう言われると xyzzy 上って言うのはおかしいですね。ただ、キーバインドがどうなるのか気になったので自分も Cygwin の emacs を起動させてみたところ、キーバインドを xyzzy に軒並み食われてしまいました。%%なんか emacs は xyzzy をターミナルにした場合使えない気がします。%% ちゃんと telnet でつなぐと大丈夫っぽいですね。cygterm がいけないのかなぁ。謎です。 --  SIZE(10){2003-11-01 (土) 12:02:15}
+-このページを作った方の「xyzzyでMAXIMA」という意味は、xyzzyをgclのようなリスプ処理系としてその上でmaximaを動かすということだったのかな。emacsでmaximaを使うようなことかと思ってました。すみません。-- [[fukae]] SIZE(10){2003-11-01 (土) 12:51:33}
+-このページの作成者です。fukaeさんのおっしゃるとおり、xyzzyをlisp処理系としてその上で動かせないかな〜とちょっと思ったのです。書き方が悪かったですね。すみませんでした。いろいろなご意見、大変面白く参考になります。ありがとうございます。 --  SIZE(10){2003-11-01 (土) 17:52:11}
+
+#comment

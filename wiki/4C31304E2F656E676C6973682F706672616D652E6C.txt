@@ -1,0 +1,11 @@
+[[L10N/english]]
+
+ pframe.l:42:    (plain-error "ミニバッファ表示中はできません")))
+#comment
+
+ pframe.l:74:    (error "~Aはすでに存在します" name))
+#comment
+
+ pframe.l:144:    (error "~Aはすでに存在します" name))
+- ~A already exist -- [[kcab]] &new{2009-05-24 (日) 19:51:48};
+#comment

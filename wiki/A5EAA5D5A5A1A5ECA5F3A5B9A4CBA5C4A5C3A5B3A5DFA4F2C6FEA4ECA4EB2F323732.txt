@@ -1,0 +1,127 @@
+* set, symbol-value [#td0bbfef]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[lambda]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: ツッコミをいれる
+-投稿日:     2007-03-08 (木) 23:57:57
+-バージョン: 
+
+** メッセージ [#r2cce561]
+グローバル環境を参照する点の説明を足してみました。
+あと set の seealso に get があったのはなぜでしょう？
+
+ <chapter>
+ <title>symbol-value</title>
+ <type>Function</type>
+ <arguments>symbol-value SYMBOL</arguments>
+ <package>lisp</package>
+ <description>
+ シンボルが束縛されている値を返します。
+ 局所変数の値は参照できません。
+ 
+   SYMBOL : 値を返すシンボル
+ 
+ 使用例：
+   ;;; foo というシンボルの値を返してみる
+   (set 'foo 3)          =&gt; 3
+   (symbol-value 'foo)   =&gt; 3
+   foo                   =&gt; 3
+   ;;; 局所変数は参照できない
+   (let ((foo 1))
+     (symbol-value 'foo)) =&gt; 3
+ </description>
+ <seealso>symbol-function</seealso>
+ <seealso>buffer-local-value</seealso>
+ <section>シンボル</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>set</title>
+ <type>Function</type>
+ <arguments>set SYMBOL VALUE</arguments>
+ <package>lisp</package>
+ <description>
+ シンボルの値を設定します。
+ setq と違って局所変数には影響を与えません。
+ 
+   SYMBOL : シンボル名
+   VALUE  : 設定する値
+ 
+ 使用例：
+   ;;; foo というシンボルを束縛してみる
+   (boundp 'foo)         =&gt; nil
+   (set 'foo 2)          =&gt; 2
+   (boundp 'foo)         =&gt; t
+   foo                   =&gt; 2
+   ;;; 局所変数には影響しない
+   (let ((foo 1))
+     (set 'foo 2) foo)   =&gt; 1
+ </description>
+ <seealso>setq</seealso>
+ <seealso>symbol-value</seealso>
+ <seealso>makunbound</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>symbol-function</title>
+ <type>Function</type>
+ <arguments>symbol-function SYMBOL</arguments>
+ <package>lisp</package>
+ <description>
+ シンボルが束縛された関数定義を返します。
+ fletなどで定義したローカルの関数定義は参照できません。
+ 
+   SYMBOL : 関数定義を取得するシンボル名
+ 
+ 使用例：
+   ;;; 関数定義の取得
+   (symbol-function 'foo)
+   =&gt; 関数が定義されていません: foo
+   (defun foo (x) (* x 2))
+   =&gt; foo
+   (symbol-function 'foo)
+   =&gt; #&lt;lexical-closure: foo&gt;
+ </description>
+ <seealso>symbol-value</seealso>
+ <seealso>function</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+- >set の seealso に get があったのはなぜでしょう。 => 
+シンボルに対する値を取得するからではないでしょうか。 --  &new{2007-03-09 (金) 11:01:54};
+- あぁ、確かにおかしいですね。 get は シンボルのプロパティを取得するためのものですから --  &new{2007-03-09 (金) 14:22:22};
+- symbol-function もグローバル定義しか見ませんね。ということで追加しておきました。 --  &new{2007-03-10 (土) 13:00:41};
+- どーもです。「グローバルな値」というのはグローバル変数を想起させるような気がするので、ローカルの定義を参照できないという感じの表現がよさそうです。~
+seealsoの件は中野さんの管轄なので、中野さんからコメントがあるでしょう。 -- [[NANRI]] &new{2007-03-10 (土) 17:10:27};
+ (let ((x 3))
+   (declare (special x))
+   (symbol-value 'x))
+- ローカルな値も参照でけるよ。 -- [[佐野]] &new{2007-03-10 (土) 17:25:44};
+- 他の例としては、こんなのとか。 -- [[中野]] &new{2007-03-11 (日) 14:39:09};
+ (progn
+   (defvar-local test-sym nil)
+   (setq test-sym 1)
+   (symbol-value 'test-sym))
+ => 1
+ 
+ (let ((test-sym 'a))
+   (symbol-value 'test-sym))
+ => 1
+- set に get を追加したのは自分だと思います。明らかにおかしいですね。以後気をつけます。 -- [[中野]] &new{2007-03-11 (日) 14:41:05};
+- そういえばダイナミックな束縛なら見えますね。とするとレキシカルな束縛は見えない、が正しいでしょうか？ --  &new{2007-03-12 (月) 11:20:43};
+- letで隠してしまったものをどうにかするモノだと思います。挙動ではまる人が欲しい関数はきっとidentity… -- [[佐野]] &new{2007-03-12 (月) 19:03:41};
+- バッファローカル変数と誤解する可能性があるため「ローカル」という表現を使うべきではないとなると「レキシカル」という表現を使うしかなさそうです。佐野さんの例みたいな現象もサポートしますし、問題なかろうと思います。この件に関係するのはset, symbol-value, symbol-functionの他にboundp, fboundp, makunbound, fmakunbound辺りもですね。他にもありそうですけど。 -- [[NANRI]] &new{2007-03-15 (木) 22:05:03};
+- それとseealsoは直しておきました。 -- [[NANRI]] &new{2007-03-15 (木) 22:07:32};
+- 「ダイナミック」「レキシカル」に変更しました。関数の場合はダイナミックな束縛という言い方をあまり聞かないような気がするので symbol-function はとりあえずそのままにしています。 --  &new{2007-03-16 (金) 12:42:44};
+- 「ダイナミックな変数」「ダイナミックな値」はまんまスペシャル変数を意味しますよね。そういう動作ではないはずです。ということでそこの部分の表現はダメです。適切な表現については考えてみますので、ちと時間をください。 -- [[NANRI]] &new{2007-03-17 (土) 16:05:19};
+- 「局所変数」という表現なら問題ないでしょうということでこんな感じで。ダイナミックなスコープを持った時点でスペシャル変数扱いなので局所変数ではないということで佐野さんの指摘はクリア、ローカルという言葉を使っていないということで中野さんの指摘もクリアと思ってます。symbol-functionのほうはfletで「ローカルな関数」という表現を使っているので「ローカル」を使うことにしました。バッファローカル関数なんてものも無いので大丈夫でしょう。 -- [[NANRI]] &new{2007-03-24 (土) 06:53:04};
+
+#comment

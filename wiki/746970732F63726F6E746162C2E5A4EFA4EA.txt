@@ -1,0 +1,22 @@
+[[tips]]
+
+from 2ch~
+気が付かなかった。普通にcronとして使えるな。~
+
+佐野
+
+ (defun cron()
+   ;; 時間になったらダイアログを出す。
+   (let ((ut (get-universal-time)))
+     (cond
+      ;;lunch time from MRR@Hateda
+      ((equal (format-date-string "%H%M" ut) "1215")
+       (msgbox "お昼ご飯の時間です！"))
+      ;;time to finish work from MRR@Hateda
+      ((equal (format-date-string "%H%M" ut) "1730")
+       (msgbox "定時になりました！"))
+      ;;drifters
+      ((equal (format-date-string "%a%H%M" ut) "Sat2048")
+       (msgbox "歯ァ磨けよ")))))
+ 
+ (start-timer 59 'cron);;定義上存在するらしい負の閏秒対策。問題があったら誰か治して。

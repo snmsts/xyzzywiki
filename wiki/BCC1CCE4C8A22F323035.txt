@@ -1,0 +1,52 @@
+* netinstallerがインストールできません [#n7772bdd]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2006-12-26 (火) 19:11:27
+
+** メッセージ [#e65c9899]
+netinstallerがインストールできません。
+他の方の質問にあったようにM-x netinstaller[return]とすると、No matchと返されます。
+
+　*scratch*バッファでの操作結果は以下の通りです。
+ (find "ni/install" *modules* :test 'equal) C-j
+ nil
+ (require "ni/setup") C-j
+ t
+ t
+
+※2回目もtのところが以前の質問者と違うところです。
+
+環境変数はXYZZYHOME="C:\Program Files\xyzzy"としています。
+なにがいけないのでしょうか。
+
+----
+-netinstallerの設定はどこにどのように書いていますか。[[QuickTour]]を読み直して設定をやり直してください。 -- NANRI
+
+----
+一晩あけて再度やっていますがだめです。
+
+C:\Program Files\xyzzy\site-lispにniフォルダを置いています。
+
+統合アーカイバプロジェクト仕様のDLLは導入済みでxyzzyで見えています。
+
+C:\Program Files\xyzzy\site-lisp\siteinit.lに以下のように書いています。.xyzzyは使っていません。
+
+siteinit.lを保存した後にShift+Ctrl+xyzzy.exeダブルクリックして起動しています。
+
+ (require "ni/setup")
+ ;; 自動設定を利用する
+ (ni-autoload)
+ ;; PROXYを通す場合
+ (setq ni::*http-proxy-host* "aaa.bbb.ccc.ddd.eee")  ; PROXY のホスト
+ (setq ni::*http-proxy-port* nnnn)          ; PROXY のポート
+ (require "isearch")
+ (setq title-bar-format "%b")
+
+どこを確認するとよいとかありますでしょうか。いろいろ共通設定をしていますが、関係のあるものがあったりするでしょうか。
+- インストールの手順は間違っていなさそうです。だとすると、$XYZZY/site-lisp/ni/setup.lcがおかしなことになっているということくらいしか原因になりそうなことがありません。 -- [[NANRI]] &new{2006-12-27 (水) 22:43:04};
+- 普通はならないできごとが起こっている気がします。環境が惜しいのでなければ頭から設定しなおしたほうが良いかもしれません。 -- [[佐野]] &new{2006-12-28 (木) 13:17:18};
+----
+こちらのインストーラを使ってインストール・再セットアップしてみたところ、M-x netinstallerでNo-matchと返されることはなくなりました。
+以前と違うのはインストーラを使用したことと.xyzzyを置いてみた(中身は空)ことです。
+解決してよかったです。ありがとうございました。

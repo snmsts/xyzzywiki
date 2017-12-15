@@ -1,0 +1,170 @@
+[[tips]]
+
+マウスの右ボタンをクリックしながらホイールを回すとバッファをぐるぐる移動します。
+
+ ;;; 右クリックしながらホイール回転でバッファを移動
+ (defvar *mouse-right-button-state* nil)
+ 
+ (defun mouse-right-button-down ()
+   (interactive)
+   (setf *mouse-right-button-state* :pressed)
+   (continue-pre-selection))
+ 
+ (defun my-mouse-wheel-scroll (window n lines)
+   (if *mouse-right-button-state*
+       (let ((*next-buffer-in-tab-order* t))
+         (declare (special *next-buffer-in-tab-order*))
+         (if (> n 0)
+             (next-buffer)
+           (previous-buffer))
+         (setf *mouse-right-button-state* :rotated))
+     (ed::mouse-wheel-scroll window n lines)))
+ 
+ (defun mouse-right-button-up ()
+   (interactive)
+   (unless (eq *mouse-right-button-state* :rotated)
+     (mouse-menu-popup))
+   (setf *mouse-right-button-state* nil))
+ 
+ (defun initialize-right-button-state ()
+   (setq *mouse-right-button-state* nil))
+ (add-hook '*activate-hook* 'initialize-right-button-state)
+ 
+ (setq-default mouse-wheel-handler #'my-mouse-wheel-scroll)
+ (global-set-key #\RBtnDown 'mouse-right-button-down)
+ (global-set-key #\RBtnUp 'mouse-right-button-up)
+----
+-ちなみに、最後の行は siteinit.l に書いてもなぜか反映されませんでした。同じ症状が出た場合は最後の行だけ .xyzzy に書けばとりあえず動くと思います。 -- [[書いた人]] &new{2005-04-20 19:33:06 (水)};
+-Win2000 SP4 + xyzzy 0.2.2.234 で動きますが？マウスジェスチャーごっこ  http://members.at.infoseek.co.jp/zauberer/microtips/xyzzy.html#mouse-gesture と共存できないものでしょうか？ -- [[ゆうき]] &new{2005-05-02 01:54:49 (月)};
+-mouse-gesture-light の mouse-right-down の定義をいじればおそらく大丈夫かと。 --  &new{2005-05-02 02:00:29 (月)};
+-上の mouse-right-button-down の (continue-pre-selection) を (mouse-gesture-light::mouse-right-down) に変えてもよさそう。でも mouse-gesture(-light) は一発ネタのつもりだったのでとても行儀悪いから、捨てて書き直したほうがいい。 --  &new{2005-05-02 18:20:07 (月)};
+-普段使ってるブラウザと同じことをしたいと思って書いてみましたが、使ってみるといまいちだったりするので書き換えてもらうのは大歓迎です。具体的には2ch-modeのように右クリックメニューが再定義されてると設定しなおさなくちゃいけないところとか。 -- [[書いた人]] &new{2005-05-02 22:04:08 (月)};
+-素直に再定義した方がいいと思いますけど、こんな感じのを考えました。F15とかに割り当てられたらそっちを使うのですが…… --  &new{2005-05-03 05:19:28 (火)};
+ (defun minor-mouse-right-button-up ()
+   (interactive)
+   (let ((command nil))
+     (unless (eq *mouse-right-button-state* :rotated)
+       (and (setq command (or (lookup-keymap (local-keymap) #\RBtnUp)
+                              (lookup-keymap *global-keymap* #\RBtnUp)))
+            (call-interactively command)))
+     (setf *mouse-right-button-state* nil)))
+ 
+ (let ((keymap (make-sparse-keymap)))
+   (define-key keymap #\RBtnUp 'minor-mouse-right-button-up)
+   (add-hook '*create-buffer-hook*
+ 	    #'(lambda (buffer)
+  		(set-minor-mode-map keymap buffer))))
+-あ、捨てるのは mouse-gesture(-light) の方です。すこし紛らわしかったですかね。気を悪くされたのならごめんなさい＞書いた人 -- [[3つ上のコメントを書いた人]] &new{2005-05-03 23:37:52 (火)};
+-2つ上のコードはどう反映させればよいのでしょうか？いろいろ試しているのですが、うまくいきません。 -- [[ゆうき]] &new{2005-05-04 23:08:03 (水)};
+--無駄なとこも出てきますけど、上のに追記すれば動くようになってます。 --  &new{2005-05-04 23:54:54 (水)};
+--うーん、おかしいですね。追記してもmouse-gesture-lightが動きません。ジェスチャーするたびにステータスバーの表示項目が増えていくのですが… -- [[ゆうき]] &new{2005-05-05 11:11:59 (木)};
+---上記のマイナーモードマップを使う方法は2ch-modeで再定義しなければならないということを受けて書いたので、mouse-gesture-lightのことは全く考慮してません。mouse-gesture-lightは使っていないので全く分かりませんが、こんなだったらうまくいったりするでしょうか？ --  &new{2005-05-05 12:03:55 (木)};
+ (defun minor-mouse-right-button-down ()
+   (interactive)
+   (let ((command nil))
+     (setf *mouse-right-button-state* :pressed)
+     (and (setq command (or (lookup-keymap (local-keymap) #\RBtnDown)
+                            (lookup-keymap *global-keymap* #\RBtnDown)))
+          (call-interactively command)))
+   t)
+ 
+ (defun minor-mouse-right-button-up ()
+   (interactive)
+   (let ((command nil))
+     (unless (eq *mouse-right-button-state* :rotated)
+       (and (setq command (or (lookup-keymap (local-keymap) #\RBtnUp)
+                              (lookup-keymap *global-keymap* #\RBtnUp)))
+            (call-interactively command)))
+     (setf *mouse-right-button-state* nil))
+   t)
+ 
+ (let ((keymap (make-sparse-keymap)))
+   (define-key keymap #\RBtnDown 'minor-mouse-right-button-down)
+   (define-key keymap #\RBtnUp 'minor-mouse-right-button-up)
+   (add-hook '*create-buffer-hook*
+ 	    #'(lambda (buffer)
+  		(set-minor-mode-map keymap buffer))))
+---ダメでした。難しいですね。なんでだろう？ -- [[ゆうき]] &new{2005-05-05 19:45:25 (木)};
+---自分のところでちょっと試した感じではうまくいっています。ゆうきさんはどんなマウスジェスチャーにどのような機能を割り当てていらっしゃるのですか？ その辺りの設定を見せていただけたら、アドバイスできるかもしれません。 --  &new{2005-05-05 20:13:05 (木)};
+---たびたびありがとうございます。私はこんな設定で使っているのですが。 -- [[ゆうき]] &new{2005-05-05 23:14:31 (木)};
+ (require "mouse-gesture-light")
+ 
+ (setq mouse-gesture-light:*gesture-handler*
+      '(("↓→" "close" (lambda ()
+                          (if (> (count-windows) 1)
+                              (delete-window)
+                            (kill-buffer (selected-buffer)))))
+        ("←" "recent-file"
+         (lambda ()
+           (track-popup-menu editor::*recent-file-popup-menu*)))
+        ("→" "split-window" split-window)
+        ("↓" "delete-other-windows" delete-other-windows)
+        ))
+---まじめに考えてみました。こんな設定でどうでしょう。 --  &new{2005-05-06 00:19:04 (金)};
+#ref(setting.l)
+---バッチリ動きました！ありがとうございました！ -- [[ゆうき]] &new{2005-05-06 00:56:50 (金)};
+-使ってみたいのですが作者さんのページが無くなっているせいなのかmouse-gesture-lightが入手できず使うことができないのですが。 --  &new{2005-05-15 00:20:20 (日)};
+--「右クリックしながらホイール回転でバッファを移動」自体はmouse-gesture-lightに依存していないので使えます。 --  &new{2005-05-15 19:10:47 (日)};
+- [[tips/バッファタブを拡張]]のコメントにあるように、ホイールが常にバッファの切り替えになってしまうことがあるようなので、上のsetting.lを修正してみました。不具合があるようでしたら修正お願いします。 --  &new{2006-12-16 (土) 19:40:39};
+ ;;; 右クリックしながらホイール回転でバッファを移動
+ (defvar *mouse-right-button-state* nil)
+ 
+ ;; (defun mouse-right-button-down ()
+ ;;   (interactive)
+ ;;   (setf *mouse-right-button-state* :pressed)
+ ;;   (continue-pre-selection))
+ 
+ (defun my-mouse-wheel-scroll (window n lines)
+   (if *mouse-right-button-state*
+       (let ((*next-buffer-in-tab-order* t))
+ 	(declare (special *next-buffer-in-tab-order*))
+ 	(if (> n 0)
+ 	    (next-buffer)
+ 	  (previous-buffer))
+ 	(setf *mouse-right-button-state* :rotated))
+     (ed::mouse-wheel-scroll window n lines)))
+ 
+ ;; (defun mouse-right-button-up ()
+ ;;   (interactive)
+ ;;   (unless (eq *mouse-right-button-state* :rotated)
+ ;;     (mouse-menu-popup))
+ ;;   (setf *mouse-right-button-state* nil))
+ 
+ (setq-default mouse-wheel-handler #'my-mouse-wheel-scroll)
+ ;(global-set-key #\RBtnDown 'mouse-right-button-down)
+ ;(global-set-key #\RBtnUp 'mouse-right-button-up)
+ 
+ (defun minor-mouse-right-button-down ()
+   (interactive)
+   (let ((command nil))
+     (setf *mouse-right-button-state* :pressed)
+     (and (setq command (or (lookup-keymap (local-keymap) #\RBtnDown)
+ 			   (lookup-keymap *global-keymap* #\RBtnDown)))
+ 	 (call-interactively command))
+     (add-hook '*post-command-hook* 'reset-mouse-right-button-state))
+   t)
+ 
+ (defun minor-mouse-right-button-up ()
+   (interactive)
+   (let ((command nil))
+     (unless (eq *mouse-right-button-state* :rotated)
+       (and (setq command (or (lookup-keymap (local-keymap) #\RBtnUp)
+ 			     (lookup-keymap *global-keymap* #\RBtnUp)))
+ 	   (call-interactively command)))
+     (setf *mouse-right-button-state* nil))
+   t)
+ 
+ (defun reset-mouse-right-button-state ()
+   (unless (eq *this-command* 'minor-mouse-right-button-down)
+     (setf *mouse-right-button-state* nil)
+     (delete-hook '*post-command-hook* 'reset-mouse-right-button-state)))
+ 
+ (let ((keymap (make-sparse-keymap)))
+   (define-key keymap #\RBtnDown 'minor-mouse-right-button-down)
+   (define-key keymap #\RBtnUp 'minor-mouse-right-button-up)
+   (set-minor-mode-map keymap (find-buffer "*scratch*"))
+   (add-hook '*create-buffer-hook*
+ 	    #'(lambda (buffer)
+ 		(set-minor-mode-map keymap buffer))))
+
+#comment

@@ -1,0 +1,21 @@
+[[FrontPage]]
+
+さて何に使おう 佐野 05/12/05
+
+ (defvar *on-idle-hook* nil)
+ 
+ (let (command (idletime 0))
+   (defun on-command ()
+     (setq command t))
+   (add-hook '*post-command-hook* 'on-command)
+   (defun count-idle-hook ()
+     (if command
+ 	(setq idletime 0
+ 	      command nil)
+       (progn
+ 	(incf idletime)
+ 	(run-hook-with-args '*on-idle-hook* idletime))))
+   (start-timer 0.5 'count-idle-hook))
+
+----
+#comment

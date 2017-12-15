@@ -1,0 +1,19 @@
+*beginning-of-buffer,end-of-buffer [#m7c1e5bf]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-06-02 16:27:25 (木)
+-バージョン: 20050330
+
+**メッセージ [#kd7be66a]
+ マークを変更しないためには
+ (goto-char (point-[min|max]))を使います。
+
+を追記すると親切かと思います。
+----
+-了解です→[[refwiki:beginning-of-buffer]], [[refwiki:end-of-buffer]] -- [[NANRI]] &new{2005-06-11 23:21:13 (土)};
+
+#comment

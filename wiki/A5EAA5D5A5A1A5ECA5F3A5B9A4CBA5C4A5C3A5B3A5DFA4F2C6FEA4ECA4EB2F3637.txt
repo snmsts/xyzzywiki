@@ -1,0 +1,76 @@
+*atan, acos, asin, acosh [#bfa1979c]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2004-07-28 (水) 01:59:01
+-バージョン: 
+
+**メッセージ [#ja416626]
+- atan → 引数が間違っている。（RADIANS → y &optional x）
+- asin, acos → 細かいですが引数は RADIANS じゃないですよね。builtin.l内には NUMBER としてあります。
+- asinh, atanh はあるのに acosh がないのはなぜだろう。
+
+あと、atan, asin, acos では file要素がなかったので全部書いちゃいました。
+
+ <chapter>
+ <title>atan</title>
+ <type>Function</type>
+ <arguments>atan Y &amp;optional X</arguments>
+ <package>lisp</package>
+ <description>
+ 逆正接関数の値を返します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>数値</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>asin</title>
+ <type>Function</type>
+ <arguments>asin NUMBER</arguments>
+ <package>lisp</package>
+ <description>
+ 逆正弦関数の値を返します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>数値</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>acos</title>
+ <type>Function</type>
+ <arguments>acos NUMBER</arguments>
+ <package>lisp</package>
+ <description>
+ 逆余弦関数の値を返します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>数値</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>acosh</title>
+ <type>Function</type>
+ <arguments>acosh Z</arguments>
+ <package>lisp</package>
+ <description>
+ 逆双曲線余弦関数を計算します。
+ </description>
+ <seealso>acos</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+
+----
+
+#comment

@@ -1,0 +1,47 @@
+* scratchバッファのバックアップ [#ae62df37]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2007-02-25 (日) 16:19:09
+
+** メッセージ [#ve45a31f]
+[[tips/scratchの中身って消さなくてもいいじゃん]]。
+こちらを導入後、scratchバッファの自動バックアップを取りたいのですが何か方法はないでしょうか？
+----
+どこかで拾ってきたものを、自分で少し改変したものです。どこで拾ったかは
+わかりません。
+
+ ;;... xyzzy 終了時に、*scratch* 内容をn世代 保存する
+ (defun save-scratch-n (&optional (n 15))
+   (interactive)
+   (save-window-excursion
+     (when (buffer-modified-p (find-buffer "*scratch*"))
+       (let* ((user-dir (merge-pathnames (concat "usr/" (user-name)) (si:system-root)))
+	      (fname (merge-pathnames (format nil "scratch.~D~~" n) user-dir)) fname2)
+ 	; scratch.5~ を削除、scratch.2~→scratch.3~、scratch.1~ →scratch.2~にリネーム
+ 	(ignore-errors (delete-file fname))    ; scratch.n~ を削除
+ 	(decf n)
+ 	(while (< 0 n)
+ 	  (setq fname2 fname
+ 		fname (merge-pathnames (format nil "scratch.~D~~" n) user-dir))
+ 	  (ignore-errors (rename-file fname fname2))
+ 	  (decf n))
+ 	(ignore-errors (rename-file (merge-pathnames "scratch" user-dir) fname))
+ 	(set-buffer "*scratch*")    ; *scratch* へ行く
+ 	(write-file (merge-pathnames "scratch.1~" user-dir))	; *scratch* を scratch.1~ に保存する
+ 	))))
+ 
+ (add-hook '*kill-xyzzy-hook* 'save-scratch-n)
+- http://womo.nconc.net/2005/10/26/save-scratch というのもありました。 --  &new{2007-02-25 (日) 20:50:45};
+- 解答は考えていないのですが、kill-xyzzyのときではなくて定時ごとのauto-saveの対象に成ってほしいという話な気がします。 -- [[佐野]] &new{2007-02-25 (日) 21:05:27};
+- こういうのでどうでしょう。 --  &new{2007-02-25 (日) 21:44:42};
+ (add-hook '*post-startup-hook*
+           #'(lambda ()
+               (save-excursion
+                 (set-buffer (find-buffer "*scratch*"))
+                 (insert-file-contents "~/scratch" t)
+                 (set-buffer-file-name "~/scratch")
+                 (setq auto-save t))))
+- ありがとう御座いました。 --  &new{2007-02-28 (水) 20:49:50};
+
+#comment

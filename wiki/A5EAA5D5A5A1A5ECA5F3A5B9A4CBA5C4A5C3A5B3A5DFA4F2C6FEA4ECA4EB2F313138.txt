@@ -1,0 +1,40 @@
+*digit-char-p [#g10ef9e2]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-04-25 22:04:44 (月)
+-バージョン: 
+
+**メッセージ [#zc9696d7]
+微妙に実際の動きと異なっていたので。
+
+ <chapter>
+ <title>digit-char-p</title>
+ <type>Function</type>
+ <arguments>digit-char-p CHAR &amp;optional (RADIX 10)</arguments>
+ <package>lisp</package>
+ <description>
+ CHAR が数字ならその数字の10進表現での値を、そうでなければ nil を返します。
+ 
+   RADIX : 基数
+ 
+ 使用例：  
+   (digit-char-p #\1)
+   =&gt; 1
+   (digit-char-p #\a)
+   =&gt; nil
+   (digit-char-p #\a 16)
+   =&gt; 10
+   (digit-char-p #\RET)
+   =&gt; nil
+ </description>
+ <section>文字</section>
+ <file>builtin.l</file>
+ </chapter>
+----
+-取り込みます→[[refwiki:digit-char-p]] -- [[NANRI]] &new{2005-06-11 23:13:43 (土)};
+
+#comment

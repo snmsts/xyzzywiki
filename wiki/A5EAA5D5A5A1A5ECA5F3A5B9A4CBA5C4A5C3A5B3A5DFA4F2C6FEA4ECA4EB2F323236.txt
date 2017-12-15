@@ -1,0 +1,43 @@
+* lisp-indent-hook [#g27ede65]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-08-13 (日) 10:50:35
+-バージョン: 
+
+** メッセージ [#gbf0bd0c]
+ <chapter>
+ <title>lisp-indent-hook</title>
+ <type>Misc</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ シンボルにプロパティを設定することで lisp-indent-line でのインデント量を制御します。
+ 
+   数値 n   : n 番目以降の引数を *lisp-body-indent* だけ、
+              それより前の引数を (* *lisp-body-indent* 2) だけインデント
+   nil      : 通常のインデント
+   それ以外 : すべての引数を *lisp-body-indention* だけインデント
+ 
+ 使用例：
+   ;;; $XYZZY/lisp/lispmode.l から
+   (setf (get 'lambda 'lisp-indent-hook) 'defun)
+   (setf (get 'interactive 'lisp-indent-hook) 1)
+   (setf (get 'progn 'lisp-indent-hook) 0)
+   (setf (get 'if 'lisp-indent-hook) 2)
+   (setf (get 'let 'lisp-indent-hook) 1)
+   (setf (get 'let* 'lisp-indent-hook) 1)
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>シンボル</section>
+ <file></file>
+ </chapter>
+
+--------
+- どーもです。 -- [[NANRI]] &new{2006-08-13 (日) 20:29:45};
+
+#comment

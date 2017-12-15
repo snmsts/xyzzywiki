@@ -1,0 +1,426 @@
+[[tips/番組表から検索する]]
+
+*索引 [#j8b2a5cd]
+
+#contents
+
+*ソース [#sd63038b]
+
+ ;;; -*- Mode: Lisp -*-
+ ;;;
+ ;;; tvl.l
+ ;;;
+ 
+ #|
+ ■概要
+ 
+ livedoor 番組表RSS配信サービスを利用し、番組表から検索します。
+ これを使うには junk-library, xml-parser-modoki.l が必要です。
+ 
+ ■設定
+ 
+ (require "tvl")
+ (setq *tvl-file* "~/tvl") ; 設定ファイル
+ (setq *tvl-prefecture* "東京都") ; 都道府県名
+ ;;; 地上波の NHK の番組だけから取得
+ (setq *tvl-subscribed-publishers* '("ＮＨＫ総合" "ＮＨＫ教育"))
+ ※livedoor 番組表(http://tv.livedoor.com/) から、チャンネル名を調べてください。
+ これを指定しないとすべてのチャンネルが対象になります。
+ 
+ *tvl-file* で指定したファイルに以下のように設定。(途中に空行は入れないでください)
+ キーワードは、番組名、出演者、リンク先から検索されます。(フリーワード検索)
+ 
+ またキーワードの代わりに、
+ livedoor 番組表RSS配信サービス(http://tv.livedoor.com/rss/make_url) で作成した
+ url を、
+ 検索条件名: url
+ のように書いて設定することもできます。
+ 
+ [設定名1]
+ キーワード1
+ キーワード2
+ ・・・
+ 検索条件名1: url1
+ 検索条件名2: url2
+ ・・・
+ [設定名2]
+ ・・・
+ ・・・
+ 
+ ■使用方法
+ 
+ M-x tvl とすると検索された番組表が表示されます。
+ 番組表のバッファ上で
+ o を押すと、リンク先を標準のブラウザで開きます。
+ v を押すと、番組内容が表示されます。
+ q を押すと、終了します。
+ 
+ また、M-x tvl-search でミニバッファから番組を検索できます。
+ 
+ ■アンインストール
+ 
+ ヒストリ変数
+ *tvl-config-write-time*
+ *tvl-config-alist*
+ *tvl-update-time*
+ *tvl-alist*
+ を使用しています。
+ (unregister-history-variable '*tvl-config-write-time*)
+ などして取り除いてください。
+ |#
+ 
+ (provide "tvl")
+ 
+ (require "junk/http")
+ (require "xml-parser-modoki")
+ 
+ (defvar *tvl-file* "~/tvl")
+ 
+ (defvar *tvl-prefecture* "東京都")
+ 
+ (defvar *tvl-subscribed-publishers* nil)
+ 
+ (defvar *tvl-search-buffer* "[検索]")
+ 
+ (defvar *tvl-rss-url* "http://tv.livedoor.com/rss/search?")
+ 
+ (defvar *tvl-prefecture-alist*
+   '(("北海道" . "1")
+     ("青森県" . "2")
+     ("岩手県" . "3")
+     ("宮城県" . "4")
+     ("秋田県" . "5")
+     ("山形県" . "6")
+     ("福島県" . "7")
+     ("茨城県" . "8")
+     ("栃木県" . "9")
+     ("群馬県" . "10")
+     ("埼玉県" . "11")
+     ("千葉県" . "12")
+     ("東京都" . "13")
+     ("神奈川県" . "14")
+     ("新潟県" . "15")
+     ("富山県" . "16")
+     ("石川県" . "17")
+     ("福井県" . "18")
+     ("山梨県" . "19")
+     ("長野県" . "20")
+     ("岐阜県" . "21")
+     ("静岡県" . "22")
+     ("愛知県" . "23")
+     ("三重県" . "24")
+     ("滋賀県" . "25")
+     ("京都府" . "26")
+     ("大阪府" . "27")
+     ("兵庫県" . "28")
+     ("奈良県" . "29")
+     ("和歌山県" . "30")
+     ("鳥取県" . "31")
+     ("島根県" . "32")
+     ("岡山県" . "33")
+     ("広島県" . "34")
+     ("山口県" . "35")
+     ("徳島県" . "36")
+     ("香川県" . "37")
+     ("愛媛県" . "38")
+     ("高知県" . "39")
+     ("福岡県" . "40")
+     ("佐賀県" . "41")
+     ("長崎県" . "42")
+     ("熊本県" . "43")
+     ("大分県" . "44")
+     ("宮崎県" . "45")
+     ("鹿児島県" . "46")
+     ("沖縄県" . "47")))
+ 
+ (define-history-variable *tvl-config-write-time* nil)
+ 
+ (define-history-variable *tvl-config-alist* nil)
+ 
+ (define-history-variable *tvl-update-time* nil)
+ 
+ (define-history-variable *tvl-alist* nil)
+ 
+ (defvar *tvl-mode-hook* nil)
+ 
+ (defvar *tvl-mode-map* nil)
+ (unless *tvl-mode-map*
+   (setq *tvl-mode-map* (make-sparse-keymap))
+   (define-key *tvl-mode-map* #\v 'tvl-view-current)
+   (define-key *tvl-mode-map* #\o 'tvl-open-link)
+   (define-key *tvl-mode-map* #\q 'tvl-quit))
+ 
+ (defvar *tvl-format*
+   (compile-regexp-keyword-list
+    '(("^[0-9][0-9](\\(土\\))" nil (:color 4 0) nil 1 1)
+      ("^[0-9][0-9](\\(日\\))" nil (:color 1 0) nil 1 1))))
+ 
+ (defun tvl-mode ()
+   (interactive)
+   (kill-all-local-variables)
+   (setq buffer-mode 'tvl-mode)
+   (setq mode-name "tvl")
+   (use-keymap *tvl-mode-map*)
+   (make-local-variable 'regexp-keyword-list)
+   (setq regexp-keyword-list *tvl-format*)
+   (make-local-variable 'tvl-alist)
+   (make-local-variable '*scroll-margin*)
+   (setq *scroll-margin* 5)
+   (setq buffer-read-only t)
+   (set-buffer-fold-width nil)
+   (set-local-window-flags (selected-buffer) *window-flag-line-number* nil)
+   (set-local-window-flags (selected-buffer) *window-flag-newline* nil)
+   (set-local-window-flags (selected-buffer) *window-flag-cursor-line* t)
+   (set-local-window-flags (selected-buffer) *window-flag-eof* nil)
+   (run-hooks '*tvl-mode-hook*))
+ 
+ (defun tvl-fill-string (string)
+   (let ((temp (create-new-buffer "*temp*")) str)
+     (set-buffer temp)
+     (insert string)
+     (fill-region (point-min) (point-max))
+     (setq str (buffer-substring (point-min) (point-max)))
+     (delete-buffer temp)
+     str))
+ 
+ (defun tvl-view-current ()
+   (interactive)
+   (let* ((beg (save-excursion (goto-bol) (point)))
+ 	 (end (save-excursion (goto-eol) (point)))
+ 	 (str (cadr (assoc (buffer-substring beg end) tvl-alist
+ 			   :test #'string=))))
+     (if str
+ 	(message-box (tvl-fill-string str) "番組説明" :ok))))
+ 
+ (defun tvl-open-link ()
+   (interactive)
+   (let* ((beg (save-excursion (goto-bol) (point)))
+ 	 (end (save-excursion (goto-eol) (point)))
+ 	 (link (caddr (assoc (buffer-substring beg end) tvl-alist
+ 			     :test #'string=))))
+     (if link
+ 	(shell-execute link t))))
+ 
+ 
+ (defun tvl-quit ()
+   (interactive)
+   (when (string= (buffer-name (selected-buffer)) *tvl-search-buffer*)
+     (delete-buffer (selected-buffer))
+     (return-from tvl-quit t))
+   (mapc #'(lambda (x)
+ 	    (let ((b (find-buffer (car x))))
+ 	      (and b (delete-buffer b))))
+ 	*tvl-config-alist*)
+   t)
+ 
+ (defun tvl-make-url (keyword)
+   (format nil "~Akeywords=~A&pref_id=~A&search_type=3"
+ 	  *tvl-rss-url*
+ 	  (si:www-url-encode (map-internal-to-euc keyword))
+ 	  (cdr (assoc *tvl-prefecture* *tvl-prefecture-alist*
+ 		      :test #'string=))))
+ 
+ (defun tvl-make-config-alist (file)
+   (let (alist)
+     (with-open-file (fp file)
+       (let (line x)
+ 	(loop
+ 	  (if (setq line (read-line fp nil))
+ 	      (cond ((string-match "^\\[.+\\]$" line)
+ 		     (and x (push (nreverse x) alist))
+ 		     (setq x nil)
+ 		     (push (match-string 0) x))
+ 		    ((string-match "^.+?: \\(http://.+\\)$" line)
+ 		     (push (match-string 1) x))
+ 		    ((string-match "^.+$" line)
+ 		     (push (tvl-make-url (match-string 0)) x))
+ 		    (t
+ 		     (error "設定ファイルの書式が間違っています")))
+ 	    (progn
+ 	      (and x (push (nreverse x) alist))
+ 	      (return))))))
+     (nreverse alist)))
+ 
+ (defun tvl-make-item (datum)
+   (list (caddr (nth 2 datum))	; title
+ 	(caddr (nth 5 datum))	; subject
+ 	(caddr (nth 6 datum))	; publisher
+ 	(caddr (nth 9 datum))	; content
+ 	(caddr (nth 3 (nth 11 datum))) ; startDatetime
+ 	(caddr (nth 4 (nth 11 datum))) ; endDatetime
+ 	(caddr (nth 7 (nth 11 datum))) ; performer
+ 	(caddr (nth 3 datum))	; link
+ 	(caddr (nth 2 (nth 11 datum))) ; genre
+ 	(caddr (nth 5 (nth 11 datum))) ; gcode
+ 	(caddr (nth 6 (nth 11 datum))) ; iepgUrl
+ 	))
+ 
+ (defun tvl-make-alist (alist)
+   (let ((tempfile (make-temp-file-name)) al)
+     (unwind-protect
+ 	(setq al
+ 	      (mapcar #'(lambda (u)
+ 			  (junk::junk-http-download-file u tempfile)
+ 			  (cons u
+ 				(mapcar #'tvl-make-item
+ 					(cdddar
+ 					 (ed::xmlpm-parse-file tempfile)))))
+ 		      (delete-duplicates (mapcan #'(lambda (x) (subseq x 1))
+ 						 alist)
+ 					 :test #'string=)))
+       (ignore-errors (delete-file tempfile)))
+     al))
+ 
+ (defun tvl-encode-universal-time (datetime)
+   (encode-universal-time
+    (parse-integer (substring datetime 17 19))
+    (parse-integer (substring datetime 14 16))
+    (parse-integer (substring datetime 11 13))
+    (parse-integer (substring datetime 8 10))
+    (parse-integer (substring datetime 5 7))
+    (parse-integer (substring datetime 0 4))))
+ 
+ (defun tvl-time-string (str)
+   (let ((n (parse-integer (substring str 0 2)))
+ 	(ap "AM"))
+     (when (<= 12 n)
+       (setq n (- n 12))
+       (setq ap "PM"))
+     (format nil "~2D~A~A" n (substring str 2 5) ap)))
+ 
+ (defun tvl-make-line-and-content (item time pday)
+   (let ((title (first item))
+ 	(subject (second item))
+ 	(publisher (third item))
+ 	(content (fourth item))
+ 	(start (fifth item))
+ 	(end (sixth item))
+ 	(performer (seventh item))
+ 	(link (eighth item))
+ 	day)
+     (when (and (or (not *tvl-subscribed-publishers*)
+ 		   (member publisher *tvl-subscribed-publishers*
+ 			   :test #'string=))
+ 	       (<= time (tvl-encode-universal-time end)))
+       (setq day
+ 	    (cond ((string= (substring start 0 10)
+ 			    (format-date-string "%Y-%m-%d" time))
+ 		   "今日")
+ 		  ((string= (substring start 0 10)
+ 			    (format-date-string "%Y-%m-%d"
+ 						(+ time
+ 						   (* 60 60 24))))
+ 		   "明日")
+ 		  (t
+ 		   (format nil "~A(~A)"
+ 			   (substring start 8 10)
+ 			   (format-date-string "%v"
+ 					       (tvl-encode-universal-time
+ 						start))))))
+       (values
+        (format nil "~9@A: ~A  ~17@A  ~A ~A"
+ 	       (if (string= day pday)
+ 		   ""
+ 		 day)
+ 	       (tvl-time-string (substring start 11 16))
+ 	       publisher
+ 	       title
+ 	       (or subject ""))
+        (format nil "~A ~A~%~%~A(~A) ~A-~A~16A~A~A"
+ 	       title
+ 	       (or subject "")
+ 	       (substring start 0 10)
+ 	       (format-date-string "%v"
+ 				   (tvl-encode-universal-time
+ 				    start))
+ 	       (tvl-time-string (substring start 11 16))
+ 	       (tvl-time-string (substring end 11 16))
+ 	       publisher
+ 	       (if performer
+ 		   (format nil "~%~%~A" performer)
+ 		 "")
+ 	       (if (zerop (length content))
+ 		   ""
+ 		 (format nil "~%~%~A" content)))
+        link
+        day))))
+ 
+ (defun tvl ()
+   (interactive)
+   (let ((file *tvl-file*)
+ 	(wtime (file-write-time *tvl-file*))
+ 	(time (get-universal-time))
+ 	(utime (encode-universal-time
+ 		0 0 3		; 03:00 頃に更新される
+ 		(parse-integer (format-date-string "%d"))
+ 		(parse-integer (format-date-string "%m"))
+ 		(parse-integer (format-date-string "%Y")))))
+     (when (or (not (eql wtime *tvl-config-write-time*))
+ 	      (not *tvl-update-time*)
+ 	      (when (<= time utime)
+ 		(not (setq utime (- utime (* 60 60 24)))))
+ 	      (< *tvl-update-time* utime))
+       (let* ((cl (tvl-make-config-alist file))
+ 	     (al (tvl-make-alist cl)))
+ 	(when (and cl al)
+ 	  (setq *tvl-config-alist* cl)
+ 	  (setq *tvl-alist* al)
+ 	  (setq *tvl-config-write-time* wtime)
+ 	  (setq *tvl-update-time* time))))
+     (dolist (x *tvl-config-alist*)
+       (let (alist pday)
+ 	(dolist (item
+ 		 (sort (mapcan #'(lambda (u) (subseq (assoc u *tvl-alist*
+ 							    :test #'string=)
+ 						     1))
+ 			       (cdr x))
+ 		       #'string<= :key #'fifth))
+ 	  (multiple-value-bind (line content link day)
+ 	      (tvl-make-line-and-content item time pday)
+ 	    (and line content (push (list line content link) alist))
+ 	    (and day (setq pday day))))
+ 	(setq alist (nreverse alist))
+ 	(with-output-to-temp-buffer ((car x) nil)
+ 	  (format t "~:{~A~%~}" alist)
+ 	  (set-buffer (car x))
+ 	  (goto-char (point-min))
+ 	  (tvl-mode)
+ 	  (setq tvl-alist alist)
+ 	  (set-buffer-modified-p nil))))
+     (set-buffer (caar *tvl-config-alist*))))
+ 
+ (defvar *tvl-search-hook* nil)
+ 
+ (defun tvl-search (keyword)
+   (interactive "s検索語: ")
+   (let ((buffer *tvl-search-buffer*)
+ 	(time (get-universal-time))
+ 	il al pday)
+     (let ((tempfile (make-temp-file-name)))
+       (unwind-protect
+ 	  (progn
+ 	    (junk::junk-http-download-file (tvl-make-url keyword) tempfile)
+ 	    (setq il (mapcar #'tvl-make-item (cdddar (ed::xmlpm-parse-file
+ 						      tempfile)))))
+ 	(ignore-errors (delete-file tempfile))))
+     (dolist (item il)
+       (multiple-value-bind (line content link day)
+ 	  (tvl-make-line-and-content item time pday)
+ 	(and line content (push (list line content link) al))
+ 	(and day (setq pday day))))
+     (setq al (nreverse al))
+     (with-output-to-temp-buffer (buffer nil)
+       (format t "~:{~A~%~}" al)
+       (set-buffer buffer)
+       (goto-char (point-min))
+       (tvl-mode)
+       (setq tvl-alist al)
+       (set-buffer-modified-p nil))
+     (run-hooks '*tvl-search-hook*)))
+ 
+ ;;;
+
+*コメント [#xbd330a6]
+- 余分なページを作ってしまってすみません。佐野さん、対処方法を教えてくださりありがとうございました。 -- [[作った人]] &new{2008-08-20 (水) 22:18:35};
+
+#comment

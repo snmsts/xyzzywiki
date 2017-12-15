@@ -1,0 +1,30 @@
+*count-xyzzy-instance [#jc39e96f]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2003-11-20 (木) 17:11:56
+-バージョン: 
+
+**メッセージ [#b1b26301]
+sectionが自信ない。
+ <chapter>
+ <title>count-xyzzy-instance</title>
+ <type>Function</type>
+ <arguments>count-xyzzy-instance</arguments>
+ <package>editor</package>
+ <description>
+ 現在起動中のxyzzyの数を返します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>プロセス</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-取り込みました。sectionは多分プロセスかシステムぐらいだと思います。 -- [[山本]] &new{2003-12-06 (土) 19:27:32};
+
+#comment

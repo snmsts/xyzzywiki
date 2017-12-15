@@ -1,0 +1,38 @@
+* メモ帳のように自動的に拡張子を付けて保存する方法 [#p40d42d0]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2006-11-17 (金) 08:17:21
+
+** メッセージ [#g7101581]
+[ファイル]→[名前を付けて保存]でファイルに保存する時、
+Windowsのメモ帳のように拡張子を自動的に付けて保存するにはどうすればいいでしょうか。
+拡張子はバッファモードに応じて可変ではなく、「.txt」と固定でも構いません。
+
+----
+- こんな。 -- [[NANRI]] &new{2006-11-19 (日) 01:09:51};
+ (require "dialogs")
+ (in-package "editor")
+ (defun save-as-dialog ()
+   (interactive)
+   (multiple-value-bind (file index encoding eol-code)
+       (file-name-dialog :save t
+                         :default (get-buffer-file-name)
+                         :filter *file-dialog-filter*
+                         :filter-index *file-dialog-filter-index*
+                         :overwrite t :hide-read-only t
+                         :char-encoding (buffer-fileio-encoding)
+                         :extension "txt"
+                         :eol-code (buffer-eol-code))
+     (when file
+       (setq *file-dialog-filter-index* index)
+       (rename file t)
+       (set-buffer-fileio-encoding encoding)
+       (set-buffer-eol-code eol-code)
+       (save-buffer)
+       (add-history file '*minibuffer-file-name-history*)
+       t)))
+ (in-package "user")
+- NANRIさん、ありがとうございます。こちらの環境でも正常に動作しました。これでまたxyzzyが好きになりました。 -- [[anonymous?]] &new{2006-11-20 (月) 21:40:03};
+
+#comment

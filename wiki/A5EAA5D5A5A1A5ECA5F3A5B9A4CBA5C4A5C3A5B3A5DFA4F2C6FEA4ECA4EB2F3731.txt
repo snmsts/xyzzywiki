@@ -1,0 +1,37 @@
+*merge [#d58d0f50]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[nakano]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-07-29 (木) 00:15:41
+-バージョン: 
+
+**メッセージ [#ae521270]
+ <chapter>
+ <title>merge</title>
+ <type>Function</type>
+ <arguments>merge RESULT-TYPE SEQUENCE1 SEQUENCE2 PREDICATE &amp;key KEY</arguments>
+ <package>lisp</package>
+ <description>
+ SEQUENCE1とSEQUENCE2を併合します．SEQUENCE1とSEQUENCE2は破壊されません．
+ PREDICATEによりSEQUENCE1とSEQUENCE2の値を比較し，非nilならば SEQUENCE1の値を 
+ nil ならば SEQUENCE2の値を順にマージしていきます．
+ 
+ RESULT-TYPE : 結果となるシーケンスの型を指定します．
+ PREDICATE   : シーケンス同士を比較する関数を指定します．
+ KEY         : 比較対照を取得する関数を指定します．
+ 
+ 例
+   (merge 'list '(1 2 3 5 8) '(2 4 6) #'<) =&gt; (1 2 2 3 4 5 6 8)
+   (merge 'string "AbCF" "aBcd" #'char-lessp) =&gt; "AabBCcdF"
+ </description>
+ <seealso>stable-sort</seealso>
+ <link></link>
+ <section>シーケンス</section>
+ <file>sequence.l</file>
+ </chapter>
+----
+
+#comment

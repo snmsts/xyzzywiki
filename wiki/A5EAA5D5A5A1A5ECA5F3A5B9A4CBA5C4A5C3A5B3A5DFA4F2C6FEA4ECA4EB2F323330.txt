@@ -1,0 +1,147 @@
+* 禁則処理 [#jfe9522e]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-08-29 (火) 22:17:39
+-バージョン: 
+
+** メッセージ [#b2aa4795]
+
+ <chapter>
+ <title>kinsoku-extend-limit</title>
+ <type>Function</type>
+ <arguments>kinsoku-extend-limit &amp;optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ 禁則処理でぶら下げる文字数を返します。
+ </description>
+ <seealso>kinsoku-bol-chars</seealso>
+ <seealso>kinsoku-shorten-limit</seealso>
+ <seealso>set-kinsoku-chars</seealso>
+ <seealso>kinsoku-goto-column</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>kinsoku-shorten-limit</title>
+ <type>Function</type>
+ <arguments>kinsoku-shorten-limit &amp;optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ 禁則処理で追い出す文字数を返します。
+ </description>
+ <seealso>kinsoku-eol-chars</seealso>
+ <seealso>kinsoku-extend-limit</seealso>
+ <seealso>set-kinsoku-chars</seealso>
+ <seealso>kinsoku-goto-column</seealso>
+ <seealso></seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>set-kinsoku-chars</title>
+ <type>Function</type>
+ <arguments>set-kinsoku-chars BOL-CHARS EOL-CHARS &amp;optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ 禁則文字をセットします。
+ [ツール] - [共通設定] - [禁則処理] からでも、設定できます。
+ 
+   BOL-CHARS: 行頭にきてはいけない文字の集合。
+   EOL-CHARS: 行末にきてはいけない文字の集合。
+   BUFFER:    nil ならば共通設定として、バッファが指定されれば
+              そのバッファに対してローカルに設定。
+ </description>
+ <seealso>kinsoku-bol-chars</seealso>
+ <seealso>kinsoku-eol-chars</seealso>
+ <seealso></seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>kinsoku-eol-chars</title>
+ <type>Function</type>
+ <arguments>kinsoku-eol-chars &amp;optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ 行末禁則文字の集合を文字列で返します。
+ </description>
+ <seealso>kinsoku-bol-chars</seealso>
+ <seealso>set-kinsoku-chars</seealso>
+ <seealso></seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>kinsoku-bol-chars</title>
+ <type>Function</type>
+ <arguments>kinsoku-bol-chars &amp;optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ 行頭禁則文字の集合を文字列で返します。
+ </description>
+ <seealso>kinsoku-eol-chars</seealso>
+ <seealso>set-kinsoku-chars</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>kinsoku-mode</title>
+ <type>Function</type>
+ <arguments>kinsoku-mode &amp;optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ 禁則処理の状態を表す4ビットのフラグを返します。
+ 
+   8: 禁則処理を行うとき t
+   4: ワードラップするとき t
+   2: 改行文字をぶら下げるとき t
+   1: 空白文字をぶら下げるとき t
+ </description>
+ <seealso>set-kinsoku-chars</seealso>
+ <seealso>*fill-kinsoku-mode*</seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>kinsoku-goto-column</title>
+ <type>Function</type>
+ <arguments>kinsoku-goto-column COLUMN &amp;optional KINSOKU-MODE</arguments>
+ <package>editor</package>
+ <description>
+ COLUMN桁で禁則処理を施したときの行末に移動します。
+ </description>
+ <seealso>kinsoku-bol-chars</seealso>
+ <seealso>kinsoku-extend-limit</seealso>
+ <seealso>kinsoku-eol-chars</seealso>
+ <seealso>kinsoku-shorten-limit</seealso>
+ <seealso></seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+
+--------
+- どーもです。自分ならこう書きます。~
+kinsoku-extend-limit→禁則処理でぶら下げる文字数を返します。~
+kinsoku-shorten-limit→禁則処理で追い出す文字数を返します。~
+kinsoku-goto-column→COLUMN桁で禁則処理を施したときの行末に移動します。~
+kinsoku-extend-limitとkinsoku-shorten-limitはおそらく折り返しにも絡むと思うので改行云々は微妙にずれるように思います。 -- [[NANRI]] &new{2006-08-30 (水) 23:29:45};
+- その方が短くて分かりやすいですね。直しました。　あと折り返しでも確かに禁則処理してますね。禁則処理は自動詰め込み時と折り返し処理で行われていて、それぞれ kinsoku-mode と *fill-kinsoku-mode* で行うかどうかを設定できるようです。まだ少し自信ないですけど。 -- [[中野]] &new{2006-09-02 (土) 13:07:15};
+
+#comment

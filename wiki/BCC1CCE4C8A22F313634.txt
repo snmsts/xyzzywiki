@@ -1,0 +1,21 @@
+* gnuplotモードの操作について [#y3a22fdb]
+-ページ: [[質問箱]]
+-投稿者: [[Tuck]]
+-状態: 投稿者反応待ち
+-投稿日: 2006-04-15 (土) 18:04:20
+
+** メッセージ [#z870f389]
+NANRIさんのホームページ「[[with xyzzy!!ってことで>http://www.page.sannet.ne.jp/southly/]]」から
+gnulpot-mode.l をダウンロードしてインストールしました。&br;
+siteinit.l の設定は次のようにしています。
+ ;-- siteinit.l ----------------------------------------------------
+ (require "gnuplot-mode")
+ (pushnew '("\\.gp$" . gnuplot-mode) *auto-mode-alist* :test 'equal)
+ ;------------------------------------------------------------------
+gnuplotモードに切り替えてみたところ，「↑」「↓」「Enter」の3つのキーが反応しませんでした。
+（下のコメント欄に「↑」キーでは「No previous history.」と，「↓」キーでは「No next history.」と出ます。）&br;
+これは仕様なのでしょうか？
+----
+- 仕様というか、使用目的が違います。*gnuplot-path*にpgnuplot.exeへのパスを設定して、M-x gnuplotでプロンプトを出すというのが一応の使い方です。でも、gnulpot-mode.lは作れることを実証して満足してしまったので、使えるものにはなってません。正直お勧めしません。 -- [[NANRI]] &new{2006-04-16 (日) 06:17:09};
+
+#comment

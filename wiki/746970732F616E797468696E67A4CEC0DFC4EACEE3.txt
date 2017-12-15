@@ -1,0 +1,214 @@
+[[tips]]
+
+- [[anything:http://ottt.x0.com/xyzzy/anything.html]]の設定を公開するためのページです。
+
+- 著作権は主張しないので、使えそうなところがありましたら適当に使って下さい。
+
+- 自由に設定を追加して下さい。
+
+ (in-package :anything)
+ 
+ ;; 別フレームに表示する
+ (defvar *anything-pseudo-frame-name* "anything")
+ (defvar *anything-use-frame* t)
+ 
+ (defun anything-create-frame ()
+   (let ((frame *anything-pseudo-frame-name*))
+     (if (find-pseudo-frame frame)
+ 	(switch-pseudo-frame frame)
+       (new-pseudo-frame frame))))
+ 
+ (defun anything-delete-frame ()
+   (let ((frame (find-pseudo-frame *anything-pseudo-frame-name*))
+ 	(buffer (selected-buffer)))
+     (when frame
+       (refresh-screen)
+       (delete-pseudo-frame frame)
+       (next-buffer) ; これを入れないと折り返しがおかしくなることがある
+       (set-buffer buffer))))
+ 
+ (when *anything-use-frame*
+   (add-hook '*anything-open-hook* 'anything-create-frame)
+   (add-hook '*anything-close-hook* 'anything-delete-frame))
+ 
+ ;; window の位置を固定する
+ (defvar *anything-fix-window-half* t)
+ 
+ (defun anything-fix-window-half ()
+   (setq *anything-buffer-popup*
+ 	(if *anything-buffer-vert*
+ 	    (truncate (/ (window-width) 2))
+ 	  (truncate (/ (window-height) 2)))))
+ 
+ (when *anything-fix-window-half*
+   (add-hook '*anything-open-hook* 'anything-fix-window-half))
+ 
+ ;; ファイラ風にする（C-u M-x anything でディレクトリを初期化）
+ (export '(*anything-directory-list*
+ 	  ))
+ 
+ (defvar *anything-directory-list*
+   `(
+     ,(si:system-root)
+     ,(append-trail-slash (merge-pathnames "site-lisp" (si:system-root)))
+     ,(append-trail-slash (merge-pathnames "lisp" (si:system-root)))
+     ,(append-trail-slash (map-backslash-to-slash (get-special-folder-location :personal)))
+     "C:/Program Files/"
+     ))
+ 
+ (defvar *anything-last-directory* nil)
+ (defvar *anything-refuge-open-hook* nil)
+ (defvar *anything-refuge-close-hook* nil)
+ 
+ (defun anything-initialize-last-directory ()
+   (when *prefix-args*
+     (setq *anything-last-directory* nil)))
+ 
+ (add-hook '*anything-open-hook* 'anything-initialize-last-directory)
+ 
+ (defun anything-refresh () ; 再描画する
+   (let (buffer)
+     (unless *anything-use-frame*
+       (setq buffer (selected-buffer))
+       (refresh-screen)
+       (next-buffer)
+       (set-buffer buffer))
+     (refresh-screen 1)))
+ 
+ (unless (member 'anything-refresh *anything-close-hook* :test #'equal)
+   (setq *anything-close-hook* (nconc *anything-close-hook* (list 'anything-refresh))))
+ 
+ (defun anything-last-directory ()
+   (or *anything-last-directory* (default-directory)))
+ 
+ (defun anything-recover-open-hook ()
+   (setq *anything-open-hook* *anything-refuge-open-hook*)
+   (delete-hook '*anything-close-hook* 'anything-recover-open-hook))
+ 
+ (defun re-anything-1 ()
+   (when *anything-refuge-close-hook*
+     (setq *anything-close-hook* *anything-refuge-close-hook*))
+   (anything))
+ 
+ (defun re-anything (dir &optional upper-directory)
+   (setq *anything-last-directory* dir)
+   (when *anything-open-hook*
+     (setq *anything-refuge-open-hook* *anything-open-hook*
+ 	  *anything-open-hook* nil)
+     (add-hook '*anything-close-hook* 'anything-recover-open-hook))
+   (setq *anything-refuge-close-hook* (if upper-directory
+ 					 (prog1 *anything-close-hook*
+ 					   (setq *anything-close-hook* nil))
+ 				       (anything-cleanup)))
+   (start-timer 0.01 're-anything-1 t)
+   (minibuffer-exit))
+ 
+ (defun anything-upper-directory ()
+   (interactive)
+   (re-anything (directory-namestring (remove-trail-slash (anything-last-directory))) t))
+ 
+ (defun anything-find-file-other-window ()
+   (interactive)
+   (when (eq *last-command* 'anything-find-file-other-window)
+     (anything-next-line))
+   (with-anything-window
+    (anything-name-search)
+    (let((type-or-act (anything-type-or-action))
+ 	(path (merge-pathnames (car *anything-selection*) (anything-last-directory))))
+      (and(eql 'user::file (cdr type-or-act))
+ 	 (file-exist-p path)
+ 	 (not(file-directory-p path))
+ 	 (find-file-other-window path)
+ 	 (add-history path '*minibuffer-file-name-history*)))))
+ 
+ (define-key *anything-mode-map* #\C-z 'anything-upper-directory)
+ (define-key *anything-mode-map* #\C-f 'anything-find-file-other-window)
+ 
+ ;; 関数の書換え
+ (defun anything-set-marker()
+   (anything-name-search)
+   (let((type-or-act (anything-type-or-action))
+        (path (merge-pathnames (car *anything-selection*) (anything-last-directory)))
+        mk)
+     (and(eql 'user::file (cdr type-or-act))
+ 	(file-exist-p path)
+ 	(not(file-directory-p path))
+ 	(setq mk (case (car type-or-act)
+ 		   (type (list (anything-attribute-default-action
+ 				(cdr type-or-act)) path))
+ 		   (action (list (cdr type-or-act) path))))
+ 	(if(member mk *anything-execute-action-list* :test 'equal)
+ 	    (setq *anything-execute-action-list*
+ 		  (remove mk *anything-execute-action-list* :test 'equal))
+ 	  (pushnew mk *anything-execute-action-list* :test 'equal))
+ 	))
+   )
+ 
+ (defun anything-set-mark-action()
+   (interactive)
+   (when (eq *last-command* 'anything-set-mark-action)
+     (anything-next-line))
+   (anything-set-marker)
+   (anything-maker-list-popup))
+ 
+ (in-package :user)
+ 
+ (defvar *anything-exclude-regexp* "\\.lc$")
+ 
+ (add-anything-sources :name "Files from Current Directory"
+ 		      :type file
+ 		      :candidates (lambda(dir)
+ 				    (delete-if
+ 				     #'(lambda(x)(and *anything-exclude-regexp*
+ 						      (string-match *anything-exclude-regexp* x)))
+ 				     (directory dir)))
+ 		      :init (anything::anything-last-directory)
+ 		      )
+ 
+ (add-anything-sources :name "Directory List"
+ 		      :type file
+ 		      :candidates (lambda() *anything-directory-list*)
+ 		      :action (lambda(dir)
+ 				(anything::re-anything dir))
+ 		      )
+ 
+ (add-anything-attribute :type file
+ 			:display "Find File"
+ 			:action (lambda(f)
+ 				  (let ((file (merge-pathnames f (anything::anything-last-directory))))
+ 				    (if (file-directory-p file)
+ 					(anything::re-anything file)
+ 				      (progn
+ 					(find-file file)
+ 					(add-history file '*minibuffer-file-name-history*)))))
+ 			:default t
+ 			)
+
+anything.lからsnippet.lを使ってみる。
+snippet.lをインストールして使ってみて下さい。
+  (add-anything-sources :name "Snippet"
+		      :candidates (lambda()
+				    (let ((abbrevs nil))
+				      (anything::with-anything-window
+				       ; バッファのabbrevの一覧をとりたいんだけどこんな方法しか思いつかない。
+				       (other-window)
+				       (setq abbrevs (append
+						 (make-list-from-keyword-table *local-abbrev-table*)
+						 (make-list-from-keyword-table *global-abbrev-table*)))
+				       abbrevs)))
+		      :action (lambda(arg)
+				(snippet-select-and-expand arg))
+		      )
+------
+- バグがあったので修正 --  &new{2008-02-26 (火) 19:46:12};
+- 0.0.5に対応 --  &new{2008-02-28 (木) 02:01:06};
+- snippet.lを使う設定を追加してみました。 --  &new{2008-09-12 (金) 02:06:33};
+- *global-abbrev-table* も使うようにしてみました。 --  &new{2012-03-31 (土) 01:38:19};
+- 1 -- [[-1']] &new{2015-02-26 (木) 21:23:30};
+- 1 -- [[1]] &new{2015-02-26 (木) 21:23:47};
+- 1 -- [[1]] &new{2015-04-10 (金) 07:51:40};
+- 1 -- [[-1']] &new{2015-04-18 (土) 15:25:31};
+-- 1' -- [[1]] &new{2015-04-18 (土) 15:25:41};
+- 1 -- [[1]] &new{2015-04-18 (土) 15:26:02};
+
+#comment

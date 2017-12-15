@@ -1,0 +1,37 @@
+*count-if-not [#kb2700d2]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[nakano]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-07-25 (日) 02:33:28
+-バージョン: 
+
+**メッセージ [#k4efde9d]
+ <chapter>
+ <title>count-if-not</title>
+ <type>Function</type>
+ <arguments>count-if-not TEST SEQUENCE &amp;key :FROM-END :START :END :KEY</arguments>
+ <package>lisp</package>
+ <description>
+   TESTを満足しないSEQUENCE中の要素数を返します．結果は非負の整数です．
+ 
+   FROM-END : 他の関数との互換性のために用意されたもので，結果に影響しません．
+   TEST     : テストを行う2項演算子
+   START    : テストする開始位置
+   END      : テストの終了位置
+ 
+ </description>
+ <seealso>count</seealso>
+ <seealso>count-if</seealso>
+ <link></link>
+ <section>シーケンス</section>
+ <file>sequence.l</file>
+ </chapter>
+
+----
+-packageの部分を修正しました。 -- [[NANRI]] &new{2004-07-25 (日) 14:56:05};
+-ありがとうございます．リファレンスは書きなれていないので，おかしなところがあったらどんどん直してください． -- [[nakano]] &new{2004-07-25 (日) 21:42:46};
+
+#comment

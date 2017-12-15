@@ -1,0 +1,8 @@
+#freeze
+お名前 [name]~
+''サマリ'' [summary] &size(12){質問の要旨を簡潔にお願いします。};
+
+''メッセージ''~
+[body]
+
+[state][_submit]

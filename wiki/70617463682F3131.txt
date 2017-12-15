@@ -1,0 +1,39 @@
+* xdoc2txtの一時ファイルを削除します [#fb3989a7]
+
+-ページ: [[patch]]
+-投稿者: [[OMA]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: その他
+-投稿日: 2006-02-28 (火) 18:17:32
+-バージョン: 
+
+** メッセージ [#wed22bf9]
+ ;;xdoc2txtで生成される一時ファイルを削除
+ (in-package "editor")
+ (defun xdoc2txt (filename output &optional (setup t))
+   (let ((fullpath (namestring filename))
+         (tmpfile (make-temp-file-name)))
+     (call-process (xdoc2txt-commandline fullpath)
+                   :output tmpfile
+                   :exec-directory (directory-namestring (xdoc2txt-command))
+                   :show :minimize
+                   :wait t)
+     (unless (bufferp output)
+       (setf output (or (find-buffer output)
+                        (create-new-buffer output))))
+     (set-buffer output)
+     (erase-buffer output)
+     (insert-file-contents tmpfile t)
+     (delete-file tmpfile)   ;;;Add
+     (when setup
+       (xdoc2txt-setup-buffer filename (directory-namestring filename)))))
+ (in-package "user")
+
+--------
+- ありがとうございます。取り込みますね。 -- [[miyamuko]] &new{2006-03-02 (木) 17:22:28};
+- よろしくお願いします。いつも便利に使用させて頂いています。~
+(make-temp-file-name)の動作確認で偶然気がつきました。 -- [[OMA]] &new{2006-03-04 (土) 15:02:15};
+- xdoc2txt 0.8 で取り込みました。ありがとうございました。 -- [[miyamuko]] &new{2006-03-15 (水) 13:34:35};
+
+#comment

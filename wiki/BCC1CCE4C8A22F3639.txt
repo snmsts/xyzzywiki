@@ -1,0 +1,48 @@
+* Emacs のインクリメンタルサーチを実現 [#pd4937b9]
+-ページ: [[質問箱]]
+-投稿者: [[こばやし]]
+-状態: 完了
+-投稿日: 2005-03-29 22:38:44 (火)
+
+** メッセージ [#s974c19a]
+Emacs のインクリメンタルサーチ(C-s) ではマッチしたもの全てが
+ハイライトされます。これを xyzzy で実現したいです。
+
+isearch.l を見てみると、C-s でマッチしたものを reverse-region しているようです。
+reverse-region だと複数の単語をハイライトできませんが、
+かわりに set-text-attribute を使えば対応できそうなことがわかりました。
+
+例えば、
+
+ (defun bar ()
+   (interactive)
+   (let* ((match "foo")
+          (len (length match)))
+     (save-excursion
+       (while (scan-buffer match :no-dup t)
+         (set-text-attribute (point) (+ (point) len) 'foo :background 1)))))
+
+とすれば、バッファ内の foo をハイライトできます。
+元に戻すには、delete-text-attributes を使います。
+
+
+C-s でインクリメンタルサーチを実行したとき、isearch-forward が呼ばれます。
+isearch-forward の中では、ループ内で minibuffer-prompt が実行され、
+ミニバッファでタイプしたものがバッファ内でマッチすれば、reverse-region が
+実行されています。
+
+やりたいことは、 reverse-region が呼ばれた直後に、上の bar 相当の関数を
+呼び出して、isearch-exit が呼び出されるときに delete-text-attributes を
+実行したいです。
+
+
+C-s でマッチした単語全てをハイライトすることが目的なので、
+それが出来れば、上のようなやり方でなくても構わないです。よろしくお願いします。
+
+
+----
+-http://www.afis.to/~start/xyzzy/mode/isearch.html -- [[bankrupt]] &new{2005-03-29 23:16:58 (火)};
+-bankruptさん、ありがとうございます。目的にぴったりのものでした。 -- [[こばやし]] &new{2005-03-30 01:03:36 (水)};
+-http://www2.ocn.ne.jp/~cheerful/script/xyzzy/mode/isearch.html 上記URL古いので、新しいのはこちら
+
+#comment

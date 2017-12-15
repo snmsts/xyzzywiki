@@ -1,0 +1,34 @@
+*make-tags-file-dialogの初期ディレクトリ [#u7123693]
+
+-ページ: [[patch]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 提案
+-カテゴリー: 訂正
+-投稿日: 2005-07-08 01:06:21 (金)
+-バージョン: 
+
+**メッセージ [#r60ec34e]
+http://pc8.2ch.net/test/read.cgi/win/1103400818/781への回答
+
+782でも書いたけどTABが消えてるからこっちでも。
+ --- maketags.l~	Fri Mar 26 01:07:44 2004
+ +++ maketags.l	Fri Jul  8 20:26:40 2005
+ @@ -106,7 +106,11 @@
+    (interactive)
+    (multiple-value-bind (result data)
+        (dialog-box *make-tags-file-dialog-template*
+ -		  (list (cons 'src (default-directory))
+ +		  (list (cons 'src (or (and (file-exist-p (merge-pathnames *tags-file-name* (default-directory)))
+ +					    (with-open-file (s (merge-pathnames *tags-file-name* (default-directory)))
+ +					      (when (string-matchp "^#USE \\(.*\\)$" (read-line s))
+ +						(append-trail-slash (merge-pathnames (match-string 1) (default-directory))))))
+ +				       (default-directory)))
+  			(cons 'subdir *make-tags-file-subdir*)
+  			(cons 'depthspin
+  			      (if *make-tags-file-subdir*
+
+----
+-http://pc8.2ch.net/test/read.cgi/win/1103400818/792 で指摘された点を修正。 --  &new{2005-07-08 20:32:37 (金)};
+
+#comment

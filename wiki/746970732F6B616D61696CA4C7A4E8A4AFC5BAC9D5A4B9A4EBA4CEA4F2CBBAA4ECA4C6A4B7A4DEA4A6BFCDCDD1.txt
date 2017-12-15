@@ -1,0 +1,37 @@
+#freeze
+kamail-send.lにあるkamail-create-send-buffer関数を改良してみました。~
+
+メールの本文に"添付"って文字があるかどうかをチェックしているだけ。~
+あまり細かいことは考えてないです。~
+
+エラーメッセージはてきとーに変えてください。
+
+ ; 添付忘れ対策
+ (defun kamail-create-send-buffer ()
+   (interactive)
+   (goto-char (point-min))
+   ; from den8view.l
+   (when (re-search-forward "[\xa0-\xdf\X8540-\X889e\Xeb40-\Xffff]+" t)
+     (ed::show-match)
+     (error "送信しちゃまずい文字発見"))
+   (goto-char (point-min))
+ 
+   ; ---このへんに追加してみた
+   (when (re-search-forward "添[ 　\n\t]*付" t)
+     (goto-char (point-min))
+     (unless (or (search-forward "Content-Type: multipart/mixed" t)
+ 	      (no-or-yes-p "添付忘れてない？大丈夫？"))
+       (error "あぶねー、もうちょっとでメール送っちまうところだったよ(汗)")))
+   ; ---このへんまで追加してみた
+ 
+   (let ((attach kamail-draft-attach-alist))
+     (kamail-send-buffer-create)
+     (kamail-send-mode)
+     (insert-buffer *kamail-buffer-draft*)
+     (goto-char (point-min))
+     (kamail-header-date-update)
+     (kamail-encode-message)
+     (when attach
+       (kamail-change-to-multipart attach))
+     (set-buffer-modified-p nil)
+     (run-hooks '*kamail-create-send-buffer-hook*)))

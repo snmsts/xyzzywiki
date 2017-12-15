@@ -1,0 +1,137 @@
+*screen-width, tanh, cosh, sinh, rationalize, rational, forward-list [#feca036a]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-05-08 00:49:15 (日)
+-バージョン: 
+
+**メッセージ [#j154a419]
+ <chapter>
+ <title>screen-width</title>
+ <type>Function</type>
+ <arguments>screen-width</arguments>
+ <package>editor</package>
+ <description>
+ xyzzyのウィンドウ全体の幅が何桁になるのかを返します。
+ </description>
+ <seealso>screen-height</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>tanh</title>
+ <type>Function</type>
+ <arguments>tanh Z</arguments>
+ <package>lisp</package>
+ <description>
+ 双曲線正接関数を計算します。 
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>cosh</title>
+ <type>Function</type>
+ <arguments>cosh Z</arguments>
+ <package>lisp</package>
+ <description>
+ 双曲線余弦関数を計算します。 
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>sinh</title>
+ <type>Function</type>
+ <arguments>sinh Z</arguments>
+ <package>lisp</package>
+ <description>
+ 双曲線正弦関数を計算します。 
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>rationalize</title>
+ <type>Function</type>
+ <arguments>rationalize NUMBER</arguments>
+ <package>lisp</package>
+ <description>
+ 実数を有理数に変換します。もしも、 NUMBER がすでに有理数だったら、そのま
+ ま返します。 rationalize の場合は、浮動小数点数を表示される範囲までの精
+ 度で扱い、近似して有理数化します。
+ </description>
+ <seealso>rational</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>rational</title>
+ <type>Function</type>
+ <arguments>rational NUMBER</arguments>
+ <package>lisp</package>
+ <description>
+ 実数を有理数に変換します。もしも、 NUMBER がすでに有理数だったら、そのま
+ ま返します。 rational の場合は、浮動小数点数を全く誤差を含まないものとし
+ て扱い、その浮動小数点数を数学的に有理数化します。
+   
+   ;;; 0.5 は2進数でちょうど表せる
+   (rational 0.5)
+   =&gt;1/2
+   ;;; 0.1 は2進数では誤差を含む
+   (rational 0.1)
+   =&gt;13421773/134217728
+   ;;; 倍精度だとまた違う
+   (rational 0.1d0)
+   =&gt;3602879701896397/36028797018963968
+ </description>
+ <seealso>rationalize</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>forward-list</title>
+ <type>Function</type>
+ <arguments>forward-list &amp;optional ARG NO-ERRORS</arguments>
+ <package>editor</package>
+ <description>
+ 前方のリストの終端へ移動します。
+   
+   使用例:
+     ;;; forward-list で移動する
+     ;;; 
+     ;;; ^ でポイント位置を表す
+     (let ((hoge '(1 2))) (foo hoge) ...)
+       ^ 最初はこの位置
+     (let ((hoge '(1 2))) (foo hoge) ...)
+                         ^ 一回
+     (let ((hoge '(1 2))) (foo hoge) ...)
+                               二回 ^
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+----
+-取り込みます→[[refwiki:screen-width]], [[refwiki:tanh]], [[refwiki:cosh]], [[refwiki:sinh]], [[refwiki:rationalize]], [[refwiki:rational]], [[refwiki:forward-list]] -- [[NANRI]] &new{2005-06-11 23:18:51 (土)};
+
+#comment

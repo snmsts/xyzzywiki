@@ -1,0 +1,45 @@
+*read-from-string
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2003-08-25 (月) 06:55:59
+-バージョン: 
+
+**メッセージ
+ <chapter>
+ <title>read-from-string</title>
+ <type>Function</type>
+ <arguments>read-from-string STRING &amp;optional EOF-ERROR-P EOF-VALUE &amp;key :start :end :preserve-whitespace</arguments>
+ <package>lisp</package>
+ <description>
+ 文字列を読み、多値で2つの値を返します。1つ目の戻り値は Lisp Reader が読
+ み込んだオブジェクトそのもの、2つ目の戻り値は文字列中において読まなかっ
+ た最初の文字の位置です。文字列を最後まで読んだ場合、2つ目の戻り値はその
+ 文字列の長さと等しくなります。
+ 
+   STRING               : 読む対象である文字列
+   EOF-ERROR-P          : EOFの状態でread-from-stringしたときにどうするか？
+                 non-nil    エラーとします。(デフォルト)
+                 nil        エラーとせず、nilを返します。
+   EOF-VALUE            : EOFの状態でread-from-stringしたときにnilの代わりに返す文字を指定します。
+   :start               : 読み始める位置(デフォルトは0)
+   :end                 : 読み終わる位置(デフォルトは文字列の長さ)
+   :preserve-whitespace : (詳細不明)<!-- ホワイトスペースを保持するかどうか？ -->
+                 non-nil    <!-- 保持する -->
+                 nil        <!-- 保持しない(デフォルト) -->
+ 
+ </description>
+ <seealso>parse-integer</seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>stream.l</file>
+ </chapter>
+
+ふと興味を持ったので自分なりに調べてみました。
+----
+-ありがとうございます。詳細不明部分はコメント含めてそのままにしています。 -- [[山本]] SIZE(10){2003-08-31 (日) 20:06:45}
+
+#comment

@@ -1,0 +1,26 @@
+[[tips]]
+
+***tips/www-modeのリンク先を別のウィンドウで開く [#u061ccad]
+
+なんとなく作りました。Lispはあまり知らないので知っている人（で、もっと上手く書ける人）は直してやってください。
+
+ ;; .wwwか.xyzzyあたりに書く
+ (defun www-open-link-another-window ()
+   "カーソル位置のリンクを別のウィンドウで開く"
+   (interactive)
+   ;; ウィンドウがなければ作り、あれば既存のウィンドウを使う
+   ;; w3mがonだと文字数が極端に少ない状態で改行されて表示されてしまう。理由は不明
+   ;; とりあえず w3mをoffにすれば問題ないみたい
+   (if (= (count-windows) 1)
+       (split-window)
+     (let (buf)
+       (setq buf (selected-buffer))
+       (other-window)
+       (switch-to-buffer buf)))
+   (www::www-view-goto-link))
+ ;; jに割り当て
+ (define-key www::*www-view-mode-map* #\j 'www::www-open-link-another-window)
+
+----
+
+#comment

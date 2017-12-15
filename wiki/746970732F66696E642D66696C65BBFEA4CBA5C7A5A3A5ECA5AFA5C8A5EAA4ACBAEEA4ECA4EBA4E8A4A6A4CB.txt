@@ -1,0 +1,20 @@
+[[tips]]
+
+元は MLの [[xyzzy:8078>http://hie.s64.xrea.com/xyzzy/ml/msg08077.html]]です。深いディレクトリが作れないバグの修正と
+[[virtual-file>http://white.s151.xrea.com/wiki/index.php?script%2Fvirtual-file]]使用時にエラーを起こさなくするための修正が追加されて
+ます。
+
+  (defun make-directory-unless-directory-exists (filename)
+    (if (not (valid-path-p filename))
+        (let ((d (directory-namestring filename)))
+          (do ((parent d (directory-namestring (remove-trail-slash parent))))
+              ((file-exist-p parent)
+               (and (file-directory-p parent)
+                    (yes-or-no-p "~a~%ディレクトリがないけど作る？" d)
+                    (create-directory d))))
+          nil)))
+  (add-hook '*before-find-file-hook* 'make-directory-unless-directory-exists)
+
+----
+
+#comment

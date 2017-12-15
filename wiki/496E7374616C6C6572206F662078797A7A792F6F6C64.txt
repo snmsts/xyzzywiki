@@ -1,0 +1,9 @@
+*Installer of xyzzy. [#g6679f4b]
+
+仕事の都合上欲しくなったので作ってみました。意見を頂きたいです。山本
+-簡単に説明するとXyzzySetup.exeがxyzzy用のインストーラになります。で、これはNSIS(http://www.nullsoft.com/free/nsis/ )を使って作られてます。あんまり信用ならないバイナリを置いておいてもあれなので、一緒にxxx.nsiとかxxx.nshなどのソースを固めたXyzzySetup.lzhも置いておきます。XyzzySetup.exeを別の妖しいものに置き換えられたら目も当てられないので自己責任での実行をお願いします
+-NSISはwinampを作ってるNullsoftが提供しているフリーのインストーラ作成ツールですが、案外簡単にきれいなものができます。初心者向けに簡単な .xyzzy を生成するツールを作成するのにも向いていると思います。興味があればどうぞ。
+
+----
+
+#pcomment(Installer of xyzzy/old/Comment,10,reply)

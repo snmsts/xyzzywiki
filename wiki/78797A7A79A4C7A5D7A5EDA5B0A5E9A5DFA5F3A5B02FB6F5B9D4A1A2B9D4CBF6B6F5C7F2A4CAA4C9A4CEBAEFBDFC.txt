@@ -1,0 +1,68 @@
+*空行、行末空白などの削除 [#z067bdc3]
+#contents
+
+**概要 [#k5314ad1]
+perlなどのone-linerを使ったバッファフィルタリング、置換などを利用して、空行、行末空白などを削除する方法を説明しています。
+
+**行末空白 [#w6a1d042]
+indent-sexp(C-M-q) で整形すれば、行末空白は削除されますが、バッファ全体で行末のスペースを削除する場合は、文字列置換(正規表現あり)を使って削除します。
+-検索: [ \t]*$
+-置換: なし
+
+キーを割り当てる場合などは、[[xyzzy Note>http://hie.s64.xrea.com/xyzzy/note/]]の[[行頭行末のホワイトスペースとか空行とかを削除>http://hie.s64.xrea.com/xyzzy/note/edit.html#delete-hoge]]を参照してください。
+
+**連続する空行をまとめる [#vec1eeb8]
+まだlispがよく分かっていないので、連続する空白行をひとつにまとめる場合などは、perlなど((cygwinなどでインストールし、Pathを通しておく))で、バッファをフィルタリングしています。以下は、行末の空白やタブをperlで取り除いたあと、cat -sで連続する空行を削除しています。%%uniqは連続する同一行を消すので、重要な行を消してしまったりしないように、十分注意する必要があります。%%
+ C-x # (Ctrlとxキーを同時に押したあと、#を入力)
+ # perl -pe 's/\s+$/\n/' | cat -s
+
+-cat -sがうまく動作しない場合は、改行コードに注意(cygwinのcatだとlfじゃないと駄目な場合がある模様)((設定で変えられると思うのですが…))
+--バッファの改行コードを変換していくには C-x C-k n (M-x change-eol-code)
+-perl -pe 's/[ \t]+$//'、perl -pe 's/[ \t\r]+$//'
+-空行削除またはカーソル行前後の複数空行を１つにまとめる場合は、C-x C-o (M-x delete-blank-lines)
+
+**空行を削除する [#c48fbdd4]
+バッファ中のすべての空行を filter-buffer(C-x #) と perl などを使って削除します。
+
+:改行がLFの場合|
+ perl -ne "print if !/^$/"
+ or
+ ruby -ne "print if !/^$/"
+
+:改行がCRLFの場合|
+ perl -ne "print if !/^\r$/"
+
+**関連情報 [#i3d18b5d]
+-[[行頭行末のホワイトスペースとか空行とかを削除>http://hie.s64.xrea.com/xyzzy/note/edit.html#delete-hoge]]
+-[[man cat>http://www.linux.or.jp/JM/html/GNU_textutils/man1/cat.1.html]]
+//-[[uniqの使い方>http://homepage2.nifty.com/tashikatsu/script/shell/uniq.html]]
+
+**コメント [#yd2902bf]
+-プログラミング言語は良く知らないのとコマンドも良く知らないのですが、uniqて場合によってはマズくないっすか？ -- [[佐野]] &new{2005-02-28 21:06:51 (月)};
+-消しちゃまずい連続同一行がある場合まずいっすね。 -- [[terai]] &new{2005-03-01 12:27:06 (火)};
+
+例えば以下のようにうっかりインデントするのを忘れてた場合とか。
+ public void hoge() {
+ try {
+ foo();
+ }catch(Exception e) {
+ e.printStackTrace();
+ }
+ }
+-最近ひょんなことから知ったのですが、「cat -s」で連続した空白行を、1つの空白行にまとめることができるそうです。＞[[man cat>http://www.linux.or.jp/JM/html/GNU_textutils/man1/cat.1.html]] -- [[NANRI]] &new{2005-03-07 20:21:44 (月)};
+-- なんかすでに書いてあるような・・・(^^; 何故、例はそのままuniqを使っているのでしょう。 -- [[NANRI]] &new{2005-03-07 20:25:36 (月)};
+-たしかcygwinのcat -sが改行コードがlfでないとうまく動かない？みたいで嵌ったからだったような。でも確かにuniqはまずい感じがプンプンするので修正しときます(^^;;;。 -- [[terai]] &new{2005-03-07 23:55:43 (月)};
+-ほぼ等価のlispを書いてみました。 -- [[佐野]] &new{2005-03-08 00:53:44 (火)};
+ (defun remove-eol-space-and-cont-lf ()
+   (interactive)
+   (save-excursion
+     (goto-char (point-min))
+     (perform-replace "[ \t]+$" "" nil t nil t)
+     (while (progn
+ 	     (goto-char (point-min))
+ 	     (not (zerop (perform-replace "\n\n\n" "\n\n" nil t nil t)))))))
+-置き場に困ってます… -- [[佐野]] &new{2005-03-08 00:56:04 (火)};
+-おぉ、lispの勉強ここから初めてみよっかな。置き場所は[[tips]]なんですかね。ここにも残しておいて欲しい気もしますが(^^; -- [[terai]] &new{2005-03-08 01:15:18 (火)};
+-完成品を見てみると全く難しくないんですよね (^^;)手続き言語が理解できてる人なら楽勝かと思います。 xyzzyから使う上ではxyzzy lispのほうが圧倒的に利便性は高いのですがlispが無理な人（すごく多いと思います）にfilter-bufferのサンプルもまた重要なのかなと… tipsに移してここにはlinkをというのがまっとうかなとも思いますが…今晩くらいまで悩んでみるとします。今日はもう眠いので… -- [[佐野]] &new{2005-03-08 01:20:51 (火)};
+
+#comment

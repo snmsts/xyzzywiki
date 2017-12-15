@@ -1,0 +1,77 @@
+#norelated
+*リファレンスとは [#k936248e]
+xyzzy lispの言語リファレンスです。((死ぬほど手短))~
+ここはリファレンスの修正・追加等を論ずる場です。~
+もしリファレンスを使っていてtypoを発見したり動作が書いてあることと違ったりしたときにこのページの存在を思い出してもらえると嬉しいです :)
+*ルール [#t62d6b23]
+**ツッコミ基本ルール [#m0498813]
+-思ったことは気楽に書いてみる。
+-人にわかる書き込みを心がける。((酒飲んだり寝ぼけたりしているときは一拍おきましょう。(自戒を込めて) ))
+-作業等について腰を据えた話がしたい場合は[[リファレンスの管理体制]]まで。
+**各カテゴリの使いわけ [#e379bfe7]
+:ツッコミを入れる|うまく分類が出来ない要望など
+:typo|誤植をつっこむ
+:新規項目|リファレンスに無い項目を書く。
+:記述形式|リファレンス記述形式について。
+**参考 [#l49129da]
+へなちょこリファレンス本体周り
+:xyzzy上での使い方|[[QuickTour/etc/へなちょこリファレンスの使い方]]
+:本家|[[リファレンス]]
+:最新版|[[refwiki:FrontPage]]
+
+
+書き方
+:リファレンスの書式|[[リファレンスフォーマット]]
+
+参考資料
+:Common Lisp HyperSpec|http://www.lispworks.com/documentation/HyperSpec/
+:CLtL2|http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/html/cltl/cltl2.html
+:CLtL2(mirror)|http://www.supelec.fr/docs/cltl/cltl2.html
+
+雑多な情報
+:旧ページ|[[./old]]
+
+**重要なお知らせ [#jc1026e8]
+
+以前はxyzzyリファレンスのライセンスは不明確でしたが、現在はxyzzy本体と同じMITライセンスでの配布しています。xyzzy本体とxyzzyリファレンスを同梱した形での配布の際に全く問題が発生しないようにするのが目的です。
+
+具体的なライセンスの条文は以下のものを予定しています。
+
+ Copyright (c) 2007 The Xyzzy Documentation Project
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a 
+ copy of this software and associated documentation files (the "Software"), 
+ to deal in the Software without restriction, including without 
+ limitation the rights to use, copy, modify, merge, publish, distribute, 
+ sublicense, and/or sell copies of the Software, and to permit persons to 
+ whom the Software is furnished to do so, subject to the following 
+ conditions:
+ 
+ The above copyright notice and this permission notice shall be included 
+ in all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+以降、新規項目を投稿される方はMITライセンスでの配布を納得した上で投稿していただきますようにお願いします。
+
+この件についてのご意見・ご質問はNANRI（southly@gmail.com）までお寄せください。
+
+よろしくお願いします。
+
+*track [#f078d62f]
+:投稿者|まぁどうとでも
+:優先順位|ドキュメントなので急かしてもしょうがない。
+:状態|順調に行くと提案->着手->完了となります。(多分)提案者は提案で始めてください。提案は却下、保留になることあります。
+:ページ名|多分どうでもいい。
+:バージョン|reference.xmlのバージョン…ツッコミの前に配布最新版になっているか…という事故は昔ありましたね。
+:サマリ|
+:メッセージ|
+#tracker(,リファレンスにツッコミを入れる)
+----
+#tracker_list(,,Status:SORT_ASC;Severity:SORT_ASC;_real:SORT_DESC)

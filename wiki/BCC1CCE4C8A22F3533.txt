@@ -1,0 +1,25 @@
+* 検索結果の全てに色を付ける方法を教えて下さい [#p4993a07]
+-ページ: [[質問箱]]
+-投稿者: [[渡辺真]]
+-状態: 完了
+-投稿日: 2004-12-26 (日) 21:14:31
+
+** メッセージ [#zb1a999b]
+YAMAMOTOさんが、
+http://www1.neweb.ne.jp/wa/sinj/xyzzy/xyzzy_kakutyo.html
+で紹介されている、「選択されたバッファのキーワードに色をつける(set-string-color)」を使うと、英文については、サマリの目的が達成できます。
+
+これと同じような動きを、日本語の文書でやりたいのですが、該当するスクリプトをご存知なら、お教え下さい。
+
+----
+- OHKUBOさんのpickup-pattern-set-inputで、色は付きました。ジャンプの方法をお教え下さい。 -- [[渡辺真]] &new{2004-12-26 (日) 22:01:27};
+-よくわかりませんが、次の検索語にジャンプということならstrcolor.lやpickup-pattern.lで出来たような。自分で作ったあやしげなものとしては[[tips/検索結果をダイアログボックスで表示する]]なんてのもあります。 --  &new{2004-12-27 (月) 12:46:12};
+-コメント有難うございました。 -- [[渡辺真]] &new{2004-12-27 (月) 21:25:45};
+-よく見ると、(global-set-key #\M-s 're-search-forward-pickup)と書いてありました。つまり、[Esc]→[s]→[Enter]すると、ジャンプすること分かりました。[F3]を押すと、次々とジャンプさせたいのですが、どう書き換えたらよいのでしょう。ムリですかね。 -- [[渡辺真]] &new{2004-12-27 (月) 21:26:50};
+-次の検索語へ飛ぶのは F5 (repeat-forward-search), S-F5 (repeat-backward-search) です。キーバインドを [F3] に変えたい場合は (global-set-key #\F3 'repeat-forward-search) などと書いてください。 -- [[NANRI]] &new{2004-12-27 (月) 22:24:29};
+-キーバインドについては、ここらあたり（http://web.sfc.keio.ac.jp/~t01089ti/xyzzy-28.html）を参考に。 --  &new{2004-12-28 (火) 07:21:31};
+-アドバイス有難うございます。分かったことは、まず OHKUBOさんの pickup-pattern-set-input で、単語をバッファに登録して、[Enter]すると、色が付きます。この後が少し腑に落ちないのですが、一回、re-search-forward-pickup つまり、[Esc]→[s]→[Enter]すると、ジャンプします。一旦ジャンプした後は、F5 (repeat-forward-search), S-F5 (repeat-backward-search) が効きます。 教えていただいた方法で、 pickup-pattern-set-input と re-search-forward-pickup をファンクションKEYに割り当てたので、スムーズに使えるようになりました。感謝いたします。 -- [[渡辺真]] &new{2004-12-28 (火) 19:17:33};
+-re-search-forward-pickup（re-search-backward-pickup） をすると *last-search-regexp* に検索した文字列がセットされ repeat-forward-search（repeat-backward-search）が有効になります。検索語を強調表示するということなら、re-search-forward-pickup（re-search-backward-pickup）を適当なキーにバインドすればいいような気がします。現在位置をキープしたまま強調表示したい場合には、pickup-pattern-set-input を使えばいいと思います。また、pickup-pattern.l の設定例にもありますが、(add-hook '*show-match-hook* 'pickup-pattern-last-search) のように設定すれば、search-dialog から検索した場合などにも検索語を強調できます。それと、M-s は [Esc]→[s] でもいいですが、[Alt]+[s]だと同時押しができるので若干早く操作できるような気がします。 --  &new{2004-12-28 (火) 21:08:41};
+-感謝いたします！(add-hook '*show-match-hook* 'pickup-pattern-last-search)私の求めていたのは、正しくこれです！【設定例にもあります】確かに・・・。そう言う意味でしたか(^_^;)。そして、pickup-pattern-set-inputと、pickup-pattern-unset-allは、ファンクションkeyに割り付けました。とにかく、大満足。有難うございました。 -- [[渡辺真]] &new{2004-12-29 (水) 00:20:32};
+
+#comment

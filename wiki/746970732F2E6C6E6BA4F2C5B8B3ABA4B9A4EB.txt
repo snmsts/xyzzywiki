@@ -1,0 +1,19 @@
+03/06/13~
+佐野
+
+ショートカットをDnDしても大丈夫に…。~
+ただし、どうやっても.lnkファイルを開けなくなります。それが普通？
+
+ (add-hook
+  '*before-find-file-hook*
+  #'(lambda (x)
+      (let ((sh
+ 	    (ignore-errors
+ 	     (resolve-shortcut x))))
+        (when sh
+ 	 (find-file sh)
+ 	 (get-file-buffer sh)))))
+
+----
+
+#comment

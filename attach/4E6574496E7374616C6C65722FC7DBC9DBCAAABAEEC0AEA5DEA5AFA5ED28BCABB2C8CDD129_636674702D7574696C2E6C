@@ -1,0 +1,25 @@
+; $Id: util.l,v 1.3 2003/04/27 02:06:40 torihat Exp $
+
+(require "util")
+
+(setq *util-name* "cftp")
+(setq *util-version* "0.0.1.6")
+
+(setq *util-dev-dir*
+  (merge-pathnames (concat "dev/" *util-name*) (si:system-root)))
+(setq *util-targ-dir*
+  (merge-pathnames (concat "site-lisp/" *util-name*) (si:system-root)))
+(setq *util-archive-dir*
+  (merge-pathnames "www.mirai.ne.jp/~gyo/xyzzy/" (si:system-root)))
+
+(setq *make-root-directory* *util-dev-dir*)
+
+(setq *util-archive-file*
+  (format nil "~A-~A.lzh"
+	  *util-name*
+	  *util-version*))
+
+(setq *util-file-list* '(("cftp.l" . "site-lisp/cftp.l")
+			 ("cftp.lc" . "site-lisp/cftp.lc")
+			 ("readme.txt")
+			 ))

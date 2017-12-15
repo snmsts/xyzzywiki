@@ -1,0 +1,38 @@
+*partial-completion 風シンボル名補完 [#i3836971]
+
+&ref(p-complete.l);
+
+emacs の partial-completion のような補完です。でも移植ではありません。作ってみたら似てました。
+
+** できること [#x2695008]
+- boundp または fboundp なシンボル名を単語ごとに分けて補完、複数ある場合はポップアップする。区切り文字は "-_." が使用可。
+ m-v-b → multiple-value-bind
+ p.mi → point-min
+- パッケージ修飾子があればそのパッケージを参照。コロンがひとつなら外部シンボルだけを見る。
+ ed::*l.m.s. → ed::*lisp-mode-syntax-table*
+ si:*s.v → si:*slot-value
+- キーワードも補完。
+ :in.e → :initial-element
+
+** 使い方 [#t97a96c0]
++ p-complete.l を ~/site-lisp の下に置く
++ p-complete.l をバイトコンパイルする(必須ではないが、しないとたぶん遅い)
+ M-x byte-compile-file [RET] ~/site-lisp/p-complete.l
++ .xyzzy か siteinit.l に以下を追加する。キーは好みに応じて適当に。
+ (require "p-complete")
+ (global-set-key #\C-. 'pc-complete-lisp-symbol)
+
+** カスタマイズ [#c31ac1f7]
+:*pc-word-delimiters*|単語の区切りに使う文字の列。デフォルトは ("-_.") 
+:*pc-complete-asterisk*|non-nil なら先頭と末尾の \"*\" を勝手に補う。デフォルトは t~
+ex) l.m.h -> *lisp-mode-hook*
+:*pc-complete-hyphen*|non-nil なら途中に \"-\" など(単語構成文字以外)を勝手に補う。デフォルトは nil~
+ex) m.l.k.t -> make-list-from-keyword-table
+:*pc-complete-trailing-words*|末尾にさらに単語が続くものも候補にするかどうか。~
+nil：しない / t：常にする / その他：候補がなかったらする~
+デフォルトは :maybe~
+ex) b....o -> backward-delete-char-untabify-or-selection
+
+
+----
+#comment

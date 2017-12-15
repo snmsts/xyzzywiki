@@ -1,0 +1,38 @@
+* save-buffer [#q6677945]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-05-27 (土) 14:47:12
+-バージョン: 
+
+** メッセージ [#a89ef0c6]
+ <chapter>
+ <title>save-buffer</title>
+ <type>Function</type>
+ <arguments>save-buffer &amp;optional CHAR-ENCODING EOL-CODE</arguments>
+ <package>editor</package>
+ <description>
+ 現在のバッファを保存します。
+   
+   CHAR-ENCODING : 保存する文字コード。
+   EOL-CODE      : 保存する改行コード。
+ </description>
+ <seealso>*before-save-buffer-hook*</seealso>
+ <seealso>*after-save-buffer-hook*</seealso>
+ <seealso>*save-buffer-no-filenames-hook*</seealso>
+ <seealso>make-backup-files</seealso>
+ <seealso>buffer-truncated-p</seealso>
+ <seealso>buffer-modified-p</seealso>
+ <seealso>save-all-buffers</seealso>
+ <seealso>save-some-buffers</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>builtin.l</file>
+ </chapter>
+--------
+- どーもです。項目自体はすでに投稿されていましたので、seealsoのみいただきます。 -- [[NANRI]] &new{2006-05-28 (日) 16:04:53};
+
+#comment

@@ -1,0 +1,57 @@
+[[tips]]
+
+
+ (require "junk/http")
+ (let (result)
+   (with-open-file (in (merge-pathnames "lisp" (etc-path)))
+     (let (tmp)
+       (while (not (string-equal ";**1"(setq tmp (read-line in))))
+ 	(or
+ 	 (zerop (length tmp))
+ 	 (string-match "^;" tmp)
+ 	 (push tmp result)))))
+   (defun addref-get-title-list ()
+     result))
+ 
+ (defun get-entry (name)
+   (let ((str (apply #'concat
+ 		    (mapcar (lambda (x)
+ 			      (setq x (char-code x))
+ 			      (if (or (<= (char-code #\a) x (char-code #\z))
+ 				      (<= (char-code #\A) x (char-code #\Z))
+ 				      (<= (char-code #\0) x (char-code #\9)))
+ 				  (format nil "~C" (code-char x))
+ 				(cond
+ 				 ((= (char-code #\SPC) x) "+")
+ 				 ((< x 256)
+ 				  (format nil "%~:@(~2,'0x~)" x)))
+ 				))
+ 			    (coerce name 'list)))))
+     (setq str (convert-encoding-to-internal
+ 	       *encoding-euc-jp*
+ 	       (junk::junk-http-get-url
+ 		(concat "http://xyzzy.s53.xrea.com/reference/view.cgi?p=" str))))
+     (setq str (cadr (split-string (find-if (lambda (x) (equal "pre" (substring x 0 3))) (split-string str #\<)) #\>)))
+     (let ((ret ""))
+       (dolist (x (split-string str #\&))
+ 	(dolist (i '(("lt;" "<") ("gt;" ">") ("amp;" "&") ("quot;" "\"")))
+ 	  (when (equal (substring x 0 (length (car i))) (car i))
+ 	    (setq ret (concat ret (cadr i) (substring x (length (car i)))))
+ 	    (return))))
+       ret)))
+ 
+ (let ((f #'addref-fix))
+   (defun addref-fix (tpc-or-str)
+     (unless (funcall f tpc-or-str)
+       (let ((buf (ed::find-file-internal *addref-file*)))
+ 	(set-buffer buf)
+ 	(widen)
+ 	(goto-char (point-min))
+ 	(insert (get-entry
+ 		 (if (addref-topic-p tpc-or-str)
+ 		     (addref-topic-title tpc-or-str)
+ 		   tpc-or-str)))
+ 	(insert "\n"))
+       (funcall f tpc-or-str))))
+
+中途半端感が否めない。保存もネットの方でどうにかしたい。 06/11/1 佐野

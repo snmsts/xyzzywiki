@@ -1,0 +1,46 @@
+* 検索結果を一時的に保存したい [#mbd19e54]
+-ページ: [[質問箱]]
+-投稿者: [[上山完]]
+-状態: 完了
+-投稿日: 2005-11-08 11:27:06 (火)
+
+** メッセージ [#mbcfb9ea]
+-replace-matchなどは「直前の検索結果に基づいて」動作しますが、この検索結果を一時的に保存することは可能でしょうか。
+-実際にやろうとしているのは、
+elispで
+ (string-match regexp string)
+ (replace-match replacement t nil string)
+とあるのを、xyzzyで動かそうとして
+ (string-match regexp string)
+ (string-replace-match string (substitute-string replacement "\\\\&" string))
+としようとしたら
+string-matchの結果ではなくsubstitute-stringの検索結果
+に基づいてstring-replace-matchしてしまいます。
+-もちろんsubstitute-stringしてからstring-matchすれば、ちゃんと動くのですが、後ろでできれば置き換えが簡単になるので。
+-ご存知の方がいましたら指導ください。
+----
+-ちょっと今確認できないんですが、 protect-match-data でどうでしょう --  &new{2005-11-08 12:24:55 (火)};
+-できました！ どなたか わかりませんがありがとうございます。 -- [[上山完]] &new{2005-11-08 13:29:56 (火)};
+ (setq string "abc123cdef")
+ (setq replacement "\\1 in \\&")
+ (string-match "\\([0-9]+\\)" string)
+ (string-replace-match string (substitute-string replacement "\\\\&" string))
+  => " in abc123cdef"
+ (string-match "\\([0-9]+\\)" string)
+ (string-replace-match string (protect-match-data (substitute-string replacement "\\\\&" string)))
+  => "123 in abc123cdef"
+-なるほど、"\&"の意味がelispでは異なるのですね。 -- [[NANRI]] &new{2005-11-08 21:21:07 (火)};
+ (substitute-string "abc123cdef" "[^0-9]*\\([0-9]+\\).*" "\\1 in \\&")
+ =>"123 in abc123cdef"
+ =>1
+ 
+ (let ((str "abc123cdef"))
+   (string-match "[^0-9]*\\([0-9]+\\).*" str)
+   (string-replace-match str "\\1 in \\&"))
+ =>"123 in abc123cdef"
+-substitute-stringでもメタ文字使えるんですね。試してみませんでした。勉強になります。
+--リファレンスに追加したほうが・・・ここに書くことじゃないですね。
+--「elispからの移植のためのTips」なんてできませんかね。 これもここに書くことじゃないですね。 -- [[上山完]] &new{2005-11-09 09:19:01 (水)};
+-利用例に足しておきました。二つ目の件はご自分でどうぞ（Wikiはそういうものですから(^^ ） -- [[NANRI]] &new{2005-11-10 00:39:48 (木)};
+
+#comment

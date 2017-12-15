@@ -1,0 +1,49 @@
+[[tips]]
+
+ (defun rename-files-regexp (dir regexp replacement &optional sub-dir-p)
+   "指定したディレクトリ内のファイルを正規表現でリネーム
+ \(前置引数付きで呼ぶとサブディレクトリ内のファイルもリネーム\)"
+   (interactive "DRename files dir: \nsScan with (regexp): \nsto: \nP"
+     :history1 'search
+     :history2 'search)
+   (let ((files (directory dir
+                           :recursive sub-dir-p
+                           :file-only t)))
+     (and (string= regexp (regexp-quote regexp))
+          (string= replacement (regexp-quote replacement))
+          (setq regexp (format nil "\\(.*\\)~A\\(.*\\)" regexp)
+                replacement (format nil "\\1~A\\2" replacement)))
+     (setq files (mapcan #'(lambda (old-name)
+                             (let ((new-name (if (string-match regexp old-name)
+                                                 (string-replace-match old-name replacement))))
+                               (and new-name
+                                    (not (equal old-name new-name))
+                                    (list (cons old-name new-name)))))
+                         files))
+     (if files
+         (case (message-box (apply 'concat (cons "以下のリネームを実行します\n\n"
+                                                 (mapcar #'(lambda (x)
+                                                             (format nil "- ~A → ~A\n" (car x) (cdr x)))
+                                                         files)))
+                            "Rename files" '(:ok-cancel :information :button1))
+           (:ok
+            (dolist (x files t)
+              (or (rename-file (merge-pathnames (car x) dir)
+                               (merge-pathnames (cdr x) dir)
+                               :if-exists :skip)
+                  (loop
+                    (if (rename-file (merge-pathnames (car x) dir)
+                                     (merge-pathnames
+                                      (read-string (format nil "\"~A\" already exists!: " (cdr x))
+                                                   :default (car x)) dir)
+                                     :if-exists :skip)
+                        (return t)))))
+            (message "Done."))
+           (:cancel nil))
+       (progn (message "リネームできるファイルがありません") nil))))
+
+リネームするのにファイラを開くのさえめんどくさい人向け。~
+[[tips/ファイラの一気にリネームを便利に]]と同様に、パターンが正規表現でない場合は勝手に正規表現を作ります。
+
+*** コメント [#d285efa4]
+#comment

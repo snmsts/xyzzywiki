@@ -1,0 +1,11 @@
+[[tips]]
+
+*中置記法のほうが分かりやすいよね
+ (require "calc")
+ (progn
+   (setq calc::x 3)
+   (setq calc::y 20)
+   (setq calc::z 40)
+   (ed::calc-string "x+y*z"))
+
+calcモードの変数域を荒らすのでそのつもりで。

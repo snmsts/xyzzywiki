@@ -1,0 +1,50 @@
+winapiをlccから抽出しようとしていましたが、自動では無理でした。
+手作業でする前の材料にはなるかもしれませんので、とりあえずＵＰしました
+ (defvar *buildlib-path* "c:/lcc/buildlib/")
+ (defvar *win-h* "c:/lcc/include/win.h")
+ (defvar *output-filename* "C:/xyzzy/site-lisp/aaa.l")
+ 
+ (defun test ()
+   (interactive)
+   (let ((dll-list (make-hash-table :test #'equal))(dll-name))
+ 	(dolist (exp (directory *buildlib-path*))
+ 	  (if (string-match "\\(.+\\)\.exp$" exp)
+ 		  (progn
+ 			(setq dll-name (match-string 1))
+ 			(with-open-file (in (concat *buildlib-path* exp) :direction :input)
+ 			  (let (line)
+ 				(while (setq line (read-line in nil))
+ 				  (if (string-match "^_\\([^@\t]+\\)" line)
+ 					  (setf (gethash (match-string 1) dll-list) dll-name))))))))
+ 	(with-open-file (in  *win-h* :direction :input)
+ 	  (with-open-file (out  *output-filename* :direction :output)
+ 		(let ((line)(ret)(func)(param))
+ 		  (while (setq line (read-line in nil))
+ 			(if (not (string-match "^typedef" line))
+ 			  (progn
+ 				(if (string-match "^\\([A-Za-z_]+\\) \\(STDCALL\\|WINAPI\\) \\([^(]+\\)(\\([^)]+\\)" line)
+ 					(progn
+ 					  (setq ret (match-string 1))
+ 					  (setq func (match-string 3))
+ 					  (setq param (match-string 4))
+ 					  (setq param (substitute-string param "\\([A-Za-z_]+ \\*+\\)" "(\\1)"))
+ 					  (setq param (substitute-string param "," " "))
+ 					  (setq param (substitute-string param "LPDWORD" "(DWORD *)"))
+ 					  (princ (concat "(*define-dll-entry "
+ 									 ret " " func "(" param ") \"" (gethash func dll-list)
+ 									 "\")\n") out)))
+ 				(if (string-match "^#define \\([A-Za-z_]+\\)[\t ]+\\(.+\\)" line)
+ 					(princ (concat "(*define " (match-string 1) " " (match-string 2) ")\n")out))
+ 				(if (string-match "^#define \\([A-Za-z_]+\\)$" line)
+ 					(princ (concat "(*define " (match-string 1) " nil)\n")out))
+ #|
+ 				(if (string-match "typedef[\t ]+struct[\t ]+tag\\([A-Za-z_]+\\)" line)
+ 					(progn
+ 					  (princ (concat "(*define-c-struct\n " (match-string 1) "\n")out)
+ 					  (while (setq line (read-line in nil))
+ 						(if (string-match "^}" line) (progn (princ "  )\n" out) (return)))
+ 						(if (string-match "^\t\\([A-Za-z_]+\\)[\t ]+\\([A-Za-z_]+\\)" line)
+ 							(princ (concat "  (" (match-string 1) (match-string 2) ")\n") out)))))
+ |#
+ 				))))
+ 		))))

@@ -1,0 +1,18 @@
+* sshクライアント
+-ページ: [[WishList]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2003-10-16 (木) 00:31:43
+
+** メッセージ 
+
+----
+http://www1.neweb.ne.jp/wa/sinj/xyzzy/tterm.html~
+のtterm.lがssh対応になってほしい
+-いいですねぇ。
+-shell3 + openssh + RSA + keychain or no passphrase で、一応sshが使えてます --  &new{2004-04-02 (金) 04:38:45};
+-Cygwinのインストールは、なるべく避けたいです。 --  &new{2004-04-09 (金) 09:34:37};
+-他のマシンでMingw でコンパイルしてから使ってください --  &new{2004-04-09 (金) 21:02:36};
+-cygwin のインストールを厭わない方には cygwin + cygterm って言うのはどうでしょう？ --  &new{2004-06-21 (月) 16:59:46};
+
+#comment

@@ -1,0 +1,47 @@
+[[tips]]
+
+現在位置の status を favorite します。前置引数をつけると favorite から外します。
+
+ (defun favorite-create (username password id)
+   (let* ((url (format nil "~Afavorites/create/~A.xml" *api-url-root* id))
+          (tmpfile (local-file url username))
+          (headers (create-request-headers username password))
+          data)
+     (multiple-value-bind (status response-headers)
+         (http-download-file url tmpfile t :headers headers)
+       (when (file-exist-p tmpfile)
+         (setq data
+               (ed::xmlpm-parse-file tmpfile)))
+       (cond ((equal status "200")
+              (values t status (parse-twstatus (car data))))
+             (t
+              (values nil status (read-error)))))))
+ 
+ (defun favorite-destroy (username password id)
+   (let* ((url (format nil "~Afavorites/destroy/~A.xml" *api-url-root* id))
+          (tmpfile (local-file url username))
+          (headers (create-request-headers username password))
+          data)
+     (multiple-value-bind (status response-headers)
+         (http-download-file url tmpfile t :headers headers)
+       (when (file-exist-p tmpfile)
+         (setq data
+               (ed::xmlpm-parse-file tmpfile)))
+       (cond ((equal status "200")
+              (values t status (parse-twstatus (car data))))
+             (t
+              (values nil status (read-error)))))))
+ 
+ (defun summary-favorite (&optional destroy-p)
+   (interactive "P")
+   (multiple-value-bind (start end status)
+       (find-text-attribute-point (point))
+     (when (and (twstatus-p status)
+                (yes-or-no-p "~A\n-----\nこの発言を favorite ~:[する~;から消す~]？"
+                             (twstatus-text status) destroy-p))
+       (if destroy-p
+           (favorite-destroy *username* *password* (twstatus-id status))
+         (favorite-create *username* *password* (twstatus-id status))))))
+ 
+ ;; キーバインド
+ ;; (define-key *summary-map* #\F 'summary-favorite)

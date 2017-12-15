@@ -1,0 +1,18 @@
+[[L10N/english]]
+
+ listfn.l:29:		    (:caption "関数(だいたい)一覧")
+-Function List --  &new{2005-03-04 21:46:30 (金)};
+
+#comment
+ listfn.l:30:		    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-04 21:47:27 (金)};
+
+#comment
+ listfn.l:33:		     (:button IDOK "OK" #x50010001 229 7 50 14)
+-OK --  &new{2005-03-04 21:46:37 (金)};
+
+#comment
+ listfn.l:34:		     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 229 24 50 14)))
+-Cancel --  &new{2005-03-04 21:46:48 (金)};
+
+#comment

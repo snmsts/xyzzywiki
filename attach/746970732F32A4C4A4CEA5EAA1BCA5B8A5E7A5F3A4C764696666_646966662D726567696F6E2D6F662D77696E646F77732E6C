@@ -1,0 +1,49 @@
+;;; diff-region-of-windows.l
+;;;         Last updated: <2003-10-25T16:02:02+09:00>
+;;; 2つのウィンドウで指定されたリージョン同士でdiffをとります。
+
+(require "diff")
+
+(in-package "editor")
+
+(export 'diff-region-of-windows)
+
+(defvar *diff-winconf* nil)
+
+(defun diff-region-of-windows ()
+  "2つのウィンドウで指定されたリージョン同士でdiffをとります"
+  (interactive)
+  (let* ((w1 (selected-window))
+         (w2 (next-window w1 'arg))
+         new-tmp1 old-tmp2)
+    (when (eq w1 w2)
+      (return-from diff-region-of-windows nil))
+    (unless *diff-winconf*
+      (setq *diff-winconf* (current-window-configuration))) ; windowの状態を記憶
+    (setq new-tmp1 (concat (make-temp-file-name "" "")
+                           (substitute-string (buffer-name (selected-buffer)) "^\\.\\|[ #*/?~:]+\\|<[0-9]+>" "")))
+    (write-region (mark) (point) new-tmp1) ; buffer対象が欲しい人はこの辺とかを適当に
+    (set-window w2)
+    (setq old-tmp2 (concat (make-temp-file-name "" "")
+                           (substitute-string (buffer-name (selected-buffer)) "^\\.\\|[ #*/?~:]+\\|<[0-9]+>" "")))
+    (write-region (mark) (point) old-tmp2) ; buffer対象が欲しい人はこの辺とかを適当に
+    (diff new-tmp1 old-tmp2)))
+
+(defun diff-quit-w ()
+  (interactive)
+  (when (prog1
+            diff-buffer
+          (and (find-buffer *diff-old-buffer-name*)
+               (or (kill-buffer *diff-old-buffer-name*)
+                   (quit)))
+          (and (find-buffer *diff-new-buffer-name*)
+               (or (kill-buffer *diff-new-buffer-name*)
+                   (quit))))
+    (if *diff-winconf*
+        (progn
+          (set-window-configuration *diff-winconf*) ; windowの状態を復帰
+          (setq *diff-winconf* nil))
+      (delete-other-windows)))
+  t)
+
+(define-key *diff-mode-map* #\q 'diff-quit-w)

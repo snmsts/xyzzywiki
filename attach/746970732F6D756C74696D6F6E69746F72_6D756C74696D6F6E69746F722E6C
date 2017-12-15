@@ -1,0 +1,191 @@
+#|text
+■機能
+マルチモニターを使用している環境で，xyzzyが表示されているモニターを変更する．
+
+■設定例
+(require "multimonitor")
+(define-key ctl-x-map #\m 'toggle-maximize-xyzzy)
+(define-key ctl-x-map #\l 'xyzzy-next-monitor)
+(global-set-key #\C-z 'minimize-xyzzy)
+                 ;(画面左上の X座標 Y座標  幅 高さ) のリスト
+(setq *multimonitor-screens* '((0 0 1600 1200) (1600 0 1280 1024)))
+
+|#
+
+(provide "multimonitor")
+
+(require "wip/winapi")
+(require "api")
+
+
+(in-package "editor")
+
+(export '(toggle-maximize-xyzzy
+	  xyzzy-next-monitor
+	  xyzzy-previous-monitor
+	  minimize-xyzzy
+	  maximize-xyzzy
+	  restore-xyzzy
+	  *multimonitor-screens*
+	  ))
+
+
+(defvar *multimonitor-screens* nil "x y width heightのリスト")
+
+
+;(c:define-dll-entry winapi:BOOL EnumDisplayMonitors (winapi::LONG (winapi::RECT *) winapi::LONG winapi::LONG) "user32")
+(c:define-dll-entry winapi:BOOL ShowWindow (winapi:HWND c:int) "user32")
+#|
+(winapi::*define  SM_CXVSCROLL 2)
+(winapi::*define  SM_CYHSCROLL 3)
+(winapi::*define  SM_CYCAPTION 4)
+(winapi::*define  SM_CXBORDER 5)
+(winapi::*define  SM_CYBORDER 6)
+(winapi::*define  SM_CXDLGFRAME 7)
+(winapi::*define  SM_CYDLGFRAME 8)
+(winapi::*define  SM_CYVTHUMB 9)
+(winapi::*define  SM_CXHTHUMB 10)
+(winapi::*define  SM_CXICON 11)
+(winapi::*define  SM_CYICON 12)
+(winapi::*define  SM_CXCURSOR 13)
+(winapi::*define  SM_CYCURSOR 14)
+(winapi::*define  SM_CYMENU 15)
+(winapi::*define  SM_CXFULLSCREEN 16)
+(winapi::*define  SM_CYFULLSCREEN 17)
+(winapi::*define  SM_CYKANJIWINDOW 18)
+(winapi::*define  SM_MOUSEPRESENT 19)
+(winapi::*define  SM_CYVSCROLL 20)
+(winapi::*define  SM_CXHSCROLL 21)
+(winapi::*define  SM_DEBUG 22)
+(winapi::*define  SM_SWAPBUTTON 23)
+(winapi::*define  SM_RESERVED1 24)
+(winapi::*define  SM_RESERVED2 25)
+(winapi::*define  SM_RESERVED3 26)
+(winapi::*define  SM_RESERVED4 27)
+(winapi::*define  SM_CXMIN 28)
+(winapi::*define  SM_CYMIN 29)
+(winapi::*define  SM_CXSIZE 30)
+(winapi::*define  SM_CYSIZE 31)
+(winapi::*define  SM_CXFRAME 32)
+(winapi::*define  SM_CYFRAME 33)
+(winapi::*define  SM_CXMINTRACK 34)
+(winapi::*define  SM_CYMINTRACK 35)
+(winapi::*define  SM_CXDOUBLECLK 36)
+(winapi::*define  SM_CYDOUBLECLK 37)
+(winapi::*define  SM_CXICONSPACING 38)
+(winapi::*define  SM_CYICONSPACING 39)
+(winapi::*define  SM_MENUDROPALIGNMENT 40)
+(winapi::*define  SM_PENWINDOWS 41)
+(winapi::*define  SM_DBCSENABLED 42)
+(winapi::*define  SM_CMOUSEBUTTONS 43)
+(winapi::*define  SM_CXFIXEDFRAME SM_CXDLGFRAME)
+(winapi::*define  SM_CYFIXEDFRAME SM_CYDLGFRAME)
+(winapi::*define  SM_CXSIZEFRAME SM_CXFRAME)
+(winapi::*define  SM_CYSIZEFRAME SM_CYFRAME)
+(winapi::*define  SM_SECURE 44)
+(winapi::*define  SM_CXEDGE 45)
+(winapi::*define  SM_CYEDGE 46)
+(winapi::*define  SM_CXMINSPACING 47)
+(winapi::*define  SM_CYMINSPACING 48)
+(winapi::*define  SM_CXSMICON 49)
+(winapi::*define  SM_CYSMICON 50)
+(winapi::*define  SM_CYSMCAPTION 51)
+(winapi::*define  SM_CXSMSIZE 52)
+(winapi::*define  SM_CYSMSIZE 53)
+(winapi::*define  SM_CXMENUSIZE 54)
+(winapi::*define  SM_CYMENUSIZE 55)
+(winapi::*define  SM_ARRANGE 56)
+(winapi::*define  SM_CXMINIMIZED 57)
+(winapi::*define  SM_CYMINIMIZED 58)
+(winapi::*define  SM_CXMAXTRACK 59)
+(winapi::*define  SM_CYMAXTRACK 60)
+(winapi::*define  SM_CXMAXIMIZED 61)
+(winapi::*define  SM_CYMAXIMIZED 62)
+(winapi::*define  SM_NETWORK 63)
+(winapi::*define  SM_CLEANBOOT 67)
+(winapi::*define  SM_CXDRAG 68)
+(winapi::*define  SM_CYDRAG 69)
+(winapi::*define  SM_SHOWSOUNDS 70)
+(winapi::*define  SM_CXMENUCHECK 71)
+(winapi::*define  SM_CYMENUCHECK 72)
+(winapi::*define  SM_SLOWMACHINE 73)
+(winapi::*define  SM_MIDEASTENABLED 74)
+(winapi::*define  SM_MOUSEWHEELPRESENT 75)
+(winapi::*define  SM_XVIRTUALSCREEN 76)
+(winapi::*define  SM_YVIRTUALSCREEN 77)
+(winapi::*define  SM_CXVIRTUALSCREEN 78)
+(winapi::*define  SM_CYVIRTUALSCREEN 79)
+(winapi::*define  SM_CMONITORS 80)
+(winapi::*define  SM_SAMEDISPLAYFORMAT 81)
+|#
+
+;;... 最大化
+(defun maximize-xyzzy ()
+  "xyzzyを最大化"
+  (interactive)
+  (ShowWindow (get-window-handle) 3))
+
+;;... 最小化
+(defun minimize-xyzzy ()
+  "xyzzyを最小化"
+  (interactive)
+  (ShowWindow (get-window-handle) 6))
+
+;;... 元のサイズに戻す
+(defun restore-xyzzy ()
+  "xyzzyの最大化解除"
+  (interactive)
+  (ShowWindow (get-window-handle) 9))
+
+;;... トグル
+(c:define-dll-entry winapi:BOOL IsZoomed (winapi:HWND) "user32")
+(defun toggle-maximize-xyzzy ()
+  "xyzzyの最大化/ｳｨﾝﾄﾞｳ表示 トグル"
+  (interactive)
+  (if (/= 0 (IsZoomed (get-window-handle)))
+      (restore-xyzzy)
+    (maximize-xyzzy)))
+
+(defun xyzzy-next-monitor (&optional (n 1))
+  "monitorを移動する"
+  (interactive)
+  (let ((whndl (get-window-handle))
+	(old-size (winapi:make-RECT))
+	(center (winapi:make-RECT))
+	(screens *multimonitor-screens*)
+	len num screen oldscreen zoomed tmp)
+    (when screens
+      (if (not (setq zoomed (/= 0 (IsZoomed whndl))))
+	  (maximize-xyzzy))
+      (winapi::GetWindowRect whndl center)
+      (restore-xyzzy)
+      (winapi::GetWindowRect whndl old-size)
+      (setq num (position-if #'(lambda (x)
+				 (setq tmp (/ (+ (winapi::RECT-left center)
+						 (winapi::RECT-right center)) 2))
+				 (when (and (< (car x) tmp)
+					    (< tmp (+ (car x) (caddr x))))
+				   (setq tmp (/ (+ (winapi::RECT-bottom center)
+						   (winapi::RECT-top center)) 2))
+				   (and (< (cadr x) tmp)
+					(< tmp (+ (cadr x) (cadddr x))))))
+			     screens))
+      (unless num
+	(msgbox "cannot find current screen")
+	(return-from xyzzy-move-monitor))
+      (setq len (length screens)
+	    oldscreen (nth num screens)
+	    screen    (nth (mod (+ num n len) len) screens))
+      (winapi::SetWindowPos whndl 0
+			    (+ (car screen) (- (winapi::RECT-left old-size) (car oldscreen)))    ;x座標
+			    (+ (cadr screen) (- (winapi::RECT-top old-size) (cadr oldscreen)))    ;y座標
+			    (- (winapi::RECT-right old-size) (winapi::RECT-left old-size)) ;ウィンドウ幅
+			    (- (winapi::RECT-bottom old-size) (winapi::RECT-top old-size)) ;ウィンドウ高さ
+			    0)
+      (if zoomed (maximize-xyzzy)))))
+
+
+(defun xyzzy-previous-monitor ()
+  "1つ前のモニタへ移動する"
+  (interactive)
+  (xyzzy-next-monitor -1))

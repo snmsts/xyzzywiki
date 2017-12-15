@@ -1,0 +1,103 @@
+[[L10N/english]]
+
+ struct.l:28:	     (error "不正なスロット名です: ~S" name))
+-Illegal slot name: ~S --  &new{2005-04-05 01:52:15 (火)};
+
+#comment
+ struct.l:36:	       (error "不正なスロット記述子です: ~S" desc))
+-Illegal slot descriptor: ~S --  &new{2005-04-05 01:52:41 (火)};
+
+#comment
+ struct.l:43:		(error "不正なスロットオプションです: ~S" (car d))))))
+-Illegal slot option: ~S --  &new{2005-04-05 01:53:27 (火)};
+
+#comment
+ struct.l:45:	   (error "不正なスロット記述子です: ~S" desc)))
+-Illegal slot descriptor: ~S --  &new{2005-04-05 01:53:57 (火)};
+
+#comment
+ struct.l:83:		 (t (error "不正な:copierオプション引数です: ~S" (car v)))))
+- Illegal :copier option argument: ~S -- [[ことぽん]] &new{2005-11-29 (火) 03:30:17};
+
+#comment
+ struct.l:88:		 (t (error "不正な:predicateオプション引数です: ~S" (car v)))))
+- There is no argument for a :type option. -- [[ことぽん]] &new{2005-11-29 (火) 03:24:32};
+- ごめんなさい、上は、struct.l:95の他訳でした。 -- [[ことぽん]] &new{2005-11-29 (火) 03:28:22};
+- Illegal :predicate option argument: ~S -- [[ことぽん]] &new{2005-11-29 (火) 03:29:29};
+
+#comment
+ struct.l:95:	     (error ":typeオプションに引数がありません"))
+- An argument cannot be seen for :type option. -- [[ことぽん]] &new{2005-11-29 (火) 03:23:21};
+
+#comment
+ struct.l:102:	   (error "不正なdefstructオプションです: ~S" opt)))))
+- Illegal defstruct option: ~S -- [[ことぽん]] &new{2005-11-29 (火) 03:22:06};
+
+#comment
+ struct.l:106:	  (error "~Sは構造体ではありません" (car include)))
+-~S is not structure --  &new{2005-04-05 01:54:24 (火)};
+
+#comment
+ struct.l:118:		(error "不正なスロット名です: ~A" name))
+-Illegal slot name: ~A --  &new{2005-04-05 01:54:37 (火)};
+- Illegal sot name: ~A -- [[ことぽん]] &new{2005-11-29 (火) 03:21:17};
+
+#comment
+ struct.l:124:		     (error "~Sは~Sのsubtypeではありません" type (caddr odesc))))
+- ~S --  &new{2005-11-29 (火) 03:19:31};
+- ~S is not a subtype of ~S, -- [[ことぽん]] &new{2005-11-29 (火) 03:20:29};
+
+#comment
+ struct.l:129:		     (error "~Aはread-onlyです" name))))))
+-~A is read-only --  &new{2005-04-05 01:55:04 (火)};
+- ~A is read-only -- [[ことぽん]] &new{2005-11-29 (火) 03:19:04};
+
+#comment
+ struct.l:132:		 (error ":typeオプションは指定できません")))
+- You cannot specify :type option -- [[ことぽん]] &new{2005-11-29 (火) 03:18:23};
+
+#comment
+ struct.l:134:	      (t (error "不正な:typeオプションです: ~S" type)))
+- Illegal option :type: ~S -- [[ことぽん]] &new{2005-11-29 (火) 03:17:41};
+
+#comment
+ struct.l:141:	     (error "不正な:typeオプションです: ~S" type))
+- Illegal option :type: ~S -- [[ことぽん]] &new{2005-11-29 (火) 03:16:31};
+
+#comment
+ struct.l:143:	     (error ":typeと:print-functionは同時に指定できません"))
+- You can not specify :type and :print-function at the same time. -- [[ことぽん]] &new{2005-11-29 (火) 03:15:36};
+
+#comment
+ struct.l:147:	     (error ":namedでない構造体に:predicateは指定できません"))
+- You cannot specify predicatel for a structure whic is not :named -- [[ことぽん]] &new{2005-11-29 (火) 03:14:04};
+
+#comment
+ struct.l:153:		  (error "不正な:initial-offset引数です: ~S" initial-offset))))
+- Illegal initial-offset argument: ~S -- [[ことぽん]] &new{2005-11-29 (火) 03:10:53};
+
+#comment
+ struct.l:156:	     (error ":initial-offsetは:typeがなければ指定できません"))))
+- You cannot specify :initial-offset without :type -- [[ことぽん]] &new{2005-11-29 (火) 03:09:28};
+
+#comment
+ struct.l:181:	  (error "スロット~Aが重複しています" (car d)))
+- Slot ~A is overlapping -- [[ことぽん]] &new{2005-11-29 (火) 03:07:37};
+
+#comment
+ struct.l:468:      (error "~Aは型指定子です" name))
+- ~A is a type specifier. -- [[ど素人]] &new{2007-11-30 (金) 16:51:29};
+
+#comment
+ struct.l:473:	(error "~Aの再定義はできません" name)))
+- You cannot re define ~A -- [[ことぽん]] &new{2005-11-29 (火) 03:06:15};
+
+#comment
+ struct.l:495:      (error "構造体ではありません: ~S" name))
+- This is not a structure: ~S -- [[ことぽん]] &new{2005-11-29 (火) 03:12:02};
+
+#comment
+ struct.l:499:    (error "コンストラクタがありません: ~S" name)))
+- Unable to find a constructor: ~S  -- [[ことぽん]] &new{2005-11-29 (火) 03:03:46};
+
+#comment

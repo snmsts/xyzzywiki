@@ -1,0 +1,58 @@
+KaMailでHTMLメールをbrowserexを使用して表示。~
+といっても拡張子を ".mht" にして開いてるだけ。~
+
+ ;;
+ ;; HTMLメールの表示
+ ;;
+ (require "browserex")
+ 
+ (defvar *kamail-browser-position* bx::XPIS_BOTTOM)
+ (defvar *kamail-browser-height* 400)
+ 
+ (defun kamail-mhtml-view (&optional shell-exec)
+   (interactive "p")
+   (let (dir
+ 	(num kamail-number)
+ 	file)
+     (save-excursion
+       (kamail-temp-create-buffer)
+       (setq file (concat bx:*browser-temp-file* "-" num ".mht"))
+       (kamail-get-message num)
+       (kamail-write-selected-buffer file))
+     (if shell-exec
+ 	(shell-execute file)
+       (kamail-view-html-mail file))))
+ 
+ (defun kamail-browser-open-p ()
+   (bx::browser-open-p))
+ 
+ (defun kamail-view-html-mail (file)
+   (bx::navigate file
+ 		:position *kamail-browser-position*
+ 		:size *kamail-browser-height*))
+ 
+ (defun kamail-close-browser-if ()
+   (interactive)
+   (if (kamail-browser-open-p)
+       (kamail-close-browser)
+     (kamail-select-window-summary)))
+ 
+ (defun kamail-close-browser ()
+   (bx::close-browser))
+ 
+ (define-key *kamail-multipart-map* #\m 'kamail-mhtml-view)
+ (define-key *kamail-multipart-map* #\q 'kamail-close-browser-if)
+
+----
+
+-おお！！素晴らしい！！！ありがとうございます。m(_ _)m --  &new{2005-08-08 23:01:03 (月)};
+- 上記を.xyzzyに記述してeval-bufferすると「変数が定義されていません:editor::*kamail-multipart-map*」と表示されてしまいます。 どのようにしたら良いのでしょうか? -- [[tos]] &new{2007-09-21 (金) 13:05:07};
+- きっとその時点でkamailを読み込んでないからですね。 -- [[佐野]] &new{2007-09-21 (金) 13:28:06};
+- 回答ありがとうございます。.xyzzyから.kamailに記述を移行しました。*KaMail: Multipart*で「m」(kamail-mhtml-view)を押したところ、「関数が定義されていません。kamail::kamail-write-selected-buffer」というメッセージが出てしまいます。まだ何か足りないのでしょうか? -- [[tos]] &new{2007-09-21 (金) 17:31:17};
+- 普通にloadしていたらありえないです。kamailの設定を失敗しているとしか -- [[佐野]] &new{2007-09-21 (金) 17:52:01};
+- そうですか。ただ気になるのは、site-lisp/kamail以下で「kamail-write-selected-buffer」を探してもどこにも定義されていないんです。kamailのバージョンが違うとかありますか? ちなみに私のkamailのバージョンは0.0.2.3です。 -- [[tos]] &new{2007-09-21 (金) 18:23:56};
+- KaMailの最新は0.0.2.8ですから0.0.2.3はかなり古いです。 -- [[NANRI]] &new{2007-09-21 (金) 21:58:57};
+- 0.0.2.8にバージョンアップしたら、今までのメールの日付が1900年1月1日になってしまったり、summaryの日本語が化けてしまうのですが、この現象はFAQでしょうか? -- [[tos]] &new{2007-09-22 (土) 09:07:30};
+- 佐野さん、NANRIさんありがとうございます。*Summaryの日付等がおかしくなってしまうのは、「*.kamail-cache」のフォーマットが変更になった？ためらしく、メールフォルダの「*.kamail-cache」を全て削除し、Kamailに新たに作成してもらったら、正常になりました。また、本来の希望のhtmlメールの表示も無事出来ました。ありがとうございました。 -- [[tos]] &new{2007-09-22 (土) 15:28:08};
+
+#comment

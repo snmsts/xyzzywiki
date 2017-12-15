@@ -1,0 +1,51 @@
+#freeze
+[[入門xyzzy]]
+
+**第一刷 [#t2193ec3]
+
+|記入日|ページ（見出し）|箇所|現状|訂正後|備考|h
+|2005/04/06|vi（はじめに）|パス名/URI|C:＼xyzzy＼xyzzy.exe|C:/xyzzy/xyzzy.exe|＼（バックスラッシュ）を「''/''」（スラッシュ）に変更|
+|2005/04/13|P2（生い立ち）|ページ下部|http://pc5.2ch.net/win/subback.html|http://pc8.2ch.net/win/subback.html|pc5をpc''8''に変更|
+|2005/04/13|P2（生い立ち）|ページ下部|http://pc5.2ch.net/software/subback.html|http://pc8.2ch.net/software/subback.html|pc5をpc''8''に変更|
+|2005/04/13|P2（生い立ち）|ページ下部|http://pc5.2ch.net/hp/subback.html|http://pc8.2ch.net/hp/subback.html|pc5をpc''8''に変更|
+|2005/04/13|P18（アップデートとアンインストール）|ページ中央|xyzzyは、レジストリを使用していないため、アンインストールを行うには、xyzzyをインストールしたフォルダ（ここではC:\xyzzy）を内容ごとすべて削除するだけです。|xyzzyはレジストリを使用していないため、アンインストールを行うには、xyzzyをインストールしたフォルダ（ここではC:\xyzzy）を内容ごとすべて削除し、''環境変数XYZZYHOMEの設定を削除する''だけです。|読点「、」を削除し、「し、環境変数XYZZYHOMEの設定を削除」を挿入|
+|2005/04/13|P35（画面構成）|表4.2|（1）変更状態  --    バッファが変更されていない状態を表す|（1）変更状態   --   バッファが変更されていない状態を表す|1行目の表示例の位置が左に1文字分ずれているので正す|
+|2005/04/06|P187（バックアップ）|図10.11 同じ名前のファイルのバックアップ|バックアップ先 C:backup-files/foo.txt~~|バックアップ先 C:backup-files/foo.txt~|「〜」（ティルダ）をひとつ取る|
+|2005/04/13|P203（改行コード/文字エンコーディング）|ページ上部|Windowsで一般的ないわゆるJIS、|Windowsで一般的ないわゆる''Shift-JIS''、||
+|2005/04/06|P225（電卓(calc)）|ページ中央少し上|また整数と同様に小数も使えます|また整数と同様に小数も使えます''。''|文の最後に「''。''」を追加|
+|2005/04/13|P309（xyzzy Lispの言語仕様）|へなちょこリファレンスコラム内|reference.chmはJunk Scripts（ http://www.mirai.ne.jp/~gyo/xyzzy/index.html ）のパッケージに入っています【注2】。|reference.chmはxyzzy reference（ http://xyzzy.s53.xrea.com/reference/ ）のパッケージに入っています。|注2も削除する|
+|2005/04/13|P353（xyzzy Lisp：基本編）|ページ上部表内|list-archive|list-archive|list-archiveの最初のlの書体を等幅に正す|
+|2005/04/13|P364（キーマップ）|ページ中央の箇条書き||spec-map………… C-cから始まるキーを設定するキーマップ|3行目（ctl-x-6-map）と4行目（esc-map）の間に追加|
+|2005/04/06|P451（著者紹介）|ページ下部|工学博士（名古屋大学）|工学''修士''（名古屋大学）|執筆者紹介の山本の略歴|
+|2005/04/06|P451（著者紹介）|ページ下部|稲原和久|稲原''知''久|執筆者紹介の稲原の名前|
+|2005/04/06|P452（索引）|Cの項|clac|c''al''c||
+|2005/04/06|P452（索引）|Iの項|InternetEplorer(Windows 98)|InternetE''x''plorer(Windows 98)|「''x''」が抜け|
+|2005/04/13|P452（索引）|Kの項|KaTex（拡張Lisp）|KaTe''X''（拡張Lisp）|xを大文字に|
+
+***2005/04/13 P82（検索/置換） [#m2911fd4]
+
+ 誤
+ 
+ 大文字小文字を区別する *case-fold-search* 
+
+ 正
+ 
+ 大文字小文字を区別する（ただしnilでチェック） *case-fold-search*
+
+1番目の表の1行目です。*case-fold-search*だけはダイアログのチェックボックスとの対応が逆なので、''（ただしnilでチェック）''を追加してください。
+
+
+***2005/04/13 P82（検索/置換） [#ha9f317c]
+
+ 誤
+ 
+ ;;; 検索は大文字小文字を区別する
+  (setq *case-fold-search* t)
+
+ 正
+ 
+ ;;; 検索は大文字小文字を区別する
+  (add-hook '*post-startup-hook*
+            #'(lambda () (setq *case-fold-search* t)))
+
+ページ中央上部です。*case-fold-search*はヒストリ変数として登録されているので、フックを使って有効にしてください。

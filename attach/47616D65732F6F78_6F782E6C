@@ -1,0 +1,112 @@
+;;; ox
+;;;
+;;; カーソルで移動
+;;; Enterで置く
+(provide "ox")
+
+(in-package "editor")
+
+(export '(ox))
+
+(defvar ox-mode-map nil "oxモードのキーマップ")
+
+(unless ox-mode-map
+  (setq ox-mode-map (make-sparse-keymap))
+  (define-key ox-mode-map #\C-m 'ox-human-plays))
+
+(defun ox-mode ()
+  "oxモード"
+  (interactive)
+  (setq buffer-mode 'ox-mode mode-name "ox")
+  (make-local-variable 'mode-line-format)
+  (set-buffer-fold-width nil)
+  (use-keymap ox-mode-map))
+
+(defun ox-play (i)
+  (let (mark pos)
+	(setq pos (point))
+	(setq mark (aref board i)) 
+	(if (member mark '(#\O #\X)) 
+		(progn
+		  (message (format nil "そこには置けません"))
+		  (sit-for 1)) 
+	  (progn (setf (aref board i) o-or-x) 
+		(toggle-read-only nil)
+		(erase-buffer "*ox*")
+		(with-output-to-selected-buffer
+		  (princ (ox-board board)))
+		(toggle-read-only t)
+		(goto-char pos)
+		(if (ox-game-over-p board)
+			(message (format nil "~Aの勝ちです" o-or-x)))
+		(setq o-or-x (if (eql o-or-x #\O) #\X #\O))
+		))))
+
+(defun ox-com-plays ()
+  "コンピュータの手順"
+  (interactive)
+  (if (ox-game-over-p board)
+	  (progn
+		(return-from ox-com-plays)))
+  (let ((i (random 9)))
+	(do	()
+		((eql (aref board i) #\ ))
+	  (setq i (random 9)))
+	(ox-play i)))
+
+(defun ox-human-plays ()
+  "人間の手順"
+  (interactive)
+  (if (ox-game-over-p board)
+	  (progn
+		(message "ゲームは終わってます")
+		(return-from ox-human-plays)))
+  (cond
+   ((= (point) 0) (ox-play 0)(ox-com-plays))
+   ((= (point) 2) (ox-play 1)(ox-com-plays))
+   ((= (point) 4) (ox-play 2)(ox-com-plays))
+   ((= (point) 12) (ox-play 3)(ox-com-plays))
+   ((= (point) 14) (ox-play 4)(ox-com-plays))
+   ((= (point) 16) (ox-play 5)(ox-com-plays))
+   ((= (point) 24) (ox-play 6)(ox-com-plays))
+   ((= (point) 26) (ox-play 7)(ox-com-plays))
+   ((= (point) 28) (ox-play 8)(ox-com-plays))
+   (t (message "そこには置けません"))))
+
+(defvar board nil)
+
+(defvar o-or-x nil)
+
+(defun ox-game-over-p (vec) 
+  (catch 'loop 
+    (dolist (indexes '((0 1 2) (2 5 8) (7 6 8) (0 3 6) 
+                       (0 4 8) (1 4 7) (2 4 6) (3 4 5))) 
+      (let ((marks (mapcar #'(lambda (i) (aref vec i)) indexes))) 
+        (when (or (null (remove #\O marks)) (null (remove #\X marks))) 
+          (throw 'loop t)))))) 
+
+(defun ox-index (x y) (+ (* y 3) x)) 
+
+(defun ox-line (vec y) 
+  (format nil "~A|~A|~A~%" 
+          (aref vec (ox-index 0 y)) 
+          (aref vec (ox-index 1 y)) 
+          (aref vec (ox-index 2 y)))) 
+
+(defun ox-board (vec) 
+  (format nil "~A-+-+-~%~A-+-+-~%~A" 
+          (ox-line vec 0) 
+          (ox-line vec 1) 
+          (ox-line vec 2))) 
+
+(defun ox () 
+  (interactive)
+  (setq *random-state* (make-random-state t))
+  (switch-to-buffer "*ox*")
+  (ox-mode)
+  (setq board (vector #\  #\  #\  #\  #\  #\  #\  #\  #\ ))
+  (setq o-or-x #\O)
+  (with-output-to-selected-buffer
+	(princ (ox-board board)))
+  (toggle-read-only t)
+  (message (format nil "~Aの番です " o-or-x)))

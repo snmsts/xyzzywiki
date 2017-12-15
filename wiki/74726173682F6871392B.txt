@@ -1,0 +1,84 @@
+[[trash]]
+
+**hq9+インタプリタ [#xf670962]
+
+ ;;; -*- Mode: Lisp; Package: EDITOR -*-
+ 
+ (provide "hq9+")
+ (in-package "editor")
+ (eval-when (:compile-toplevel :load-toplevel :execute)
+   (export '(hq9+ *hq9+-mode-hook* hq9+-mode *hq9+-mode-map* hq9+-eval-line)))
+ (defvar *hq9+-mode-hook* nil)
+ 
+ (defun b99 (n)
+   (cond
+    ((= n 1)
+ 	(insert "1 bottle of beer on the wall, 1 bottle of beer\n"
+ 			"Take one down and pass it around,\n\n")
+ 	(b99 (- n 1)))
+    ((> n 1)
+ 	(insert (format nil "~D bottles of beer on the wall, ~D bottles of beer~%Take one down and pass it around,\n\n" n n))
+ 	(b99 (- n 1)))))
+ 
+ (eval-when (:compile-toplevel :load-toplevel :execute)
+   (defvar *hq9+-package* (defpackage "hq9+"
+ 			   (:use)
+ 			   (:internal-size 30)
+ 			   (:external-size 0)))
+   (unuse-package "lisp" *hq9+-package*))
+ 
+ (defun hq9+-eval-line ()
+   (interactive)
+   (let ((result nil))
+     (when (save-excursion
+ 	    (goto-bol)
+ 	    (looking-at "^ *\\$"))
+ 	  (handler-case
+ 		  (setq result (buffer-substring (match-end 0)
+ 										 (progn
+ 										   (goto-eol)
+ 										   (point))))))
+ 	(goto-eol)
+ 	(insert "\n")
+ 	(with-input-from-string (s result)
+ 	  (let (c)
+ 		(while (setq c (read-char s nil nil))
+ 		  (cond ((char= c #\h) (insert "hello world!\n"))
+ 				((char= c #\q) (insert result) (insert "\n"))
+ 				((char= c #\9) (b99 99))
+ 				((and (char/= c #\+) (char/= c #\ ) (char/= c #\TAB))
+ 				 (insert (format nil "command not found: ~C~%" c))
+ 				 (return))
+ 				)
+ 		  )))
+ 	(insert "$ ")))
+ 
+ (defun hq9+ ()
+   (interactive)
+   (switch-to-buffer "*hq9+*")
+   (hq9+-mode))
+ 
+ (defun hq9+-mode ()
+   (interactive)
+   (kill-all-local-variables)
+   (setq buffer-mode 'hq9+-mode)
+   (setq mode-name "hq9+")
+   (use-keymap *hq9+-mode-map*)
+   (make-local-variable 'need-not-save)
+   (setq need-not-save t)
+   (make-local-variable 'auto-save)
+   (setq auto-save nil)
+   (goto-char (point-max))
+   (unless (bolp)
+     (insert #\LFD))
+   (insert #\LFD)
+   (forward-char -1)
+   (insert "$ ")
+   (run-hooks '*hq9+-mode-hook*))
+ 
+ (defvar *hq9+-mode-map* nil)
+ (unless *hq9+-mode-map*
+   (setq *hq9+-mode-map* (make-sparse-keymap))
+   (define-key *hq9+-mode-map* #\RET 'hq9+-eval-line))
+
+#comment

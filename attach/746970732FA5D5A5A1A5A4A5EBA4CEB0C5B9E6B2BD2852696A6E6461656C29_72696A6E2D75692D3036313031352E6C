@@ -1,0 +1,110 @@
+;;; rijn-ui.l
+
+;;; 06-10-15 (Sun)
+;;; *encrypted-file-auto-mode-function* を追加
+;;; ファイルパラメタを見るようにした
+;;; *auto-mode-alist* に従ってモード設定をするようにした
+;;; 開いた後でパスワード入力のプロンプトを消すようにした
+;;; 開いた後でステータスバーにメッセージを表示するようにした
+;;; 保存した後にメッセージを表示するようにした
+
+;; (eval-when (:compile-toplevel :load-toplevel :execute)
+;;   (require "rijn"))
+
+
+(defvar *encrypted-file-list* nil
+  "暗号化するファイルのフルパスにマッチする正規表現のリスト
+
+設定例: My Documents/passwords を暗号化
+  (pushnew (merge-pathnames \"passwords\" (get-special-folder-location :personal))
+	   *encrypted-file-list*
+	   :test 'path-equal)")
+
+(defvar *encrypted-file-auto-mode-function* nil
+  "暗号化ファイルを開くとき用の *find-file-auto-mode-function* みたいなの")
+
+#|
+(defun encrypted-file-auto-mode ()
+  (let ((filename (get-buffer-alternate-file-name))
+	(*auto-mode-last-buffer* nil))	; これでいい？
+    (dolist (x *auto-mode-alist*)
+      (when (string-matchp (car x) filename)
+	(funcall (cdr x))
+	(return)))))
+|#
+
+(defun file-encrypted-p (filename)
+  (dolist (pattern *encrypted-file-list*)
+    (when (string-matchp pattern filename)
+      (return-from file-encrypted-p t))))
+
+(let (key-alist)
+  (flet ((buffer-needs-encryption-p (&optional (buf (selected-buffer)))
+	   (dolist (x key-alist)
+	     (when (eq (car x) buf)
+	       (return-from buffer-needs-encryption-p t))))
+	 (get-key ()
+	   (cdr (assoc (selected-buffer) key-alist :test #'eq)))
+	 (set-key (key &optional (buf (selected-buffer)))
+	   (let ((x (assoc buf key-alist :test #'eq)))
+	     (if x (setf (cdr x) key)
+	       (progn
+		 (push (cons buf key) key-alist)
+		 key)))))
+    (defun save-buffer-with-encryption ()
+      (when (buffer-needs-encryption-p)
+	(let ((key (or (and (null *prefix-args*) (get-key))
+		       (getpass))))
+	  (write-file-and-encrypt (get-buffer-alternate-file-name) key t)
+	  (set-buffer-modified-p nil)
+	  (set-key key)
+	  (message "Wrote ~A" (get-buffer-alternate-file-name)))))
+    (defun find-file-with-decryption (filename)
+      (let ((last-buffer (selected-buffer))
+	    (exist-p (file-exist-p filename)))
+	(when exist-p
+	  (setq filename (truename filename)))
+	(unless (file-encrypted-p filename)
+	  (return-from find-file-with-decryption nil))
+	(let ((buf (get-alternate-file-buffer (namestring filename))))
+	  (when buf
+	    (set-buffer buf)
+	    (return-from find-file-with-decryption buf)))
+	(si:*activate-toplevel)	; filer から開いたときのため
+	(let ((lastbuf (selected-buffer))
+	      (key (getpass)))
+	  (if exist-p
+	      (read-encrypted-file filename key)
+	    (set-buffer (create-new-buffer (file-namestring filename))))
+	  (set-key key)
+	  (set-buffer-alternate-file-name filename)
+	  ;; process file parameters---ほとんど files.l から拝借
+	  (let ((auto-mode nil))
+	    (declare (special auto-mode))
+	    (when (and (symbolp *encrypted-file-auto-mode-function*)
+		       (fboundp *encrypted-file-auto-mode-function*))
+	      (funcall *encrypted-file-auto-mode-function*)
+	      (setq auto-mode t))
+	    (mapc #'(lambda (x)
+		      (let ((f (cdr (assoc (car x) *auto-mode-parameter-alist*
+					   :test #'string-equal))))
+			(when f
+			  (unless (and auto-mode (get f 'find-file-auto-mode))
+			    (when (and (funcall f (cdr x))
+				       (get f 'find-file-auto-mode))
+			      (setq auto-mode t))))))
+		  (ed::find-file-scan-params))
+	    (let ((filename (get-buffer-alternate-file-name))
+		  (*auto-mode-last-buffer* lastbuf))
+	      (dolist (x *auto-mode-alist*)
+		(when (string-matchp (car x) filename)
+		  (funcall (cdr x))
+		  (return)))))
+	  )
+	(clear-minibuffer-message)
+	(message "Decrypted ~A" (get-buffer-alternate-file-name))
+	(selected-buffer)))
+    ))
+
+(add-hook '*save-buffer-no-filenames-hook* 'save-buffer-with-encryption)
+(add-hook '*before-find-file-hook* 'find-file-with-decryption)

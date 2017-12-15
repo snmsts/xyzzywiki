@@ -1,0 +1,227 @@
+[[tips]]
+
+*索引 [#b66cbe0e]
+
+#contents
+
+*ソース [#p0373630]
+
+ ;;; -*- Mode: Lisp -*-
+ 
+ (provide "weather-icon")
+ 
+ (require "junk/http")
+ (require "xml-parser-modoki")
+ (require "api")
+ 
+ (defvar *wi-file* "~/weather/weather")
+ 
+ (defvar *wi-icon-directory* "~/weather/icon/")
+ 
+ (defvar *wi-city-id* "113")
+ 
+ (defvar *wi-tomorrow-weather-start-time* "18:00")
+ 
+ (defvar *wi-rest-url* "http://weather.livedoor.com/forecast/webservice/rest/v1")
+ 
+ ;day, 予報日, 予報発表時刻, 天気, 最高気温, 最低気温
+ (defvar *wi-weather-info* (make-list 6))
+ 
+ (defvar *wi-weather-icon-alist*
+   '(("晴" . "1.ico")
+     ("晴れ" . "1.ico")
+     ("晴時々曇" . "2.ico")
+     ("晴れ時々曇" . "2.ico")
+     ("晴時々曇り" . "2.ico")
+     ("晴れ時々曇り" . "2.ico")
+     ("晴時々雨" . "3.ico")
+     ("晴れ時々雨" . "3.ico")
+     ("晴時々雪" . "4.ico")
+     ("晴れ時々雪" . "4.ico")
+     ("晴のち曇" . "5.ico")
+     ("晴れのち曇" . "5.ico")
+     ("晴のち曇り" . "5.ico")
+     ("晴れのち曇り" . "5.ico")
+     ("晴のち雨" . "6.ico")
+     ("晴れのち雨" . "6.ico")
+     ("晴のち雪" . "7.ico")
+     ("晴れのち雪" . "7.ico")
+     ("曇" . "8.ico")
+     ("曇り" . "8.ico")
+     ("曇時々晴" . "9.ico")
+     ("曇り時々晴" . "9.ico")
+     ("曇時々晴れ" . "9.ico")
+     ("曇り時々晴れ" . "9.ico")
+     ("曇時々雨" . "10.ico")
+     ("曇り時々雨" . "10.ico")
+     ("曇時々雪" . "11.ico")
+     ("曇り時々雪" . "11.ico")
+     ("曇のち晴" . "12.ico")
+     ("曇りのち晴" . "12.ico")
+     ("曇のち晴れ" . "12.ico")
+     ("曇りのち晴れ" . "12.ico")
+     ("曇のち雨" . "13.ico")
+     ("曇りのち雨" . "13.ico")
+     ("曇のち雪" . "14.ico")
+     ("曇りのち雪" . "14.ico")
+     ("雨" . "15.ico")
+     ("雨時々晴" . "16.ico")
+     ("雨時々晴れ" . "16.ico")
+     ("雨時々止む(曇)" . "17.ico")
+     ("雨時々止む(曇り)" . "17.ico")
+     ("雨時々曇" . "17.ico")
+     ("雨時々曇り" . "17.ico")
+     ("雨時々雪" . "18.ico")
+     ("雨のち晴" . "19.ico")
+     ("雨のち晴れ" . "19.ico")
+     ("雨のち曇" . "20.ico")
+     ("雨のち曇り" . "20.ico")
+     ("雨のち雪" . "21.ico")
+     ("雨で暴風を伴う" . "22.ico")
+     ("雪" . "23.ico")
+     ("雪時々晴" . "24.ico")
+     ("雪時々晴れ" . "24.ico")
+     ("雪時々止む(曇)" . "25.ico")
+     ("雪時々止む(曇り)" . "25.ico")
+     ("雪時々曇" . "25.ico")
+     ("雪時々曇り" . "25.ico")
+     ("雪時々雨" . "26.ico")
+     ("雪のち晴" . "27.ico")
+     ("雪のち晴れ" . "27.ico")
+     ("雪のち曇" . "28.ico")
+     ("雪のち曇り" . "28.ico")
+     ("雪のち雨" . "29.ico")
+     ("暴風雪" . "30.ico")))
+ 
+ (defun wi-get-weather-file (file day)
+   (junk::junk-http-download-file
+    (format nil "~A?city=~A&day=~A"
+            *wi-rest-url* *wi-city-id* day)
+    file))
+ 
+ (defun wi-set-weather-info (&optional force)
+   (let ((file *wi-file*)
+         (tempfile (make-temp-file-name)))
+     (let ((dir (directory-namestring file)))
+       (unless (file-directory-p dir)
+         (unless (yes-or-no-p "~A を作成しますか?" dir)
+           (return-from wi-set-weather-info))
+         (create-directory dir)
+         (message "~A を作成しました" dir)))
+     (unwind-protect
+         (let* ((hm1 (format-date-string "%H:%M"))
+                (hm2 (format-date-string "%H:%M" (file-write-time file)))
+                (shm *wi-tomorrow-weather-start-time*)
+                ;; 02:20 に today でリクエストした値が正しくなるので
+                (day (cond ((string< "02:20" shm)
+                            (if (and (string<= "02:20" hm1) (string<= hm1 shm))
+                                "today"
+                              "tomorrow"))
+                           ((string< shm "02:20")
+                            (if (and (string<= shm hm1) (string<= hm1 "02:20"))
+                                "dayaftertomorrow"
+                              "tomorrow"))
+                           (t
+                            "tomorrow"))))
+           (when (file-exist-p file)
+             (let* ((info (with-open-file (is file :direction :input)
+                            (read is)))
+                    (phm (substring (nth 4 (split-string (nth 2 info) " "))
+                                    0 5)))
+               (when (and (not force)
+                          (string= (format-date-string "%Y%m%d")
+                                   (format-date-string "%Y%m%d"
+                                                       (file-write-time file)))
+                          (or (and (string< hm1 shm) (string< hm2 shm))
+                              (and (string<= shm hm1) (string<= shm hm2)))
+                          ;; 08:15, 14:15, 20:15 に予報が更新される
+                          (cond ((string= phm "05:00")
+                                 (and (string<= "08:15" hm1)
+                                      (string< hm1 "14:15")))
+                                ((string= phm "11:00")
+                                 (and (string<= "14:15" hm1)
+                                      (string< hm1 "20:15")))
+                                ((string= phm "17:00")
+                                 (or (and (string<= "20:15" hm1)
+                                          (string< hm1 "24:00"))
+                                     (and (string<= "00:00" hm1)
+                                          (string< hm1 "08:15"))))))
+                 (setq *wi-weather-info* info)
+                 (return-from wi-set-weather-info t))))
+           (wi-get-weather-file tempfile day)
+           (let* ((val (ed::xmlpm-parse-file tempfile))
+                  (forecastdate (caddr (nth 8 (car val))))
+                  (cmax (caddr (caddr (caddr (nth 13 (car val))))))
+                  (cmin (caddr (caddr (cadddr (nth 13 (car val)))))))
+             (when val
+               ;; 最高気温, 最低気温が nil の時は変更しない
+               (when (or (and cmax cmin)
+                         (string/= (second *wi-weather-info*) forecastdate))
+                 (setf (fifth *wi-weather-info*) cmax)
+                 (setf (sixth *wi-weather-info*) cmin))
+               (setf (first *wi-weather-info*) (caddr (nth 6 (car val))))
+               (setf (second *wi-weather-info*) forecastdate)
+               (setf (third *wi-weather-info*) (caddr (nth 9 (car val))))
+               (setf (fourth *wi-weather-info*) (caddr (nth 10 (car val))))
+               (with-open-file (s file
+                                  :direction :output
+                                  :if-exists :overwrite
+                                  :if-does-not-exist :create)
+                 (format s "~S" *wi-weather-info*)))))
+       (ignore-errors (delete-file tempfile)))
+     t))
+ 
+ (defun wi-set-icon (weather)
+   (let ((icon (cdr (assoc weather *wi-weather-icon-alist*
+                           :test #'string=))))
+     ;; Xyzzy Wiki の "tips/iconを書き換える" (by 佐野さん) より借用
+     (when icon
+       (message "changing icon...")
+       (winapi::SendMessage
+        (ed::get-window-handle) winapi::WM_SETICON  1
+        (winapi::LoadImage
+         0
+         (si:make-string-chunk
+          (map-slash-to-backslash
+           (merge-pathnames icon *wi-icon-directory*)))
+         winapi::IMAGE_ICON 0 0 winapi::LR_LOADFROMFILE))
+       (message "changing icon...done"))))
+ 
+ (defun wi-change-icon (&optional force)
+   (wi-set-weather-info force)
+   (wi-set-icon (fourth *wi-weather-info*)))
+ 
+ (add-hook 'ed::*post-startup-hook* 'wi-change-icon)
+
+*概要 [#rc5e4822]
+
+-livedoor 天気情報を利用し、今日(明日)の天気をアイコンで表示します。
+-これを使うには api.l, junk-library, xml-parser-modoki.l が必要です。
+
+*アイコンの準備 [#g9ddfe22]
+
++天気アイコンの凡例 - livedoor 天気情報
+http://weather.livedoor.com/help/weather_icon.html
+上のページをブラウザで保存し、天気用の gif ファイル 1.gif 〜 30.gif を取得する。
++"ドラッグ&ドロップ画像変換" などのツールを使って、上の gif ファイルを
+ico 形式に変換し、1.ico 〜 30.ico を作成する。
++1.ico 〜 30.ico をディレクトリ "~/weather/icon/" の下に置く。
+
+*使い方 [#fb788285]
+
++weather-icon.lと名前をつけてsite-lispに保存する
++.xyzzyに
+ (require "weather-icon")
+ (setq *wi-file* "~/weather/weather")
+ (setq *wi-icon-directory* "~/weather/icon/")
+ (setq *wi-city-id* "113") ; 久留米の場合
+ ;↑は、http://weather.livedoor.com/forecast/rss/forecastmap.xml を参考に設定。
+ (setq *wi-tomorrow-weather-start-time* "18:00") ; この時刻以降は、明日の天気のアイコンを表示する
+
+*コメント [#o4a0fd86]
+- [[tips/iconを書き換える]] のコードを借りました。まずいこと、変なところがあったらご指摘お願いします。 --  &new{2007-07-23 (月) 05:23:42};
+- 面白いですね。zsh用ですが一応置いておきます。-- &new{2007-07-23 (月) 08:06:05};
+ wget http://weather.livedoor.com/img/icon/{1..30}.gif
+- 1 -- [[1]] &new{2015-04-27 (月) 22:07:47};
+
+#comment

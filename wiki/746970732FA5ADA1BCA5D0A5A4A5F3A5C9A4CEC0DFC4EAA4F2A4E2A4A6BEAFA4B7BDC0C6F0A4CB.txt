@@ -1,0 +1,106 @@
+[[tips]]
+
+* キーバインドの設定をもう少し柔軟に [#m8c95d50]
+Shiftを押している時と押していない時，左右のSHIFT，左右のALTなどでキーバインドを変えることができます． 2ch で過去に拾ったマクロをパクリました．
+
+ (require "wip/winapi")
+ (c:define-dll-entry c:short GetKeyState (c:int) "user32")
+ 
+ (defmacro x-key-macro (keycode x-func x-key-func)
+   `'(lambda ()
+      (interactive)
+ ;     (funcall
+      (call-interactively
+       (if (minusp (GetKeyState ,keycode))
+ 	   #',x-key-func
+ 	 #',x-func))))
+
+ 
+**使い方 [#z4dd1823]
+SHIFTの例
+ (global-set-key #\C-b (x-key-macro  16 backward-char selection-backward-char))
+
+右ALT 左ALTで変える場合の例
+ (global-set-key #\M-8 (x-key-macro 165 (lambda () (insert #\[)) (lambda () (insert #\8))))
+
+windowsの[[仮想キーコード一覧>http://www.uri.sakura.ne.jp/~cosmic/yuno/lab/win32_keycode.html]]
+[[仮想キーコード一覧2>http://www.mapcom.co.jp/support/hint/script/KeyCode.htm]]
+
+----
+-かなりバギーでした．ごめんなさい --  SIZE(10){2003-09-08 (月) 02:44:26}
+-こんな感じかなぁ。 -- [[佐野]] SIZE(10){2003-09-08 (月) 04:27:53}
+-lambdaにすればよかったのか ＿|￣|○   %%funcallも必要なかったのか．%%  勉強になりました--  SIZE(10){2003-09-08 (月) 12:07:33}
+-interactiveで 引数を受け取ることを前提とした関数を引数に取りたい時は，自分で read-string するようにしなければならないのでしょうか --  SIZE(10){2003-09-12 (金) 00:57:01}
+-call-interactivelyってのを見つけました。 -- [[佐野]] SIZE(10){2003-09-12 (金) 01:35:56}
+-ありがとうございます．おかげで ggrep が x-key-macroの引数に設定することができました --  SIZE(10){2003-09-12 (金) 03:40:48}
+-はう　どれが最終版か分からない… --  &new{2004-02-25 (水) 11:09:36};
+-最終版で書き直しました。 -- [[佐野]] &new{2004-02-25 (水) 12:41:59};
+-これって何がだめですか？ --  &new{2004-03-23 (火) 23:08:46};
+ (global-set-key #\C-n (x-key-macro 
+                        16 (x-key-macro 32 next-virtual-line next-buffer)
+                        selection-next-virtual-line))
+-すみません．コレでできました%%が挙動がおかしいので使うのやめときます．%%．うまく動いてます．
+ (global-set-key #\C-p (x-key-macro
+                        16 (lambda () (interactive)
+                             (funcall (x-key-macro 32 previous-virtual-line move-previous-window)))
+                        selection-previous-virtual-line))
+
+#comment
+
+* キーバインドの設定をもう少し柔軟に part2 [#p0711841]
+-x-key-macroの引数の型が不自然に思えるので，自然だと思うように修正.
+-describe-key 等でどんな関数なのかが分かりやすくするため，関数のところに両方ともシンボルを与えた時に限り適当な名前で関数定義するように修正．
+
+ (require "wip/winapi")
+ (c:define-dll-entry c:short GetKeyState (c:int) "user32")
+ 
+ (defmacro x-key-macro (keycode fun x-key-fun)
+   (if (and (symbolp (eval fun)) (symbolp (eval x-key-fun)))
+       `(progn
+          (defun ,(intern (format nil "x-key ~A  ~A" (eval fun) (eval x-key-fun))) ()
+            ,(format nil "キー~D 非押下時 ~A, 押下時 ~A" keycode (eval fun) (eval x-key-fun))
+            (interactive)
+            (call-interactively
+             (if (minusp (GetKeyState ,keycode))
+                 ,x-key-fun
+               ,fun)))
+          (intern (format nil "x-key ~A  ~A" ,fun ,x-key-fun)))
+     `#'(lambda ()
+          (interactive)
+          (call-interactively
+           (if (minusp (GetKeyState ,keycode))
+               ,x-key-fun
+             ,fun)))))
+
+使用例
+ (global-set-key #\C-n (x-key-macro 16 #'(lambda () (interactive) (next-line 1)) #'selection-next-line))
+ (global-set-key #\C-n (x-key-macro 16 'next-line #'selection-next-line))
+ (global-set-key #\C-n (x-key-macro 16 'next-line 'selection-next-line))
+
+注意点
+-part1の x-key-macroと引数の与え方が違うので，こちらに移行するにはx-key-macroを呼び
+出しているところを修正する必要があります
+-マクロの引数は何度も評価しているので，副作用のあるものを与えては駄目です．(誰か直して 自分には無理だった．＿|￣|○ )
+
+
+----
+- 今更ながら直してみました。ちゃんと直ってるだろうか。 --  &new{2006-04-22 (土) 19:00:45};
+ (defmacro x-key-macro (keycode fun x-key-fun)
+   (when (symbolp fun) (setq fun `',fun))
+   (when (symbolp x-key-fun) (setq x-key-fun `',x-key-fun))
+   (flet ((qsymbolp (s)
+            (and (eq (safe-car s) 'quote)
+                 (symbolp (safe-cadr s)))))
+     (let ((body `((interactive)
+                   (call-interactively
+                    (if (minusp (GetKeyState ,keycode))
+                        ,x-key-fun
+                      ,fun)))))
+       (if (and (qsymbolp fun) (qsymbolp x-key-fun))
+           `(defun ,(intern (format nil "x-key ~A  ~A" (cadr fun) (cadr x-key-fun))) ()
+              ,(format nil "キー~D 非押下時 ~A, 押下時 ~A" keycode (cadr fun) (cadr x-key-fun))
+              ,@body)
+         `#'(lambda () ,@body)))))
+- おぉ、参考になります。 -- [[無理だった人]] &new{2006-05-09 (火) 05:30:57};
+
+#comment

@@ -1,0 +1,143 @@
+#freeze
+*Wordファイルだって開きたい。 [#k2bd7c7a]
+
+某巨大掲示板でリクエストがあったものです。
+
+Word の .doc ファイルを開いたときにテキストとかに変換して開きます。
+
+#contents
+
+**OLE 版 [#w982c77a]
+
+制限とか
+
+-Microsoft Word が必要です。
+-Wordを起動するので古いマシンだと開くまでの時間
+が気になるかもしれません
+-.doc 形式での保存はできません。
+-まじめに実装してないのでエスケープシーケンスとか丸出しです。
+--^Gをうまく解析すればテーブルは再現できるかも
+--OLE を駆使したほうがきれいにフォーマットできるかも
+
+Note:
+
+|''エスケープシーケンス''|''意味''|''16進''|
+|^K|Shift+改行|0x0B|
+|^G|テーブルのセルの区切り|0x07|
+|^L|改ページ|0x0C|
+|^A|？|0x01|
+
+ (require "ole")
+ 
+ (defun msdoc-find-file (filename)
+   ;; .doc 以外は nil を返しておまかせモード
+   (unless (string-match (compile-regexp "\\.doc$" t) ; case-fold
+                         filename)
+     (return-from msdoc-find-file nil))
+ 
+   ;; .doc の場合は Word を使ってテキストにしてバッファを返す
+   (switch-to-buffer (concat "*Word: " (file-namestring filename) "*"))
+   (erase-buffer (selected-buffer))
+   (insert (msdoc-document filename))
+   (goto-char (point-min))
+   (set-buffer-fold-type-column)
+   (set-buffer-modified-p nil)
+   ;(view-mode)
+   (selected-buffer))
+ 
+ (defun msdoc-document (filename)
+   (long-operation
+     (let ((word (ole-create-object "Word.Application"))
+           (doc nil)
+           (selection nil))
+       (unwind-protect
+           (progn
+             (setf doc #{word.Documents.Add[filename]})
+             #{doc.Select[]}
+             (setf selection #{word.Selection.Text}))
+         (if doc #{doc.Close[0]})
+         (if word #{word.Quit[]}))
+       (substitute-string selection "\r" "\n"))))
+ 
+ (add-hook '*before-find-file-hook* 'msdoc-find-file)
+
+#vote(いただきました[14],微妙ですね[2],Word なしで開けるようにしてくれ[30],保存してぇ[1])
+
+
+** wvWare 版 [#xa43990b]
+
+NamazuでおなじみのwvWareを使ってHTMLに変換しそれを表示します。
+日本語・画像・表もばっちりです。
+
+*** wvWare のインストール [#d371e3b1]
+
+''レシピ''
+
+:cygwin|ソースから make するために必要です。MinGWでいけるかどうかは知りません。
+:iconv|これがないと[[だめらしい>http://www.namazu.org/ml/namazu-users-ja/msg01805.html]]です。
+:[[wvWare>http://wvware.sourceforge.net/]]|doc ファイルをHTMLに変えてくれる主役。
+
+''インストール''
+
+簡単です。
+ちなみにコンパイル済みのバイナリは配布してないみたいです。
+
+ tar zxvf wv-0.7.6.tar.gz
+ cd wv-0.7.6
+ ./configure
+ make
+ make install
+
+
+*** xyzzy の設定 [#f0ba3926]
+
+''レシピ''
+
+-www-modeとかbrowserexとかHTMLを表示する何か。
+-www-modeを使う場合は表がレンダリングできるようにw3mもあったほうがいいかも
+
+''インストール''
+
+↓を好きなとこに書いてくれ。
+
+ ;; cygwin の bash コマンド
+ (defvar *wview-bash-command*
+   "d:\\cygwin\\bin\\bash")
+ 
+ (defun wview-find-file (filename fn)
+   ;; .doc 以外は nil を返しておまかせモード
+   (unless (string-match (compile-regexp "\\.doc$" t) ; case-fold
+                         filename)
+     (return-from wview-find-file nil))
+ 
+   ;; .doc の場合は wvWare を使ってHTMLにしてどうこうする。
+   (let ((html (make-temp-file-name "wv" ".html")))
+     (execute-shell-command
+      (format nil
+              (concat "~A --login -c"
+                      " \"wvHtml --charset=Shift_JIS `cygpath ~A`"
+                      " --targetdir=`cygpath ~A` ~A\"")
+              *wview-bash-command*
+              filename
+              (directory-namestring html)
+              (file-namestring html)))
+     (funcall fn html)
+     (selected-buffer)))
+
+ (add-hook '*before-find-file-hook*
+           #'(lambda (filename)
+               (wview-find-file filename
+                                #'(lambda (html)
+                                    ;; www-mode で開く
+                                    (www-open-local-file html)))))
+
+#vote(＼（　＾▽＾）／[8],Cygwin入れるの面倒なんですけど・・・[9],↑じゃあもっといいのを作ってくれと思ったやつ[1],OLE版をもっと気合を入れて作ってほしい[2],↑じゃあお前が以下同文[1])
+
+----
+-Wordなしって需要あるのね・・・ --  SIZE(10){2003-06-18 (水) 20:59:53}
+-Wordなんてインストールしたくないし、インストールしてません。でも他人はワードファイルを添付して送ってきたり…。ワードなしができれば非常に重宝します。 --  SIZE(10){2003-06-18 (水) 21:07:26}
+-んでもこれってwordべったり依存の実装に見えるんだけど…できるのかなぁ。 -- [[佐野]] SIZE(10){2003-06-19 (木) 01:01:15}
+-これでいいですか？ >>2 --  SIZE(10){2003-06-21 (土) 11:37:07}
+-コンパイル済みバイナリを配布してください。 --  SIZE(10){2003-06-22 (日) 16:37:20}
+-そりゃお門違いでは？ --  SIZE(10){2003-06-22 (日) 16:44:48}
+-最近だと[[xdoc2txt>http://miyamuko.s56.xrea.com/xdoc2txt.html]]がありますね。 --  &new{2004-09-22 (水) 21:55:20};

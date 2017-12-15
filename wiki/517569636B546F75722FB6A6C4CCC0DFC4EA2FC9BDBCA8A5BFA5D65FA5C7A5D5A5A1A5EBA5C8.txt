@@ -1,0 +1,3 @@
+[[QuickTour/共通設定]]
+
+CENTER:#ref(buf_01.png,center,100%)

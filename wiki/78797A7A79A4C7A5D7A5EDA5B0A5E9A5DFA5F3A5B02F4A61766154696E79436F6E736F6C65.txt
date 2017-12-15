@@ -1,0 +1,47 @@
+*JavaTinyConsole [#z1c580de]
+#contents
+
+**概要 [#l97f098a]
+[[JavaTinyConsole>http://www1.odn.ne.jp/ymtz/jtc.html]]([[66MHz.com>http://www1.odn.ne.jp/ymtz/index.html]]) は、xyzzy用のJava開発環境です。色分け、入力補完(自作パッケージでもOK)、F1でヘルプ表示などができます。起動時間は補完用ファイルの量で変化しますが、動作自体は非常に軽いです。
+
+#ref(./JavaTinyConsole.png,30%)
+
+***ポップアップヘルプ [#p5bb8d5e]
+"."や"("キーを入力した後、またはクラス、メソッドなどにカーソルを置いてF1キーを押した場合、ポップアップヘルプが表示されます。JDKドキュメントも表示する場合は、別途''browser.dll''などが必要なので、NetInstallerでインストールします([[browser.dll Tips>http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/browser.html]])。
+#ref(popuphelp.png)
+
+***コード補完 [#qa45e6a1]
+Tabキーでコード補完ができます。Javaソースコードから、補完用のファイルを生成するバッチファイルが用意されているので、必要な分だけ作成して使用することができます。
+#ref(hokan.png)
+
+**インストール [#q940a90f]
+NetInstallerを使うと簡単です。
+
+***補完リスト [#u7f36f89]
+
+**使い方(メニュー・ツールバー) [#m0046cc2]
+***コンパイル [#j85091a0]
+カレントバッファのjavaソースコードをコンパイルします。メニューが選択できない、またはjavaファイルではありませんと警告される場合は、java-mode((M-x java-modeと入力。モードについては[[QuickTour/mode]]を参照してください。))にして実行してください。
+
+絶対パスがスペースを含むフォルダにjavaをインストールして、そこに環境変数Path通している場合、コンパイルなどで以下のようなエラーが発生することがあります。
+ 'C:\Program' は、内部コマンドまたは外部コマンド、
+ 操作可能なプログラムまたはバッチ ファイルとして認識されていません。
+
+別の場所にJDKをインストールするか、バッチファイルを使用する回避方法があります。
+
+-バッチファイルの作成(javac1.5.0_02.bat)
+--環境変数Pathの通った場所に以下のようなバッチファイルを作成。
+ @ECHO OFF
+ "C:\Program Files\Java\jdk1.5.0_02\bin\javac" %*
+ rem "%JAVA_HOME%\bin\javac" %*
+
+-JavaTinyConsoleの設定
+--コマンドのコンパイルを、作成したバッチファイルを使用するように変更。
+#ref(bat.png)
+
+**関連情報 [#v6920638]
+-[[JavaTinyConsole>http://www1.odn.ne.jp/ymtz/jtc.html]]
+-[[browser.dll Tips>http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/browser.html]]
+
+**コメント [#v0250236]
+#comment

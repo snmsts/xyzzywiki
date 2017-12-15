@@ -1,0 +1,64 @@
+* enlarge-window後のwindow-columnsの値 [#yb51e1c4]
+-ページ: [[質問箱]]
+-投稿者: [[七篠]]
+-状態: 完了
+-投稿日: 2010-07-04 (日) 10:22:01
+
+** メッセージ [#g3239384]
+enlarge-windowで現在のウインドウ幅を２未満にした後
+window-columnsで幅が１より大きなウィンドウまでother-windowで
+移動するという機能をlambda式でキーバインドに設定したいのですが
+window-columnsで取得できる値がenlarge-windowの後に記述して
+あるのにenlarge-window前の値のようです。
+
+enlarge-window後の値を取得するにはどのようにすればいいのでしょうか？
+----
+- window 周りを操作したときは refresh-screen しないと更新されない事があるみたいです。 -- [[bowbow99]] &new{2010-07-10 (土) 09:49:53};
+- ありがとうございます。
+基本はウィンドウ分割なしで、時々分割したい時に便利じゃないかと思って
+いかのようなマクロを作ってみました。　便利かどうかは出来たばかりなので
+分かりません:)
+
+
+	; アクティブなウィンドウの幅を２？くらいにする
+	; ウィンドウの分割構成が縦、左右どちらかのウィンドウが横
+	; の時に使えるかも？
+	┌┬┐
+	│││
+	│├┤
+	└┴┘こんなの
+	(global-set-key '(#\C-M-\*) '(lambda()
+		(interactive)
+		(when (< 1 (window-columns))
+			(enlarge-window (- (window-columns)) t)
+			(refresh-screen)
+			(other-window)
+			(while (< (window-columns) 2)
+			  (other-window)
+			  )
+			)
+		)
+		
+	)
+	; アクティブなウィンドウの高さを２？くらいにする
+	; ウィンドウの分割構成が横、上下どちらかのウィンドウが横
+	; の時に使えるかも？
+
+	┌─┐
+	├┬┤
+	└┴┘こんなの
+	(global-set-key '(#\C-M-\`) '(lambda()
+			(interactive)
+			(when (< 1 (window-lines))
+				(enlarge-window (- (window-lines)) nil)
+				(refresh-screen)
+				(while (< (window-lines) 2)
+				  (other-window)
+				  )
+				)
+			)
+		)
+
+-- [[七篠]] &new{2010-07-10 (土) 18:17:28};
+
+#comment

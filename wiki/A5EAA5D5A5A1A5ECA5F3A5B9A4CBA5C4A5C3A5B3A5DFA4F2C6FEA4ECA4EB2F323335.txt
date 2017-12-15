@@ -1,0 +1,58 @@
+* filer-cancel, filer-close [#x62a738f]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[砂]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-09-21 (木) 10:26:34
+-バージョン: 
+
+** メッセージ [#v9b28303]
+filer-closeはseealsoにfiler-cancelを追加しただけです。
+
+ <chapter>
+ <title>filer-cancel</title>
+ <type>Function</type>
+ <arguments>filer-cancel</arguments>
+ <package>editor</package>
+ <description>
+ ファイラを閉じます。
+ 「閉じる」ボタンや「キャンセルボタン」を押したときと同じ効果が得られます。
+ 
+ (defun filer-cancel ()
+  (filer-close nil))
+ と定義されています。
+ <!--
+ 例:
+   ;;; ESCキーでファイラを閉じる
+   (define-key filer-keymap #\ESC 'filer-cancel) -->
+ </description>
+ <seealso>filer-close</seealso>
+ <link></link>
+ <section>ファイラ</section>
+ <file>filer.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>filer-close</title>
+ <type>Function</type>
+ <arguments>filer-close RESULT</arguments>
+ <package>editor</package>
+ <description>
+ ファイラを閉じます。
+ 
+   RESULT : モーダルファイラの場合、関数filerの戻り値に影響を与えます。
+            （詳細不明）
+ </description>
+ <seealso>filer-cancel</seealso>
+ <link></link>
+ <section>ファイラ</section>
+ <file>builtin.l</file>
+ </chapter>
+--------
+- どーもです。あんまりなので多少追記しました。例はfiler-cancel自身が評価されないのに例になっているのか疑問なのでコメントアウト。 -- [[NANRI]] &new{2006-09-23 (土) 23:53:36};
+- それとaddrefを使って記述していらっしゃるのだと思いますが、現在はセクションは「ファイラー」ではなく「ファイラ」で統一されていますので注意してください。 -- [[NANRI]] &new{2006-09-23 (土) 23:55:14};
+- 了解です。 -- [[砂]] &new{2006-09-25 (月) 14:45:03};
+
+#comment

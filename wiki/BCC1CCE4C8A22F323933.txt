@@ -1,0 +1,31 @@
+* switch-to-buffer-other-windowの動き [#y6759ddc]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2011-05-05 (木) 15:21:46
+
+** メッセージ [#ab9301a9]
+scratchだけを開いている状態で、
+(switch-to-buffer-other-window (get-buffer-create "hoge"))
+としてCtr-jすると、ウィンドウが上下に分割され下のウィンドウに
+scratchの内容が表示されました。
+
+switch-to-buffer-other-windowの説明が
+「他のウィンドウに移ってからバッファを切り替えます。[C-x 4 b]
+ウィンドウ数が1の時は、ウィンドウを分割します。」
+だったので、下のウィンドウにはhogeバッファが表示されるとおもったのですが、
+「バッファを切り替える」
+ということと、
+「バッファが表示される」
+ということは違うんでしょうか？
+
+
+----
+- Ctrl-Jで評価しているため、hogeバッファを表示した後で*scratch*バッファに戻っているのでしょう。戻る前の状態を確認するにはこんな感じでしょうか。 --  &new{2011-05-06 (金) 01:35:02};
+ (progn
+   (switch-to-buffer-other-window (get-buffer-create "hoge"))
+   (refresh-screen)
+   (msgbox "check"))
+- なるほど。Ctrl-Jでやってるからなんですね。たしかにinteractiveな関数にして実行してみると切り替えられました。 --  &new{2011-05-06 (金) 11:10:29};
+
+#comment

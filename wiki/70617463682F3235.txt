@@ -1,0 +1,30 @@
+* 戻り値が double, float の C 関数を呼ぶとクラッシュする [#c3e5c541]
+-ページ:     [[patch]]
+-投稿者:     [[NANRI]]
+-優先順位:   低
+-状態:       提案
+-カテゴリー: その他
+-投稿日:     2007-12-20 (木) 02:34:25
+-バージョン: 
+
+** メッセージ [#ge78d1b7]
+初出は http://d.hatena.ne.jp/miyamuko/20070509/p1
+[[自分とこ>http://raido.sakura.ne.jp/southly/rn/index.rb?1178768333.txt]]に書いていたけどこっちに移すことにした。
+ --- dll.cc~	Sun Feb 25 08:58:21 2001
+ +++ dll.cc	Fri May 11 04:34:41 2007
+ @@ -244,10 +244,10 @@
+        return make_integer (long_to_large_int (u_long (proc ())));
+  
+      case CTYPE_FLOAT:
+ -      return make_single_float (((float (__stdcall *)())fn)());
+ +      return make_single_float (((float (__stdcall *)())proc)());
+  
+      case CTYPE_DOUBLE:
+ -      return make_double_float (((double (__stdcall *)())fn)());
+ +      return make_double_float (((double (__stdcall *)())proc)());
+      }
+  #else
+  # error "yet"
+----
+
+#comment

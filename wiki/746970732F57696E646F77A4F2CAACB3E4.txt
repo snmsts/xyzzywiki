@@ -1,0 +1,37 @@
+** window を分割して全バッファを表示する。
+
+ (defun split-window-each-buffer ()
+   (interactive)
+   (split-windows (count-buffers))
+   (let ((win (selected-window)))
+     (dolist (buffer (buffer-list))
+       (unless (string-matchp "^ " (buffer-name buffer))
+         (set-window win)
+         (set-buffer buffer)
+         (setf win (next-window win))))))
+
+**  window を指定した数で分割する
+
+ (defun split-windows (&optional (n (count-buffers)))
+   (interactive "p")
+   (delete-other-windows)
+   (let ((current (selected-window)))
+     (split-windows-1 (list current) n)
+     (set-window current)))
+ 
+ (defun split-windows-1 (windows n &optional (vertical t))
+   (if (not windows)
+       (return-from split-windows-1))
+   (let ((children ()))
+     (dolist (win windows)
+       (if (<= n (count-windows))
+           (return-from split-windows-1))
+       (set-window win)
+       (when (or (ignore-errors
+                  (split-window nil vertical))
+                 (ignore-errors
+                  (split-window nil (not vertical))))
+         (setf children (append children (list (selected-window))))
+         (other-window 1)
+         (setf children (append children (list (selected-window))))))
+     (split-windows-1 children n (not vertical))))

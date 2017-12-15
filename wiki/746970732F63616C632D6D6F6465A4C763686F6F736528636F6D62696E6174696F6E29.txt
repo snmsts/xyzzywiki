@@ -1,0 +1,9 @@
+[[tips]]
+
+calc-modeで組合せを計算できるようにします。
+
+使い方 : choose(5,3) => 10
+ (require "calc") 
+ (defun calc::choose (n m) 
+   (if (= m 0) 1 
+   (* (/ n m) (calc::choose (- n 1) (- m 1)))))

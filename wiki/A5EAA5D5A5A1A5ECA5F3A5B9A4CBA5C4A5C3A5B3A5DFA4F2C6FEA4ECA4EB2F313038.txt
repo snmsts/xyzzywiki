@@ -1,0 +1,38 @@
+**save-buffer-no-filenames-hook*の実例を… [#i4518d05]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-02-16 03:43:22 (水)
+-バージョン: 20041115
+
+**メッセージ [#x5bb12d8]
+ <chapter>
+ <title>*save-buffer-no-filenames-hook*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ get-buffer-file-nameがnilとかだと実行されます。
+ 使用例:
+   (add-hook '*save-buffer-no-filenames-hook*
+   	  #'(lambda ()
+   	      (if (yes-or-no-p "保存しますか")
+   		  ;;この時点でset-buffer-file-nameをしても遅い。
+   		  ;;emacs-write-fileなりを呼んでからnon-nilを渡すべき
+   		  (emacs-write-file (read-file-name "filename:"))
+   		;;次のhookに処理を渡す場合はnilを渡す
+   		nil)))
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file></file>
+ </chapter>
+
+----
+-取り込みます。＞[[refwiki:*save-buffer-no-filenames-hook*]] -- [[NANRI]] &new{2005-03-14 10:59:41 (月)};
+
+#comment

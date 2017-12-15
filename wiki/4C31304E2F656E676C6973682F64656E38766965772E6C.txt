@@ -1,0 +1,64 @@
+[[L10N/english]]
+
+ den8view.l:11:;;;   (require "den8view") を初期化ファイルのどこかに書いておく。
+#comment
+ den8view.l:251:	    (plain-error "~:[前~;次~]のメールはありません" (plusp n)))))
+-No ~:[previous~;next~] mail. --  &new{2005-03-08 05:34:19 (火)};
+
+#comment
+ den8view.l:280:	     (plain-error "前のフォルダはありません"))
+-No previous folder --  &new{2005-03-08 05:34:39 (火)};
+
+#comment
+ den8view.l:284:	     (error "フォルダが定義されていません"))
+-No defined folder. --  &new{2005-03-08 05:37:33 (火)};
+
+#comment
+ den8view.l:288:	     (plain-error "次のフォルダはありません"))
+-No next folder. --  &new{2005-03-08 05:38:03 (火)};
+
+#comment
+ den8view.l:485:      (msgbox "~A~%フォルダではありません" folder)
+-~A~%is not a folder. --  &new{2005-03-08 05:38:59 (火)};
+
+#comment
+ den8view.l:492:      (msgbox "~A~%ファイルが見つかりません" cache)
+-~A~%File not found. --  &new{2005-03-08 05:39:30 (火)};
+
+#comment
+ den8view.l:497:	(msgbox "~A~%電八君のキャッシュファイルではなさそうです" cache)
+-~A~%It is not a cache file of Den8. --  &new{2005-03-08 05:43:32 (火)};
+
+#comment
+ den8view.l:515:	(message "未読メールはないような気がします"))
+-There are no unread mail. --  &new{2005-03-08 05:44:24 (火)};
+
+#comment
+ den8view.l:778:		      (:caption "ﾌｫﾙﾀﾞの選択")
+-Browse Folder --  &new{2005-03-08 05:44:51 (火)};
+
+#comment
+ den8view.l:779:		      (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-08 05:45:48 (火)};
+
+#comment
+ den8view.l:782:		       (:button IDOK "OK" #x50010001 129 7 50 14)
+-OK --  &new{2005-03-08 05:45:54 (火)};
+
+#comment
+ den8view.l:783:		       (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 129 24 50 14)))
+-Cancel --  &new{2005-03-08 05:46:00 (火)};
+
+#comment
+ den8view.l:856:	   (case (message-box "メールを送信しますか?" nil
+-Send mails? --  &new{2005-03-08 05:46:20 (火)};
+
+#comment
+ den8view.l:881:      (error "腐れ文字があるので送信でけん"))
+-The text including invalid charactor, this mail cannot be sent. --  &new{2005-03-08 05:57:10 (火)};
+
+#comment
+ den8view.l:933:			       (plain-error "文字列が見つかりません"))
+-String is not found. --  &new{2005-03-08 05:57:31 (火)};
+
+#comment

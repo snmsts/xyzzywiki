@@ -1,0 +1,238 @@
+#freeze
+* Microsoft Visual C++ 2005 Express Edition で xyzzy をビルドする [#xa675a98]
+-ページ: [[patch]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 提案
+-カテゴリー: その他
+-投稿日: 2006-05-02 (火) 19:59:02
+-バージョン: 
+
+** メッセージ [#cbcc26ad]
+コンパイルエラーをつぶしてみました。
+そんな変更しちゃダメだ、というようなところは直してください。
+あんまし自信ないです。
+----
+第二版です。
+
+書くのを忘れていましたがベースはsrc-0.2.2.235.tar.bz2です。
+ --- Makefile~	Wed Dec 07 23:20:11 2005
+ +++ Makefile	Thu May 18 02:03:52 2006
+ @@ -1,6 +1,6 @@
+  
+  # define VC++ version (4, 6, or 7)
+ -VCVER=4
+ +VCVER=8
+  
+  .SUFFIXES: .cc .rc .res .d
+  
+ @@ -140,7 +140,11 @@
+  !ENDIF
+  
+  DEFS=-DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC
+ +!IF "$(VCVER)" == "8"
+ +CXX=cl -nologo -Zc:wchar_t- -Zc:forScope- -D_CRT_SECURE_NO_DEPRECATE
+ +!ELSE
+  CXX=cl -nologo
+ +!ENDIF
+  CPP=cl -nologo -E
+  LD=link -nologo
+  LIBS=kernel32.lib user32.lib gdi32.lib advapi32.lib shell32.lib \
+ --- archiver.cc~	Mon Aug 12 01:58:40 2002
+ +++ archiver.cc	Thu May 18 02:04:34 2006
+ @@ -77,7 +77,7 @@
+  static char *
+  copy_path (char *b, const char *o, const char *d, int dirp = 0)
+  {
+ -  char *spc = strchr (d, ' ');
+ +  const char *spc = strchr (d, ' ');
+    if (spc)
+      *b++ = '"';
+    b = stpcpy (b, o);
+ --- dyn-handle.h~	Sat Dec 20 18:15:49 1997
+ +++ dyn-handle.h	Thu May 18 02:08:38 2006
+ @@ -4,7 +4,7 @@
+  class dyn_handle
+  {
+  private:
+ -  operator = (const dyn_handle &);
+ +  void operator = (const dyn_handle &);
+  protected:
+    HANDLE h;
+  public:
+ --- encoding.cc~	Wed Mar 16 20:55:05 2005
+ +++ encoding.cc	Thu May 18 02:06:18 2006
+ @@ -617,15 +617,15 @@
+      default:
+      case ENCODING_LANG_JP:
+      case ENCODING_LANG_JP2:
+ -      return putw_jp;
+ +      return &putw_jp;
+  
+      case ENCODING_LANG_KR:
+      case ENCODING_LANG_CN_GB:
+      case ENCODING_LANG_CN_BIG5:
+ -      return putw_gen;
+ +      return &putw_gen;
+  
+      case ENCODING_LANG_CN:
+ -      return putw_cn;
+ +      return &putw_cn;
+      }
+  }
+  
+ --- environ.h~	Sat Mar 17 06:05:46 2001
+ +++ environ.h	Thu May 18 02:05:11 2006
+ @@ -37,7 +37,7 @@
+      RegCloseKey (hkey);
+  }
+  
+ -inline
+ +inline int
+  Registry::fail () const
+  {
+    return !hkey;
+ --- insdel.cc~	Sun Jul 22 21:39:52 2001
+ +++ insdel.cc	Thu May 18 02:06:57 2006
+ @@ -165,9 +165,9 @@
+  }
+  
+  static void
+ -adjust (const Chunk *&chunk, int &offset)
+ +adjust (Chunk *&chunk, int &offset)
+  {
+ -  const Chunk *cp = chunk;
+ +  Chunk *cp = chunk;
+    int o = offset;
+    while (o > cp->c_used)
+      {
+ @@ -227,9 +227,9 @@
+  }
+  
+  static void
+ -adjust_dst (const Chunk *&chunk, int &offset)
+ +adjust_dst (Chunk *&chunk, int &offset)
+  {
+ -  const Chunk *cp = chunk;
+ +  Chunk *cp = chunk;
+    int o = offset;
+    while (o > Chunk::TEXT_SIZE)
+      {
+ --- minibuf.cc~	Wed Mar 06 23:42:25 2002
+ +++ minibuf.cc	Thu May 18 02:08:12 2006
+ @@ -257,7 +257,7 @@
+              package = lpkg;
+          }
+  
+ -      const Char *b = xstring_contents (string);
+ +      Char *b = xstring_contents (string);
+        int l = xstring_length (string);
+  
+        maybe_symbol_string mss (package);
+ @@ -527,7 +527,7 @@
+          package = lpkg;
+      }
+  
+ -  const Char *b = xstring_contents (c_target);
+ +  Char *b = xstring_contents (c_target);
+    int l = xstring_length (c_target);
+  
+    maybe_symbol_string mss (package);
+ --- package.cc~	Sun Apr 02 03:44:11 2000
+ +++ package.cc	Thu May 18 02:07:21 2006
+ @@ -653,11 +653,11 @@
+  }
+  
+  void
+ -maybe_symbol_string::parse (const Char *&xb, int &xl)
+ +maybe_symbol_string::parse (Char *&xb, int &xl)
+  {
+ -  const Char *b = xb;
+ -  const Char *be = b + xl;
+ -  for (const Char *colon = b; colon < be; colon++)
+ +  Char *b = xb;
+ +  Char *be = b + xl;
+ +  for (Char *colon = b; colon < be; colon++)
+      if (*colon == ':')
+        {
+          if (colon == b)
+ --- package.h~	Sat Dec 06 23:55:25 1997
+ +++ package.h	Thu May 18 02:07:50 2006
+ @@ -95,7 +95,7 @@
+  public:
+    maybe_symbol_string (lisp pkg) : package (pkg), pkge (0) {}
+    lisp current_package () const {return package;}
+ -  void parse (const Char *&b, int &l);
+ +  void parse (Char *&b, int &l);
+    const Char *pkg_end () const {return pkge;}
+  };
+  
+ --- syntax.cc~	Wed Jan 21 23:41:56 2004
+ +++ syntax.cc	Thu May 18 02:09:23 2006
+ @@ -3878,7 +3878,7 @@
+  const syntax_table *syntax_state::ss_tab;
+  Buffer *syntax_state::ss_bp;
+  Chunk *syntax_state::ss_chunk;
+ -void (syntax_state::*syntax_state::update)(Char);
+ +void (syntax_state::*syntax_state::update)(const Char *);
+  
+  void
+  syntax_state::init_color_table ()
+ --- xdde.h~	Wed Aug 11 01:27:53 1999
+ +++ xdde.h	Thu May 18 02:05:47 2006
+ @@ -228,7 +228,7 @@
+    d = DdeAccessData (hdata, &len);
+  }
+  
+ -inline
+ +inline int
+  DdeDataP::length () const
+  {
+    return len;
+
+--------
+- 差分ファイルと環境変数を設定をするバッチを固めておきました。 -- [[NANRI]] &new{2006-05-02 (火) 20:00:44};
+- ぐわー！！！！必死こいてあーでもないこーでもないとやっていたのに先越されていたとは…（Ｔ−Ｔ）。とりあえず気になった点をいくつか…。的外れな指摘でしたらすみません…。 -- [[ぽい]] &new{2006-05-17 (水) 23:44:44};
+- Platform SDK のディレクトリは INCLUDE や LIB の先頭に追加する必要はないのでしょうか？Help では最初に追加するとなっていたと思いますが、最後に追加するので大丈夫？ -- [[ぽい]] &new{2006-05-17 (水) 23:45:08};
+- archiver.cc の const_cast はやめて、spc を const char * にした方がいいのでは？ -- [[ぽい]] &new{2006-05-17 (水) 23:45:25};
+- C 方式の cast を追加しているところですが、コンパイルオプション -Zc:wchar_t- をつけるとキャストなしでもエラーにならなくなると思います。ところで自分は -Zc:forScope- に気づきませんでした。for 文のスコープエラーが出るところ全部直してた…（泣） -- [[ぽい]] &new{2006-05-17 (水) 23:45:46};
+- CXX に -Zc:forScope- を設定していますが、すぐ上の CXXOPT の設定の分岐を VER8 用に増やしてそこで定義した方がいいのでは？（-Zc:wchar_t- も） -- [[ぽい]] &new{2006-05-17 (水) 23:46:41};
+- xyzzycli.cc には WinMain() が、xyzzyenv.cc には main() がないとコンパイルエラーになるような気がするのですが、そんなことはないでしょうか…？ -- [[ぽい]] &new{2006-05-17 (水) 23:47:18};
+- Platform SDKの件＞ようは正しいファイルが見つかればいいのでうちの環境では大丈夫です。vsvars32.batで設定するとLIBやらINCLUDEが「;」で終わるのが気持ち悪かったのでこうなってます。環境に合わせて修正して使ってください。~
+const_castの件＞const_castが高コストならそちらにしておきます。~
+オプション-Zc:wchar_t-の件＞了解です。~
+CXXの件＞確かそれではダメです。gen-syms.exeとかを作るコマンドラインに$(CXXOPT)が使われてませんので。やるなら、CXXの定義を分岐する必要があります。この変更をしても他のバージョンに影響がなければそうしますが、確認するつもりがなかったので直接書いてました。~
+WinMain()とかの件＞大丈夫です。スタートアップルーチンが自前で書いてあるのだと思います。 -- [[NANRI]] &new{2006-05-18 (木) 02:51:31};
+- お返事ありがとうございます。~
+const_castの件＞いえ、コストの考えは自分には全くなくて、単に const なデータを指すポインタが返されるのに、それを変更可能にしてしまうのはまずいのではというだけのことです。あまり深くは考えていません…。~
+CXXの件＞あ、なるほど…。CXXを直さないといけないというのはおっしゃる通りですね。CXXの分岐ですが…以前のバージョンでのコンパイルにこのオプションが指定されていなかったということはそのオプションがなかったということで、ということは昔のバージョンでコンパイルエラーが出てしまうのではないか、と思ったのですが…単に警告が出て無視されるだけなんでしょうかね。~
+WinMain()とかの件＞自分の環境だとエラーになってしまいます…。Makefile でコメントアウトされている -entry:process_startup がその指定のような気がするのですが、マニュアルを見ると entry で指定した関数では C ランタイムの初期化のコードを追加する必要があるそうで、そのコメントアウトしている部分を使うようにすると 「CRT セクションが初期化されていない」警告が出るんですよね…。しかし NANRI さんの方では大丈夫ということは、やっぱり自分の環境がなんか変なのかなあ…。 -- [[ぽい]] &new{2006-05-18 (木) 22:59:52};
+- 警告は黙らせていないのでいろいろと出てますよ。参考になるかどうか分かりませんがログを置いてみます。 -- [[NANRI]] &new{2006-05-19 (金) 00:12:11};
+- ログありがとうございます！xyzzyenv.cc のコンパイルでログの方では -entry:process_startup がかかってる…と思ったら、なんかパッチを当てる前のオリジナルのソースをいつの間にか修正してしまっていたようです…（´Д｀）。しょーもないミスでお騒がせしてすみません＆ありがとうございました。 -- [[ぽい]] &new{2006-05-19 (金) 19:56:56};
+- unified diff形式のほうがうれしいな --  &new{2006-06-09 (金) 01:25:13};
+- Microsoft Visual C++ 2008 Express EditionだとWindows Server 2003 SP1 Platform SDKがなくてもビルドできるようです。このページのパッチはほとんどそのまま使えそうですが、Makefileの2箇所のバージョンの数字を9に変更する必要があると思います。それと、afxres.h が無いと怒られるので、
+ #include <windows.h>
+ #define IDC_STATIC      (-1)
+という内容のファイルをincludeディレクトリにafxres.hという名前で保存しておけば動くと思います。 --  &new{2008-02-19 (火) 14:14:07};
+- GB2312.txtは本当にこれでいいのかはわかりませんが、こちら（http://examples.oreilly.com/cjkvinfo/unicode/gb2312-80.txt）を改名して使ってみました。--  &new{2008-02-19 (火) 14:39:55};
+- 情報ありがとうございます。VC2008EEはそんなに変わっていないだろうと思い、調査を先延ばしにしていたのですがビルド可能ということが分かり嬉しく思います。afxres.hはPlatform SDKに含まれているようですのでPlatform SDKをインストールすればそちらを使えます。((Platform SDKが必要なのはこれだけが理由じゃなかったと思いますが。)) ~
+最近のコンパイラ事情に合わせてビルド方法もまとめた方が良さそうですね。 -- [[NANRI]] &new{2008-02-19 (火) 20:49:24};
+- こちらのページ（http://tech.ckme.co.jp/vc.shtml）によると、2005ではコマンドラインベース以外のプログラムを開発しようという場合は、Platform SDKをインストールする必要があったそうですが、2008からは、Platform SDKも同胞されるようになったので、別途インストールする必要はなくなったとのことです。同じページに書いてありますが環境変数は
++環境変数PATHに
+ C:\Program Files\Microsoft Visual Studio 9.0\VC\bin;
+ C:\Program Files\Microsoft Visual Studio 9.0\Common7\IDE;
+ C:\Program Files\Microsoft SDKs\Windows\v6.0A\bin;
+ 
++環境変数INCLUDEに
+ C:\Program Files\Microsoft Visual Studio 9.0\VC\INCLUDE;
+ C:\Program Files\Microsoft SDKs\Windows\v6.0A\Include;
+ 
++環境変数LIBに
+ C:\Program Files\Microsoft Visual Studio 9.0\VC\LIB;
+ C:\Program Files\Microsoft SDKs\Windows\v6.0A\Lib;
+を追加すればよさそうです。
+
+それと、基本的なことですがnmakeの実行はVisual Studio Toolsのコマンドプロンプトから実行する必要があるようです。
+これでビルドはできますが、バイナリのサイズが標準より小さくなるのは特に問題はないと考えていいのでしょうか？ --  &new{2008-02-19 (火) 22:02:24};
+- それと話はずれますが、C++の部分に手を加えたものをWEBで探すのが大変なので、その辺の情報も一元化できたらいいのではないかと思います。 --  &new{2008-02-19 (火) 22:22:58};
+- ページを作成してみました（[[Memo/ソースの変更・修正情報]]）。 --  &new{2008-02-19 (火) 23:05:07};

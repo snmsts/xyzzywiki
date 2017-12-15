@@ -1,0 +1,184 @@
+#freeze
+HTMLを除くWeb関連物は[[WebSite制作関連Lispリンク]]もどうぞ。CSS、JavaScriptの情報もこっち。
+
+* HTML関連Tips [#n8672061]
+
+#contents
+
+** はじめに [#n02858ec]
+
+***html+-mode [#y8635c06]
+
+Tipsでもなんでもないけど、まずはHTML+-mode。これはタグを自分で書いていく人向け。
+
+:html+-mode（山本さん, 66MHz.com）|
+http://www1.odn.ne.jp/ymtz/html_plus-mode.html
+
+***add2html [#hc178549]
+
+手でタグをばしばし書いていくだけじゃなく、ちょっとマウスで楽をしたい人に「マウス右クリックでタグを入力する HTML 作成用スクリプト」。html+-mode と一緒にどうぞ。
+
+:add2html.l （紫藤貴文さん, 紫藤貴文のページ）|
+http://www.geocities.jp/shido_takafumi/xyzzy/add2html.html
+
+***ConvertHML [#s051ed07]
+
+こっちはHTMLを書くのではなくて、決まった書式で書いたテキストをHTMLに変換する方式。
+
+:ConvertHTML（N.Kobayashiさん, Seventh Delphi）|
+http://kakinotane.s7.xrea.com/chtml/chtml.html
+
+
+***html-support [#n123f405]
+
+補助的に使えるマイナーモード。「HTML文字実体参照とUnicodeキャラクターの相互変換、tidyを利用した構文チェック、xhtmlへの変換 があるそうです」
+
+
+:HTML入力サポート（S.Sugiyamaさん，chez sugi）|http://chez-sugi.net/xyzzy/xyzzy003.html
+
+** HTML書いているときにプレビューするには [#x5417e8a]
+
+HTMLを書いたらブラウザで表示してみたいのが人情。ということで、Browser.dll と Browserex をインストールすると、HTMLを保存するたびにブラウザでの表示が確認できたり（しかもxyzzyだけで）する。
+
+:browserex（大久保さん, 雑記帖）|
+http://ohkubo.s53.xrea.com/xyzzy/#browserex
+:browser.dll（oowadaさん）|
+http://oowada.pobox.ne.jp/xyzzy/xyzzy.html
+:browser.dll拡張版（いまいたけをさん, ななしの人の部屋）|
+http://www.osk.3web.ne.jp/~usitukai/
+:browser.dll 拡張版 (Gecko編)（山本さん, 66MHz.com）|
+http://www1.odn.ne.jp/ymtz/browser.html
+
+** 最初にテンプレートを挿入したい。 [#kfa90572]
+
+いちいち<HTML><HEAD><TITLE>***</TITLE></HEAD> ......... って書くのがめんどくさい場合は、あらかじめテンプレートを用意しておいてtemplate-insert を使うと便利。
+
+:template-insert（kiaさん, kia's website - xyzzy関連）|
+http://www.geocities.jp/kiaswebsite/xyzzy/template-insert.html
+:[[QuickTour]]のtemplate-insertを導入しよう|
+[[QuickTour/ext/template-insert]]
+
+** html+-mode のカスタマイズや拡張など [#qc87126d]
+
+自分用にごりごりカスタマイズして使うほど幸せになれるが本来の目的とはずれてゆくかも。
+
+*** クリップボードの中身を…… [#tdcb692c]
+
+:クリップボードを実体参照+<br>付加して張り付け（xyzzyのがらくた - すこプラ）''Web-Archiveより''|
+http://web.archive.org/web/20040224220531/http://members4.tsukaeru.net/skry/xyzzy.html#skr-ins-edited-clipboard
+:クリップボードの中身を貼り付けるとき、行末に<BR>をいれる（Hieさん, xyzzyの音 - 編集）|
+http://hie.s64.xrea.com/xyzzy/note/edit.html#paste-clipboard-with-br
+:クリップボードの中身が http:// で始まっていたら、リンクをつけてペースト（Hieさん, xyzzyの音 - 編集）|
+http://hie.s64.xrea.com/xyzzy/note/edit.html#insert-url-with-link
+:タグの中身とクリップボードの中身を置換したい。(2ch)|
+[[2chbeginner5:83]]
+
+*** ブラウザと連携とかプレビュー関連 [#lbcfb80e]
+
+:編集中のページを指定したブラウザで開く（2ch）|
+[[2chmain11:542]](-549)
+:編集中のhtmlファイルを直接IEで開きたい（2ch）|
+[[2chtag:653]](-655)
+:perlなどCGIが動作する環境でbrowser.dllを利用して動作を確認する方法。 （2ch）|
+[[2chtag:636]]
+:IEからxyzzyでソースを表示する時にhtml+-modeで表示する（shiroさん, 黒い羽根）|
+http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/html+.html#source
+
+*** 編集機能 [#o6e7a77d]
+
+:HTML文字実体参照とUnicodeキャラクターの相互変換、構文チェックやxhtmlへの変換−HTML入力サポート（sugiさん, chez sugi）|
+http://chez-sugi.net/xyzzy/000952.html
+:状況に依存して適当なタグを自動挿入するための設定（shiroさん, 黒い羽根）|
+http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/html+.html#guess-tag
+:ミニバッファからコメントを挿入（Hieさん, xyzzyの音 - 編集）|
+http://hie.s64.xrea.com/xyzzy/note/edit.html#html-insert-comment
+:リージョンをコメントアウト（Hieさん, xyzzyの音 - 編集）|
+http://hie.s64.xrea.com/xyzzy/note/edit.html#html-region-to-comment
+:リージョンを指定したタグで囲む（Hieさん, xyzzyの音 - 編集）|
+http://hie.s64.xrea.com/xyzzy/note/edit.html#html-quote-region-by-tag
+:カーソルがある行を指定したタグで囲む（2ch）|
+[[2chtag:517]]
+:タグの補完の時に別ウィンドウで開くのではなく、選べるようにする（2ch）|
+[[2chtag:172]]
+:文字参照一発挿入（アサノさん, Junkline）|
+http://www.mushline.com/junky/2004/041720.shtml
+:HTML 文字参照挿入  > を &amp;gt; とか表示したりするあれ。（Hieさん, xyzzyの音 - 編集）|
+http://hie.s64.xrea.com/xyzzy/note/edit.html#insert-character-references
+:改行を連続させてもインデントを残さない（xyzzyのがらくた - すこプラ）''Web-Archiveより''|
+http://web.archive.org/web/20040224220531/http://members4.tsukaeru.net/skry/xyzzy.html#html+-mode
+:選択範囲の最初と最後の対になったタグを削除（xyzzyのがらくた - すこプラ）''Web-Archiveより''|
+http://web.archive.org/web/20040224220531/http://members4.tsukaeru.net/skry/xyzzy.html#skr-delete-tag-pair-selection
+:HTMLタグを全部小文字に一発変換してくれるマクロ探してるんですが （2ch）|
+[[2chtag:832]](-837)
+
+*** テーブル関連 [#zdebc0ef]
+
+:タブ区切りデータをテーブルに変換（Hieさん, xyzzyの音 - 編集）|
+http://hie.s64.xrea.com/xyzzy/note/edit.html#tab2table-selection
+:行数と列数を指定するとズバッとテーブルが作成される（2ch）|
+[[2chtag:612]]
+:罫線で書かれた表を元に html のテーブルに変換し、 指定したバッファのカーソル位置に出力−box-to-table（koji kimuraさん, xyzzyに関する諸々）|
+http://homepage3.nifty.com/~ko-ji/box-to-table.html
+
+*** TABキーとかインデントとか [#u5fb79e9]
+
+:html+-mode で一発インデント（Hieさん, xyzzyの音 - 編集）|
+http://hie.s64.xrea.com/xyzzy/note/edit.html#html+-indent
+:インデントはタブでやる（shiroさん, 黒い羽根）|
+http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/html+.html#tab-indent
+//:インデントをタブじゃなくて半角スペースにしたい(2ch /762-764を参照)|
+//http://pc.2ch.net/win/kako/1013/10130/1013042550.html
+:スペースでインデント（shiroさん, 黒い羽根）|
+http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/html+.html#space-indent
+:インデント機能のトグル（2ch）|
+[[2chtag:387]]
+:TABキーで補完しない（市井さん, ~m-itii）|
+http://sel.ics.es.osaka-u.ac.jp/~m-itii/#xyzzy2
+:（html+-modeに限らず）常にTABキーでタブを入れたい （xyzzyML）|
+[[xyzzy-ml:07398]]
+:Ctrl+TABとかで強制TAB入力とか（2ch）|
+[[2chtag:634]]
+
+
+*** あると便利なもの [#y7a44533]
+
+:HTMLの文法チェック機能を導入する（shiroさん, 黒い羽根）|
+http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/html+.html#lint
+:buf2html-region で作成したソースをクリップボードへコピー（Hieさん, xyzzyの音 - 編集）|
+http://hie.s64.xrea.com/xyzzy/note/edit.html#my-buf2html-region
+
+*** 好みの問題 [#q456dd6b]
+
+:Insert Image Tagの文字を変更（shiroさん, 黒い羽根）|
+http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/html+.html#insert-image
+:URI挿入形式を変更する（shiroさん, 黒い羽根）|
+http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/html+.html#uri
+:パスの挿入形式を変更する（shiroさん, 黒い羽根）|
+http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/html+.html#pass
+:</ ではなく <? で終了タグ補完（すこりさん, xyzzyのがらくた - すこプラ）''Web-Archiveより''|
+http://web.archive.org/web/20040224220531/http://members4.tsukaeru.net/skry/xyzzy.html#html+-mode
+
+*** 説明など [#x80cc18f]
+
+:html+-use-html-kwd 変更時の注意点（xyzzyの音）|
+http://hie.s64.xrea.com/xyzzy/note/html_plus-mode.html#html+-use-html-kwd
+:uplevel-tag の詳しい説明（xyzzyの音）|
+http://hie.s64.xrea.com/xyzzy/note/html_plus-mode.html#uplevel-tag
+
+*** キーワードファイル [#va65bbb4]
+
+:拡張されたキーワードファイルとその設定方法（shiroさん, 黒い羽根）|
+http://www.uranus.dti.ne.jp/~shiro-/soft/xyzzy/keyword.html
+
+*** そのほか [#kc227c2a]
+
+:popup-mode-memo.l 用の記述（大久保さん, 雑記帖）|
+http://ohkubo.s53.xrea.com/xyzzy/memo.html#html-edit:html+-mode
+:HTMLの目次を生成−HTMLのname anchorを拾ってきて挿入（nonentityさん, NanoTips(xyzzy dept))|
+http://members.at.infoseek.co.jp/zauberer/microtips/xyzzy2.html
+
+----
+-2ch関連がdat落ちしてる〜(;_:) -- [[xenon]] &new{2005-08-06 18:47:21 (土)};
+--[[にくちゃんねる>http://makimo.to/cgi-bin/search/search.cgi?q=xyzzy&sf=2&andor=AND&H=ikenai&view=table&all=on]]とか使ってください。 --  &new{2005-08-06 21:16:16 (土)};
+---ありがとうございました。 -- [[xenon]] &new{2005-08-07 04:06:17 (日)};
+- リンク切れているところがあるので：http://web.archive.org/web/20050323112120/http://sel.ics.es.osaka-u.ac.jp/~m-itii/ --  &new{2006-04-27 (木) 16:30:07};

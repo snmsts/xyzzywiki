@@ -1,0 +1,12 @@
+[[L10N/english]]
+
+ sequence.l:58:					  (t (error "型指定子のサイズと指定されたサイズが異なります"))))
+- Mismatched size of the type specifier. --  &new{2005-12-27 (火) 14:40:00};
+
+#comment
+ sequence.l:231:       (error ":testと:test-notが両方指定されています"))
+- You cannot specify both :test and :test-not at once. --  &new{2005-12-27 (火) 14:42:40};
+
+#comment
+ sequence.l:303:	   (error ":testと:test-notが両方指定されています"))
+#comment

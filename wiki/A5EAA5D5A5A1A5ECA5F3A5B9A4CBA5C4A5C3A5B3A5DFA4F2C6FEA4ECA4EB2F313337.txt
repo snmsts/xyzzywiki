@@ -1,0 +1,17 @@
+*arguments 要素の & の表記 [#ibb934cb]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[めもちょ]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: typo
+-投稿日: 2005-07-08 03:50:50 (金)
+-バージョン: 20050702
+
+**メッセージ [#a941525f]
+reference050702.tar.gz の xml で、substring, unintern, unless, vector の arguments 要素の表記で & が &amp; となっていませんでした。
+----
+-訂正：＆が＆ａｍｐ；になってない (´；ω；`)変換されてもーた -- [[めもちょ]] &new{2005-07-08 03:53:24 (金)};
+-どもです。さっそく直しておきました。→[[substring>refwiki:substring]], [[unintern>refwiki:unintern]], [[unless>refwiki:unless]], [[vector>refwiki:vector]] -- [[NANRI]] &new{2005-07-08 21:09:49 (金)};
+
+#comment

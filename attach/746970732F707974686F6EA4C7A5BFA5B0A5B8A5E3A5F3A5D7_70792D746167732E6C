@@ -1,0 +1,127 @@
+#|
+■説明
+pythonでタグジャンプしよう というものです。
+いろいろ不完全ですが、無いよりはましなので公開。
+
+おかしなところは勝手に修正してください。
+
+■インストール
+
+(require "py-tags")
+と、.xyzzy か siteinit.l に書いてください。
+
+py-mode が必要です。
+
+
+■ライセンス:  LGPL v2
+
+■ Author
+Nakano Masahiro <m-nakano@jaist.ac.jp>
+
+
+■バージョン
+2006/08/05 初版     つくった。
+|#
+
+(provide "py-tags")
+(in-package "editor")
+
+(defparameter py-tags-regexp
+  (compile-regexp "^\\([ \t]*\\)\\(def\\|class\\|module\\)[ \t]+\\([^ \t\n:{(]+\\)[ \t]*\\([^:\n]*\\)"))
+(defun python-maketags (file count)
+  (let ((pmin (point-min))
+	(level 0)
+	classes 
+	)
+    (goto-char pmin)
+    (if (not (boundp '*py-mode-syntax-table*))
+	(require "py-mode"))
+    (use-syntax-table *py-mode-syntax-table*)
+    (unwind-protect
+	(while (scan-buffer py-tags-regexp :tail t)
+          (let ((opoint (point))
+		(indent (match-string 1))
+		(type (match-string 2))
+		(name (match-string 3))
+		(params (match-string 4))
+		)
+	    (cond ((or (equal type "class")
+		       (equal type "module"))
+		   (if (equal indent "")
+		       (setq classes (list name)
+			     level 1)
+		     (setq classes (cons name (last classes (round (/ (length indent) 4))))
+			   level (1+ (round (/ (length indent) 4)))))
+		   (format t "~A~A~D~A" name file opoint params))
+		  ((equal type "def")
+		   (format t "~A~A~D~A~A" name file opoint params
+			   (let* ((depth (- level (round (/ (length indent) 4))))
+				  it)
+			     (if (>= depth 0)
+				 (if (setq it (nth depth classes))
+				     it "")
+			       ""))))
+		  )
+            (incf count)
+            ))
+      (progn
+	))
+    (update-mode-line)
+    count))
+
+(defun python-tags-find-point (class name functionp point)
+  (goto-char (- point *jump-tag-limit*))
+  (refresh-screen)
+  (and (scan-buffer (if functionp
+			(concat "^[ \t]*def[ \t]+" (regexp-quote name))
+		      (concat "^[ \t]*\\?:class\\|module\\)[ \t]+" (regexp-quote name)))
+		    :regexp t
+		    :right-bound t
+                    :limit (+ point *jump-tag-limit*))
+       (point)))
+
+(defun python-tags-find-target ()
+  (let* ((opoint (point))
+	 (point1 (progn
+		   (skip-syntax-spec-backward "w_")
+		   (point)))
+	 (name1 (buffer-substring point1
+				  (progn
+				    (skip-syntax-spec-forward "w_")
+				    (point))))
+	 (point2 (progn
+		   (loop
+		     (skip-syntax-spec-backward "w_")
+		     (if (eql (preceding-char) #\.)
+			 (backward-char 1)
+		       (return)))
+		   (point)))
+	 (name2 (buffer-substring point2
+				  (progn
+				    (loop
+				      (skip-syntax-spec-forward "w_")
+				      (if (eql (following-char) #\.)
+					  (forward-char 1)
+					(return)))
+				    (point))))
+	 (functionp (progn                                
+		      (skip-syntax-spec-forward " ")
+		      (eql (following-char) #\()
+		      )))
+    (goto-char opoint)
+    (if (equal name1 name2)
+	(return-from python-tags-find-target (values nil name1 functionp)))
+    (let ((pos (- point1 point2))
+	   class)
+      (if (/= pos 0)
+	  (setq class (car (last (split-string (substring name2 0 (1- pos)) #\.)))))
+      ;(msgbox "class: ~A\npos: ~A\nname: ~A" class pos name1)
+      (values class name1 functionp))))
+
+(defun setup-python-tags ()
+  (setq tags-find-target 'python-tags-find-target)
+  (setq tags-find-point  'python-tags-find-point)
+  )
+(add-hook '*py-mode-hook* 'setup-python-tags)
+
+(pushnew '(python-maketags "*.py") *maketags-list* :key #'car)

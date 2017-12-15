@@ -1,0 +1,23 @@
+* openの:if-existsには:skipを指定できない [#ff4ac216]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[Kongmu]]
+-優先順位:   普通
+-状態:       着手
+-カテゴリー: typo
+-投稿日:     2011-02-25 (金) 21:46:11
+-バージョン: 
+
+** メッセージ [#bb6ca885]
+ (with-open-file (fo "test.txt" :if-exists :skip :direction :output)
+   ...)
+を評価すると，
+
+> 不正な‘:if-exists’オプションです: :skip
+
+と怒られますが，これは:if-exists :skipの代りに:if-exists nilを指定すると，期待した動作になるみたいです。
+リファレンスが間違っていると思うので，修正していただければと。
+
+----
+- どーもです。修正しました。[[refwiki:open]] -- [[NANRI]] &new{2011-02-26 (土) 20:58:15};
+
+#comment

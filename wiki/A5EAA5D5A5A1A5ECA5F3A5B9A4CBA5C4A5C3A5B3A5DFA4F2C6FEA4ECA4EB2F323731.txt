@@ -1,0 +1,40 @@
+* go [#udb2c5b8]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[lambda]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: 新規項目
+-投稿日:     2007-03-07 (水) 13:07:51
+-バージョン: 
+
+** メッセージ [#ocaabc9a]
+ <chapter>
+ <title>go</title>
+ <type>Special Form</type>
+ <arguments>go TAG</arguments>
+ <package>lisp</package>
+ <description>
+ tagbody や prog の中で指定されたタグへジャンプします。
+ 
+ 使用例:
+   ;;; dotimes 相当のループを tagbody と go で書いてみる
+   (let ((x 0) (sum 0))
+     (tagbody
+       start
+       (setq sum (+ sum x)
+ 	    x (1+ x))
+       (if (&lt;= x 10) (go start)))
+     sum)
+   =&gt; 55
+ </description>
+ <seealso>tagbody</seealso>
+ <seealso>prog</seealso>
+ <link></link>
+ <section>制御構造</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+- どーもです。 -- [[NANRI]] &new{2007-03-10 (土) 16:57:41};
+
+#comment

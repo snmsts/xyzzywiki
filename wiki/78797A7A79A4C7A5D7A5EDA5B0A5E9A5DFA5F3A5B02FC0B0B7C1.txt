@@ -1,0 +1,101 @@
+*整形 [#b1e9fa89]
+#contents
+
+**概要 [#zbeba6b4]
+関数整形(indent-sexp)や外部アプリを使ったコード整形について説明しています。
+
+**関数整形(indent-sexp) [#q3498cd6]
+関数の"{"の前にカーソルを置き、indent-sexp(ESC C-q)or(C-M-q) を入力すると、その関数を整形、インデントしてくれます。
+
+-整形前
+#ref(indent-sexp1.png,nolink)
+
+-整形後
+#ref(indent-sexp2.png,nolink)
+
+**バッファ全体のインデント [#k6116910]
+[[Windows板 xyzzy Part12>http://pc8.2ch.net/test/read.cgi/win/1103400818/]]より
+ 538 [2005/04/20(水) 20:47:07 ID:sjyObp4w] 名無し~3.EXE <sage>
+ >>537 
+ 余計なお世話かもしれないけどこんなのの方がよくない？ 
+ これだとポイント動かないしマークもセットされないし他のモードでも使える。 
+  
+ ;; バッファ全体のインデント 
+ (defun indent-buffer () 
+   (interactive "*") 
+   (when mode-specific-indent-command 
+     (save-excursion 
+       (goto-char (point-min)) 
+       (funcall mode-specific-indent-command) 
+       (indent-region (point-min) (point-max))))) 
+  
+ ちなみに 
+ (indent-region (point-min) (point-max)) 
+ だと一行目がインデントされないみたい。
+
+**インデントの設定(java-mode) [#g5b8c0a2]
+.xyzzy、またはsiteinit.lファイルなどに記入します。
+ ;;インデントレベルの設定
+ (setq java-indent-level 4)
+ ;;インデントをタブで指定 
+ (setq ed::*java-indent-tabs-mode* t)
+ ;;すべて半角スペースでインデントしたい場合 
+ ;(setq ed::*java-indent-tabs-mode* nil)
+
+-[[java-mode でのインデントの設定方法がわからないのですが…。>http://hie.s64.xrea.com/xyzzy/qanda/html/editmode.html#78]]
+-[[しょぼしょぼすくりぷと インデントの設定>http://www.afis.to/~start/xyzzy/programing/indent.html]]
+--[[emacs インデント生成スクリプト /しょぼしょぼすくりぷと xyzzy for programer>http://www.afis.to/~start/xyzzy/programing/xyzzy_index_maker.html]]
+
+**インデントのタブ・スペース相互変換 [#e25a2038]
+-[[Another 朝顔日記 - tabify と untabify>http://d.hatena.ne.jp/nyama/20061121/1164077673]]
+ リージョン作っておいて、M-x tabify するとスペースによるインデントがタブによるインデントになり、
+ M-x untabify するとタブによるインデントがスペースによるインデントになります。
+
+**前後の行を見てインデント [#pdffd5e4]
+indent-to-token.l(NetInstallerでインストール可)で、リージョン中のトークン(たとえば代入文で"="など)の位置をそろえることができます(Emacs の M-x align 風機能)。
+
+詳細や、キーバインドの設定などは、site-lisp/indent-to-token.l を参考になります。
+
+- M-x align
+-- リージョン内の代入文の位置をそろえます。
+
+#ref(align.png)
+
+- M-x arrange-with
+-- リージョン中に現れるトークンの位置をそろえます。
+-- texのテーブル環境で & でそろえる時に便利です。
+
+#ref(arrange-with.png)
+
+- 参考
+-- indent-to-token
+--- [[思いつくまま xyzzy>http://www.jaist.ac.jp/~m-nakano/ni/package.l]]
+--- [[himadatenodeの日記 - indent-to-next-token>http://d.hatena.ne.jp/himadatanode/20060919/p2]]
+--- [[oooooooo - xyzzy で開発補助系>http://d.hatena.ne.jp/oooooooo/20061221]]
+-- indent-to-token+
+--- [[xyzzy’s Lisps>http://park.geocities.jp/bovecrach/]]
+
+**コード整形 [#sffc1130]
+filter-buffer(C-x #)で外部アプリを起動し、一気にバッファ全体のコード整形が可能です。
+
+例えば、[[astyle>http://astyle.sourceforge.net/]] や [[jacobe>http://www.tiobe.com/jacobe.htm]]を以下のように使用します。
+
+ C-x # (Ctrlとxキーを同時に押したあと、#を入力)
+ # astyle -j
+ 
+ C-x #
+ # jacobe -cfg=sun.cfg -quiet -stdout -
+
+**関連情報 [#fe617009]
+-[[Artistic Style>http://astyle.sourceforge.net/]]
+-[[Jacobe Code Beautifier>http://www.tiobe.com/jacobe.htm]]
+
+**コメント [#qa7d0ebd]
+- サイトの閉鎖でindent-to-token.lが手に入りません。 ライセンスが不明なのですが、可能ならばどなたか アップしていただくことはできないでしょうか。 -- [[さざんか]] &new{2010-09-20 (月) 22:17:33};
+-- indent-to-tokenの改造版のindent-to-token+を使うのではだめなんですか。 --  &new{2010-09-20 (月) 22:47:19};
+- そのlispは存じてますが、改造版ということでやはりオリジナルが欲しいです。 -- [[さざんか]] &new{2010-09-21 (火) 20:31:22};
+- お気に入りのxyzzyでSQL文をコード整形したいのですが、どうすればいいですかね？ -- [[tnn]] &new{2011-08-21 (日) 11:52:01};
+- javascript で書かれた beautifier を実行するのも cscriptを 呼ぶことで 可能ですね。 -- [[おかゆん]] &new{2011-09-30 (金) 11:00:15};
+- 1 -- [[1]] &new{2016-03-12 (土) 02:44:46};
+
+#comment

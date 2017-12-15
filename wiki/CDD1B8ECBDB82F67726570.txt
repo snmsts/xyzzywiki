@@ -1,0 +1,12 @@
+[[用語集]]
+
+**grepとは [#y14dcfbe]
+
+ファイル群から、文字列を検索してその位置を表示します。
+
+ed コマンドの "g/RE/p"(Global Regular Expression Print) の略で、グレップと読むそうです。
+
+----
+突っ込みなどあったらどうぞ。
+
+#comment

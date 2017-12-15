@@ -1,0 +1,882 @@
+;-*-Lisp-interaction-*-
+;
+; xydun.l - 2005-04-04
+;
+; todo:
+; 敵に直横を歩いている時は、目覚める確立を高くする
+
+(setf (get 'for 'ed:lisp-indent-hook) 2)
+
+(defmacro for (var begin end &body body)
+  (let ((gend (gensym)))
+    `(do ((,var ,begin (1+ ,var))
+          (,gend ,end))
+         ((> ,var ,gend))
+       ,@body)))
+
+(defstruct room
+  x y ex ey stairs)
+
+(defstruct item
+  x y name type)
+
+(defstruct enemy
+  x y hp status item)
+
+(defvar *rooms* nil)
+
+(defvar *stage* (make-array (list 80 20) :initial-element #\,))
+
+(defun clear-stage ()
+  (let ((dimens (array-dimensions *stage*)))
+    (dotimes (i (car dimens))
+      (dotimes (j (cadr dimens))
+	(setf (aref *stage* i j) #\,)))))
+
+(defun aref-stage (x y)
+  (aref *stage* x y))
+
+(defun setf-stage (x y obj)
+  (setf (aref *stage* x y) obj))
+
+(defun stage-width ()
+  (car (array-dimensions *stage*)))
+
+(defun stage-height ()
+  (cadr (array-dimensions *stage*)))
+
+(defun movep (x y)
+  (case (aref-stage x y)
+    ((#\- #\+ #\| #\,) nil)
+    (t t)))
+
+(defun movep2 (x y ex ey)
+  (and (movep ex y)
+       (movep x  ey)
+       (movep ex ey)))
+
+(defun pathp (x y)
+  (char= #\# (aref-stage x y)))
+
+(defun stairsp (x y &optional room)
+  (let ((rm (or room (find-room x y))))
+    (when rm
+      (let ((stairs (room-stairs rm)))
+	(and stairs
+	     (= x (car stairs))
+	     (= y (cdr stairs)))))))
+
+(defun cornerp (x y)
+  (char= #\+ (aref-stage x y)))
+
+(defun wallp (x y)
+  (case (aref-stage x y) ((#\- #\+ #\|) t)))
+
+(defun floorp (x y)
+  (char= #\SPC (aref-stage x y) ))
+
+(defun find-room (x y)
+  (dolist (room *rooms*)
+    (when (and (> x (room-x  room))
+	       (< x (room-ex room))
+	       (> y (room-y  room))
+	       (< y (room-ey room)))
+      (return room))))
+
+(defun excavate (x y)
+  (case (aref-stage x y)
+    ((#\- #\| #\,) (setf-stage x y #\#))))
+
+(defun draw-previous-player-position (room)
+  (labels ((draw-aux ()
+	     (dotimes (i 3)
+	       (dotimes (j 3)
+		 (let ((x (+ i (player-prev-x) -1))
+		       (y (+ j (player-prev-y) -1)))
+		   (unless (wallp x y)
+		     (let ((item (find-item x y)))
+		       (cond (item          (draw-item x y item))
+			     ((stairsp x y) (draw-stairs x y))
+			     ((pathp x y)   (draw-path x y))
+			     (t             (draw-floor x y))))))))))
+    (let ((rm (find-room (player-prev-x) (player-prev-y))))
+      (if rm
+	  (unless room
+	    (draw-room rm nil))
+	(draw-aux)))))
+
+(defun draw ()
+  (let ((room (find-room (player-x) (player-y))))
+    (draw-previous-player-position room)
+    (if room
+	(draw-room room t)
+      (dotimes (i 3)
+	(dotimes (j 3)
+	  (draw-spot (+ i (player-x) -1) (+ j (player-y) -1) t))))))
+
+(defun draw-obj (x y obj)
+  (save-excursion
+    (goto-line (+ 3 y))
+    (goto-column x)
+    (unless (char= obj (following-char))
+      (delete-char)
+      (insert obj))))
+
+(defun draw-path (x y)
+  (draw-obj x y #\#))
+
+(defun draw-wall (x y)
+  (draw-obj x y (aref-stage x y)))
+
+(defun draw-stairs (x y)
+  (draw-obj x y #\%))
+
+(defun draw-floor (x y)
+  (draw-obj x y #\SPC))
+
+(defun draw-item (x y item)
+  (draw-obj x y
+	    (case (item-type item)
+	      (money  #\$)
+	      (food   #\o)
+	      (herb   #\*)
+	      (weapon #\!)
+	      (shield #\()
+	      )))
+
+(defun draw-enemy (x y enemy)
+  (draw-obj x y #\e))
+    
+(defun draw-player ()
+  (draw-obj (player-x) (player-y) #\@))
+
+(defun draw-room (room &optional bright)
+  (dotimes (i (1+ (- (room-ey room) (room-y room))))
+    (dotimes (j (1+ (- (room-ex room) (room-x room))))
+      (draw-spot (+ j (room-x room))
+		 (+ i (room-y room))
+		 bright))))
+
+(defun draw-spot (x y bright)
+  (if (wallp x y)
+      (draw-wall x y)
+    (let ((enemy (and bright (find-enemy x y))))
+      (if enemy
+	  (draw-enemy x y enemy)
+	(let ((item (find-item x y)))
+	  (cond ((and (= x (player-x)) (= y (player-y)))
+		 (when item
+		   (remove-item item)
+		   (if (eq 'money (item-type item))
+		       (let ((money (random 100)))
+			 (draw-message "~A G 手に入れた" money)
+			 (inc-player-money money)
+			 (draw-status))
+		     (draw-message "~A を手に入れた" (item-name item))))
+		 (draw-player))
+		(item          (draw-item x y item))
+		((stairsp x y) (draw-stairs x y))
+		((pathp   x y) (draw-path x y))
+		(t             (draw-floor x y))))))))
+
+(defun draw-status ()
+  (save-excursion
+    (goto-line 2)
+    (let ((p (point)))
+      (goto-eol)
+      (delete-region p (point)))
+    (insert (format nil " ~2D F    Lv ~2D  HP ~3D/~3D ~15D G"
+		    1 (player-lv) (player-hp) (player-max-hp) (player-money)))))
+
+(defun display-stage ()		; for debug
+  (dotimes (y (stage-height))
+    (dotimes (x (stage-width))
+      (if (null (aref-stage x y))
+	  (princ " ")
+	(princ (aref-stage x y))))
+    (terpri)))
+
+(defun setup-stage ()
+  (save-excursion
+    (goto-char (point-min))
+    (insert #\LFD)
+    (insert "status is here\n")
+    (dotimes (y (stage-height))
+      (insert #\SPC (stage-width))
+      (insert #\LFD))))
+
+(defun setup-item-window ()
+  (save-excursion
+    (goto-char (point-max))
+    (dotimes (i 17)
+      (insert #\SPC 50)
+      (case i
+	(0  (insert "┌アイテム─────────┐\n"))
+	(16 (insert "└─────────────┘\n"))
+	(t  (insert "│                          │\n"))))))
+
+(defun clear-message-window ()
+  (save-excursion
+    (goto-line 25)
+    (labels ((rec ()
+	       (goto-bol)
+	       (unless (char= #\SPC (following-char))
+		 (let ((p (point)))
+		   (scan-buffer "│")
+		   (delete-region p (point)))
+		 (insert #\SPC 50)
+		 (next-line)
+		 (rec))))
+      (rec))))
+
+(defun draw-message (fmt &rest args)
+  (labels ((rec (s)
+	     (goto-bol)
+	     (cond ((char= #\SPC (following-char))
+		    (delete-region (point) (+ (point) 50))
+		    (insert (format nil "~50@A" s)))
+		   (t
+		    (next-line)
+		    (if (scan-buffer "│")
+			(rec s)
+		      (progn
+			(clear-message-window)
+			(draw-message s)))))))
+    (init-clear-message-countdown)
+    (save-excursion
+      (goto-line 25)
+      (rec (apply #'format nil (cons fmt args))))))
+
+(defun draw-item-window ()
+  (labels ((rec (items)
+	     (unless (null items)
+	       (goto-column 52)
+	       (let ((p (point)))
+		 (scan-buffer "│")
+		 (delete-region p (point)))
+	       (insert (format nil "  ~24@A" (item-name (car items))))
+	       (next-line)
+	       (rec (cdr items)))))
+  (save-excursion
+    (goto-line 24)
+    (rec (player-items)))))
+
+(defun putdown-room (x y width height)
+  (let ((ex (+ x width))
+	(ey (+ y height)))
+    (labels ((conflictp ()
+	       (for i (max 0 (- x 2)) (min 79 (+ 2 ex))
+		 (for j (max 0 (- y 2)) (min 19 (+ 2 ey))
+		   (when (wallp i j)
+		     (return-from conflictp t))))))
+      (unless (conflictp)
+	(for i x ex
+	  (for j y ey
+	    (setf-stage i j (cond ((or (= j y) (= j ey))
+				   (if (or (= i x) (= i ex)) #\+ #\-))
+				  ((or (= i x) (= i ex))
+				   #\|)
+				  (t #\SPC)))))
+	t))))
+
+(defun create-room (room-count)
+  (labels ((rec (n acc try-count limit-try-count)
+	     (if (> try-count limit-try-count)
+		 ; room-count の数だけ部屋が配置できない場合は再トライ
+		 (create-room room-count)
+	       (if (zerop n)
+		   (sort acc #'< :key #'room-x)
+		 (let* ((width  (+ 8 (random 12)))
+			(height (+ 5 (random 3)))
+			(x (max 0 (- (random (stage-width))  width)))
+			(y (max 0 (- (random (stage-height)) height))))
+		   (if (putdown-room x y width height)
+		       (rec (1- n)
+			    (cons (make-room :x x
+					     :y y
+					     :ex (+ x width)
+					     :ey (+ y height))
+				  acc)
+			    (1+ try-count)
+			    limit-try-count)
+		     (rec n acc (1+ try-count) limit-try-count)))))))
+    (clear-stage)
+    (rec room-count nil 0 100)))
+
+(defun make-random-lst (n x y)
+  (labels ((rec (n acc)
+	     (if (zerop n)
+		 acc
+	       (let ((val (cons (random x) (random y))))
+		 (if (find val acc :test #'equal)
+		     (rec n acc)
+		   (rec (1- n) (cons val acc)))))))
+    (rec n nil)))
+
+(defun create-item (x y)
+  (case (random 10)
+    ((0 1 2 3 4) (create-money x y))
+    ((5 6)       (create-food x y))
+    ((7 8)       (create-herb x y))
+    (9           (create-weapon x y))
+    (t           (create-shield x y))))
+
+(defun create-money (x y)
+  (make-item :x x :y y :type 'money))
+
+(defun create-herb (x y)
+  (make-item :x x :y y :name "薬草" :type 'herb))
+
+(defun create-food (x y)
+  (case (random 5)
+    (1 (make-item :x x :y y :name "大きなパン" :type 'food))
+    (t (make-item :x x :y y :name "パン"       :type 'food))))
+
+(defun create-weapon (x y)
+  (case (random 4)
+    ((0 1 2) (make-item :x x :y y :name "こんぼう" :type 'weapon))
+    (t       (make-item :x x :y y :name "銅の剣"   :type 'weapon))))
+
+(defun create-shield (x y)
+  (make-item :x x :y y :name "皮の盾" :type 'shield))
+
+(defun make-maze ()		;  for debug
+  (clear-stage)
+  (let ((lst (create-room (+ 3 (random 4)))))
+    (dotimes (i (1- (length lst)))
+      (make-path (nth i lst) (nth (1+ i) lst)))
+    (when (and (> (length lst) 4)
+	       (zerop (random 3)))
+      (make-path (nth 2 lst) (car (last lst))))
+    (setq *rooms* lst))
+  (display-stage))
+
+
+;; room1 の西側の壁は、 room2 の西側の壁より必ず左側にある（か、又は同じ x 座標にある）
+;; room1 から room2 に向かって穴を掘る
+;; 掘った通路が room1,room2 以外の部屋に接触するような場合は、
+;; その部屋を迂回せずに貫通させる
+(defun make-path (room1 room2)
+  (labels ((rec (x y)
+	     (excavate x y)
+	     ; room2 に到着したら停止
+	     (unless (and (>= x (room-x  room2))
+			  (<= x (room-ex room2))
+			  (>= y (room-y  room2))
+			  (<= y (room-ey room2)))
+	       (cond ((<= y (room-y room2)) ; 下に向かって掘り進む
+		      (if (cornerp x (1+ y))
+			  (rec (1+ x) y)
+			(rec x (1+ y)))) 
+		     ((>= y (room-ey room2)) ; 上に向かって掘り進む
+		      (if (cornerp x (1- y))
+			  (rec (1+ x) y)
+			(rec x (1- y))))
+		     (t
+		      ; 横に掘り進めば、必ず room2 に到達する
+		      (if (or (cornerp (+ x 1) y)
+			      (and (wallp (+ x 1) y)
+				   (wallp (+ x 2) y)))
+			  (cond ((pathp x (1+ y))
+				 (rec x (1- y)))
+				((pathp x (1- y))
+				 (rec x (1+ y)))
+				(t
+				 ; room1, room2 以外の部屋の壁を掘った状態
+				 ; 横に掘る事はできないので、上か下に一歩ずれる
+				 (if (= 1 (- (room-ey room2) y))
+				     (rec x (1- y))
+				   (rec x (1+ y)))))
+			(rec (1+ x) y)))))))
+    (let ((off (1+ (random 6)))
+	  (x1  (room-x room1)))
+      (cond ((< (room-ey room1) (room-y room2)) ; 南側の壁を掘る
+	     (excavate (+ x1 off) (room-ey room1))
+	     (rec (+ x1 off) (1+ (room-ey room1))))
+	    ((> (room-y room1) (room-ey room2)) ; 北側の壁を掘る
+	     (excavate (+ x1 off) (room-y room1))
+	     (rec (+ x1 off) (1- (room-y room1))))
+	    (t			; 東側の壁を掘る
+	     (let ((off (1+ (random 3))))
+	       (if (< (+ 4 (room-ex room1)) (room-x room2))
+		   (let ((x (room-ex room1))
+			 (y (+ (room-y room1) off)))
+		     (dotimes (i 3)
+		       (excavate (+ x i) y))
+		     (rec (+ x 3) y))
+		 (progn
+		   (excavate (room-ex room1) (+ (room-y room1) off))
+		   (rec (1+ (room-ex room1)) (+ (room-y room1) off))))))))))
+
+(defvar *xydun-mode-map* nil)
+
+(unless *xydun-mode-map*
+  (setq *xydun-mode-map* (make-sparse-keymap))
+  (define-key *xydun-mode-map* #\h 'press-h)
+  (define-key *xydun-mode-map* #\j 'press-j)
+  (define-key *xydun-mode-map* #\k 'press-k)
+  (define-key *xydun-mode-map* #\l 'press-l)
+  (define-key *xydun-mode-map* #\y 'press-y)
+  (define-key *xydun-mode-map* #\u 'press-u)
+  (define-key *xydun-mode-map* #\b 'press-b)
+  (define-key *xydun-mode-map* #\n 'press-n)
+  (define-key *xydun-mode-map* #\. 'press-dot)
+
+  (define-key *xydun-mode-map* #\; 'godown)
+
+  ; (define-key *xydun-mode-map* #\i 'toggle-operation-mode)
+
+  (define-key *xydun-mode-map* #\z 'xydun-test)
+  )
+
+(defun godown ()
+  (interactive)
+  (if (stairsp (player-x)
+	       (player-y)
+	       (find-room (player-x)
+			  (player-y)))
+      (next-floor)
+    (draw-message "階段がありません")))
+
+(defun press-h ()
+  (interactive)
+  (if (move-modep)
+      (move-west)
+    (use-item)))
+
+(defun press-j ()
+  (interactive)
+  (if (move-modep)
+      (move-south)
+    (scroll-item-cursor :dir 'down)))
+
+(defun press-k ()
+  (interactive)
+  (if (move-modep)
+      (move-north)
+    (scroll-item-curosr :dir 'up)))
+
+(defun press-l ()
+  (interactive)
+  (when (move-modep)
+    (move-east)))
+
+(defun press-y ()
+  (interactive)  
+  (when (move-modep)
+    (move-north-west)))
+
+(defun press-u ()
+  (interactive)  
+  (when (move-modep)
+    (move-north-east)))
+
+(defun press-b ()
+  (interactive)  
+  (when (move-modep)
+    (move-south-west)))
+
+(defun press-n ()
+  (interactive)  
+  (when (move-modep)
+    (move-south-east)))
+
+(defun press-dot ()
+  (interactive)
+  (when (move-modep)
+    (do-nothing)))
+
+(defun move (x y &optional diagonal)
+  (labels ((goto () 
+	     ;(clear-message-window)
+	     (move-player x y)
+	     (do-task)
+	     (draw)))
+    (if diagonal
+	(when (movep2 (player-x) (player-y) x y)
+	  (goto))
+      (when (movep x y)
+	(goto)))))
+
+(defun move-west ()
+  (move (1- (player-x)) (player-y)))
+
+(defun move-east ()
+  (move (1+ (player-x)) (player-y)))
+
+(defun move-north ()
+  (move (player-x) (1- (player-y))))
+
+(defun move-south ()
+  (move (player-x) (1+ (player-y))))
+
+(defun move-north-west ()
+  (move (1- (player-x)) (1- (player-y)) t))
+
+(defun move-north-east ()
+  (move (1+ (player-x)) (1- (player-y)) t))
+
+(defun move-south-west ()
+  (move (1- (player-x)) (1+ (player-y)) t))
+
+(defun move-south-east ()
+  (move (1+ (player-x)) (1+ (player-y)) t))
+
+(defun do-nothing ()
+  (move (player-x) (player-y)))
+
+(defun xydun ()
+  (interactive)
+  (let ((buf-name "*xydun*"))
+    (set-buffer (or (find-buffer buf-name)
+		    (create-new-buffer buf-name))))
+  (erase-buffer (selected-buffer))
+  (set-buffer-fold-width nil)
+  (setq kept-undo-information nil)
+  (setq need-not-save t)
+  (setq auto-save nil)
+
+  (set-local-window-flags (selected-buffer) *window-flag-eof* nil)
+  (set-local-window-flags (selected-buffer) *window-flag-newline* nil)
+  (set-local-window-flags (selected-buffer) *window-flag-full-width-space* nil)
+  (set-local-window-flags (selected-buffer) *window-flag-half-width-space* nil)
+
+  (setq *random-state* (make-random-state t))
+
+  (xydun-initialize)
+  (xydun-mode)
+  )
+
+(defun xydun-mode ()
+  (setq mode-name "xydun")
+  (setq buffer-mode 'xdun-mode)
+  (use-keymap *xydun-mode-map*))
+
+(defun xydun-initialize ()
+  (setup-stage)
+  (setup-item-window)
+  (create-player)
+  (next-floor)
+  (turn-initialize)
+  (push-system-task #'dec-clear-message-countdown)
+  (goto-char (point-max)))
+
+(defun connect-rooms (rooms)
+  (dotimes (i (1- (length rooms)))
+    (make-path (nth i rooms) (nth (1+ i) rooms)))
+  (when (and (> (length rooms) 4)
+	     (zerop (random 3)))
+    (make-path (nth 2 rooms) (car (last rooms)))))
+
+(defun next-floor ()
+  (save-excursion
+    (goto-line 23)
+    (delete-region 0 (point)))
+  (setup-stage)
+  (task-initialize)
+  (message "迷路生成中...")
+  (let ((rooms (create-room (+ 3 (random 4)))))
+    (setq *rooms* rooms)
+    (connect-rooms rooms)
+    (create-stairs (random-elt rooms))
+    (create-enemies rooms)
+    (create-items rooms)
+    (let ((room (random-elt rooms)))
+      (init-player-position room)
+      (draw-room room t)))
+  (clear-message)
+  (draw-status))
+
+(defun random-elt (lst)
+  (nth (random (length lst)) lst))
+
+(let (items)
+  (defun create-items (rooms)
+    (setq items nil)
+    (dolist (room rooms)
+      (setq items (append
+		   (mapcar #'(lambda (xs)
+			       (create-item (+ 1 (room-x room) (car xs))
+					    (+ 1 (room-y room) (cdr xs))))
+			   (make-random-lst
+			    (random 4)
+			    (- (room-ex room) (room-x room) 1)
+			    (- (room-ey room) (room-y room) 1)))
+		   items))))
+
+  (defun remove-item (item)
+    (setq items (remove item items)))
+
+  (defun add-item (item)
+    (setq items (cons item items)))
+
+  (defun find-item (x y)
+    (dolist (item items)
+      (when (and (= x (item-x item)) (= y (item-y item)))
+	(return item))))
+  )
+
+
+(defstruct human
+  (hp 3)
+  (max-hp 15)
+  (lv 1)
+  (money 0)
+  (items (list (make-item :name "パン" :type 'food)))
+  (manpukudo 100)
+  x y prev-x prev-y)
+
+(let (man)
+  (defun create-player ()
+    (setq man (make-human))
+    (let ((counter 0))
+      (push-system-task #'(lambda ()
+			    (setq counter (1+ counter))
+			    (when (> counter 10)
+			      (setq counter 0)
+			      (recovery-player-hp 1)
+			      (dec-player-manpukudo 1)
+			      (draw-status))))))
+  
+  (defun init-player-position (room)
+    (let ((x (+ 1 (room-x room) (random 6)))
+	  (y (+ 1 (room-y room) (random 4))))
+      (if (find-enemy x y)
+	  (init-player-position room)
+	(setf (human-prev-x man) x
+	      (human-prev-y man) y
+	      (human-x man) x
+	      (human-y man) y))))
+
+  (defun player-x ()
+    (human-x man))
+  
+  (defun player-y ()
+    (human-y man))
+
+  (defun player-prev-x ()
+    (human-prev-x man))
+
+  (defun player-prev-y ()
+    (human-prev-y man))
+
+  (defun player-hp ()
+    (human-hp man))
+  
+  (defun player-max-hp ()
+    (human-max-hp man))
+  
+  (defun player-lv ()
+    (human-lv man))
+
+  (defun player-manpukudo ()
+    (human-manpukudo man))
+  
+  (defun player-items ()
+    (human-items man))
+
+  (defun player-money ()
+    (human-money man))
+  
+  (defun inc-player-money (money)
+    (setf (human-money man) (+ money (human-money man))))
+
+  (defun dec-player-manpukudo (val)
+    (unless (zerop (human-manpukudo man))
+      (let ((m (- (human-manpukudo man) val)))
+	(setf (human-manpukudo man) m)
+	(cond ((= 50 m)  (draw-message "お腹が空いてきた…"))
+	      ((= 25 m)  (draw-message "腹ペコで目が回ってきた…"))
+	      ((zerop m)
+	       (draw-message "ヤバイ! はやく何か食べないと飢え死にしてしまう!")
+	       (push-system-task #'(lambda ()
+				     (if (zerop (human-manpukudo man))
+					 (progn
+					   (dec-player-hp 1)
+					   (draw-status))
+				       'delete-me))))))))
+
+  (defun recovery-player-manpukudo (n)
+    (setf (human-manpukudo man) (min 100 (+ (human-manpukudo man) n))))
+	
+  (defun recovery-player-hp (n)
+    (setf (human-hp man) (min (+ n (human-hp man)) (human-max-hp man))))
+    
+  (defun dec-player-hp (n)
+    (let ((hp (- (human-hp man) n)))
+      (if (<= hp 0)
+	  (progn 
+	    (draw-message "プレーヤーは死んでしまった（開発中）")
+	    (recovery-player-manpukudo 100))
+	(setf (human-hp man) hp))))
+  
+  (defun add-player-item (item)
+    (setf (human-items man) (sort (cons item (human-items man)))))
+
+  (defun move-player (x y)
+    (let ((enemy (find-enemy x y)))
+      (if enemy
+	  (player-attack enemy)
+	(setf (human-prev-x man) (human-x man)
+	      (human-prev-y man) (human-y man)
+	      (human-x man) x
+	      (human-y man) y))))
+  )
+
+(defun player-attack (enemy)
+  (let ((damage-point (+ 3 (random 9))))
+    (draw-message "プレーヤーのこうげき!")
+    (draw-message "敵に ~A のダメージをあたえた" damage-point)
+    (cond ((> damage-point (enemy-hp enemy))
+	   (draw-message "敵を倒した exp ~3D を獲得" 5)
+	   (die-enemy enemy))
+	  (t
+	   (dec-enemy-hp enemy damage-point)))))
+
+(defun player-neighborp (ene-x ene-y)
+  (let ((diffx (abs (- ene-x (player-x))))
+	(diffy (abs (- ene-y (player-y)))))
+    (or (= 1 (+ diffx diffy))
+	(and (= 1 diffx diffy)
+	     (movep2 ene-x ene-y (player-x) (player-y))))))
+
+(defun enemy-attack (enemy)
+  (draw-message "敵のこうげき!")
+  (draw-message "プレーヤーは ~A のダメージをうけた" (random 12)))
+
+(defun enemy-action (enemy)
+  (unless (eq 'sleep (enemy-status enemy))
+    (let ((ene-x (enemy-x enemy))
+	  (ene-y (enemy-y enemy)))
+      (if (player-neighborp ene-x ene-y)
+	  (enemy-attack enemy)
+	(let ((moved-x (cond ((= (player-x) ene-x) ene-x)
+			     ((> (player-x) ene-x) (1+ ene-x))
+			     (t                    (1- ene-x))))
+	      (moved-y (cond ((= (player-y) ene-y) ene-y)
+			     ((> (player-y) ene-y) (1+ ene-y))
+			     (t                    (1- ene-y)))))
+	  (or (move-enemy moved-x moved-y enemy)
+	      (move-enemy moved-x ene-y   enemy)
+	      (move-enemy ene-x   moved-y enemy)))))))
+
+(let (enemy-lst)
+  (defun create-enemies (room-lst)
+    (setq enemy-lst nil)
+    (dolist (room room-lst)
+      (setq enemy-lst (append
+		       (mapcar #'(lambda (lst)
+				   (make-enemy
+				    :x (+ 1 (room-x room) (car lst))
+				    :y (+ 1 (room-y room) (cdr lst))
+				    :hp 10
+				    :status (if (zerop (random 5))
+						'act 'sleep)))
+			       (make-random-lst
+				(random 3)
+				(- (room-ex room) (room-x room) 1)
+				(- (room-ey room) (room-y room) 1)))
+		       enemy-lst)))
+    (push-task #'(lambda ()
+		   (dolist (enemy enemy-lst)
+		     (enemy-action enemy)))))
+  
+  (defun die-enemy (enemy)
+    (setq enemy-lst (remove enemy enemy-lst)))
+  
+  (defun find-enemy (x y)
+    (dolist (ene enemy-lst)
+      (when (and (= x (enemy-x ene)) (= y (enemy-y ene)))
+	(return ene))))
+  )
+
+(defun move-enemy (x y enemy)
+  (when (and (movep2 (enemy-x enemy) (enemy-y enemy) x y)
+	     (not (find-enemy x y)))
+    (setf (enemy-x enemy) x
+	  (enemy-y enemy) y)))
+
+(defun dec-enemy-hp (enemy val)
+  (setf (enemy-hp enemy) (- (enemy-hp enemy) val))
+  (when (eq 'sleep (enemy-status enemy))
+    (setf (enemy-status enemy) 'act)))
+
+(let (system-tasks tasks)
+  (defun task-initialize ()
+    (setq tasks nil))
+
+  (defun push-system-task (task-fn)
+    (setq system-tasks (cons task-fn system-tasks)))
+  
+  (defun push-task (task-fn)
+    (setq tasks (cons task-fn tasks)))
+
+  (defun do-task ()
+    (dolist (fn system-tasks)
+      (let ((result (funcall fn)))
+	(when (eq result 'delete-me)
+	  (setq system-tasks (remove fn system-tasks)))))
+    (dolist (fn tasks)
+      (funcall fn))
+    )
+  )
+
+(let ((counter 3))
+  (defun init-clear-message-countdown ()
+    (setq counter 3))
+
+  (defun dec-clear-message-countdown ()
+    (setq counter (1- counter))
+    (when (zerop counter)
+      (clear-message-window))))
+
+(let ((turn-count 0))
+  (defun turn ()
+    turn-count)
+  
+  (defun turn-initialize ()
+    (push-system-task #'(lambda ()
+			  (setq turn-count (1+ turn-count))))))
+
+(let ((operation-mode 'move))
+  (defun toggle-operation-mode ()
+    (interactive)
+    (setq operation-mode (if (eq operation-mode 'move) 'item 'move))
+    (if (eq operation-mode 'move)
+	(delete-item-cursor)
+      (display-item-cursor)))
+
+  (defun move-modep ()
+    (eq 'move operation-mode))
+
+  (defun current-operation-mode ()
+    operation-mode))
+
+(defun create-stairs (room)
+  (let ((x (+ (room-x room) (1+ (random (- (room-ex room) (room-x room) 1)))))
+	(y (+ (room-y room) (1+ (random (- (room-ey room) (room-y room) 1))))))
+    (setf (room-stairs room) (cons x y))))
+
+(defun scroll-item-cursor (&key dir)
+  )
+
+(defconstant item-cursor "→")
+
+(defun display-item-cursor ()
+  (save-excursion
+    (goto-line 24)
+    (goto-column 52)
+    (delete-char 2)
+    (insert item-cursor)))
+
+(defun delete-item-cursor ()
+  (save-excursion
+    (scan-buffer item-cursor :reverse t)
+    (delete-char)
+    (insert #\SPC 2)))
+
+(defun xydun-test ()		; for debug
+  (interactive)
+  (msgbox "~A" (player-manpukudo)))
+
+

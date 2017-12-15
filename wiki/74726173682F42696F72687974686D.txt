@@ -1,0 +1,57 @@
+[[trash]]
+
+**biorhythm [#qb43a8ca]
+ ;;; -*-Lisp-*-
+ 
+ (provide "biorhythm")
+ 
+ (defun getPosition (z)
+   (values
+    (floor (* 50.0 (+ 1.0 (sin (/ (* (* (- (/ z 23.0) (floor (/ z 23))) 360.0) 3.14) 180.0)))))
+    (floor (* 50.0 (+ 1.0 (sin (/ (* (* (- (/ z 28.0) (floor (/ z 28))) 360.0) 3.14) 180.0)))))
+    (floor (* 50.0 (+ 1.0 (sin (/ (* (* (- (/ z 33.0) (floor (/ z 34))) 360.0) 3.14) 180.0)))))))
+ 
+ (defun str2day (s)
+   (progn
+ 	(multiple-value-bind
+ 		(year month day)
+ 		(str2date s)
+ 	  (date2day year month day))))
+ 
+ (defun date2day (year month day)
+   (floor (/ (encode-universal-time 0 0 0 day month year 0) (* 24 60 60))))
+ 
+ (defun str2date (s)
+   (progn
+ 	(values (parse-integer (substring s 0 4))
+ 			(parse-integer (substring s 4 6))
+ 			(parse-integer (substring s 6 8)))))
+ 
+ (defun biorhythm (birthday date)
+   (interactive "sBirthday(YYYYMMDD): \nsDate(YYYYMMDD): ")
+   (let ((bd (str2day birthday)) (dt (str2day date)))
+ 	(switch-to-buffer "*Biorhythm*")
+ 	(erase-buffer (selected-buffer))
+ 	(setq kept-undo-information nil)
+ 	(setq need-not-save t)
+ 	(setq auto-save nil)
+ 	(erase-buffer (selected-buffer))
+ 	(insert "                     P=physical, E=emotional, M=mental\n")
+ 	(insert "             -------------------------+-------------------------\n")
+ 	(insert "                     Bad Condition    |    Good Condition\n")
+ 	(insert "             -------------------------+-------------------------\n")
+ 	(dotimes (n 10)
+ 	  (multiple-value-bind
+ 		  (phys emot geist)
+ 		  (getPosition (+ (- dt bd) n))
+ 		(setq p (floor (+ (/ phys 2.0)  0.5)))
+ 		(setq e (floor (+ (/ emot 2.0)  0.5)))
+ 		(setq g (floor (+ (/ geist 2.0)  0.5)))
+ 		(insert (format-date-string "%Y,%m,%d : " (* (+ dt n) 24 60 60)))
+ 		(let ((str ".........................|.........................\n"))
+ 		  (setq str (concat (substring str 0 p) "P" (substring str (+ p 1))))
+ 		  (setq str (concat (substring str 0 e) "E" (substring str (+ e 1))))
+ 		  (setq str (concat (substring str 0 g) "M" (substring str (+ g 1))))
+ 		  (insert str))))))
+
+// #comment

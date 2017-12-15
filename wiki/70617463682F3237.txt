@@ -1,0 +1,175 @@
+* 前後フィードバック機能のサポート [#qba46aed]
+-ページ:     [[patch]]
+-投稿者:     [[miyamuko]]
+-優先順位:   普通
+-状態:       提案
+-カテゴリー: 機能追加
+-投稿日:     2008-02-21 (木) 23:02:15
+-バージョン: 
+
+** メッセージ [#t2a35797]
+http://fixdap.com/p/xyzzy/7376/ に投稿したパッチです。
+fixdap はログインしないと添付ファイルが見えないみたいなので
+こっちにも張っときます。
+
+ Index: lisp/kanji.l
+ ===================================================================
+ --- lisp/kanji.l	(revision 23)
+ +++ lisp/kanji.l	(working copy)
+ @@ -212,6 +212,15 @@
+  
+  (setq *ime-reconvert-helper* #'ime-reconvert-helper)
+  
+ +(defun ime-documentfeed-helper ()
+ +  (save-excursion
+ +    (let ((curr (point)))
+ +      (goto-bol)
+ +      (values (buffer-substring (point) curr)
+ +              (buffer-substring (point) (progn (goto-eol) (point)))))))
+ +
+ +(setq *ime-documentfeed-helper* #'ime-documentfeed-helper)
+ +
+  (define-key spec-map #\C-c 'rewind-ime-composition)
+  (define-key spec-map #\C-d 'delete-last-ime-composition)
+  (define-key spec-map #\C-r 'ime-register-word-dialog)
+ Index: src/gen-syms.cc
+ ===================================================================
+ --- src/gen-syms.cc	(revision 23)
+ +++ src/gen-syms.cc	(working copy)
+ @@ -2313,6 +2313,7 @@
+    DEFVAR2 (*deactivate-hook*),
+    DEFVAR2 (*save-buffer-ime-mode*),
+    DEFVAR2 (*ime-reconvert-helper*),
+ +  DEFVAR2 (*ime-documentfeed-helper*),
+    DEFVAR2 (*keyboard-layout-list*),
+    DEFVAR (*ime-does-not-process-C-\\*, Vime_does_not_process_control_backslach),
+    DEFVAR2 (*no-input-language-change-notification*),
+ Index: src/toplev.cc
+ ===================================================================
+ --- src/toplev.cc	(revision 23)
+ +++ src/toplev.cc	(working copy)
+ @@ -1075,6 +1075,8 @@
+      case WM_IME_REQUEST:
+        if (wparam == IMR_RECONVERTSTRING)
+          return app.kbdq.reconvert ((RECONVERTSTRING *)lparam, 0);
+ +      if (wparam == IMR_DOCUMENTFEED)
+ +        return app.kbdq.documentfeed ((RECONVERTSTRING *)lparam, 0);
+        break;
+  
+      case WM_DRAWITEM:
+ @@ -1091,9 +1093,11 @@
+          {
+            static const UINT msime = RegisterWindowMessage (WM_MSIME_RECONVERT);
+            static const UINT atok = RegisterWindowMessage (WM_ATOK_RECONVERT);
+ -          if ((msg == msime || msg == atok)
+ -              && wparam == IMR_RECONVERTSTRING)
+ -            return app.kbdq.reconvert ((RECONVERTSTRING *)lparam, 1);
+ +          if (msg == msime || msg == atok)
+ +            if (wparam == IMR_RECONVERTSTRING)
+ +              return app.kbdq.reconvert ((RECONVERTSTRING *)lparam, 1);
+ +            if (wparam == IMR_DOCUMENTFEED)
+ +              return app.kbdq.documentfeed ((RECONVERTSTRING *)lparam, 1);
+          }
+  
+        wheel_info wi;
+ Index: src/kbd.h
+ ===================================================================
+ --- src/kbd.h	(revision 23)
+ +++ src/kbd.h	(working copy)
+ @@ -121,6 +121,7 @@
+    int copy_queue (Char *, int) const;
+    void paste () const;
+    int reconvert (RECONVERTSTRING *, int);
+ +  int documentfeed (RECONVERTSTRING *, int);
+    void set_kbd_langid (LANGID langid) {input_langid = langid;}
+    LANGID kbd_langid () const {return input_langid;}
+    void init_kbd_encoding () {init_kbd_encoding (get_kbd_langid ());}
+ Index: src/kbd.cc
+ ===================================================================
+ --- src/kbd.cc	(revision 23)
+ +++ src/kbd.cc	(working copy)
+ @@ -889,6 +889,68 @@
+  }
+  
+  int
+ +kbd_queue::documentfeed (RECONVERTSTRING *rsbuf, int unicode_p)
+ +{
+ +  if (!idlep ())
+ +    return 0;
+ +
+ +  lisp hook = xsymbol_value (Vime_documentfeed_helper);
+ +  if (hook == Qunbound || hook == Qnil)
+ +    return 0;
+ +
+ +  try
+ +    {
+ +      suppress_gc sgc;
+ +      lisp r = Ffuncall (hook, Qnil);
+ +      int n = multiple_value::count ();
+ +      multiple_value::clear ();
+ +      if (n != 2)
+ +        return 0;
+ +
+ +      lisp b = multiple_value::value (0);
+ +      lisp c = multiple_value::value (1);
+ +
+ +      char *content = w2s (c);
+ +      char *before = w2s (b);
+ +      long len = strlen (content);
+ +      long offset = strlen (before);
+ +      if (unicode_p)
+ +        {
+ +          int numc = MultiByteToWideChar (CP_ACP, 0, content, len, 0, 0);
+ +          int numo = MultiByteToWideChar (CP_ACP, 0, before, offset, 0, 0);
+ +          len = (numc + 1) * sizeof (wchar_t);
+ +          offset = numo * sizeof (wchar_t);
+ +        }
+ +      long size = sizeof *rsbuf + len;
+ +
+ +      if (!rsbuf)
+ +        return size;
+ +
+ +      rsbuf->dwSize = size;
+ +      rsbuf->dwVersion = 0;
+ +      rsbuf->dwStrLen = len;
+ +      rsbuf->dwStrOffset = sizeof *rsbuf;
+ +      rsbuf->dwCompStrLen = 0;
+ +      rsbuf->dwCompStrOffset = 0;
+ +      rsbuf->dwTargetStrLen = 0;
+ +      rsbuf->dwTargetStrOffset = offset;
+ +
+ +      if (!unicode_p)
+ +        strncpy ((char *)(rsbuf + 1), content, len);
+ +      else
+ +        MultiByteToWideChar (CP_ACP, 0, content, -1, (wchar_t *)(rsbuf + 1), strlen (content));
+ +
+ +      return size;
+ +    }
+ +  catch (nonlocal_jump &)
+ +    {
+ +      print_condition (nonlocal_jump::data ());
+ +      return 0;
+ +    }
+ +  return 0;
+ +}
+ +
+ +int
+  kbd_queue::kbd_mblead_p (int c) const
+  {
+    switch (PRIMARYLANGID (kbd_langid ()))
+ 
+----
+
+      if (!sysdep.Win98p () && !sysdep.Win5p ())
+        {
+          static const UINT msime = RegisterWindowMessage (WM_MSIME_RECONVERT);
+          static const UINT atok = RegisterWindowMessage (WM_ATOK_RECONVERT);
+          if (msg == msime || msg == atok)
+            if (wparam == IMR_RECONVERTSTRING)
+              return app.kbdq.reconvert ((RECONVERTSTRING *)lparam, 1);
+            if (wparam == IMR_DOCUMENTFEED)
+              return app.kbdq.documentfeed ((RECONVERTSTRING *)lparam, 1);
+        }
+
+- 2つめの if文は {} でくくらなくてもいいのでしょうか。 
+#comment

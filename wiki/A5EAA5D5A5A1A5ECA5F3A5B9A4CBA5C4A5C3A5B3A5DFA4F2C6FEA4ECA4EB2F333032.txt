@@ -1,0 +1,45 @@
+* *protected-local-variables* [#na5f1e7d]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[lambda]]
+-優先順位:   普通
+-状態:       着手
+-カテゴリー: 新規項目
+-投稿日:     2008-06-27 (金) 19:48:59
+-バージョン: 
+
+** メッセージ [#i55de2d0]
+変数*protected-local-variables*のリストにローカル変数のシンボルを追加すると、そのローカル変数はkill-all-local-variablesから保護？されるようです。
+
+----
+- どーもです。 -- [[NANRI]] &new{2010-04-29 (木) 04:47:25};
+ <chapter>
+ <title>*protected-local-variables*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ 変数*protected-local-variables*のリストにローカル変数のシンボルを追加す
+ ると、そのローカル変数はkill-all-local-variablesから保護されます。
+ 
+   *protected-local-variables*
+   =&gt; (kept-undo-information need-not-save buffer-read-only auto-save lock-file abbrev-mode)
+   (setq kept-undo-information 5)
+   =&gt; 5
+   (kill-all-local-variables)
+   =&gt; t
+   kept-undo-information
+   =&gt; 5                              ; 値はそのまま
+   (pop *protected-local-variables*) ; kept-undo-informationを取り除く
+   =&gt; kept-undo-information
+   (kill-all-local-variables)
+   =&gt; t
+   kept-undo-information
+   =&gt; 1000                           ; 値はデフォルト値に
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file></file>
+ </chapter>
+
+#comment

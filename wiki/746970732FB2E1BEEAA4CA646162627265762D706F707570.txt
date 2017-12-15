@@ -1,0 +1,132 @@
+[[tips]]
+
+ (require "dabbrev")
+ (defvar *excess-dabbrev-popup-command*
+   '(ed::self-insert-command
+ 	ed::backward-delete-char-untabify-or-selection))
+ (defun excess-dabbrev-popup ()
+   (interactive "*")
+   (and (find *this-command* *excess-dabbrev-popup-command*)
+ 	   (dabbrev-popup)))
+ (add-hook 'ed::*post-command-hook* 'excess-dabbrev-popup)
+
+***コメント [#zd59f79a]
+-ただもう、キーを押すたびにdabbrev-popupを自動的にやるだけです。実装してみたら単に鬱陶しいだけでした。 -- [[山本]] &new{2005-04-16 12:35:23 (土)};
+-TeXをやるときには結構便利なので使ってみようと思っています。ただ、候補が無いときに出るビープ音がうっとうしいです。候補が見つからなかったときdabbrev.lの方で(plain-error "ないよん"))としているのでこのplain-errorをほかのビープ音の出ないエラー出力にすればいいと思い。http://www.netlaputa.ne.jp/~henmi/lisp/xyzzy/common/971208.htmlこれを参考にいくつか置き換えてやってみたのですが関数が定義されていないと言ってできないです。どなたかヒント下さい。 --  &new{2005-05-01 17:45:09 (日)};
+-できた気がします --  &new{2005-05-01 18:48:26 (日)};
+ (defun dabbrev-popup-noerror ()
+   (handler-case
+       (dabbrev-popup)
+     (error (c) (message "ないよん"))))
+ 
+ (defun excess-dabbrev-popup ()
+   (interactive "*")
+   (and (find *this-command* *excess-dabbrev-popup-command*)
+        (dabbrev-popup-noerror)))
+-わざわざありがとうございます！！！！！！！！。さっそくやってみます。！！！！ --  &new{2005-05-01 18:53:49 (日)};
+-できましたー！！感動です。本当にありがとうございました。 --  &new{2005-05-01 19:00:09 (日)};
+-とてもいい感じです。でも少し使ってみましたがTeXで使うにはもう少し改造が必要みたいなので改造してみようと思います。（しないかも） --  &new{2005-05-01 20:31:54 (日)};
+-Lisp初挑戦ながら少し変えて（ミニバッファにいるときはdabbrevではなくてminibuffer-completeするようにした)みました。本当はKaTeX-modeのときにelisp::KaTeX-do-completionをするようにしたかったんだけどKaTeXモードの判別がうまくいかない。 --  &new{2005-05-04 20:16:40 (水)};
+
+ (defun dabbrev-popup-noerror ()
+   (handler-case
+       (dabbrev-popup)
+     (error (c) (message "ないよん"))))
+ 
+ (defun excess-dabbrev-popup ()
+   (interactive "*")
+   (and (find *this-command*
+              '(ed::self-insert-command
+                ed::backward-delete-char-untabify-or-selection))
+        (cond (
+                ;;(equal *last-command-char* #\SPC) (princ #\F24)) 
+                ;;なんかいまいちなのでこの部分はコメントアウト
+              ((minibuffer-window-p (selected-window)) (minibuffer-complete))
+                ;;ミニバッファにいるときはdabbrevではなくminibuffer-complete
+              (t (dabbrev-popup-noerror)))))
+                ;;dabbrevによる補完
+ (add-hook 'ed::*post-command-hook* 'excess-dabbrev-popup)
+-ヒントで十分な印象なのでヒントだけ。SPCの件……*last-command-char*に最後に入力した文字が入っています。KaTeXモードの判別の件……buffer-modeを見るのが一般的かと。 -- [[NANRI]] &new{2005-05-04 20:54:53 (水)};
+-早速ありがとうございますーー。ていうか、自分の投稿見てみるとヒント貰おうって下心まるみえだぁ --  &new{2005-05-04 21:11:05 (水)};
+-#\SPCの認識はうまくいくようになりましたーー！！NANRIさんありがとうございました！！でも肝心の(princ #\F24)としてもスペースを押したときに#\F24が押されたことにはならないみたいです。(T T)もう少し調べてみます。 --  &new{2005-05-04 21:42:31 (水)};
+-なんかこの方法は無理くさいのでやめることにしました。ほかの方法を探してみます。 -- [[上の書いた人]] &new{2005-05-06 00:09:05 (金)};
+- こちら（http://web.archive.org/web/20050523225208/http://www-komo.ise.eng.osaka-u.ac.jp/~oka/xyzzy.html#dabbrev）も参考にさせていただいて、トグルにしてみました。 --  &new{2008-02-19 (火) 09:38:57};
+ (defvar *excess-dabbrev-popup-command* ; ここで指定したコマンドの時に実行
+   '(self-insert-command
+     backward-delete-char-untabify-or-selection
+     delete-backward-char-or-selection
+     toggle-excess-dabbrev-popup
+     ))
+ 
+ ; リストの先頭を現在入力中の単語にする。
+ ; nilにしたら入力中の単語は表示しない。
+ (defvar *insert-current-word-into-list* t)
+ 
+ ; 入力中の単語も表示するようにオリジナルのdabbrev-popupを改造。
+ (defun dabbrev-popup-with-current-word ()
+   (interactive "*")
+   (let* ((end (point))
+ 	 (start (save-excursion (dabbrev-start))))
+     (when (= start end)
+       (return-from dabbrev-popup-with-current-word nil))
+     (let* ((abbrev (buffer-substring start end))
+ 	   (match-table (make-hash-table
+ 			 :test (if *dabbrevs-case-fold* #'equalp #'equal)))
+ 	   matches)
+       (setf (gethash abbrev match-table) start)
+       (setq matches (dabbrev-find-all-expansion abbrev *dabbrevs-case-fold*
+ 						match-table start nil))
+       (push abbrev matches) ; この1行を追加したかっただけ。
+       (unless *dabbrev-popup-this-buffer-only*
+ 	(let ((curbuf (selected-buffer))
+ 	      (case-fold *dabbrevs-case-fold*)
+ 	      (syntax-table (syntax-table)))
+ 	  (with-set-buffer
+ 	    (with-interval-message (300)
+ 	      (save-excursion
+ 		(dolist (buffer (buffer-list))
+ 		  (unless (or (eq buffer curbuf)
+ 			      (string-match "^ \\*TAGS\\*" (buffer-name buffer))) ; *TAGS*バッファを除外
+ 		    (message "Searching (~A)..." (buffer-name buffer))
+ 		    (set-buffer buffer)
+ 		    (save-excursion
+ 		      (let ((osyntax-table (syntax-table)))
+ 			(unwind-protect
+ 			    (progn
+ 			      (use-syntax-table syntax-table nil t)
+ 			      (setq matches (dabbrev-find-all-expansion
+ 					     abbrev case-fold match-table nil matches)))
+ 			  (use-syntax-table osyntax-table nil t))))))))))
+ 	(clear-message))
+       (if matches
+ 	  (popup-completion-list (sort matches #'string-lessp) start end)
+ 	(plain-error "ないよん")))))
+ 
+ (defun dabbrev-popup-noerror ()
+   (handler-case
+       (if *insert-current-word-into-list*
+ 	  (dabbrev-popup-with-current-word)
+ 	(dabbrev-popup))
+     (error () (message "ないよん"))))
+ 
+ (defun excess-dabbrev-popup ()
+   (if (find *this-command* *excess-dabbrev-popup-command*)
+       (dabbrev-popup-noerror)
+     (toggle-excess-dabbrev-popup t)))
+ 
+ (defun toggle-excess-dabbrev-popup (&optional off)
+   (interactive "*")
+   (if (or off (find 'excess-dabbrev-popup *post-command-hook*))
+       (progn
+ 	(delete-hook '*post-command-hook* 'excess-dabbrev-popup)
+ 	(message "excess-dabbrev-popup turns off."))
+     (progn
+       (add-hook '*post-command-hook* 'excess-dabbrev-popup)
+       (message "excess-dabbrev-popup turns on.")
+       (dabbrev-popup-noerror))))
+ 
+ (add-hook '*after-popup-completion-hook* #'(lambda () (toggle-excess-dabbrev-popup t))) ; 要 ldoc2
+ 
+ (global-set-key #\C-t 'toggle-excess-dabbrev-popup)
+
+#comment

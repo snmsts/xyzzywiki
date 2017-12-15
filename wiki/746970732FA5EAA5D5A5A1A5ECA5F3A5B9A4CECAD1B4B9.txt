@@ -1,0 +1,249 @@
+to html~
+to kwd~
+to txt~
+to chm~
+が一通りできる。
+使い方は内緒。
+03/09/22 [[佐野]]
+
+----
+reference.txt をつくってみたところ，以下のように Description で改行されない項目がいくつかできてしまいました。
+
+  ■*pre-command-hook*
+  [Type       ]: Variable
+  [Package    ]: editor
+  [Seealso    ]: *post-command-hook*
+  [Section    ]: 変数と定数
+  [Description]: コマンドループにおいてコマンドの実行前に実行されます。
+
+しかし Perl がいらないのはとっても便利ですね。03/09/26 [[ひえ]]
+
+知っててシカトしてました。というわけで直しました。他にも問題があったら突っ込んでください。((今度の変更でおかしくなってるかも))~
+そうそう。未だに変換できるPerl環境作れてないんですよ。~
+出力結果とPerl版のソースを見ながらの作業は結構骨が折れました…。~
+もし良かったら引き取ってください。~
+関係ない話ですけど<ese-fortune-br>よりもTABあたりが良いのでは無いかと思いました。 ~
+03/09/26 [[佐野]]~
+
+修正ありがとうございました。うまくいきました。xml2kwd もできましたし，xml2html も (make_nodes) がコメントされてたのを外したら作成できました。~
+引き取りの件については，まだ内容をよくみさせて頂いていないのですが，私には難しそうな辺りが多々ありそうなので。。。でも，いろいろとあそばせて頂くかもしてません。<ese-fortune-br> については，当時 lisp で作成していた頃，元ファイルの中には，ありえない文字列をということでそうしたような怪しい記憶があります。TABでもいいかもしれません。~
+03/09/27 [[ひえ]]~
+
+すみません(make-nodes)は後半の関数を作成していたときものが残っていたようです。~
+引き取りはもし気が向いたらということでお願いします。あらゆる改変や複製、引用他歓迎なので((禁止して面白いことなんて何も無いので))じゃんじゃん遊んでください~
+忘れていたのですがひえさんの所のリファレンスコンバータへのリンクが切れています。~
+対応お願いできますでしょうか？~
+03/09/27 [[佐野]]~
+
+あ。直しておきました。他にもいくつか切れてるとこがるので近いうちに（多分）直しておきます。~
+03/09/28 [[ひえ]]~
+
+si:www-url-encode~
+03/10/26~
+-キーワードファイルにてオートロードされるファイルで定義されるシンボルが抜けてます。キーワードは使わないので必要かどうかはいまいちよく分かりませんが、リファレンスに載っているのに色がつかないのもどうかと思いますので。 -- [[NANRI]] &new{2005-09-06 20:05:57 (火)};
+ ; symlist を作る時に以下をロードしておいてください。
+ ; gomokuとかはいらないかも。その辺りは佐野さんの裁量にお任せします。
+ (require "LaTeX")
+ (require "basic-mode")
+ (require "c#-mode")
+ (require "calc")
+ (require "calendar")
+ (require "ccurve")
+ (require "cfns")
+ (require "comparew")
+ (require "compile")
+ (require "css-mode")
+ (require "dabbrev")
+ (require "dexplorer")
+ (require "dialogs")
+ (require "diff")
+ (require "gomoku")
+ (require "grepd")
+ (require "gresreg")
+ (require "gresregd")
+ (require "hanoi")
+ ;(require "hh-call")
+ (require "hideif")
+ (require "htmlmode")
+ (require "idl-mode")
+ (require "ispell")
+ (require "java")
+ (require "javafns")
+ (require "life")
+ (require "lispfns")
+ (require "listfn")
+ (require "maketags")
+ (require "niftylog")
+ (require "pascal")
+ (require "perl")
+ (require "shell")
+ (require "sql-mode")
+ (require "struct")
+ (require "tail-f")
+ (require "verup")
+ (require "viewmode")
+-xml2xxx050905.lzhを使って手元で HTML Help を作ってみました。reference.css が無いのと、キーワードがHTMLエスケープされてなくてhhcでワーニングが出ていたのが気になりました。代替コードは…まだもう少し(汗) -- [[ふぉなみ]] &new{2005-09-06 23:31:52 (火)};
+-reference.cssは前回のhtml配布版からパクっておいておけば大丈夫だと思います。ワーニングは意識してませんでした。ヘッダにも書いてあるとおり物凄く書き散らかしてるので代替コードを書かせるのは過酷だと思っています。まぁがんばりたいのなら止めませんが…出力結果がこうなってるけどこうなるようにしなよーってのでお互い作業できると思うので、そっち方面からお願いします。 -- [[佐野]] &new{2005-09-07 03:01:40 (水)};
+
+ (do-all-symbols (def)
+   (and
+    (fboundp def)
+    (autoload-function-p def)
+    (progn
+      (setq def (symbol-function def))
+      (when (si:*closurep def)
+        (setq def (si:closure-body def)))
+      (when (cond ((eq (safe-car def) 'lambda)
+ 		  (setq def (safe-cddr def))
+ 		  (when (eq (safe-caar def) 'ed::interactive)
+ 		    (setq def (cdr def)))
+ 		  def)
+ 		 ((eq (safe-car def) 'macro)
+ 		  (setq def (safe-cddr def)))
+ 		 (t nil)))
+      (setq def (safe-car def))
+      (and (eq (safe-car def) 'block)
+ 	  (let ((file (safe-caddar (safe-cddr def))))
+ 	    (unless (equal file "hh-call")
+ 	      (require file)
+ 	      ))))))
+-次回からはこんなの使おうかと…hh-callってなんでしょ？ -- [[佐野]] &new{2005-09-07 06:48:19 (水)};
+-xml2htmlでは実体参照への変換が足りてないです。試してませんが多分こんな感じだと思います。 -- [[NANRI]] &new{2005-09-07 20:04:26 (水)};
+ --- xml2xxx.l~	Wed Sep  7 20:01:46 2005
+ +++ xml2xxx.l	Wed Sep  7 20:00:58 2005
+ @@ -386,7 +386,7 @@
+  <link href=\"reference.css\" rel=\"stylesheet\" type=\"text/css\">
+  <title>~A</title>
+  </head>
+ -" title))
+ +" (ed::xmlpm-encode-special-chars title)))
+  
+  (defun html-header (title)
+    "フレーム無し用header"
+ @@ -397,7 +397,7 @@
+  <meta http-equiv=\"Content-Style-Type\" content=\"text/css\">
+  <link href=\"reference.css\" rel=\"stylesheet\" type=\"text/css\">
+  <title>~A</title>
+ -</head>" title)
+ +</head>" (ed::xmlpm-encode-special-chars title))
+    )
+  
+  (defun html-fheader (title)
+ @@ -409,7 +409,7 @@
+  <meta http-equiv=\"Content-Style-Type\" content=\"text/css\">
+  <link href=\"reference.css\" rel=\"stylesheet\" type=\"text/css\">
+  <title>~A</title>
+ -</head>" title))
+ +</head>" (ed::xmlpm-encode-special-chars title)))
+  
+  
+  ;=====================================;
+ @@ -435,7 +435,7 @@
+       (format out "<ul>\n")
+       (dolist (key INDEX_NAME_LIST)
+         (format out "<li><a href=\"~A#~A\">~A</a> (~D)</li>\n"
+ -	       (section_index_file_name (cdr key)) (cdr key) (car key)
+ +               (section_index_file_name (cdr key)) (cdr key) (ed::xmlpm-encode-special-chars (car key))
+  	       (length (section-set (car key)))
+  	       ))
+       (format out
+ @@ -468,14 +468,14 @@
+         (format out "</span>\n")
+  
+         (format out "<h3><a href=\"~A\" target=\"~A\">~A</a></h3>\n"
+ -	       (section_file_name (car key)) $WINDOW_RIGHT (car key))
+ +               (section_file_name (car key)) $WINDOW_RIGHT (ed::xmlpm-encode-special-chars (car key)))
+         (format out "<ul>\n")
+         (dolist (i (section-set (car key)))
+  	 (when i
+  	   (format out "<li><a href=\"~A#~A\" target=\"~A\">~A</a></li>\n"
+  		   (section_file_name (car key))
+  		   (en_url (ed::xmlpm-encode-special-chars i))
+ -		   $WINDOW_RIGHT i)))
+ +                   $WINDOW_RIGHT (ed::xmlpm-encode-special-chars i))))
+         (format out (concat "</ul>\n"
+  			   "<hr>\n"
+  			   "</body>\n</html>\n"))
+ @@ -504,7 +504,7 @@
+  			 "<h2>目的別索引</h2>\n"))
+       (dolist (i (elem-list "section" (type-set "Tips")))
+         (format out "<h4><a href=\"~A\" target=\"~A\">~A</a></h4>\n"
+ -	       (section_file_name i) $WINDOW_RIGHT i)
+ +               (section_file_name i) $WINDOW_RIGHT (ed::xmlpm-encode-special-chars i))
+         (format out "<ul>\n")
+         (dolist (j (type-set "Tips"))
+  	 (when (string-equal (caadr (get-elems "section" (car (gethash j xmlhash)))) i)
+ @@ -512,7 +512,7 @@
+  		   (section_file_name i)
+  		   (en_url (ed::xmlpm-encode-special-chars j))
+  		   $WINDOW_RIGHT
+ -		   j
+ +                   (ed::xmlpm-encode-special-chars j)
+  		   )))
+         (format out "</ul>\n")))
+     file)
+ @@ -577,15 +577,15 @@
+  				  $temp
+  				  (section_file_name $section)
+  				  (en_url (ed::xmlpm-encode-special-chars (car $s)))
+ -				  (car $s))
+ +                                  (ed::xmlpm-encode-special-chars (car $s)))
+  			(format nil "~A~A" $temp (car $s))))
+ -		(format $out "<span class=\"element\">~A</span>: <span class=\"seealso\">~A</span><br>\n" "SeeAlso" $temp))
+ +                (format $out "<span class=\"element\">~A</span>: <span class=\"seealso\">~A</span><br>\n" "SeeAlso" (ed::xmlpm-encode-special-chars $temp)))
+  	      )))
+  	; Link
+  	(let (($link (cadr (get-elems "link" $val))))
+  	  (if $link
+  	      (dolist ($href $link)
+ -		(format $out "<span class=\"element\">~A</span>: <a href=\"~A\" target=\"link\">~A</a><br>\n" "Link" $href $href)
+ +                (format $out "<span class=\"element\">~A</span>: <a href=\"~A\" target=\"link\">~A</a><br>\n" "Link" $href (ed::xmlpm-encode-special-chars $href))
+  		))))
+        ; Section
+        (format $out "<br>\n")
+ @@ -597,7 +597,7 @@
+        (format $out " | <a href=\"~A\" target=\"~A\">目的別</a>\n" $HTML_TIPS $WINDOW_LEFT)
+        (when $section
+  	;#$out .= sprintf "[<a href=\"%s#%s\" target=\"%s\">%s</a>]\n" $HTML_CONTENTS, $INDEX_NAME_LIST{$section}, $WINDOW_LEFT, $section;
+ -	(format $out " | <a href=\"~A\" target=\"~A\">~A</a>\n" (section_index_file_name $section) $WINDOW_LEFT $section)
+ +        (format $out " | <a href=\"~A\" target=\"~A\">~A</a>\n" (section_index_file_name $section) $WINDOW_LEFT (ed::xmlpm-encode-special-chars $section))
+  	)
+        (format $out " ]\n")
+        (format $out "</span>\n")
+ @@ -617,7 +617,7 @@
+  	 (report (format nil "creating ~A ... " $file))
+  	 (format $out(html-header $sect))
+  	 (format $out  "<body>\n")
+ -	 (format $out  "<h2>~A</h2>\n" $sect)
+ +         (format $out  "<h2>~A</h2>\n" (ed::xmlpm-encode-special-chars $sect))
+  	 
+  	 (dolist ($key (section-set $sect))
+  	   (when $key
+ @@ -659,8 +659,8 @@
+  		      (cdr (assoc section INDEX_NAME_LIST :test #'string=))
+  		      (en_url (ed::xmlpm-encode-special-chars i))
+  		      $WINDOW_RIGHT
+ -		      i)
+ -	   (format $out "<li>~A</li>" i))))
+ +                      (ed::xmlpm-encode-special-chars i))
+ +           (format $out "<li>~A</li>" (ed::xmlpm-encode-special-chars i)))))
+       (format $out "</ul>\n<hr>\n")
+       (format $out "</body>\n</html>\n")
+       )
+-一応、普通のテキストの部分を出力のタイミングで変換しているつもりです。本来ならば属性値にも必要なのですが、下手に触ると整合性が崩れそうなので触ってません。 -- [[NANRI]] &new{2005-09-07 20:11:05 (水)};
+-ありがとうございます。あとで直します。こーいうのって機械的に採点できないかしら… -- [[佐野]] &new{2005-09-08 10:51:46 (木)};
+-この辺りでしょうか。→http://validator.w3.org/ , http://openlab.ring.gr.jp/k16/htmllint/htmllintl.html , http://www.tcp-ip.or.jp/~mt2knm/etc/HTMLChecker.html , http://www.htmlhelp.com/tools/validator/ -- [[NANRI]] &new{2005-09-08 20:36:11 (木)};
+-NANRIさんパッチ試してみました。html_make_section_stringでもう1箇所変換すべき所がありますね。 -- [[ふぉなみ]] &new{2005-09-08 23:11:32 (木)};
+-自分でdiff/patchコマンドは使えるんですけど（同じ処理系なのだから当然？）掲示板に貼り付けられたやつを適応することが出来ませんでした。どこのpatchを使うといいんでしょうか？手動でパッチを当てた後にdiff -cの出力を見てみたらぜんぜん書式が違ったり改行コードがが処理系としてはlfだったり…で(on debian) -- [[佐野]] &new{2005-09-09 09:37:17 (金)};
+-自分はコピペ保存したパッチ(crlf)に、ここのバイナリを当てました(on WinXP)。多少ワーニングは出ましたが、ちゃんと当たりましたよ。http://www.fsci.fuk.kindai.ac.jp/kakuto/soft.html -- [[ふぉなみ]] &new{2005-09-09 12:19:48 (金)};
+-lintを足がかりに得点アップを目指してみました。reference/archive/tmpにおいてあります。kwdとかは後回しにしてあるので変化なしです。主な減点が空のaタグとtarget属性なんですけど…代替手段ありますかねぇ… -- [[佐野]] &new{2005-09-09 12:49:00 (金)};
+--target属性はフレームを使っている以上避けられないでしょうねぇ。空のaタグはかなり減った感じですが、現在残っているのは全部無くても良さそうな気がします。 -- [[NANRI]] &new{2005-09-11 20:25:42 (日)};
+--えとtarget代替は無いですか…正直今の減点なら許容範囲なのではないかと思っています。&amp;apos;とかが意外でした。 -- [[佐野]] &new{2005-09-11 21:24:22 (日)};
+-[雑談]いつも手元にsambaでつながっているlinuxがあるとwin環境にunixコマンドを入れることに抵抗を感じてしまったりします…debianで何とかならないものか… -- [[佐野]] &new{2005-09-09 12:54:50 (金)};
+--自分とこで動いているdiffはMinGWのdiffっぽいです。(diff - GNU diffutils version 2.7) 別に変なdiffってことではないでしょうし、何で適用できなかったり、ワーニングがでたりしてるんでしょ? ちなみに上のは diff -u の出力結果です。diff -c は長くなるのでほとんど使いません。patchコマンドは結構よきにはからってくれる印象があるので、差分の改行コードをLFにしておけばlinuxのでも何とかなるような気がしているのですが… -- [[NANRI]] &new{2005-09-10 02:22:16 (土)};
+--改行コードをCRLF,LFどちらでもrejectされますねぇ…なぜじゃろ？ -- [[佐野]] &new{2005-09-11 00:26:59 (日)};
+--xml2xxx.lの改行コードをLFにしたらいけました。diffの方もLFで。環境はpatch 2.5.9@Debianです。 --  &new{2005-09-11 02:24:52 (日)};
+--あーそれなら大丈夫そうですね。trを二回…とか考えるとやっぱりwinにunixliketoolをいれなきゃいかんかと思います… -- [[佐野]] &new{2005-09-11 21:17:25 (日)};
+- こそっと人柱版をアップロード。ふぉなみさんのパッチ取り込みと作業量の割りに遅くなったり、テストを書いていないのでどっかでおかしくなったりしていたりとかとか。 -- [[佐野]] &new{2006-03-11 (土) 15:58:43};
+
+#comment

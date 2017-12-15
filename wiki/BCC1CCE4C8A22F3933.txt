@@ -1,0 +1,44 @@
+* 自動的にファイル名を決めて新規作成 [#b3db5adf]
+-ページ: [[質問箱]]
+-投稿者: [[asiamoth]]
+-状態: 完了
+-投稿日: 2005-06-07 14:47:09 (火)
+
+** メッセージ [#c7b5c066]
+秀丸エディタの「メモ箱」マクロのように、現在の日時で自動的にファイル名を決めて、あらかじめ設定したフォルダに保存する──というlispはないでしょうか？
+
+現在、メモには「calmemo」を愛用していますが、仕事で使う（=calmemoに残したくない）ちょっとしたメモを書くときに使いたいです。
+----
+ (defvar *memo-dir* "~/memo/" "diary memo is created in this directroy")
+ (defvar *memo-filename-format* "%Y%m%d%H.txt" "diary memo filename format")
+ 
+ (defun new-memo ()
+   "open new memo file"
+   (interactive)
+   (create-directory *memo-dir* :if-exists :skip)
+   (find-file (format nil "~A~A" *memo-dir* (format-date-string *memo-filename-format*))))
+-こんな感じで… -- [[佐野]] &new{2005-06-07 15:38:38 (火)};
+-ありがとうございます！！かなり便利です！！色々応用もできそうですね。 -- [[asiamoth]] &new{2005-06-14 14:33:15 (火)};
+-いつもありがとうございます。便利です。メニューがあると操作がし易いです。 -- [[gosia]] &new{2005-09-26 20:48:01 (月)};
+-メニューというとこういうことですか? -- [[NANRI]] &new{2005-09-26 22:36:19 (月)};
+ (defvar *memo-dir* "~/memo/" "diary memo is created in this directroy")
+ (defvar *memo-filename-format* "%Y%m%d%H.txt" "diary memo filename format")
+ 
+ (defun new-memo ()
+   "open new memo file"
+   (interactive)
+   (create-directory *memo-dir* :if-exists :skip)
+   (find-file (format nil "~A~A" *memo-dir* (format-date-string *memo-filename-format*))))
+ 
+ ; site-lisp/olt/main.l よりほとんどそのまま
+ (defun new-memo-update-menu ()
+   (let ((file-menu (get-menu *app-menu* 'ed::file)))
+     (when file-menu
+       (unless (get-menu-position file-menu 'memo)
+         (insert-menu-item file-menu 1 'memo
+                           "新規メモ(&M)" 'new-memo)))))
+ (if *app-menu*
+     (new-memo-update-menu)
+   (add-hook '*init-app-menus-hook* 'new-memo-update-menu))
+
+#comment

@@ -1,0 +1,28 @@
+[[tips]]
+
+　登録しているチャンネル数が増えてきて毎回 rss-menu-update-all してられなくなってきたので、作ってみました。もうちょっとかっこよく作りたいのですが、今のオレにはこれが精一杯です。
+
+ (in-package "rss")
+ 
+ (defvar *rss-menu-file-list*
+   (adjoin *rss-menu-file*
+           (list (merge-pathnames "rss-news-menu.dat" *rss-directory*)
+                 (merge-pathnames "rss-diary-menu.dat" *rss-directory*)
+                 (merge-pathnames "rss-other-menu.dat" *rss-directory*))))
+ 
+ (defun rss-change-next-menu ()
+   (interactive)
+   (let ((file (second (member *rss-menu-file* *rss-menu-file-list*))))
+     (unless file
+       (setq file (first *rss-menu-file-list*)))
+     (rss-menu-save)
+     (setq *rss-menu-file* file)
+     (setq *rss-menu-data* nil)
+     (rss-menu-load)
+     (rss-menu-print)
+     (message "change to ~A" file)))
+ 
+ (define-key *rss-menu-map* #\c 'rss-change-next-menu)
+
+----
+#comment

@@ -1,0 +1,172 @@
+* xyzzy lisp のプロファイラ [#j823eb35]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2003-09-18 (木) 18:10:51
+
+** メッセージ [#p4affc38]
+xyzzy lisp のプロファイラは作成可能でしょうか？
+
+以下のページの Ruby でのプロファイラを xyzzy Lisp でも欲しいです。
+
+http://homepage1.nifty.com/~tetsu/ruby/tool/profile.html
+
+xyzzy Lisp で、関数が何度呼ばれたかや、関数呼び出しから戻るまでの時間が
+取得できたらいいなと考えています。
+
+
+----
+-encapと適当なマクロを組めば関数単位のプロファイリングはわりとすぐにできると思います。例示されたものと同等なツールを作るのは多分難しいです。 -- [[佐野]] SIZE(10){2003-09-18 (木) 21:41:30}
+-『プログラマのうちあけ話』には、Lisp の関数の実行回数を勘定するものを作成した話が載っていて、それによると、defun を変更して各関数が呼ばれるたびにカウンタを増やすようにしたとのことです。（サンプルコードなどは載っていませんでした）。関数が何度よばれたかを表示するような Lisp のサンプルを（もし宜しければ）載せていただけないでしょうか？ --  SIZE(10){2003-09-20 (土) 19:04:25}
+-んー…。まぁ簡単なやつでも。 -- [[佐野]] SIZE(10){2003-09-20 (土) 21:00:18}
+ (defmacro defun (name (&rest lambda-list) &body body)
+   `(let ()
+      (defvar ,name 0)
+      (si:*fset ',name
+ 	       (si:*set-function-name
+ 		#'(lambda ,lambda-list (incf ,name),@body)
+ 		',name))))
+-”関数名と同じ名前の変数”に呼び出された回数が保存されます。変数が数字じゃなくなったときに関数呼び出し自体がポシャるので大変危険。 -- [[佐野]] SIZE(10){2003-09-20 (土) 21:07:07}
+-,@bodyの前後で時間を計ろうと思えば計れます。ベンチマークや高速化手法等何がしかの成果が上がったら報告よろしくお願いします。 :D -- [[佐野]] SIZE(10){2003-09-20 (土) 21:11:17}
+-おお！ありがとうございます。関数を何度呼び出したか、その一覧を表示させるようにしてみました。ただ、穴があるかもしれません…。
+ (defvar *function-call-list* nil)
+ 
+ (defun profile ()
+   (dolist (o *function-call-list*)
+     (format t "~A: ~4D~%" o (eval o))))
+ 
+ (defmacro defun (name (&rest lambda-list) &body body)
+   `(let ()
+      (defvar ,name 0)
+      (pushnew (si:*fset ',name
+                         (si:*set-function-name
+                          #'(lambda ,lambda-list (incf ,name) ,@body)
+                          ',name))
+               *function-call-list*)))
+ 
+ テスト例)
+ (defun foo ()
+    (princ "foo"))
+ (defun bar ()
+    (princ "bar"))
+ (defun baz ()
+    (princ "baz"))
+ …適当に関数を呼んで…
+ (profile)
+ baz:    1
+ bar:    1
+ foo:    2
+ nil
+
+「ここはこうした方がいいなど」アドバイスなどありましたら、お願いいたします。
+-pushnew の返す値に car を適用するといいかも… --  SIZE(10){2003-09-22 (月) 07:52:19}
+-どうせリストを持つのなら全体まとめてハッシュを使うと少しはまとまるかと。 -- [[佐野]] SIZE(10){2003-09-22 (月) 17:26:08}
+ (defvar *function-call-hash* (make-hash-table))
+ 
+ (defun profile ()
+   (with-hash-table-iterator (foo *function-call-hash*)
+     (loop
+       (multiple-value-bind (f x y)
+ 	  (foo)
+ 	(unless f (return))
+ 	(format t "~S: ~4S~%" x y)))))
+ 
+ (defmacro defun (name (&rest lambda-list) &body body)
+   `(let ()
+      (setf (gethash ',name *function-call-hash*) 0)
+      (si:*fset ',name
+ 	       (si:*set-function-name
+ 		#'(lambda ,lambda-list
+ 		    (incf (gethash ',name *function-call-hash*))
+ 		    ,@body)
+ 		',name))))
+-あとはエラー処理が全くついていないことと、formatの出力書式が甘い感じなのが改善点でしょうか。何にしてもencap.lの使い方をマスターしたほうがここにあるものを使うよりは良いと思います。状態を完了にしました。 -- [[佐野]] SIZE(10){2003-09-22 (月) 17:31:52}
+
+-なるほど、encap.l を利用した方が便利ですね。やってみました。
+
+ (defvar *function-call-hash* (make-hash-table))
+ 
+ (defun profile ()
+   (maphash #'(lambda (k v) (format t "~S: ~4S~%" k v))
+            *function-call-hash*))
+ 
+ (defmacro encap (fn)
+   `(encapsulate ,fn
+                 'encap
+                 '((unless (gethash ,fn *function-call-hash*)
+                     (setf (gethash ,fn *function-call-hash*) 0))
+                   (let ((result (apply basic-definition argument-list)))
+                     ;; 関数呼び出しの後でインクリメント。（呼び出し失敗の考慮）
+                     (incf (gethash ,fn *function-call-hash*))
+                     result))))
+ 
+ 
+ (defun foo ()
+   "foo")
+ (defun bar (s)
+   (princ s))
+ (encap 'foo)
+ (encap 'bar)
+ (profile)
+ >nil ; まだ foo, bar を一度も呼び出していないため
+ (foo)
+ >"foo"
+ (bar "hoge")
+ >hoge
+ >"hoge"
+ (profile)
+ >bar: 1
+ >foo: 1
+ >nil
+-突っ込みありましたら、よろしくお願いします --  SIZE(10){2003-09-24 (水) 00:52:22}
+-こまっかーいところ幾つか。letよりもprog1の方が美しいと思います。（効率は良くはなりません）encap関数を呼び出したときにカウンタを0にした方が関数の再定義をした時にカウンタが戻ってよいと思います。 -- [[佐野]] SIZE(10){2003-09-24 (水) 14:35:09}
+-prog1 ですね。ただ、多値が返されると let も prog1 もまずいことが分かりました。そこで、multiple-value-prog1 が使えることがわかりました。長くなりますが、再び、掲載させてください。 --  SIZE(10){2003-09-26 (金) 09:16:00}
+
+ (defvar *function-call-hash* (make-hash-table))
+ (defun profile ()
+   (maphash #'(lambda (k v) (format t "~S: ~4S~%" k v))
+            *function-call-hash*))
+ 
+ (defmacro encap (fn)
+   `(progn
+      (setf (gethash ,fn *function-call-hash*) 0)
+      (encapsulate ,fn
+                   'encap
+                   '((multiple-value-prog1
+                      (apply basic-definition argument-list)
+                      (incf (gethash ,fn *function-call-hash*)))))))
+ 
+ (defmacro encap-lst (lst)
+   `(unless (null ,lst)
+      (encap (car ,lst))
+      (encap-lst (cdr ,lst))))
+ 
+ (defun foo () 2)
+ (defun bar () (values 1 2 3))
+ (defun baz () "baz")
+ 
+ (encap-lst '(foo bar baz))
+ 
+ (profile)
+ >foo: 0   
+ >baz: 0   
+ >bar: 0   
+ >nil
+ 
+ (foo)
+ >2
+ (bar)
+ >1
+ >2
+ >3
+ (profile)
+ >foo: 1   
+ >baz: 0   
+ >bar: 1   
+ >nil
+-ちょっと分からないのですが、encap で関数を登録したあと、(functionp #'foo) で nil が返ってくるのですが、なぜだか分かりますでしょうか？ --  SIZE(10){2003-09-26 (金) 09:21:14}
+-↑の foo は、 (defun foo () 2) のように定義した後です。 --  SIZE(10){2003-09-26 (金) 09:23:04}
+-すみません。上記のコードだと、同じ関数に対して、encap を 2 度呼ぶと、カウンタが 2 回インクリメントされてしまいますね…。 --  SIZE(10){2003-09-26 (金) 09:36:43}
+-マクロだからです。 -- [[佐野]] SIZE(10){2003-09-26 (金) 12:12:31}
+
+#comment

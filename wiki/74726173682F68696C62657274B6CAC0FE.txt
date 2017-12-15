@@ -1,0 +1,53 @@
+[[trash]]
+
+**hilbert曲線
+
+ヒルベルト曲線を書きます。課題でなんとなく作りました。[[佐野]]
+
+ (require "wip/turtle")
+ (in-package "win-user")
+ 
+ (defun hilbert ()
+   (let ((len 2))
+     (with-turtle-paint
+      (turtle-setpos 60 320)
+      (turtle-right 90)
+      (labels ((hilbert (d td)
+ 		(when (> d 0)
+ 		  (turtle-right (* 90 td))
+ 		  (hilbert (1- d) (- td))
+ 		  (turtle-lineto len)
+ 		  (turtle-left (* 90 td))
+ 		  (hilbert (1- d) td)
+ 		  (turtle-lineto len)
+ 		  (hilbert (1- d) td)
+ 		  (turtle-left (* 90 td))
+ 		  (turtle-lineto len)
+ 		  (hilbert (1- d) (- td))
+ 		  (turtle-right (* 90 td)))))
+      (hilbert 7 -1))))
+   t)
+
+
+***使い方
+
+とりあえず上のソースをxyzzyに貼り付けます。そして、
+
+ M-x eval-buffer
+
+してください。無事に終了したら
+
+ ESC ESC (win-user::hilbert)
+
+とかしてください。
+
+***多分こんな感じで
+
+画像が表示されます。
+
+#br
+CENTER:&ref(hilbert.png);
+#br
+
+----
+#comment

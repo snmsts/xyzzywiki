@@ -1,0 +1,110 @@
+[[L10N/english]]
+
+ files.l:54:		 (error "ファイルが削除されています" filename))
+-error "The file is deleted" filename --  &new{2005-09-03 11:00:57 (土)};
+
+#comment
+ files.l:56:				  "誰かが勝手にファイルを変更しています。\n変更内容を破棄してディスクから読みなおしますか?"
+-Someone is altering the file without permission. Do you want to have read it again from the disc after having removed out the alteration. -- [[anonymous]] &new{2005-09-14 22:01:47 (水)};
+-The file has been modified by other programs. Discard the change and re-read from the disk? --  &new{2005-09-27 02:20:37 (火)};
+
+#comment
+ files.l:57:				"誰かが勝手にファイルを変更しています。\nディスクから読みなおしますか?"))
+-The file has been modified by someone. Re-read from disk? --  &new{2005-09-03 19:40:46 (土)};
+
+#comment
+ files.l:75:	       (message "~aは他のプロセスが上書き禁止で開いています。~d行読み込みました"
+-In respect of "a", another process is opening not to be overwritten. Have read in d lines. -- [[anonymous]] &new{2005-09-15 09:23:20 (木)};
+
+ files.l:77:	     (message "~d行読み込みました" nlines))))
+-Loaded ~d lines.  厳密には下のようにするのが適当か。(他の箇所も)
+ (if (= nlines 1)
+     (message "Loadod 1 line.")
+   (message "Loaded ~d lines." nlines))
+- Loaded ~d line~:P. (気になるのならこんなで) --  &new{2006-01-11 (水) 01:02:14};
+
+#comment
+ files.l:81:	     (message "~aは書き込み禁止ファイルです。~d行読み込みました"
+-~~a is read-only. Loaded ~d lines. (read-only と write-protected はどっちがいいんでしょう……)
+
+#comment
+ files.l:98:		 (message-box (format nil "~aはメモリが足りなくて全部読み込めませんでした。"
+-Not enough memory.  ~a wasn't completely loaded. --  &new{2005-10-02 17:55:24 (日)};
+
+#comment
+ files.l:107:	     (message "新しいファイルです"))
+-New file. --  &new{2005-09-03 19:41:48 (土)};
+
+#comment
+ files.l:186:    (error "~aはデバイスファイルです" filename))
+-~~a is a device file. --  &new{2005-09-03 19:42:42 (土)};
+
+#comment
+ files.l:188:    (error "~aはディレクトリです" filename))
+-~~a is a directory. --  &new{2005-09-03 19:42:58 (土)};
+
+#comment
+ files.l:190:    (error "~a\nファイルまたはディレクトリが見つかりません" filename))
+-~~a\nCannot find file or directory. --  &new{2005-09-03 19:43:22 (土)};
+
+#comment
+ files.l:263:      (error "書き込み禁止バッファです"))
+-Buffer is read-only. --  &new{2005-09-03 19:46:58 (土)};
+
+#comment
+ files.l:266:      (error "~aはデバイスファイルです" filename))
+-~~a is a device file. --
+
+#comment
+ files.l:268:      (error "~aはディレクトリです" filename))
+-~~a is a directory. --
+
+#comment
+ files.l:271:      (error "~a\nファイルまたはディレクトリが見つかりません" filename))
+-~~a\nCannot find file or directory. --
+
+#comment
+ files.l:273:	       (not (no-or-yes-p "バッファが変更されています。変更内容を破棄しますか?")))
+-Buffer is modified. Kill it anyway? --
+
+#comment
+ files.l:281:	(warn "~a\nメモリが足りなくてすべて読み込めませんでした" filename)
+-Couldn't read it all in short of memory. -- [[anonymous]] &new{2005-09-15 09:29:50 (木)};
+
+#comment
+ files.l:284:	  (message "~d行読み込みました" nlines))
+- Loaded ~d lines. --  &new{2005-12-24 (土) 17:04:11};
+
+#comment
+ files.l:293:      (error "~aはデバイスファイルです" filename))
+-~~a is a device file. --
+
+#comment
+ files.l:295:      (error "~aはディレクトリです" filename))
+-~~a is a directory. --
+
+#comment
+ files.l:298:      (error "~a\nファイルまたはディレクトリが見つかりません" filename))
+-~~a\nCannot find file or directory. --
+
+#comment
+ files.l:312:		  (if (yes-no-or-cancel-p "~aをセーブしますか?" buffer)
+-Save ~a? --  &new{2005-09-03 19:49:42 (土)};
+
+#comment
+ files.l:319:			  (yes-no-or-cancel-p "~a~%をセーブしますか?"
+-Save ~a? --
+
+#comment
+ files.l:323:      (message "~d個のファイルをセーブしました" count))))
+-Saved ~d files.
+
+#comment
+ files.l:396:		   (error "~a~%なんか知らんけど解凍できませんでした" file))
+-&#126;a~%Couldn't extract for some reason. --  &new{2005-09-03 19:52:32 (土)};
+-&#126;a~%Couldn't for some indefinite reason. -- [[anonymous]] &new{2005-09-15 09:04:41 (木)};
+-&#126;a~%Couldn't for some indefinite reason. -- [[anonymous]] &new{2005-09-15 09:19:00 (木)};
+-&#126;a~%Couldn't extract for some indefinite reason. -- [[anonymous]] &new{2005-09-15 17:18:29 (木)};
+-&#126;a~%Failed to extract for some unknown reason -- [[名無し]] &new{2008-08-19 (火) 03:12:21};
+
+#comment

@@ -1,0 +1,12 @@
+* autoconf-mode [#a2424112]
+-ページ: [[WishList]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2006-03-23 (木) 10:01:37
+
+** メッセージ [#maacfd79]
+emacsについてるautoconf-modeがほしいです。
+AM_***とかAC_***とか色分けしてくれたり、保管してくれたり。
+----
+
+#comment

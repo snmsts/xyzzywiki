@@ -1,0 +1,133 @@
+[[tips]]
+
+*索引 [#wf09ed74]
+
+#contents
+
+*ソース [#ceb7f05d]
+
+  ;;; -*- Mode: Lisp -*-
+  ;;;
+  ;;; weather-title-bar.l
+  ;;;
+  
+  (provide "weather-title-bar")
+  
+  (require "junk/http")
+  (require "xml-parser-modoki")
+  
+  (defvar *wtb-xml-url* "http://www.drk7.jp/weather/xml/40.xml")
+  
+  (defvar *wtb-area-id* "筑後地方")
+  
+  (defvar *wtb-area-name* "福岡県筑後地方")
+  
+  (defvar *wtb-tomorrow-weather-start-time* "18:00")
+  
+  ; 取得時刻, 予報日, 天気, 最高気温, 最低気温, 降水確率1, 2, 3, 4
+  (define-history-variable *wtb-weather-info* nil)
+  
+  (defun wtb-get-weather-file (file)
+    (junk::junk-http-download-file *wtb-xml-url* file))
+  
+  (defun wtb-get-time (hm time)
+    (let ((day (parse-integer (format-date-string "%d" time)))
+          (month (parse-integer (format-date-string "%m" time)))
+          (year (parse-integer (format-date-string "%Y" time))))
+      (encode-universal-time 0
+                             (parse-integer (substring hm 3 5))
+                             (parse-integer (substring hm 0 2))
+                             day month year)))
+  
+  ; 取得時刻に対し、再取得しなくてもよい限界の時刻を返す
+  (defun wtb-get-update-time (time)
+    (let ((hm (format-date-string "%H:%M" time))
+          (shm *wtb-tomorrow-weather-start-time*))
+      (cond ((and (string<= "06:00" hm) (string< hm shm))
+             (wtb-get-time shm time))
+            ((and (string<= shm hm) (string< hm "24:00"))
+             (wtb-get-time "06:00" (+ time (* 60 60 24))))
+            ((and (string<= "00:00" hm) (string< hm "06:00"))
+             (wtb-get-time "06:00" time)))))
+  
+  (defun wtb-set-weather-info (&optional force)
+    (let* ((info *wtb-weather-info*)
+           (time (get-universal-time))
+           (date (if (string< (format-date-string "%H:%M")
+                              *wtb-tomorrow-weather-start-time*)
+                     (format-date-string "%Y年%m月%d日(%v)" time)
+                   (format-date-string "%Y年%m月%d日(%v)"
+                                       (+ time (* 60 60 24)))))
+           (fdate (format nil "~A/~A/~A"
+                          (substring date 0 4)
+                          (substring date 5 7)
+                          (substring date 8 10))))
+      (unless (and (not force) info
+                   (< time (wtb-get-update-time (first info))))
+        (let ((tempfile "~/wtb.tmp") val d1 d2)
+          (wtb-get-weather-file tempfile)
+          (setq val (ed::xmlpm-parse-file tempfile))
+          (setq d1 (find *wtb-area-id* (cddr (nth 8 (car val)))
+                         :test #'string= :key #'cdaadr))
+          (setq d2 (find fdate (cdddr d1)
+                         :test #'string= :key #'cdaadr))
+          (setq *wtb-weather-info*
+                (list time
+                      date
+                      (nth 2 (assoc "weather" (cdr d2) :test #'equal))
+                      (caddr (nth 2 (assoc "temperature" (cdr d2)
+                                           :test #'equal)))
+                      (caddr (nth 3 (assoc "temperature" (cdr d2)
+                                           :test #'equal)))
+                      (caddr (nth 0 (cddr (assoc "rainfallchance" (cdr d2)
+                                                 :test #'equal))))
+                      (caddr (nth 1 (cddr (assoc "rainfallchance" (cdr d2)
+                                                 :test #'equal))))
+                      (caddr (nth 2 (cddr (assoc "rainfallchance" (cdr d2)
+                                                 :test #'equal))))
+                      (caddr (nth 3 (cddr (assoc "rainfallchance" (cdr d2)
+                                                 :test #'equal))))))
+          (ignore-errors (delete-file tempfile))))))
+  
+  (defun wtb-change-title-bar ()
+    (wtb-set-weather-info)
+    (let ((info *wtb-weather-info*))
+      (setq title-bar-format
+            (if (third info)
+                (format nil "~A ~Aの天気 ［~A］ 気温 ［~A℃〜~A℃］ 降水確率 ［    ~A%% ~A%% ~A%% ~A%%］"
+                        *wtb-area-name*
+                        (second info)
+                        (third info)
+                        (fifth info) (fourth info)
+                        (sixth info) (seventh info) (eighth info) (ninth info))
+              (format nil "~A ~Aの天気 - 天気情報の取得に失敗しました"
+                      *wtb-area-name* (second info))))
+      (refresh-title-bar)))
+  
+  (add-hook 'ed::*post-startup-hook* 'wtb-change-title-bar)
+  
+  ;;;
+
+*概要 [#j9d7fe94]
+
+-drk7.jp さん（http://www.drk7.jp/weather/）の天気予報情報を利用し、天気予報情報をタイトルバーに表示します。
+-これを使うには junk-library, xml-parser-modoki.l が必要です。
+
+*使い方 [#j191c2ab]
+
++weather-title-bar.lと名前をつけてsite-lispに保存する
++.xyzzyに
+ (require "weather-title-bar")
+ (setq *wtb-xml-url* "http://www.drk7.jp/weather/xml/40.xml")
+ (setq *wtb-area-id* "筑後地方")
+ (setq *wtb-area-name* "福岡県筑後地方") ; タイトルバーに表示する名前
+ (setq *wtb-tomorrow-weather-start-time* "18:00") ; この時刻以降は、明日の天気の情報を表示する
+
+*コメント [#l63c813c]
+- 天気情報の取得に失敗したときの表示が見苦しかったので変えました。(^^; -- [[作った人]] &new{2012-04-03 (火) 04:56:08};
+- 1 -- [[1]] &new{2014-07-31 (木) 12:20:01};
+- 1 -- [[1]] &new{2014-07-31 (木) 12:23:18};
+-- 1' -- [[1]] &new{2014-07-31 (木) 12:23:48};
+- 1 -- [[1]] &new{2014-07-31 (木) 12:23:56};
+
+#comment

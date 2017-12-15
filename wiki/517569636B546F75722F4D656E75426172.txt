@@ -1,0 +1,57 @@
+#freeze
+***[[Menu>QuickTour/MenuBar]] [#a1c2ace0]
+
+-[[Xyzzy Wikiへ戻る>FrontPage]]
+-[[QuickTourのトップへ>QuickTour]]
+
+***イントロ [#i6981846]
+
+- [[xyzzyの特徴>QuickTour/intro]]
+
+***標準機能 [#z5e17e25]
+
+- [[ダウンロードと使い方>QuickTour/intro2]]
+
+***設定 [#t195009e]
+
+- [[置き場所を決める>QuickTour/置き場所を決める]]
+- [[共通設定>QuickTour/共通設定]]
+- [[Lispを書く>QuickTour/Lispを書いてみる]]
+***機能 [#h480191d]
+
+- [[キーバインド>QuickTour/キーバインド]]
+- [[関連付け>QuickTour/関連付け]]
+- [[minibuffer>QuickTour/minibuffer]]
+- [[mode>QuickTour/mode]]
+- [[session>QuickTour/session]]
+- [[frame>QuickTour/frame]]
+- [[grep>QuickTour/grep]]
+- [[gresreg>QuickTour/gresreg]]
+- [[abbrev>QuickTour/abbrev]]
+- [[キーボードマクロ>QuickTour/キーボードマクロ]]
+
+***カスタマイズ [#w4563d17]
+
+- [[clickable-uri>QuickTour/ext/clickable-uri]]
+- [[NetInstaller>QuickTour/ext/NetInstaller]]
+- [[html+-mode>QuickTour/ext/html+-mode]]
+- [[auto-time-stamp>QuickTour/ext/auto-time-stamp]]
+- [[ext/paren>QuickTour/ext/paren]]
+- [[ext/shell3>QuickTour/ext/shell3]]
+- [[ext/template-insert>QuickTour/ext/template-insert]]
+- [[ext/key>QuickTour/ext/key]]
+- [[ext/dmacro>QuickTour/ext/dmacro]]
+
+***その他 [#h9b58857]
+
+- [[呼び方>QuickTour/etc/呼び方]]
+- [[edict>QuickTour/etc/edict]]
+- [[ispell>QuickTour/etc/ispell]]
+- [[reference>QuickTour/etc/へなちょこリファレンスの使い方]]
+
+----
+
+#counter
+#online
+#recent(10)
+#popular(10)

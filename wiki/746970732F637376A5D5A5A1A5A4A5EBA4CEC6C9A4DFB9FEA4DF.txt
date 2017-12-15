@@ -1,0 +1,72 @@
+excelで作成されたcsvファイルを読み込まないといけなかったので作成しました。
+#ref(tips/xsv.l)
+
+***インストール [#e1e78e9e]
+ 1.xsv.lをダウンロードしてsite-lispへ
+ 2.xsv.lをバイトコンパイル(しないと強烈に遅いです。。)
+
+***使い方 [#h7fd27cb]
+1.xsv-create-parserでパーサを作成し、~
+2.xsv-bind-streamでcsvファイルへのストリームをセット~
+3.xsv-parseでパースする。
+
+パーサ作成時に各イベントに対するハンドラをセットすることで~
+ヘッダ、レコード、フィールドにアクセスします。
+
+ xsv-create-parserの各キーワード引数に関して
+  delimiter
+    デリミタをセットする。
+    文字列でなく、文字を指定します。デフォルトはカンマ(#\,)
+  handle-record
+    1行パースする度に行う処理を登録します。
+    「1行の内容を表すリスト」を引数として受け取る関数をセット。
+  handle-header
+    nilでない場合、1行目をヘッダとみなします。
+    「ヘッダの内容を表すリスト」を引数として受け取る関数をセット。
+  handle-field
+    nilで無い場合、フィールド一つ処理する度に呼ばれます。
+    「フィールド」を引数として受け取り、新しいフィールド値を返す関数をセット。
+
+***サンプル [#y91ba17a]
+サンプルデータ~
+#ref(tips/xsv-data.png)
+
+excelは、どうもセル内の改行がCRになるみたいですね。~
+これをcsv形式で保存したもの(c:\xsv-data.csv)~
+を読み込むには
+
+ (require "xsv")
+ 
+ ;;パーサ作成
+ (setq parser
+  (xsv-create-parser
+   :handle-header #'(lambda (header)
+                      (format t "header:(~D):~A~%" (length header) header))
+   :handle-record #'(lambda (record)
+                      (format t "record(~D):~A~%" (length record) record))
+   :handle-field #'(lambda (field)
+                      (format nil "[~A]" field))))
+ 
+ ;;パース実行
+ (xsv-bind-stream (parser "C:/xsv-data.csv")
+   (xsv-parse parser))
+
+***実行結果 [#wdf4515f]
+ header:(4):([field1] [field2] [field3] [field4])
+ record(4):([a-1] [b-1] [c-1] [d-1])
+ record(4):([a,-2] [b,","-2] [,"c-2",] [d-2])
+ record(4):([,"
+ a
+ -
+ 3,"] [,b-3
+ ","] [] [c-3])
+ nil
+
+***その他 [#h156d158]
+RFC 4180( http://www.rfc-archive.org/getrfc.php?rfc=4180 )を参考にしました。~
+excelがこれに準じているかどうかは分かりません。(今のところ特に問題ありません)~
+xsv.lが本当にこの通りに実装されてるかも自信ありません(すいません。。)~
+
+不具合がありそうな危ういコードですので、見つけた方は教えてください。
+
+#comment

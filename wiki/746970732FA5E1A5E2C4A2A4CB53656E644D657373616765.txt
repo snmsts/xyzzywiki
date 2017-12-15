@@ -1,0 +1,16 @@
+#freeze
+winapiでメモ帳をいじるサンプルを書いてみました
+ (use-package "winapi")
+ (winapi::*define-dll-entry HWND 
+   FindWindowEx (winapi::int winapi::int LPCSTR LPCSTR) "user32" "FindWindowExA")
+ (winapi::*define-dll-entry HWND 
+   ShellExecute (LONG LPCSTR LPCSTR LPCSTR LPCSTR LONG) "shell32" "ShellExecuteA")
+ (defun test()
+   (interactive)
+   (let ((hwnd-edit 0)(hwnd-notepad 0))
+ 	(ShellExecute 0 (si::make-string-chunk "open") (si::make-string-chunk "notepad") 0 0 SW_SHOWNORMAL)
+ 	(while (= hwnd-notepad 0)
+ 	  (setq hwnd-notepad (FindWindow (si::make-string-chunk "NOTEPAD") 0)))
+ 	(while (= hwnd-edit 0)
+ 	  (setq hwnd-edit (FindWindowEx hwnd-notepad 0 (si::make-string-chunk "Edit") 0)))
+ 	(SendMessage hwnd-edit WM_SETTEXT 0 (si::make-string-chunk "あいうえお"))))

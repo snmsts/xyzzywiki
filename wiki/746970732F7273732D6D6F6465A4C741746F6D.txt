@@ -1,0 +1,59 @@
+とりあえず、ということで・・・。
+
+ ;config.lに
+ (defun rss-parse (xml)
+   (let (cur)
+     (while xml
+       (or xml (return))
+       (or (listp xml) (return))
+       (setq cur (car xml))
+       (setq xml (cdr xml))
+       (cond ((listp cur)
+ 	     (let ((name (ed::xmlpm-tag-name cur))
+ 		   (opts (ed::xmlpm-tag-opts cur))
+ 		   (contents (ed::xmlpm-tag-contents cur)))
+ 	       (cond ((or (equal name "channel")
+ 			  (equal name "feed"))
+ 		      (rss-parse-channel contents))
+ 		     ((or (equal name "item")
+ 			  (equal name "entry"))
+ 		      (rss-parse-item contents))
+ 		     (t
+ 		      nil))
+ 	       (when contents
+ 		 (rss-parse contents))))
+ 	    ((stringp cur)
+ 	     nil)
+ 	    (t
+ 	     nil))
+       )))
+ 
+ (defun rss-parse-item (xml)
+   (let (cur item)
+     (while xml
+       (or xml (return))
+       (or (listp xml) (return))
+       (setq cur (car xml))
+       (setq xml (cdr xml))
+       (when (listp cur)
+ 	(let ((name (ed::xmlpm-tag-name cur))
+ 	      (opts (ed::xmlpm-tag-opts cur))
+ 	      (contents (ed::xmlpm-tag-contents cur)))
+ 	  (cond ((or (equal name "title")
+ 		     )
+ 		 (push (cons name (car contents)) item))
+ 		((or (equal name "summary")
+ 		     (equal name "description"))
+ 		 (push (cons "description" (car contents)) item))
+ 		((equal name "link")
+ 		 (if (ed::xmlpm-tag-single-p cur)
+ 		     (push (cons "link" (cdr (assoc "href" opts :test #'equal))) item)
+ 		   (push (cons name (car contents)) item))
+ 		 )
+ 		((equal name "enclosure")
+ 		 (push (cons "link" (cdr (assoc "url" opts :test #'equal))) item)
+ 		 )))))
+     (when item
+       (push item *rss-item-list*))))
+
+#comment

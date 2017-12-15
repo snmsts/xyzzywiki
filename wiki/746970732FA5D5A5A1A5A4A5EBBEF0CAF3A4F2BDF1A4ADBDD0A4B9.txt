@@ -1,0 +1,34 @@
+* できること [#q29ec90c]
+~属性、サイズ、更新日時、ファイル名を*file list*バッファに出力します。キーワード :test に条件を指定することでそれを満たすものだけを表示させることができます。
+~出力もある程度カスタマイズできます。ファイルサイズをKBやMBにするとか、時刻のフォーマットを変えるとか。
+
+#ref(file-info.l)
+
+* 使用例 [#g30cf13c]
+例のための例って感じがなきにしもあらず、ですが。
+-XYZZYHOME 直下のファイル・ディレクトリをすべて表示
+ (file-info (si:system-root))
+ 
+-XYZZYHOME 以下の.lファイルをサイズ順にすべて表示
+ (file-info (si:system-root) :recursive t :file-only t
+ 	   :test #'(lambda (i) (string-match "\\.l$" (first i)))
+ 	   :before #'(lambda (i) (stable-sort i '< :key 'fourth)))
+ 
+-SYSTEM ディレクトリ以下の exe 以外のファイルを名前順にすべて表示
+ (file-info (get-system-directory) :recursive t :file-only t
+	   :test #'(lambda (i) (not (string-matchp "\\.exe$" (first i))))
+	   :after #'(lambda (i) (stable-sort i 'string< :key 'fourth)))
+
+* 補足 [#p5051707]
+:before|引数、返り値ともに (名前 属性 日時 サイズ) を並べたリスト
+:test|引数は before と同じ、nil を返した場合そのファイルは出力に含まれない
+:after|デフォルトでは引数、返り値ともに (属性 サイズ 日時 名前) を並べたリスト
+
+* その他 [#e26f5244]
+-勢いでいっぱいキーワードを付けてしまいましたが、後で考えたら :after ってグローバル変数と役割がかぶってるかも。:beforeだけでよかった？
+-どっちかというとバッファに書き出すのではなくリストを返してくれたほうが使い道がありそうかも。というか出力先を指定したい。
+-上のとも関係しますが、非インタラクティブなときの動作があまりよろしくないですね。
+
+----
+
+#comment

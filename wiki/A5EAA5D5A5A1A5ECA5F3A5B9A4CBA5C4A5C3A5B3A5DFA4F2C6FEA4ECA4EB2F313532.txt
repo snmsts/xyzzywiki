@@ -1,0 +1,37 @@
+*seealsoに欲しいもの [#w5c3a778]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-09-23 20:42:47 (金)
+-バージョン: 20050330
+
+**メッセージ [#u753cad0]
+miyamukoさんの日記を見て思ったこととしてseealsoをもう少し充実させてあげないと困ること多いよなということで、~
+ truename <-> get-short-path-name
+ concat <-> merge-pathnames
+他にもリファレンス引いてるときには色々思うときがあるんですけど忘れてるんでとりあえずはこんなところで。~
+＃僕はmerge-pathnamesがいつも出てきません。
+（カテゴリはともかく連想で対応を探したいこと多いですよね）
+
+----
+-truename のセクションは入出力というよりファイルシステムのような気がするので変えときました。で、seealsoについては、「truename <-> get-short-path-name」はあってもいいかなと思います。ですが、「concat <-> merge-pathnames」はちょっと賛同しかねます。merge-pathnamesはこういう使い方もするので連結というイメージじゃないんですよね。 -- [[NANRI]] &new{2005-09-23 21:40:23 (金)};
+ (merge-pathnames "../.." "c:/foo/bar/baz")
+ =>"c:/foo"
+-あー個人的にconcatに戻る矢印は要らないのかも”パスをくっつけるのどれだっけ？”で悩むのです。 -- [[佐野]] &new{2005-09-23 21:54:16 (金)};
+-却下はさくっと却下で結構です。思いつくとこ適当に上げてるだけなんで。 -- [[佐野]] &new{2005-09-23 21:56:42 (金)};
+-追加でrationalize<->floatとかassoc->getfとか -- [[佐野]] &new{2005-09-23 22:02:19 (金)};
+-個人的には
+-- truename <-> get-short-path-name …… あり
+-- concat  -> merge-pathnames …… 微妙な気がします。ってことで保留。
+-- rationalize <-> float …… あり
+-- assoc  -> getf …… よく分からないので保留。
+-保留にしたものについては他の方の意見待ちです。-- NANRI
+-defun->lambda　lambda listがlambdaにしか載ってないので相当欲しい。 -- [[佐野]] &new{2005-09-29 15:43:03 (木)};
+-/ -> truncate 最近は出てくるようになったけれども悩みどころかと。 -- [[佐野]] &new{2005-10-08 23:04:00 (土)};
+-とりあえず、これらは反映しました。→[[refwiki:float]], [[refwiki:rationalize]], [[refwiki:get-short-path-name]], [[refwiki:truename]] -- [[NANRI]] &new{2005-10-23 00:53:42 (日)};
+-lambda-list はdefun, defmacroあたりにもあってよいかなと思ったり。「/ -> truncate」(PC定義)があるなら「/ -> floor」(数学定義)も必要? とか思います。 -- [[NANRI]] &new{2005-10-23 00:57:30 (日)};
+
+#comment

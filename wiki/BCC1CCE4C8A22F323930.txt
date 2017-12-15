@@ -1,0 +1,25 @@
+* クリップボードから文字列へ [#g9394bf7]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2011-02-04 (金) 15:09:15
+
+** メッセージ [#h9094062]
+ (beginning-of-line)
+ (set-mark-command)
+ (end-of-line)
+
+ (copy-region-to-clipboard (mark) (point))
+こういう風にリージョンにコピーした文字列を
+変数に代入して扱うことは出来るでしょうか？
+----
+- [[refwiki:get-clipboard-data]] --  &new{2011-02-05 (土) 01:08:29};
+ ;;; クリップボードの内容を文字列に
+ (get-clipboard-data)
+ 
+ ;;; リージョンを文字列に
+ (setf str (buffer-substring (mark) (point)))
+- ありがとうございます --  &new{2011-02-05 (土) 03:52:21};
+- ありがとうございます --  &new{2011-02-05 (土) 03:53:31};
+
+#comment

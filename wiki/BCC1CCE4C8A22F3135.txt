@@ -1,0 +1,23 @@
+* haskell refactoring mode の移植に関して 
+-ページ: [[質問箱]]
+-投稿者: [[shelarcy]]
+-状態: 提案
+-投稿日: 2004-02-17 (火) 22:37:47
+
+** メッセージ 
+[[Haskell:xyzzy>http://www.sampou.org/cgi-bin/haskell.cgi?xyzzy&l=jp]] にも書きましたが、[[haskell refactoring mode の移植:http://page.freett.com/shelarcy/programm/Werkzeug/#xyzzy]]を移植していて以下の部分でつまずいています。
+
+
+- メニュー周り
+-- turn-on-haskell-refac の実行時に use-local-menu を使ってカレントバッファにローカルなメニューを設定する方法。
+-- HaRe に送るコマンドの書き換え方。
+ (define-key haskell-refac-menu
+   [haskell-refac-generaliseDef]
+   '("generaliseDef" " <fileName> <name (name of new parameter? )> <line> <column> <line> <column> generalise a definition" . haskell-refac-generaliseDef))
+- emacs の with-current-buffer を置き換える方法。
+- プロセス周りにバグがあります。
+
+
+----
+
+#comment

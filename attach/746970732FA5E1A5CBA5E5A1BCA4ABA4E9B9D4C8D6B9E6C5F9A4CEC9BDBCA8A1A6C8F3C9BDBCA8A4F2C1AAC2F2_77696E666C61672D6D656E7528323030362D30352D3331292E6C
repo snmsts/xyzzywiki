@@ -1,0 +1,39 @@
+(provide "winflag-menu")
+
+(defvar *view-view-menu* nil)
+(defun create-view-view-menu ()
+  (if *app-menu*
+      (let* ((viewmenu (get-menu *app-menu* 'ed::view))
+	     (pos (get-menu-position viewmenu :above-frame))
+	     (sources `(("Line Number"  ,ed::*window-flag-line-number* :line-number)
+			("Ruler"  ,ed::*window-flag-ruler* :ruler)
+			;("Display Tab"  ,ed::*window-flag-tab* :tab)
+			;("Display Full Space"  ,ed::*window-flag-full-width-space* :space)
+			("EOF"  ,ed::*window-flag-eof* :eof)
+			("Vertical Scrollbar"  ,ed::*window-flag-vscroll-bar* :vscroll-bar)
+			("Horizontal Scrollbar"  ,ed::*window-flag-hscroll-bar* :hscroll-bar)
+			("Mode Line"  ,ed::*window-flag-mode-line* :mode-line)
+			("Cursor Line"  ,ed::*window-flag-cursor-line* :cursor)
+			("Function Bar"  ,ed::*window-flag-function-bar* :function-bar)
+			)))
+	(if (null pos)
+	    (setq pos 5))
+	(setq *view-view-menu* (create-popup-menu :view))
+
+	(mapc #'(lambda (x)
+		  (add-menu-item *view-view-menu* (caddr x) (car x)
+				 #'(lambda ()
+				     (interactive)
+				     (ed::toggle-window-flag (cadr x) nil nil))
+				 #'(lambda ()
+				     (if (/= 0 (logand (get-window-flags) (cadr x)))
+					 :check))))
+	      sources)
+	(insert-popup-menu viewmenu pos *view-view-menu* "View(&V)"))
+    (msgbox "create-view-view-menu: *app-menu* is not initialized")))
+
+
+
+(if *app-menu*
+    (create-view-view-menu)
+  (add-hook '*post-startup-hook* 'create-view-view-menu))

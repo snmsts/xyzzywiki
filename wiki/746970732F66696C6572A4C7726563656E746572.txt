@@ -1,0 +1,43 @@
+[[tips]]
+
+* ファイラーでrecenter
+2ch xyzzy Part9 391-392より
+
+**376 [03/07/29 16:11 ID:a50FHm+u] 名無し~3.EXE <sage>
+filer で recenter はできないでしょうか．
+
+**391 [03/08/05 21:46 ID:8Q/RHqeg] 名無し~3.EXE <sage>
+
+ (require "wip/winapi")
+ (in-package "winapi")
+ (unless (fboundp 'GetForegroundWindow)
+   (c:*define-dll-entry HWND GetForegroundWindow () "user32"))
+ (unless (fboundp 'FindWindowEx)
+   (c:*define-dll-entry winapi::HWND FindWindowEx
+     (winapi::DWORD winapi::DWORD winapi::LPCSTR winapi::LPCSTR)
+     "user32" "FindWindowExA"))
+ (in-package "user")
+ 
+ (defun filer-recenter ()
+   (let* ((position (winapi::make-POINT))
+          (rect (winapi::make-RECT))
+          (listview (let* ((lc (si:make-string-chunk "SysListViewEx32"))
+                           (lh (winapi::FindWindowEx (winapi::GetForegroundWindow)
+                                            0 lc 0)))
+                      (if (filer-left-window-p)
+                          lh
+                        (winapi::FindWindowEx (winapi::GetForegroundWindow)
+                                              lh lc 0))))
+          index)
+     (setq index (winapi::SendMessage listview #x100c #|LVM_GETNEXTITEM|#
+                                    -1 1 #|LVNI_FOCUSED|#))
+     (when (and (< -1 index)
+                (eq (winapi::SendMessage listview #x1010 #|LVM_GETITEMPOSITION|#
+                                         index position)
+                    1 #|TRUE|#))
+       (winapi::GetClientRect listview rect)
+       (winapi::SendMessage listview #x1014 #|LVM_SCROLL|#
+                            0 (- (winapi::POINT-y position)
+                                 (truncate (/ (winapi::RECT-bottom rect) 2)))))))
+ 
+ (define-key filer-keymap #\C-l 'filer-recenter)

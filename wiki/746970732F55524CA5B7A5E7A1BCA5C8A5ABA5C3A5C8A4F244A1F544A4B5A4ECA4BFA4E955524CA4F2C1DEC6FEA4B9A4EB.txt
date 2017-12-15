@@ -1,0 +1,63 @@
+[[tips]]
+
+**概要 [#o6ec8882]
+URLショートカットがD&Dされたら、今編集しているウィンドウのカーソル位置にショートカットのファイル名とURLを挿入します。
+
+もし、HTML+-mode などで編集していると、リンクの形で挿入してくれます。
+
+**lispコード [#c8ce7ae3]
+
+ ;;;;;;;;;;;;;;;;
+ ;;;■ URLショートカットをD&Dされたら、URLを挿入する。
+ ;;;設定項目
+ ;このモードのときはリンク形式でペーストする。
+ (defvar *insert-url-as-link-mode-list* '(html-mode html+-mode))
+ ;ドロップされたもとのショートカットをゴミ箱へ移動する?
+ (defvar *kill-url-shortcut-file* nil)
+ ;ふつうにペーストするときのフォーマット
+ (defvar *insert-as-text-format* "\n($filename)\n($url)\n")
+ ;リンクでペーストするときのフォーマット
+ (defvar *insert-as-link-format* "<a href=\"($url)\">($filename)</a>")
+ (c:define-dll-entry
+  winapi:DWORD
+  GetPrivateProfileString
+  (winapi:LPCSTR winapi:LPCSTR winapi:LPCSTR winapi:LPCSTR winapi:DWORD winapi:LPCSTR)
+  "kernel32" "GetPrivateProfileStringA")
+ (add-hook
+ '*before-find-file-hook*
+ #'(lambda (f)
+     (when (string-matchp "^\\(.*\\)\.url$" (file-namestring f))
+       (let* ((ttl (match-string 1))
+              (name (pathname-name f))
+              (sec (si:make-string-chunk "InternetShortcut"))
+              (key (si:make-string-chunk "URL"))
+              (non (si:make-string-chunk ""))
+              (sz 500)
+              (url (si:make-chunk nil sz))
+              (file (si:make-string-chunk (map-slash-to-backslash f))) st)
+         (GetPrivateProfileString sec key non url sz file)
+         (if (member buffer-mode *insert-url-as-link-mode-list*)
+             (setq st *insert-as-link-format*)
+           (setq st *insert-as-text-format*))
+         (setq st (substitute-string st "($url)" (si:unpack-string url 0)))
+         (setq st (substitute-string st "($filename)" name))
+         (insert st)
+         (when *kill-url-shortcut-file* (delete-file f :recycle t))
+         (selected-buffer)))))
+ほとんどHTML+-mode のソースをぱくらせていただいてます。多謝。
+
+**使い方 [#s95d7c1c]
+-適度にGUIな人向け。
+-.xyzzyや、siteinit.lに書き加えて使ってください。
+-ブックマークするまでもないURLをがんがんデスクトップにためこんでおいて、あとでまとめて howm や diary なんかにメモっておくために作りました。
+-IEのお気に入りからずるずる引っ張ってきてリンクを挿入することもできます。
+-WinAPI が必要なような気もしますがよくわかりません。
+-貼り付けるときのフォーマットが指定できます。"($url)" にURL、"($filename)" にファイル名称が入ります。
+----
+-素敵ですね。シンボルhtmlとkillの扱いが少し気になります…。defvarしてあったほうが良いと思います。htmlという変数は必要ですか？string-matchpではなく与えられたモードのリストからmemberかなんかでチェックする形のほうが美しいと思います。 -- [[佐野]] &new{2004-07-13 (火) 18:28:20};
+-アドバイスありがとうございます。修正してみました。本当はD&D編集のときのようにマウスポインタ位置に挿入したいのですが、やりかたがさっぱりわかりません。 --  &new{2004-07-20 (火) 19:49:20};
+-mouse.lを見ながら格闘したのですが同一window内のボタン押し以外正確な場所を把握する事は難しいようです。もしポインタ位置に挿入するのを諦めるとするとDnDhookよりもfind-file-hookに引っ掛けた方が何かと行儀が良いように思います。あと一つだけstがletされていないのだけが気になりました。 -- [[佐野]] &new{2004-07-21 (水) 03:47:55};
+-WinAPIでマウスクリックイベントを発生させて場所を確定させようとしていたのですが挫折したので、find-file-hook にひっかけるVer.にさしかえました。旧Verも一応添付で残しておきます。 --  &new{2004-08-25 (水) 19:04:14};
+- パッケージが存在しません:"c" というエラーメッセージが出る場合には、一番上の行に (require "wip/winapi") を追加してみてください。 -- [[おおさわ]] &new{2007-09-05 (水) 16:43:59};
+
+#comment

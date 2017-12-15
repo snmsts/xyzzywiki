@@ -1,0 +1,95 @@
+#freeze
+* syntax-match-char [#ae26c00d]
+
+-ページ: [[patch]]
+-投稿者: NANRI
+-優先順位: 低
+-状態: 提案
+-カテゴリー:
+-投稿日: 2007-03-01
+-バージョン:
+
+** メッセージ [#d417476a]
+xyzzyの使い方が分からぬやし 励ましあえ その10の328氏の要望にあったxchar_match相当のbuiltn関数の追加です。
+自分は189氏とは別人なのですが、手ごろな難易度だったのでbuiltin関数の追加の練習としてやってました。
+
+ --- gen-syms.cc~      Sat Dec 03 23:24:50 2005
+ +++ gen-syms.cc       Tue Feb 27 21:52:04 2007
+ @@ -2031,6 +2031,7 @@
+    DEFUN3 (syntax-end-multi-comment-2-p, 1, 1, 0),
+    DEFUN2 (syntax-c++-comment-p, syntax-cplusplus-comment-p, 1, 1, 0),
+    DEFUN3 (syntax-start-column-comment-p, 1, 1, 0),
+ +  DEFUN3 (syntax-match-char, 1, 1, 0),
+    DEFUN3 (set-syntax-option, 2, 0, 0),
+    DEFUN3 (get-syntax-option, 1, 0, 0),
+    DEFUN3 (set-syntax-comment-column, 2, 0, 0),
+
+ --- syntax.cc~        Mon Mar 05 21:15:46 2007
+ +++ syntax.cc Mon Mar 05 21:16:15 2007
+ @@ -490,6 +490,23 @@
+  }
+
+  lisp
+ +Fsyntax_match_char (lisp ch, lisp table)
+ +{
+ +  check_char (ch);
+ +  if (!table)
+ +    table = selected_buffer ()->lsyntax_table;
+ +  check_syntax_table (table);
+ +  Char c = xchar_code (ch);
+ +  if (!ascii_char_p (c))
+ +    return Qnil;
+ +  if (xchar_syntax (xsyntax_table (table), c) != SCclose
+ +      && xchar_syntax (xsyntax_table (table), c) != SCopen)
+ +    return Qnil;
+ +
+ +  return make_char(xchar_match (xsyntax_table (table), c));
+ +}
+ +
+ +lisp
+  Fget_syntax_option (lisp table)
+  {
+    check_syntax_table (table);
+
+あとは$XYZZY/lisp/builtin.lのeditorパッケージの領域に適当に以下を追加。（しなくても使え）
+ (si::defun-builtin syntax-match-char (char &optional syntax-table))
+
+もう一方のxchar_syntaxは、とりあえずこんな感じでLispで可能ということで省略。
+ (defun get-char-syntax (char &optional (syntax-table (syntax-table)))
+   (car (member char '(syntax-c++-comment-p
+                       syntax-close-p
+                       syntax-close-tag-p
+                       syntax-end-c++-comment-p
+                       syntax-end-comment-p
+                       syntax-end-multi-comment-1-p
+                       syntax-end-multi-comment-2-p
+                       syntax-escape-p
+                       syntax-junk-p
+                       syntax-math-p
+                       syntax-open-p
+                       syntax-open-tag-p
+                       syntax-punctuation-p
+                       syntax-quote-p
+                       syntax-start-column-comment-p
+                       syntax-start-comment-p
+                       syntax-start-multi-comment-1-p
+                       syntax-start-multi-comment-2-p
+                       syntax-string-p
+                       syntax-symbol-p
+                       syntax-symbol-prefix-p
+                       syntax-whitespace-p
+                       syntax-word-p)
+                :test #'(lambda (x y)
+                          (funcall y x syntax-table)))))
+
+バイナリが欲しい場合は提供します。どこかでアピールしてください。> 328氏
+
+どういうものを作るアイディアがあるのか楽しみにしています。
+----
+- ありがとうございます。バイナリを用意していただけるならお願いします。 ひとつ気になったのでが、
+ +      || xchar_syntax (xsyntax_table (table), c) == SCopen) {
+という行は
+ +      && xchar_syntax (xsyntax_table (table), c) != SCopen) {
+ではないのでしょうか。 -- [[328]] &new{2007-03-05 (月) 10:58:32};
+- すみません。おっしゃるとおりです。（いくらなんでもポカ過ぎるorz） 修正して、http://raidosakura.ne.jp/southly/xyzzy/xyzzy-20070305.lzh に置きました。 -- [[NANRI]] &new{200-03-05 (月) 21:22:59};
+- ありがとうございました。そのうち、これを利用した拡張lisp を公開できるようがんばってみます - [[328]] &new{2007-03-10 (土) 17:46:49};

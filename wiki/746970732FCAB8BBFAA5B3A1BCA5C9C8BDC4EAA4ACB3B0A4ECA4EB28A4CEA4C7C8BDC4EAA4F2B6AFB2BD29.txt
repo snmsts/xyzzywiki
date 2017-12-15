@@ -1,0 +1,166 @@
+[[tips/文字コード判定が外れる]]
+
+http://d.hatena.ne.jp/himadatanode/20080103
+ここで言及されてることをみてじゃぁ本体で（？）できる限り対応してみよう…と。
+
+http://lispuser.net/memo/lisp/2007-08-07-22-49.html
+んでアルゴリズムはここから借りてきた。いつもお世話になっとります。
+
+＃というかdefine-dfaのスコアだけしか見てない気がする。
+
+ (defmacro define-dfa (name &rest args)
+   (unless (boundp name)
+     (let (ret
+ 	  (char (gensym))
+ 	  (param (gensym))
+ 	  (tmp (gensym)))
+       (dolist (i args)
+ 	(let ((arr (make-array '(256 2))))
+ 	  (dolist (j (cdr i))
+ 	    (pushnew (list (second j)) ret :key 'car)
+ 	    (dolist (k (first j))
+ 	      (if (numberp k)
+ 		  (setf (aref arr k 1) (assoc (second j) ret)
+ 			(aref arr k 0) (third j))
+ 		(do ((l (first k) (1+ l)))
+ 		    ((> l (second k)))
+ 		  (setf (aref arr l 1) (assoc (second j) ret)
+ 			(aref arr l 0) (third j))))))
+ 	  (pushnew (list (first i)) ret :key 'car)
+ 	  (setf (cdr (assoc (first i) ret))
+ 		(list arr))))
+       (dolist (i ret)
+ 	(dotimes (j 256)
+ 	  (setf (aref (second i) j 1) (second (aref (second i) j 1)))))
+       `(defun ,name (,char &optional ,param)
+ 	 (unless ,param (setq ,param (list 1.0 ,(second (assoc 'init ret)))))
+ 	 (if (aref (second ,param) ,char 0)
+ 	     (list (* (first ,param) (aref (second ,param) ,char 0))
+ 		   (aref (second ,param) ,char 1))
+ 	   (list -1.0 (second ,param)))))))
+ (define-dfa eucj
+     ;; first byte
+     (init
+      (((#x00 #x7f)) init         1.0)   ; ASCII range
+      ((#x8e)        jis0201_kana 0.8)   ; JISX 0201 kana
+      ((#x8f)        jis0213_2    0.95)  ; JISX 0213 plane 2
+      (((#xa1 #xfe)) jis0213_1    1.0)   ; JISX 0213 plane 1
+      )
+     ;; jis x 0201 kana
+     (jis0201_kana
+      (((#xa1 #xdf)) init         1.0)
+      )
+     ;; jis x 0208 and jis x 0213 plane 1
+     (jis0213_1
+      (((#xa1 #xfe)) init         1.0))
+     ;; jis x 0213 plane 2
+     (jis0213_2
+      (((#xa1 #xfe)) init         1.0)))
+ 
+ (define-dfa sjis
+     ;; first byte
+     (init
+      (((#x00 #x7f)) init         1.0)	   ;ascii
+      (((#x81 #x9f) (#xe1 #xef)) jis0213 1.0) ;jisx0213 plane 1
+      (((#xa1 #xdf)) init         0.8)	     ;jisx0201 kana
+      (((#xf0 #xfc)) jis0213      0.95)	     ;jisx0213 plane 2
+      (((#xfd #xff)) init         0.8))	     ;vendor extension
+     (jis0213
+      (((#x40 #x7e) (#x80 #xfc)) init 1.0)))
+ 
+ (define-dfa utf8
+     (init
+      (((#x00 #x7f)) init         1.0)
+      (((#xc2 #xdf)) 1byte_more   1.0)
+      (((#xe0 #xef)) 2byte_more   1.0)
+      (((#xf0 #xf7)) 3byte_more   1.0)
+      (((#xf8 #xfb)) 4byte_more   1.0)
+      (((#xfc #xfd)) 5byte_more   1.0))
+     (1byte_more
+      (((#x80 #xbf)) init         1.0))
+     (2byte_more
+      (((#x80 #xbf)) 1byte_more   1.0))
+     (3byte_more
+      (((#x80 #xbf)) 2byte_more   1.0))
+     (4byte_more
+      (((#x80 #xbf)) 3byte_more   1.0))
+     (5byte_more
+      (((#x80 #xbf)) 4byte_more   1.0)))
+ 
+ (defun iso2022jp (char &optional tmp)
+   (unless tmp (setq tmp (list 0.0 0)))
+   (cond
+    ((= (second tmp) 2)
+     tmp)
+    ((and (= (second tmp) 0)
+ 	 (= char #x1b))
+     (list 0.0 1))
+    ((and (= (second tmp) 1)
+ 	 (or (= char #x24)   ; $
+ 	     (= char #x28))) ; (	 (or
+     (list 1.5 2))
+    (t tmp)))
+ 
+ (defun guess-jp (buffer &aux (len (length buffer)))
+   (flet ((dfa-alive (x)
+ 	   (plusp (car x)))
+ 	 (score (x)
+ 	   (car x)))
+     (block guess-body
+       (let (eucj sjis utf8 iso2022jp top c)
+ 	(dotimes (i len)
+ 	  (setq c (aref buffer i))
+ 	  (setq eucj (eucj c eucj)
+ 		sjis (sjis c sjis)
+ 		utf8 (utf8 c utf8)
+ 		iso2022jp (iso2022jp c iso2022jp))
+ 	  (when (and (not (dfa-alive eucj)) (not (dfa-alive sjis)) (not (dfa-alive utf8)))
+ 	    (return nil)))
+ 	;; pick highest score
+ 	(when (dfa-alive eucj)
+ 	  (setf top eucj))
+ 	(when (dfa-alive utf8)
+ 	  (if top
+ 	      (when (<= (score top) (score utf8))
+ 		(setf top utf8))
+ 	    (setf top utf8)))
+ 	(when (dfa-alive sjis)
+ 	  (if top
+ 	      (when (< (score top) (score sjis))
+ 		(setf top sjis))
+ 	    (setf top sjis)))
+ 	(when (dfa-alive iso2022jp)
+ 	  (if top
+ 	      (when (< (score top) (score iso2022jp))
+ 		(setf top iso2022jp))
+ 	    (setf top iso2022jp)))
+ 	(cond ((eq top eucj) *encoding-euc-jp*)
+ 	      ((eq top utf8) *encoding-utf8*)
+ 	      ((eq top sjis) *encoding-sjis*)
+ 	      ((eq top iso2022jp) *encoding-iso-2022-jp-2-open*)
+ 	      (t             *encoding-auto*))))))
+ 
+ (defun guess-jp-helper ()
+   (let ((data (make-vector 4096 :element-type 'character :fill-pointer 0)))
+     (with-open-file (is (match-string 0) :encoding :binary)
+       (read-into data is nil))
+     (guess-jp (coerce (mapcar 'char-code (coerce data 'list)) '(array t 1)))))
+ 
+ (setq *auto-encoding-alist*  '((".*" . guess-jp-helper)))
+
+感想：判定率は上がったようなのだけど、速度的にいまいちかなーと思った。
+コード的にはCに落として本体内蔵もやりやすい気がする。
+
+
+2008年1月佐野
+----
+- コンパイルできないですけど、できるようになりませんか。 --  &new{2008-03-16 (日) 17:53:19};
+- defmacroの部分を(eval-when (:compile-toplevel :load-toplevel :execute) ... ) でくくるといけそうですがどうでしょう。 -- [[佐野]] &new{2008-03-16 (日) 20:24:50};
+- 1 -- [[1]] &new{2015-02-22 (日) 05:09:32};
+- meCJOWXBUF -- [[mgsznmrntvg]] &new{2015-03-21 (土) 19:09:43};
+- 1 -- [[-1']] &new{2015-04-02 (木) 07:47:05};
+-- 1' -- [[1]] &new{2015-04-02 (木) 07:47:07};
+
+#comment
+- 1 -- [[1]] &new{2015-09-19 (土) 10:05:08};
+- 1 -- [[1]] &new{2015-04-02 (木) 07:46:51};

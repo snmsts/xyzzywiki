@@ -1,0 +1,567 @@
+;;; -*- Mode: Lisp; Package: EDITOR -*-
+;;;
+;;; my-coloring.l
+;;;
+;;; Last updated: "2004/11/28 15:48:34 +0900"
+;;;
+;;; ●はじめに:
+;;; このlispでは、深江さんのcoloring.l、TKIさんのinsert-brace.lを引用・改悪させていただいています。m(__)m
+;;; 引用部分以外については自由に改変・再配布などしてもかまいません。
+;;; どんなバグがあるやも知れないので、使用は自己責任でお願いします。
+;;;
+;;; ●インストール:
+;;; .xyzzy などに (require "my-coloring") と記述
+;;;
+;;; ●設定例:
+;;; (setq *coloring-attribute-list* '(("赤(&0)" :foreground 1)
+;;; 				  ("青(&1)" :foreground 4)
+;;; 				  ("緑(&2)" :foreground 10)
+;;; 				  ("太赤(&3)" :foreground 1 :bold t)
+;;; 				  ("太青(&4)" :foreground 4 :bold t)
+;;; 				  ("太緑(&5)" :foreground 10 :bold t)
+;;; 				  ("下線(&6)" :underline t)
+;;; 				  ("取消し線(&7)" :strike-out t)
+;;; 				  ("赤+下線(&8)" :foreground 1 :underline t)
+;;; 				  ("青+取消し線(&9)" :foreground 4 :strike-out t)
+;;; 				  ))
+;;; (setq *coloring-color-list* '(("赤(&1)" 1)
+;;;				("明るい緑(&2)" 2)
+;;;				("黄色(&3)" 3)
+;;;				("青(&4)" 4)
+;;;				("ピンク(&5)" 5)
+;;;				("明るい水色(&6)" 6)
+;;;				("白(&7)" 7)
+;;;				("黒(&8)" 8)
+;;;				("茶色(&9)" 9)
+;;;				("緑(&A)" 10)
+;;;				("黄土色(&B)" 11)
+;;;				("紺(&C)" 12)
+;;;				("紫(&D)" 13)
+;;;				("水色(&E)" 14)
+;;;				("灰色(&F)" 15)
+;;;				))
+;;; (setq *coloring-brace-list* '("()" "[]" "{}" "<>" "#||#" "\"\":      double quote" "'':        single quote" "  :      blank" ",,:      comma" "/**/" "/***/:    java doc" "=begin\n=end :    perl" "<!--  -->:      HTML" "HTML:タグ" "『』" "【】" "「」" "（）:全角"))
+;;;
+;;; ●使い方:（キーバインドはお好みで変更してください）
+;;; Shift+右クリックで色情報をポップアップ表示、選択してセレクションの文字列に色づけ、カーソル下の色情報を削除
+;;; C-1 で色情報を保持してセレクションの文字列をコピー、C-M-1 で貼り付け
+;;; C-2 で色づけされている文字列をダイアログボックスで表示、選択して該当位置にジャンプ
+;;; C-M-2 で前回色づけした位置または前回ダイアログボックスを表示した位置に戻る
+;;; C-3 で色づけされている文字列を選択した括弧で囲む（セレクションがあればその範囲内だけを対象とする）
+;;; C-M-3 で選択した括弧を検索して、その括弧内を選択した色情報で色づけする（セレクションがあれば上と同様）
+
+(provide "my-coloring")
+
+(in-package "editor")
+
+(export '(copy-coloring-text paste-coloring-text coloring-list coloring-return-point
+	  enclose-braces-coloring-string coloring-enclosed-braces-string
+	  color-string-popup *coloring-attribute-list* *coloring-brace-list*))
+
+;;; ■各種設定
+
+;;; 色情報の設定
+(defvar *coloring-attribute-list* '(("赤(&0)" :foreground 1)
+				    ("青(&1)" :foreground 4)
+				    ("緑(&2)" :foreground 10)
+				    ("太赤(&3)" :foreground 1 :bold t)
+				    ("太青(&4)" :foreground 4 :bold t)
+				    ("太緑(&5)" :foreground 10 :bold t)
+				    ("下線(&6)" :underline t)
+				    ("取消し線(&7)" :strike-out t)
+				    ("赤+下線(&8)" :foreground 1 :underline t)
+				    ("青+取消し線(&9)" :foreground 4 :strike-out t)
+				    ))
+
+(defvar *coloring-color-list* '(("赤(&1)" 1)
+				("明るい緑(&2)" 2)
+				("黄色(&3)" 3)
+				("青(&4)" 4)
+				("ピンク(&5)" 5)
+				("明るい水色(&6)" 6)
+				("白(&7)" 7)
+				("黒(&8)" 8)
+				("茶色(&9)" 9)
+				("緑(&A)" 10)
+				("黄土色(&B)" 11)
+				("紺(&C)" 12)
+				("紫(&D)" 13)
+				("水色(&E)" 14)
+				("灰色(&F)" 15)
+				))
+
+;;; 色づけ部分を囲んだり、その括弧内を色づけする括弧の設定
+;各要素を２分割して前後に挿入される	;;; insert-brace.l より引用（一部改変）－①（ここから）
+;長さ奇数の場合前が長くなる｡空白で調整してください｡
+(defvar *coloring-brace-list* '("()" "[]" "{}" "<>" "#||#" "\"\":      double quote" "'':        single quote" "  :      blank" ",,:      comma" "/**/" "/***/:    java doc" "=begin\n=end :    perl" "<!--  -->:      HTML" "HTML:タグ" "『』" "【】" "「」" "（）:全角"))
+
+;上で HTML だった場合 タグ として入れられるようにする
+(defvar *coloring-brace-html-tag* "")
+(defvar *coloring-brace-html-tag-list* nil)
+;この後ろは無視される
+(defvar *coloring-brace-list-comment* ":")	;;; insert-brace.l より引用（一部改変）－①（ここまで）
+
+;;; その他の変数
+(defvar *coloring-not-save* nil) ;これを t にすると色情報を保存しない。
+(defvar *last-coloring-list* nil)
+(defvar *coloring-return-marker* nil)
+(defvar *copied-coloring-txt* nil)
+(defvar *copied-attribute-list* nil)
+
+
+;;; ■テキストに色づけする
+
+;;; 色情報をポップアップメニューで表示
+(defun color-string-popup (&optional fb eb s)	;;; coloring.l より引用（一部改変）（ここから）
+  (interactive)
+  (if *coloring-attribute-list*
+      (progn
+	(unless s (set-window *last-mouse-window*)
+	  (continue-pre-selection))
+	(let ((menu (create-popup-menu)))
+	  (mapcar #'(lambda (lst)	;;; colorant.l を参考にさせていただきました
+		      (add-menu-item menu nil (car lst)
+				     #'(lambda () (interactive)
+					 (if s
+					     (apply #'coloring-enclosed-braces-string1 fb eb (cdr lst))
+					   (apply #'color-string-selection (cdr lst))))
+				     (unless s :selection)))
+		  *coloring-attribute-list*)
+	  (unless s
+	    (add-menu-separator menu)
+	    (add-menu-item menu nil "太(細)くする(&L)" 'color-bold 'color-find)
+	    (add-menu-item menu nil "下線をつける(消す)(&U)" 'color-underline 'color-find)
+	    (add-menu-item menu nil "取消線をつける(消す)(&O)" 'color-strike-out 'color-find)
+	    (add-menu-item menu nil "反転する(&R)" 'color-reverse 'color-find)
+	    (add-menu-separator menu)
+	    (let ((fmenu (create-popup-menu))
+		  (bmenu (create-popup-menu)))
+	      (add-popup-menu menu fmenu "前景色の変更(&G)")
+	      (mapcar #'(lambda (lst)
+			  (add-menu-item fmenu nil (car lst)
+					 #'(lambda () (interactive)
+					     (apply #'color-foreground-number (cdr lst)))
+					 'color-find))
+		      *coloring-color-list*)
+	      (add-popup-menu menu bmenu "背景色の変更(&H)")
+	      (mapcar #'(lambda (lst)
+			  (add-menu-item bmenu nil (car lst)
+					 #'(lambda () (interactive)
+					     (apply #'color-background-number (cdr lst)))
+					 'color-find))
+		      *coloring-color-list*))
+	    (add-menu-separator menu)
+	    (add-menu-item menu nil "削除(&D)" 'color-delete 'color-find)
+	    (add-menu-item menu nil "全削除(&C)" 'color-clear
+			   #'(lambda () (unless (find-text-attribute nil)
+					  :disable))))
+	  (track-popup-menu menu)))
+    (plain-error "色情報のリストが設定されていません")))
+
+(defun color-find () ;カーソル下に色づけがなされていなければメニューを使用不可にする
+  (unless (find-text-attribute-point (point)) :disable))
+
+;;; セレクションに色づけ
+(defun color-string-selection (&rest attr)
+  (apply #'set-text-attribute
+	 (selection-point) (selection-mark) nil attr)
+  (setq *coloring-return-marker*
+	(set-marker (make-marker) (point)))
+  (setq *last-coloring-list* (selection-mark))
+  (stop-selection))
+
+;;; 色情報をファイル読み込み時に復元
+(defun color-resume ()
+  (let ((fname (get-buffer-file-name))
+	col attr is)
+    (when (and fname
+	       (file-exist-p (setq col (concat fname ".col"))))
+      (handler-case
+	  (with-open-file (is col :direction :input)
+	    (setq attr (read is))
+	    (mapc #'(lambda (x)
+		      (apply #'set-text-attribute x))
+		  attr))
+	(error ()
+	  (clear-all-text-attributes)))))
+  t)
+
+(add-hook '*find-file-hooks* 'color-resume)
+
+;;; カーソル下の色情報の属性を変更する
+
+(defun color-bold ()
+  (interactive)
+  (let* ((attr (multiple-value-list
+		(find-text-attribute-point (point))))
+	 (bold (nth 5 attr)))
+    (when attr
+      (set-text-attribute (car attr) (cadr attr) (caddr attr)
+			  :foreground (nth 3 attr)
+			  :background (nth 4 attr)
+			  :bold (not bold)
+			  :underline (nth 6 attr)
+			  :strike-out (nth 7 attr)
+			  :prefix (nth 8 attr)
+			  :extend (nth 9 attr))
+      )))
+
+(defun color-underline ()
+  (interactive)
+  (let* ((attr (multiple-value-list
+		(find-text-attribute-point (point))))
+	 (underline (nth 6 attr)))
+    (when attr
+      (set-text-attribute (car attr) (cadr attr) (caddr attr)
+			  :foreground (nth 3 attr)
+			  :background (nth 4 attr)
+			  :bold (nth 5 attr)
+			  :underline (not underline)
+			  :strike-out (nth 7 attr)
+			  :prefix (nth 8 attr)
+			  :extend (nth 9 attr))
+      )))
+
+(defun color-strike-out ()
+  (interactive)
+  (let* ((attr (multiple-value-list
+		(find-text-attribute-point (point))))
+	 (strike-out (nth 7 attr)))
+    (when attr
+      (set-text-attribute (car attr) (cadr attr) (caddr attr)
+			  :foreground (nth 3 attr)
+			  :background (nth 4 attr)
+			  :bold (nth 5 attr)
+			  :underline (nth 6 attr)
+			  :strike-out (not strike-out)
+			  :prefix (nth 8 attr)
+			  :extend (nth 9 attr))
+      )))
+
+(defun color-reverse ()
+  (interactive)
+  (let* ((attr (multiple-value-list
+		(find-text-attribute-point (point))))
+	 (foreground (nth 3 attr))
+	 (background (nth 4 attr)))
+    (when attr
+      (set-text-attribute (car attr) (cadr attr) (caddr attr)
+			  :foreground background
+			  :background foreground
+			  :bold (nth 5 attr)
+			  :underline (nth 6 attr)
+			  :strike-out (nth 7 attr)
+			  :prefix (nth 8 attr)
+			  :extend (nth 9 attr))
+      )))
+
+(defun color-foreground-number (num)
+  (let* ((attr (multiple-value-list
+		(find-text-attribute-point (point)))))
+    (when attr
+      (set-text-attribute (car attr) (cadr attr) (caddr attr)
+			  :foreground num
+			  :background (nth 4 attr)
+			  :bold (nth 5 attr)
+			  :underline (nth 6 attr)
+			  :strike-out (nth 7 attr)
+			  :prefix (nth 8 attr)
+			  :extend (nth 9 attr))
+      )))
+
+(defun color-background-number (num)
+  (let ((attr (multiple-value-list
+	       (find-text-attribute-point (point)))))
+    (when attr
+      (set-text-attribute (car attr) (cadr attr) (caddr attr)
+			  :foreground (nth 3 attr)
+			  :background num
+			  :bold (nth 5 attr)
+			  :underline (nth 6 attr)
+			  :strike-out (nth 7 attr)
+			  :prefix (nth 8 attr)
+			  :extend (nth 9 attr))
+      )))
+
+;;; カーソル下の色情報を削除
+(defun color-delete ()
+  (interactive)
+  (delete-text-attribute-point (point)))
+
+;;; 色づけがなされているテキストのうち、タグが nil のものを全て削除
+(defun color-clear ()
+  (interactive)
+  (delete-text-attributes nil))
+
+;;; 色情報をファイル（元ファイル名＋ .col）に保存する
+(defun color-write ()
+  (let ((fname (get-buffer-file-name))
+	(attr (delete nil (mapcar #'(lambda (x) (unless (caddr x) x)) ;タグが nil のものだけ対象とする（以下同様）
+				  (list-text-attributes))))
+	col)
+    (when fname
+      (setq col (concat fname ".col"))
+      (if attr
+	  (with-open-file (s col :direction :output)
+	    (format s "~S" attr))
+	(if (file-exist-p col) (delete-file col))
+	)
+      )))
+
+;;; バッファ保存時に色情報を保存
+(add-hook '*after-save-buffer-hook* 'color-write)	;;; coloring.l より引用（一部改変）（ここまで）
+
+;;; バッファを閉じるとき色保存	;;; colorant.l より引用しました
+(defun coloring-delete-buffer (buffer)
+  (let ((f (minibuffer-window-p (selected-window))))
+    (unwind-protect
+	(progn
+	  (and f (other-window))
+	  (save-excursion
+	    (set-buffer buffer)
+	    (when (and (not *coloring-not-save*) ; close-selected-buffer 対策
+		       ;; 未保存のまま閉じる場合は保存しない
+		       (not (need-buffer-save-p buffer)))
+	      (color-write))))
+      (setq *coloring-not-save* nil)
+      (and f (set-window (minibuffer-window)))))
+  t)
+(add-hook '*delete-buffer-hook* #'coloring-delete-buffer)
+
+;;; 既存の関数 close-selected-buffer の書き換え
+(defun close-selected-buffer ()
+  (interactive)
+  (cond ((not (need-buffer-save-p (selected-buffer)))
+	 (kill-buffer (selected-buffer)))
+	((yes-no-or-cancel-p "~aを保存しますか?" (selected-buffer))
+	 (if (save-buffer-dialog)
+	     (kill-buffer (selected-buffer))))
+	(t
+	 (setq *coloring-not-save* t) ; 追加
+	 (not-modified)
+	 (kill-buffer (selected-buffer)))))
+
+
+;;; ■色づけしたテキストをダイアログボックスで表示する
+
+(defun make-coloring-list ()
+  (let ((l (delete nil (mapcar #'(lambda (x) (unless (caddr x) x))
+			       (list-text-attributes)))) result)
+    (save-excursion
+      (dolist (attr l)
+	(let* ((start (first attr))
+	       (end (second attr))
+	       (str (buffer-substring start end)))
+	  (goto-char start)
+	  (push (list (current-line-number)
+		      str
+		      start)
+		result))))
+    (nreverse result)))
+
+(defun coloring-list ()	;;; gmark.l を参考にしました。
+  (interactive)
+  (let ((list (make-coloring-list)))
+    (if list
+	(progn
+	  (setq *coloring-return-marker*
+		(set-marker (make-marker) (point)))
+	  (multiple-value-bind (result data)
+	      (dialog-box
+	       '(dialog 0 0 260 123
+		 (:caption "強調文字列")
+		 (:font 9 "ＭＳ Ｐゴシック")
+		 (:control
+		  (:listbox list nil #x50b10111 4 5 192 114)
+		  (:button go "移動(&G)" #x50010001 205 5 50 14)
+		  (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 205 24 50 14)))
+	       (list (cons 'list list)
+		     (cons 'list (find *last-coloring-list* list :key #'caddr)))
+	       `((list :column (-6 128 0) :must-match t :enable (go))))
+	    (when result
+	      (setq *last-coloring-list* (cadddr (assoc 'list data)))
+	      (goto-char *last-coloring-list*))))
+      (plain-error "ないよん"))))
+
+;;; 前回色づけした位置または前回ダイアログボックスを表示した位置に戻る
+(defun coloring-return-point ()
+  (interactive)
+  (if *coloring-return-marker*
+      (if (marker-point *coloring-return-marker*)
+	  (progn (when (pre-selection-p) (stop-selection))
+	    (goto-char (marker-point *coloring-return-marker*)))
+	(plain-error "マーカーが削除されています"))
+    (plain-error "マーカーが設定されていません")))
+
+
+;;; ■色情報を保持してテキストをコピー・貼り付け
+
+;;; 色情報を保持してテキストをコピー
+(defun copy-coloring-text ()
+  (interactive)
+  (if (pre-selection-p)
+      (let* ((l (delete nil (mapcar #'(lambda (x) (unless (caddr x) x))
+				    (list-text-attributes))))
+	     (start (selection-mark))
+	     (end (selection-point))
+	     start1 start2 end1 end2 attr exist)
+	(when (> start end)
+	  (rotatef start end))
+	(setq *copied-coloring-txt* nil)
+	(setq *copied-attribute-list* nil)
+	(dolist (c l)
+	  (setq start1 (first c))
+	  (setq end1 (second c))
+	  (when (or (and (>= start1 start) (< start1 end))
+		    (and (> end1 start) (<= end1 end))
+		    (and (< start1 start) (> end1 end)))
+	    (setq exist t)
+	    (if (< start1 start)
+		(setq start2 0)
+	      (setq start2 (- start1 start)))
+	    (if (> end1 end)
+		(setq end2 (- end start))
+	      (setq end2 (- end1 start)))
+	    (setq attr (nthcdr 2 c))
+	    (push (list start2 end2 attr) *copied-attribute-list*)))
+	(if exist
+	    (setq *copied-coloring-txt* (buffer-substring start end))
+	  (plain-error "色づけがなされていません")))
+    (plain-error "セレクションが設定されていません")))
+
+;;; 色情報を保持してテキストを貼り付け
+(defun paste-coloring-text ()
+  (interactive)
+  (if *copied-coloring-txt*
+      (let ((poi (point)))
+	(insert *copied-coloring-txt*)
+	(dolist (c *copied-attribute-list*)
+	  (let ((start (first c))
+		(end (second c))
+		(attr (third c)))
+	    (apply #'set-text-attribute
+		   (+ poi start)
+		   (+ poi end) attr))))
+    (plain-error "コピーされていません")))
+
+
+;;; ■色づけ部分を括弧で囲む
+
+(defun enclose-braces-coloring-string ()
+  (interactive)
+  (continue-pre-selection)
+  (coloring-braces-list))
+
+(defun enclose-braces-coloring-string1 (fb eb)
+  (let ((l (delete nil (mapcar #'(lambda (x) (unless (caddr x) x))
+			       (list-text-attributes))))
+	(rise 0) start end exist)
+    (if l
+	(progn
+	  (when (pre-selection-p)
+	    (setq start (selection-mark))
+	    (setq end (selection-point))
+	    (when (> start end)
+	      (rotatef start end)))
+	  (save-excursion
+	    (dolist (attr l)
+	      (let ((start1 (first attr))
+		    (end1 (second attr)))
+		(flet ((insert-braces ()
+			 (goto-char (+ start1 rise))
+			 (insert fb)
+			 (setq rise (+ rise (length fb)))
+			 (goto-char (+ end1 rise))
+			 (insert eb)
+			 (setq rise (+ rise (length eb)))))
+		  (if start
+		      (when (or (and (>= start1 start) (< start1 end))
+				(and (> end1 start) (<= end1 end))
+				(and (< start1 start) (> end1 end)))
+			(setq exist t)
+			(when (< start1 start)
+			  (setq start1 start))
+			(when (> end1 end)
+			  (setq end1 end))
+			(insert-braces))
+		    (insert-braces))))))
+	  (or (not start) exist
+	      (plain-error "色づけがなされていません")
+	      (return-from enclose-braces-coloring-string1))
+	  (stop-selection)
+	  (refresh-screen))
+      (plain-error "色づけがなされていません"))))
+
+;;; 括弧をポップアップ表示する
+(defun coloring-braces-list (&optional s)	;;; insert-brace.l より引用（一部改変）－②（ここから）
+  (let (fb eb st-num st-h-num)
+    (popup-list
+     *coloring-brace-list*
+     #'(lambda (target-brace)
+	 (when target-brace
+	   ;list の前に持ってくる｡
+	   (delete target-brace *coloring-brace-list* :test #'equal)
+	   (push target-brace *coloring-brace-list*)
+	   ;:から後ろを取る
+	   (if (string-matchp *coloring-brace-list-comment* target-brace)
+	       (setq target-brace (substring target-brace 0
+					     (string-matchp *coloring-brace-list-comment* target-brace))))
+	   ;tagの場合
+	   (when (string-equal "HTML" target-brace)
+	     (setq *coloring-brace-html-tag*
+		   (read-string "input : " :default *coloring-brace-html-tag* :history *coloring-brace-html-tag-list*)
+		   )
+	     (push *coloring-brace-html-tag* *coloring-brace-html-tag-list*)
+	     (setq target-brace (format nil "<~A> </~A>" *coloring-brace-html-tag* *coloring-brace-html-tag*))
+	     )
+	   ;２分割して前後に振り分ける
+	   (setq st-num (length target-brace))
+	   (setq st-h-num (ceiling (/ st-num 2)))
+	   (setq fb (substring target-brace 0 st-h-num))
+	   (setq eb (substring target-brace st-h-num))
+	   (if s
+	       (color-string-popup fb eb t)
+	     (enclose-braces-coloring-string1 fb eb))
+	   )))))	;;; insert-brace.l より引用（一部改変）－②（ここまで）
+
+
+;;; ■括弧内を色付けする
+
+(defun coloring-enclosed-braces-string ()
+  (interactive)
+  (continue-pre-selection)
+  (coloring-braces-list t))
+
+(defun coloring-enclosed-braces-string1 (fb eb &rest attr)
+  (let (start1 end1 match)
+    (flet ((set-color ()
+	     (goto-char (point-min))
+	     (while (and (scan-buffer fb :no-dup t)
+			 (setq start1 (point))
+			 (scan-buffer eb :no-dup t)
+			 (setq end1 (+ (point) (length eb)))
+			 (apply #'set-text-attribute
+				start1 end1 nil attr)
+			 (setq match t)))))
+      (save-excursion
+	(if (pre-selection-p)
+	    (map-selection
+	     #'(lambda (start end)
+		 (set-color)))
+	  (set-color)))
+      (if match
+	  (progn
+	    (stop-selection)
+	    (refresh-screen))
+	(plain-error "括弧がありません")))))
+
+;;; キーバインド
+(global-set-key #\S-RBtnDown 'color-string-popup)
+(global-set-key #\C-1 'copy-coloring-text)
+(global-set-key #\C-M-1 'paste-coloring-text)
+(global-set-key #\C-2 'coloring-list)
+(global-set-key #\C-M-2 'coloring-return-point)
+(global-set-key #\C-3 'enclose-braces-coloring-string)
+(global-set-key #\C-M-3 'coloring-enclosed-braces-string)
+
+;;;

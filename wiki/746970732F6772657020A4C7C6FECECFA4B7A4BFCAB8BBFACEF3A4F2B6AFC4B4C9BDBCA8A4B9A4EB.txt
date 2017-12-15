@@ -1,0 +1,56 @@
+[[tips]]
+
+2ch [Windows板] xyzzy Part10（過去ログ） の709、710、711、716で公開していただいているコードに、へたくそなコードを少し加えたものです。
+
+2ch でこのコードを公開していただいている方、および pickup-pattern の作者である OHKUBO Hiroshi さんに感謝です。
+
+----
+**インストール方法 [#j6130bb5]
+- OHKUBO Hiroshi さんの [[pickup-pattern>http://ohkubo.s53.xrea.com/xyzzy/index.html#pickup-pattern]] をインストールする。
+- &ref(pickup-grep.LZH); をダウンロードして解凍し、中身の pickup-grep.l を ~/site-lisp/に保存する。
+- .xyzzy や siteinit.l に (require "pickup-grep") と記述する。
+**使い方 [#fa64f82d]
+- F10・F11などで grep 該当行にジャンプした時に、grep で入力した文字列が強調表示されます。
+- また、grep 該当行にジャンプ後 F5 などで連続検索が出来ます。
+
+----
+**おまけ [#xb3ce2e6]
+pickup-pattern の設定でどの検索時にも検索語を強調表示したい場合には、
+
+ (add-hook '*show-match-hook* 'pickup-pattern-last-search)
+
+と .xyzzy などに設定する必要がありますが、 pickup-pattern に限らず、*show-match-hook* に引っ掛けると、ﾂｰﾙ(T)→共通設定→さまざま→検索での表示 での設定が無視されてしまいます。そこで、上の記述の後に、以下の記述を加えると「検索での表示」の設定が反映されるようになります。
+
+ (add-hook '*show-match-hook* 'ed::show-match)
+
+-grepバッファの強調表示をしたい場合には以下のコードを記述して下さい（xyzzyの使い方がわからぬやし励ましあえ3 734より引用させて頂きました。m(_ _)m）
+
+(2005/11/27 "^.*$" で grep するとフリーズするバグを修正)
+ (in-package "editor")
+ (defun grep-scan-file (file scanner)
+   (let ((found nil))
+     (while (funcall scanner)
+       (setq found t)
+       (let ((beg (progn (goto-bol) (point)))
+ 	    (end (progn (goto-eol) (point))))
+ 	(format t "~A:~D:~A~%" file (current-line-number) (buffer-substring beg end))
+ 	(when (and *grep-highlight-match*
+ 		   (buffer-stream-p *standard-output*))
+ 	  (save-excursion
+ 	    (set-buffer (buffer-stream-buffer *standard-output*))
+ 	    (let ((p (- (buffer-stream-point *standard-output*) end 1)))
+ 	      (apply #'set-text-attribute (+ (match-beginning 0) p) (+ (match-end 0) p)
+ 		     'grep *grep-highlight-match*)
+ 	      (goto-char (+ (match-end 0) p 1))
+ 	      (while (and (not (eolp)) (funcall scanner))
+ 		(setq p (point))
+ 		(apply #'set-text-attribute (match-beginning 0) (match-end 0)
+ 		       'grep *grep-highlight-match*)
+ 		(goto-char (+ (match-end 0) 1)))
+ 	      ))))
+       (or (forward-char 1)
+ 	  (return)))
+     found))
+ (in-package "user")
+
+#comment

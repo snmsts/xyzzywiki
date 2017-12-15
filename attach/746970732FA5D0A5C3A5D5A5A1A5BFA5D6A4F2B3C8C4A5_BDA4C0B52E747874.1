@@ -1,0 +1,22 @@
+①バッファ「a」が閉じられないのは、バッファ名が２文字以下であること、
+②バッファ「@あⅠ001.txt」が閉じられないのは、buffer-name「@あⅠ001.txt」
+と文字列「@あⅠ001.txt」の「Ⅰ」の部分がバイナリレベルで異なっている
+（従って (let ((buffer (find-buffer name))) の buffer が nil になる）
+ことが原因のようです。
+これらの問題については、buffer-bar-click-to-delete.l を以下のように
+修正することで解決できると思います（「@あⅠ」などという名前のフレームは
+閉じられないままですが、それはまあいいかなということで。(^^ゞ）。
+
+1.74～83行を
+	 (kill-buffer (selected-buffer))
+	 (refresh-screen)
+	 1)))))
+に差し替える。
+
+2.99～110行を
+	 (if (> delta 0)
+	     (next-buffer)
+	   (previous-buffer))
+	 (refresh-screen)
+	 1)))))
+に差し替える。

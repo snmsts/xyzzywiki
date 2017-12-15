@@ -1,0 +1,12 @@
+#freeze
+秀丸みたいにバッファを閉じる時に空ならファイルを削除
+
+ ;保存時ファイルが空なら確認して削除
+ (add-hook '*before-save-buffer-hook*
+           #'(lambda ()
+               (if (equal (point-max) (point-min))
+                   (if (y-or-n-p (format nil "~Aは空のファイルです。削除します か？" (buffer-name (selected-buffer))))
+                       (progn (delete-file (get-buffer-file-name))
+                         (delete-buffer (selected-buffer)))
+                     nil)
+                 nil)))

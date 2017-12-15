@@ -1,0 +1,38 @@
+* 「ファイラからまとめて印刷」のキャンセル [#m22d1167]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2006-04-21 (金) 10:30:26
+
+** メッセージ [#e2554b5d]
+-HIEさんの「ファイラからまとめて印刷」を使わせていただいてます。
+-最初のファイルだけ印刷設定ダイアログがでるのですが、ここでキャンセルすると２番目以降のファイルはすべて印刷されます。
+-ここでキャンセルした場合は何も印刷しないで終わりにしたいのですが、どこを変更すればよいでしょうか。
+
+ (defun print-selected-file ()
+   (interactive)
+   (toggle-ime nil)
+   (multiple-value-bind (files result)
+       (filer nil t "まとめてファイルを印刷" nil)
+     (when result
+       (let ((i 0))
+         (dolist (f files t)
+           (unless (file-directory-p f)
+             (find-file f)
+             (add-history f '*minibuffer-file-name-history*)
+             (if (zerop i)
+                 (progn
+                   (print-dialog)
+                   (setq i (1+ i)))
+               (print-buffer (selected-buffer)))
+             (delete-buffer (selected-buffer))
+             ))))))
+
+----
+ (if (print-dialog)
+     (setq i (1+ i))
+   (return-from print-selected-file nil))
+- うちにプリンタがないもので動作チェックできてませんが、 (progn ...) 部分を上のように書き換えるとどうでしょうか --  &new{2006-04-21 (金) 22:57:22};
+- 質問者です。返事がおそくなってすみません。試してみました。希望通りの動作をしてくれました。回答をしてくださった方、HIEさん、感謝です。 --  &new{2006-04-24 (月) 09:16:54};
+
+#comment

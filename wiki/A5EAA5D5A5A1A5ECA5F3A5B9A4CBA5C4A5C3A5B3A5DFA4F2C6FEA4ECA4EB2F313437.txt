@@ -1,0 +1,144 @@
+*coerce [#mf16c764]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[レム]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-09-02 17:17:09 (金)
+-バージョン: 
+
+**メッセージ [#l1a66044]
+を、どなたか詳しい人にお願いしたいです。
+----
+-coerceが分からないという質問ですよね。質問は[[質問箱]]でお願いします。 -- [[NANRI]] &new{2005-09-02 18:56:16 (金)};
+-せっかくなので調べてみました。わけがわからないのは使用例でカバーということで。ついでにcoerceの内部で使用しているmake-sequenceにも加筆したので書いておきます。あと関係ないですけど、「配列」と「ベクトル」はどっちの表現を使えばいいのかわからずごちゃまぜになってます。 -- [[Nomura]] &new{2005-09-02 21:22:08 (金)};
+ <chapter>
+ <title>coerce</title>
+ <type>Function</type>
+ <arguments>coerce OBJECT TYPE</arguments>
+ <package>lisp</package>
+ <description>
+ OBJECT を TYPE 型に変換します。
+ 
+ TYPE はシンボルまたはリストで、それぞれ以下の型に変換されます。
+   'list         ──→ リスト
+   'array        ─┬→ 配列
+   'simple-array ─┘
+   'character    ──→ 文字
+   'float        ─┬→ 単精度浮動小数点数
+   'short-float  ─┤
+   'single-float ─┘
+   'double-float ─┬→ 倍精度浮動小数点数
+   'long-float   ─┘
+   'complex      ──→ 複素数
+   'function     ──→ 関数
+ リストの場合、その最初の要素で型が決まります。
+ 2番目以降の要素は、最初の要素が array、simple-array、complex の場合のみ
+ 意味を持ち、それぞれ以下のように動作します。
+   '(array ...)        ─┬→ make-sequence の TYPE と同じ
+   '(simple-array ...) ─┘
+   '(complex ...)      ──→ 実部、虚部を二番目の要素の型に変換
+   
+ 使用例:
+   (coerce "abc" 'list)                         ; 文字列を文字のリストに
+   =&gt; (#\a #\b #\c)
+   (coerce #(1 2 3) 'list)                      ; 配列をリストに
+   =&gt; (1 2 3)
+   (coerce '(a b c) '(array t 1))               ; リストを配列に
+   =&gt; #(a b c)
+   (coerce "abc" '(array t 1))                  ; 文字列を文字の配列に
+   =&gt; #(#\a #\b #\c)
+   (coerce '(#\a #\b #\c) '(array character 1)) ; 文字のリストを文字列に
+   =&gt; "abc"
+   (coerce "abc" '(array character 1))          ; 意味なし
+   =&gt; "abc"
+ 
+   (coerce "a" 'character)                      ; 文字列を文字に
+   =&gt; #\a
+   
+   (coerce 1 'float)
+   =&gt; 1.0
+   (coerce 1 'double-float)
+   =&gt; 1.0d0
+   (coerce 1.0 'complex)
+   =&gt; #C(1.0 0.0)
+   (coerce #C(1 2) '(complex float))            ; 単精度の複素数に
+   =&gt; #C(1.0 2.0)
+   
+   (coerce 'let 'function)                      ; シンボル名の関数を返す
+   =&gt; #&lt;function: let&gt;
+   (coerce '(lambda (x) (* x 2)) 'function)     ; 関数を作ることも
+   =&gt; #&lt;lexical-closure: (anonymous)&gt;
+   (funcall (coerce '(lambda (x) (* x 2)) 'function) 12)
+   =&gt; 24
+ </description>
+ <seealso>type-of</seealso>
+ <link></link>
+ <section>データ型</section>
+ <file>typespec.l</file>
+ </chapter>
+
+ <chapter>
+ <title>make-sequence</title>
+ <type>Function</type>
+ <arguments>make-sequence TYPE SIZE &amp;key INITIAL-ELEMENT</arguments>
+ <package>lisp</package>
+ <description>
+ 要素のタイプが TYPE でサイズが SIZE なシーケンスを作成して返します。
+ INITIAL-ELEMENT が与えられた場合はそれぞれの項目はそれで初期化されます。
+   
+ TYPE の値と返されるシーケンスは以下の通りです。
+   'list          ──→ リスト
+   'vector        ─┬→ ベクトル
+   'simple-vector ─┘
+   'string        ─┬→ 文字列
+   'simple-string ─┘
+ 
+ TYPE にはリストを与えることもでき、その場合は最初の要素でシーケンスが決まります。
+   '(list ...)         ──→ リスト
+   '(array ...)        ─┬→ 配列
+   '(simple-array ...) ─┘
+ 最初の要素が list の場合、二番目以降の引数は無視されます。
+ 最初の要素が array または simple-array の場合は三番目の要素まで意味を持ちます。
+ 二番目の要素は値によって以下のように変化します。リストの場合はその最初の要素で判断されます。
+   t                  ─┬→ 配列
+   nil                ─┘
+   character          ─┬→ 文字列
+   base-character     ─┤
+   standard-char      ─┤
+   extended-character ─┘
+ 三番目の要素は 1 または (*) または (SIZE に等しい数値) でなければなりませんが、
+ どれを選んでも動作に違いはないようです。
+   
+ 使用例：
+   ;;; #\a が 8 文字の文字列を作ってみる
+   (make-sequence 'string 8 :initial-element #\a)
+   =&gt; "aaaaaaaa"
+   (make-sequence 'list 4 :initial-element "abc")
+   =&gt; (#1="abc" #1# #1# #1#)
+   (make-sequence 'vector 4 :initial-element 'a)
+   =&gt; #(a a a a)
+   ;;; あえて TYPE に array を与えてみる
+   (make-sequence '(array t (*)) 4 :initial-element 'a)
+   =&gt; #(a a a a)
+   (make-sequence '(array character 1) 8 :initial-element #\a)
+   =&gt; "aaaaaaaa"
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>シーケンス</section>
+ <file>sequence.l</file>
+ </chapter>
+-cltl2を見ると一次元配列を特にvectorと言いそれ以外を含めてarrayといっているように思います。正しいかどうかはよくわかりませんが。 -- [[佐野]] &new{2005-09-02 22:58:04 (金)};
+-いや、referenceに該当する項目がなかったので新規に書き起こしてほしいという要望でした。わかりにくくてすいません。＞NANRIさん -- [[レム]] &new{2005-09-02 23:24:24 (金)};
+-それはやっぱりなんか順序が違いません？ -- [[佐野]] &new{2005-09-02 23:35:27 (金)};
+-そういう要望は書ける範囲をご自分で書いた上で追記・修正を求めるという形でお願いします。 -- [[NANRI]] &new{2005-09-02 23:36:13 (金)};
+-すいませんでした。お許しください。＞佐野さん、NANRIさん。 -- [[レム]] &new{2005-09-03 15:54:03 (土)};
+-xyzzy リファレンスは各人の自己学習の副産物や質問に対する回答の集積で成り立っていますので、新規項目の要望というのはやっぱり何か違う気がします。ご理解ください。~
+かといって、需要があることを主張することまでダメと言う気はありません。[[リファレンスにツッコミを入れる]]のページ以下を使わずに[[質問箱]]、[[雑談]]、[[WishList]]あたりを使っていただければ、と思っています。~
+~
+Nomuraさん、調べていただきありがとうございました。 -- [[NANRI]] &new{2005-09-04 20:55:51 (日)};
+-取り込みました。→[[refwiki:make-sequence]], [[refwiki:coerce]] -- [[NANRI]] &new{2005-10-23 00:41:28 (日)};
+
+#comment

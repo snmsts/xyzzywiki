@@ -1,0 +1,30 @@
+* maphash [#nc36ca1d]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[佐野]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: ツッコミをいれる
+-投稿日:     2007-03-04 (日) 02:16:12
+-バージョン: 
+
+** メッセージ [#qb96dd30]
+[[refwiki:maphash]]のwith-output-to-selected-bufferの意義が感じられません
+scratchで泣きを見る可能性を思うと削ったほうが良いように思います。
+
+----
+- 確かに必要なさそうです。さらに他にも問題があるのでこうするのはどうでしょう。 --  &new{2007-03-04 (日) 14:49:27};
+ (let ((hsh (make-hash-table :test 'equal)))
+   (setf (gethash #\a hsh) "Apple")  ;; =&gt; "Apple"
+   (setf (gethash #\b hsh) "Banana") ;; =&gt; "Banana"
+   (setf (gethash #\c hsh) "Cake")   ;; =&gt; "Cake"  
+   (maphash #'(lambda (x y) (format t "~S ~S~%"x y)) hsh))
+ =&gt;
+ #\a "Apple"
+ #\b "Banana"
+ #\c "Cake"
+ nil
+- となると [[refwiki:with-hash-table-iterator]] も直したほうが良いですね。 これら以外には、 直すべきものは無いようです。 --  &new{2007-03-04 (日) 15:09:26};
+- とりあえずてきとーに直しておきました。もっといい例があったら教えてください。 -- [[NANRI]] &new{2007-03-05 (月) 21:54:33};
+- 提示していただいたコードはコードの途中の戻り値を示したことがあったっけと感じたり、標準出力と戻り値の差別化は何かしら対策を考えないとわかりづらいなぁと思ってしまったので、いったん見送りました。 -- [[NANRI]] &new{2007-03-05 (月) 21:57:51};
+
+#comment

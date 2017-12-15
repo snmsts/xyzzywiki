@@ -1,0 +1,40 @@
+[[tips]]
+
+2003/10/11
+
+*calcモードで補完 [#c4124e92]
+calc-modeで履歴から補完したいなーと思って。~
+
+**ダウンロード [#s1101994]
+#ref(calc-ext.l,left)
+
+**準備 [#hedd745d]
+calc-ext.lをsite-lispにぶち込んで、必要ならbyte-compile。~
+そして.xyzzyに以下を
+ ;;calc拡張
+ (add-hook 'ed::*calc-mode-hook*
+ 	  #'(lambda()
+ 	      (require "calc-ext")))
+
+**使い方 [#tce482cf]
+M-x calc から
+ $ 1 + 1
+ 2
+ $ 2 + 2
+ 4
+ $ 3 + 3
+ 6
+ $ 
+この状態でM-pを押すと
+ $ 3 + 3
+もう一回押すと
+ $ 2 + 2
+ここでM-nを押すと、
+ $ 3 + 3
+に戻ります。
+
+----
+-ありがとうございます。とても快適です。 -- [[butsumon]] &new{2004-01-23 (金) 14:09:24};
+- 1 -- [[-1']] &new{2015-02-23 (月) 11:25:53};
+
+#comment

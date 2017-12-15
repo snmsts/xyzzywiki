@@ -1,0 +1,63 @@
+* list* get-next-buffer [#p624175d]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-05-02 (火) 21:59:03
+-バージョン: 
+
+** メッセージ [#yf4152a1]
+ <chapter>
+ <title>list*</title>
+ <type>Function</type>
+ <arguments>list* &amp;rest ARGS</arguments>
+ <package>lisp</package>
+ <description>
+ list とよく似て ARGS を要素とするリストを作りますが、 最後の要素だけは
+ コンスセルの cdr部に直接つなげます。
+ 
+ 使用例:
+   (setq a (list 1 2 3))
+   =&gt; (1 2 3)          ; (1 . (2 . (3 . nil)))
+ 
+   (setq b (list* 1 2 3))
+   =&gt; (1 2 . 3)        ; (1 . (2 . 3))
+ 
+   (setq c (list* 4 5 6 a))
+   =&gt; (4 5 6 1 2 3)
+ </description>
+ <seealso>list</seealso>
+ <link></link>
+ <section>リスト</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>get-next-buffer</title>
+ <type>Function</type>
+ <arguments>get-next-buffer &amp;optional BUFFER REVERSE TAB-ORDER INTERNAL</arguments>
+ <package>editor</package>
+ <description>
+ 次のバッファを返します。
+ 
+   BUFFER    : 
+        :top     先頭のバッファを返します。
+        :bottom  最後尾のバッファを返します。
+        バッファ 指定したバッファの次のバッファを返します。
+   REVERSE   : non-nil なら一つ前のバッファを返します。
+   TAB-ORDER : nil ならバッファの生成順で、non-nil ならバッファタブ順で
+               次のバッファを返します。
+   INTERNAL  : non-nil なら非表示バッファも含めて次のバッファを返します。
+ </description>
+ <seealso>next-buffer</seealso>
+ <seealso>buffer-list</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+--------
+- どーもです。list*の方はドット表現を見せたほうが分かりやすいだろうと思ったので足しました。 -- [[NANRI]] &new{2006-05-03 (水) 05:53:37};
+
+#comment

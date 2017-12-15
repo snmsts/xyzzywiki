@@ -1,0 +1,46 @@
+*xyzzylisp [#a6fab9fa]
+
+**拡張Lispとは [#s2ab8f3a]
+xyzzyで動くLispファイル群です。多分。
+
+頭に「拡張」と付くのは、xyzzyのアーカイブに含まれるLispファイルと区別するためかと思います。他のソフトで言うところのプラグインのように、拡張Lispを導入すると、xyzzyに様々な機能を追加することができます。
+
+ごちゃごちゃしてきたので、wikiにページを作ったらここに追記していってくれるとうれしいです。
+//ライセンスとかはなんとも言いたくないのでぱくれなかったなぁ
+
+**関連ページ [#f763a1a2]
+:[[tips]]|限定的なのはここにぶち込んでしまうのが良し。((そして後で分類に困る))
+----
+*索引 [#f597df4e]
+#contents
+
+**winapi by 佐野 [#ffa0244d]
+[[./winapi]]
+
+**NetInstaller by 服部さん [#gcbb13af]
+配布ページ~
+http://www7a.biglobe.ne.jp/~hat/~
+
+**niseabout by 佐野 [#p8f3890d]
+[[./niseabout]]
+
+**nindent by 佐野 [#ea9315c4]
+[[./nindent]]
+
+**winamp by 佐野 [#kf4878a4]
+[[./winamp]]
+
+**vi-mode by 有野さん [#bcfe698c]
+[[Omicron:xyzzy/viモード]]
+
+**enparam by 佐野 [#c8c8eecf]
+[[./enparam]]
+
+**configure by 佐野 [#s39cca50]
+[[./configure]]
+
+**javascript-mode by ビスポさん [#y6605e9f]
+[[./javascript-mode]]
+
+**gdl by 佐野 [#u1ac4c82]
+[[./gdl]]

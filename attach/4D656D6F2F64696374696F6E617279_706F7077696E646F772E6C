@@ -1,0 +1,181 @@
+;; Last updated: <2003/12/08 21:47:13 +0900>
+;; popwindow.l
+;;
+;; このファイルをsite-lisp以下に置いて、バイトコンパイル。
+;;
+;; ~/.xyzzyに
+;; (require "popwindow")
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (require "wip/winapi"))
+
+(defpackage "pop-window"
+  (:use "lisp" "winapi" "foreign")
+  )
+
+;(in-package "win-user")
+(in-package "pop-window")
+
+(export '(*pop-window-font-size*
+	  *pop-window-default-alpha*
+	  *pop-window-limit*
+	  *pop-window-height*
+	  *pop-window-width*
+	  *default-pop-window-charset*))
+
+(defconstant *pop-window-class* "popwindow-class")
+(defvar *hwnd-pop-window* nil)
+(defvar *pop-window-dc-handle* nil)
+
+;; ポップアップウィンドウのフォントサイズ
+(defvar *pop-window-font-size* 14)
+;; 透過ウィンドウのアルファ値 0-255で値が大きくなるほど透過しない
+;; nilで透過処理をしない
+(defvar *pop-window-default-alpha* 200)
+;; ポップアップウィンドウが非表示になるまでの秒数
+(defvar *pop-window-limit* 30)
+;; ポップアップウィンドウのサイズ。表示後に変更可
+(defvar *pop-window-height* 600)
+(defvar *pop-window-width* 400)
+(defvar *default-pop-window-charset* SHIFTJIS_CHARSET)
+
+(unless (find "api" *modules* :test 'string=)
+  ; dll関数の登録
+  (c:define-dll-entry winapi:LONG GetWindowLong (winapi:HWND c:int) "user32" "GetWindowLongA")
+  (c:define-dll-entry winapi:LONG SetWindowLong (winapi:HWND c:int winapi:LONG) "user32" "SetWindowLongA")
+  (c:define-dll-entry winapi:LONG SetLayeredWindowAttributes (winapi:HWND winapi:DWORD winapi:BYTE winapi:DWORD) "user32")
+  (c:*define GWL_EXSTYLE  -20)
+  (c:*define SW_SHOWNA 8)
+  (c:*define WS_EX_TOOLWINDOW #x00000080)
+  )
+(c:define-dll-entry c:int DrawTextW (winapi:HDC winapi:LPCSTR c:int (winapi:RECT *) winapi:UINT) "user32")
+
+(defun set-layered-window (hwnd alpha)
+  (let ((ex-style (GetWindowLong hwnd GWL_EXSTYLE)))
+    (SetWindowLong hwnd GWL_EXSTYLE (logior ex-style #x80000))
+    (SetLayeredWindowAttributes hwnd 0 alpha 2)))
+
+(defun set-hide-window ()
+  (let ((ex-style (GetWindowLong *hwnd-pop-window* GWL_EXSTYLE)))
+    (SetWindowLong *hwnd-pop-window* GWL_EXSTYLE (logior ex-style #x80000))
+    (SetLayeredWindowAttributes *hwnd-pop-window* 0 0 2)))
+
+(let (mtext pop-window-charset)
+  (defun draw-text-ex (hwnd hdc &optional otext cset)
+    (when otext
+      (progn
+	(if cset
+	    (setq pop-window-charset cset)
+	  (setq pop-window-charset *default-pop-window-charset*))
+	(setq mtext otext))
+      )
+    (let* ((r (make-RECT))
+	   (sz (make-SIZE))
+	   (text (si:make-string-chunk (ed::map-internal-to-ucs-2 mtext)))
+	   (l (length mtext))
+	   ofont)
+      (let ((lf (make-LOGFONT)))
+	(si:clear-chunk lf)
+	(setf (LOGFONT-lfHeight lf) *pop-window-font-size*)
+	(setf (LOGFONT-lfCharSet lf) pop-window-charset)
+	(si:pack-string lf (c-struct-offset-of LOGFONT winapi::lfFaceName)
+			"ＭＳ ゴシック")
+	(setq ofont (SelectObject hdc (CreateFontIndirect lf))))
+      (GetClientRect hwnd r)
+      (GetTextExtentPoint32 hdc text l sz)
+      (setf (RECT-right r) (- (RECT-right r) 5))
+      (setf (RECT-left r) (+ (RECT-left r) 10))
+      (setf (RECT-top r) (+ (RECT-top r) 10))
+      (setf (RECT-bottom r) (- (RECT-bottom r) 5))
+      (DrawTextW hdc text l r 16)
+      (DeleteObject (SelectObject hdc ofont))
+      (when *pop-window-default-alpha*
+	(set-layered-window *hwnd-pop-window* *pop-window-default-alpha*)
+	(ShowWindow hwnd SW_SHOWNA))
+      ))
+  )
+
+(unless (fboundp 'pop-window-wndproc-stub)
+  (defun-c-callable LRESULT pop-window-wndproc-stub ((HWND hwnd) (UINT msg) (WPARAM wparam) (LPARAM lparam))
+		    (pop-window-wndproc hwnd msg wparam lparam)))
+
+(defun pop-window-wndproc (hwnd msg wparam lparam)
+  (cond ((= msg WM_NCDESTROY)
+	 (setq *hwnd-pop-window* nil))
+	((= msg WM_PAINT)
+	 (let* ((ps (make-PAINTSTRUCT))
+		(hdc (BeginPaint hwnd ps)))
+	   (draw-text-ex hwnd hdc)
+	   (EndPaint hwnd ps))
+	 (return-from pop-window-wndproc 0))
+	)
+  (DefWindowProc hwnd msg wparam lparam))
+
+(defun register-pop-window-window ()
+  (let ((wc (make-WNDCLASS)))
+    (setf (WNDCLASS-style wc) (logior CS_HREDRAW CS_VREDRAW))
+    (setf (WNDCLASS-lpfnWndProc wc) #'pop-window-wndproc-stub)
+    (setf (WNDCLASS-cbClsExtra wc) 0)
+    (setf (WNDCLASS-cbWndExtra wc) 0)
+    (setf (WNDCLASS-hInstance wc) (GetModuleHandle 0))
+    (setf (WNDCLASS-hIcon wc) (LoadIcon 0 (MAKEINTRESOURCE IDI_APPLICATION)))
+    (setf (WNDCLASS-hCursor wc) (LoadCursor 0 (MAKEINTRESOURCE IDC_ARROW)))
+    (setf (WNDCLASS-hbrBackground wc) (+ 1 5))
+    (setf (WNDCLASS-lpszMenuName wc) 0)
+    (setf (WNDCLASS-lpszClassName wc)
+	  (si:make-string-chunk *pop-window-class*))
+    (RegisterClass wc)))
+
+(defun create-pop-window-window ()
+  (let ((hwnd (CreateWindowEx WS_EX_TOOLWINDOW (si:make-string-chunk *pop-window-class*)
+			      (si:make-string-chunk "PopWindow")
+			      WS_OVERLAPPEDWINDOW
+			      ;;WS_POPUPWINDOW
+			      CW_USEDEFAULT CW_USEDEFAULT
+			      *pop-window-width* *pop-window-height*
+			      (ed::get-window-handle) 0 (GetModuleHandle 0) 0)))
+    (UpdateWindow hwnd)
+    hwnd))
+
+(defun pop-window-init ()
+  (if *hwnd-pop-window*
+      (progn
+	(InvalidateRect *hwnd-pop-window* 0 1)
+	(UpdateWindow *hwnd-pop-window*))
+    (progn
+      (register-pop-window-window)
+      (setq *hwnd-pop-window* (create-pop-window-window))
+      (setf ps (make-PAINTSTRUCT))
+      (setq *pop-window-dc-handle* (BeginPaint *hwnd-pop-window* ps))
+      )))
+
+(defun user::pop-window-pop (text &optional enc)
+  (pop-window-init)
+  (draw-text-ex *hwnd-pop-window* *pop-window-dc-handle* text enc)
+  (InvalidateRect *hwnd-pop-window* 0 1)
+  (unless *pop-window-limit*
+    (ed:stop-timer 'set-hide-window)
+    (ed:start-timer *pop-window-limit* 'set-hide-window t))
+  )
+
+;;pop-windowのサンプルとしてのrefe
+;; (define-key *ruby-mode-map* '(#\C-c #\r) 'pop-window::refe)
+;; とか、好きなキーにバインド。
+(defun refe (word)
+  (ed:interactive "sSearch reference: ")
+  (let (refe-result-string)
+    (ed:save-window-excursion
+      (let ((outbuffer nil)
+	    (outstr nil))
+	(setq outbuffer (ed:create-new-buffer "refe output"))
+	;; cygwinが入っていない場合はバッチファイルを指定？バッチファイルを使う場合の指定方法は知らん(笑)
+	(ed:execute-shell-command (ed:concat "bash -t -c 'refe " word "'") :output outbuffer)
+	(ed:set-buffer outbuffer)
+	(setq refe-result-string (ed:buffer-substring (ed:point-min) (ed:point-max)))
+	(ed:delete-buffer outbuffer)
+	)
+      )
+    (user::pop-window-pop refe-result-string)))
+
+(provide "popwindow")
+;;EOF

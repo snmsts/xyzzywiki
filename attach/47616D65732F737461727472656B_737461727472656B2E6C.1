@@ -1,0 +1,628 @@
+;;; This is an adaptation of an old text-based Star Trek game!
+;;;   This lisp program is based on a BASIC program adapted by
+;;;   L.E. Cochran 2/29/1976.
+;;;
+;;;   http://www.tc.umn.edu/~sorem002/startrek.html
+
+(defpackage "startrek" (:use "lisp" "editor"))
+(defun startrek () (interactive) (startrek::startrek))
+(in-package "startrek")
+
+(defvar *qs* '("." "E" "K" "B" "*"))
+(defvar *ds* '("WARP ENGINES" "SHORT RANGE SENSORS" "LONG RANGE SENSORS"
+			   "PHASERS" "PHOTON TORPEDOES" "GALACTIC RECORDS"))
+(defvar *d* (make-array 6))
+(defvar *k1* (make-array 8))
+(defvar *k2* (make-array 8))
+(defvar *sect* (make-array '(8 8)))
+(defvar *quad* (make-array '(8 8)))
+(defvar *a* 0)
+(defvar *newquad* 0)
+(defvar *q1* 0)
+(defvar *q2* 0)
+(defvar *x* 0)
+(defvar *y* 0)
+(defvar *x7* 0)
+(defvar *y7* 0)
+(defvar *k* 0)
+(defvar *i* 0)
+(defvar *j* 0)
+(defvar *b* 0)
+(defvar *k0* 0)
+(defvar *k9* 0)
+(defvar *b9* 0)
+(defvar *s* 0)
+(defvar *s1* 0)
+(defvar *s2* 0)
+(defvar *t* 0)
+(defvar *t0* 0)
+(defvar *t9* 0)
+(defvar *p* 0)
+(defvar *p0* 0)
+(defvar *x1* 0)
+(defvar *yy* 0)
+(defvar *x2* 0)
+(defvar *y2* 0)
+(defvar *x3* 0)
+(defvar *y3* 0)
+(defvar *aa* 0)
+(defvar *e* 0)
+(defvar *e0* 0)
+(defvar *n* 0)
+(defvar *rn* 0)
+(defvar *h* 0)
+(defvar *w* 0)
+(defvar *c* 0)
+(defvar *s9* 0)
+(defvar *k3* (make-array 8))
+(defvar *ans* "")
+(defvar *fbuff* "")
+(defvar *cond* "")
+(defvar *es* "")
+(defvar *cmdbuff* "")
+
+(defun pow (x y)
+  (if (< y 0)
+	  (pow-iter (/ 1 x) (* y -1) 1)
+	(pow-iter x y 1)))
+(defun pow-iter (x y sum)
+  (if (= y 0)
+	  sum
+	(pow-iter x (1- y) (* sum x))))
+
+;;; Show program title
+(defun title ()
+  (princ "STAR TREK!!\n")
+  (princ "===========\n\n"))
+
+;;; Repair anything that is down
+(defun fixdamage ()
+  (dotimes (*i* 6) (setf (aref *d* *i*) 0)))
+
+;;; Initialize pseudo-random number generator
+(defun randinit ()
+  (setq *rn* (mod (get-universal-time) 1000))
+  *rn*)
+
+;;; Generate a new pseudo-random number
+(defun rnd ()
+  (setq *rn* (- (* *rn* 777.7) (floor (* *rn* 777.7))))
+  *rn*)
+
+;;; Determine damage hit amount (distance-dependent)
+(defun fnd ()
+  (+ (sqrt (pow (abs (- (aref *k1* *i*) *s1*)) 2)) (pow (abs (- (aref *k2* *i*) *s2*)) 2)))
+
+;;; Set a random x and y in interval [0,7]
+(defun setrndxy ()
+  (setq *x* (floor (* (rnd) 8)))
+  (setq *y* (floor (* (rnd) 8))))
+
+;;; Find an unoccupied sector
+(defun findslot ()
+  (while t
+	(setrndxy)
+	(if (< (aref *sect* *x* *y*) 2) (return-from findslot))))
+
+;;; See if r1 is less than r2, BASIC style
+(defun lt (r1 r2)
+  (if (< r1 r2)
+	  -1 ; BASIC true = -1
+	0)) ; BASIC false = 0
+
+;;; See if r1 is greater than r2, BASIC style
+(defun gt (r1 r2)
+  (if (> r1 r2)
+	  -1 ; BASIC true = -1
+	0)) ; BASIC false = 0
+
+;;; Initialize
+(defun init ()
+  (randinit)
+  (fixdamage)
+  (setrndxy)
+  (setq *q1* *x*)
+  (setq *q2* *y*)
+  (setq *x* 8)
+  (setq *y* 1)
+  (setq *x1* 0.2075)
+  (setq *yy* 6.28)
+  (setq *x2* 3.28)
+  (setq *y2* 1.8)
+  (setq *aa* 0.96)
+  (setq *c* 100)
+  (setq *w* 10)
+  (setq *k9* 0)
+  (setq *b9* 0)
+  (setq *s9* 400.0)
+  (setq *t9* 3451)
+  (setq *t0* 3421)
+  (setq *t* *t0*)
+  (setq *e0* 4000.0)
+  (setq *e* *e0*)
+  (setq *p0* 10)
+  (setq *p* *p0*)
+  (dotimes (*i* 8)
+	(dotimes (*j* 8)
+	  (setq *k* 0)
+	  (setq *n* (rnd))
+	  (if (< *n* *x1*)
+		  (progn
+			(setq *n* (* *n* 64))
+			(setq *k* (- (lt *n* *yy*) *y*))
+			(setq *k* (+ *k* (lt *n* *x2*) (lt *n* *y2*) (lt *n* 0.08) (lt *n* 0.03) (lt *n* 0.01)))
+			(setq *k9* (- *k9* *k*))))
+	  (setq *b* (gt (rnd) *aa*))
+	  (setq *b9* (- *b9* *b*))
+	  (setf (aref *quad* *i* *j*) (- (+ (* *k* *c*) (* *b* *w*)) (floor (+ (* (rnd) *x*) *y*))))))
+  (if (> *k9* (- *t9* *t0*)) (setq *t9* (+ *t0* *t9*)))
+  (if (<= *b9* 0)
+	  (progn
+		(setrndxy)
+		(setf (aref *quad* *x* *y*) (- (aref *quad* *x* *y*) 10))
+		(setq *b9* 1)))
+  (setq *k0* *k9*)
+  (princ (format nil "OBJECTIVE: DESTROY ~D KLINGON BATTLE CRUISERS IN ~D YEARS.\n" *k9* (- *t9* *t0*)))
+  (princ (format nil " THE NUMBER OF STARBASES IS ~D.\n\n" *b9*)))
+
+;;; Set up quadrant when entering it
+(defun setupquad()
+  (setq *a* 0)
+  (if (or (< *q1* 0) (> *q1* 7) (< *q2* 0) (> *q2* 7))
+	  (progn
+		(setq *n* 0)
+		(setq *s* 0)
+		(setq *k* 0))
+	(progn
+	  (setq *n* (abs (aref *quad* *q1* *q2*)))
+	  (setf (aref *quad* *q1* *q2*) *n*)
+	  (setq *s* (- *n* (* (floor (/ *n* 10)) 10)))
+	  (setq *k* (floor (/ *n* 100)))))
+  (setq *b* (floor (- (/ *n* 10) (* *k* 10))))
+  (setrndxy)
+  (setq *s1* *x*)
+  (setq *s2* *y*)
+  (dotimes (*i* 8)
+	(dotimes (*j* 8)
+	  (setf (aref *sect* *i* *j*) 1)))
+  (setf (aref *sect* *s1* *s2*) 2)
+  (dotimes (*i* 8)
+	(setf (aref *k3* *i*) 0)
+	(setq *x* 8)
+	(if (< *i* *k*)
+		(progn
+		  (findslot)
+		  (setf (aref *sect* *x* *y*) 3)
+		  (setf (aref *k3* *i*) *s9*)))
+	(setf (aref *k1* *i*) *x*)
+	(setf (aref *k2* *i*) *y*))
+  (let ((i *s*))
+	(if (> *b* 0)
+		(progn
+		  (findslot)
+		  (setf (aref *sect* *x* *y*) 4)))
+	(while (> *i* 0)
+	  (findslot)
+	  (setf (aref *sect* *x* *y*) 5)
+	  (decf *i*))))
+
+;;; Check condition
+(defun checkcond ()
+  (dotimes (ii 3)
+	(setq *i* (+ ii *s1* -1))
+	(dotimes (jj 3)
+	  (setq *j* (+ jj *s2* -1))
+	  (if (and (>= *i* 0) (<= *i* 7) (>= *j* 0) (<= *j* 7))
+		  (if (= (aref *sect* *i* *j*) 4) ; Docked at starbase
+			  (progn
+				(setq *cond* "DOCKED")
+				(setq *e* *e0*)
+				(setq *p* *p0*)
+				(fixdamage)
+				(return))))))
+  (if (> *k* 0) (setq *cond* "RED") ; Klingons present!
+	(if (< *e* (* 0.1 *e0*)) (setq *dond* "YELLOW") ; Low energy
+	  (setq *cond* "GREEN")))) ; A-OK!
+
+;;; Show hit on Enterprise or Klingon
+(defun showhit ()
+  (princ (format nil "~G UNIT HIT ON ~A SECTOR ~D - ~D  (~G LEFT)\n"
+				 *h* *es* (+ (aref *k1* *i*) 1) (+ (aref *k2* *i*) 1) *n*)))
+
+;;; Check for hits from Klingons
+(defun checkforhits ()
+  (if (< *k* 1) (return-from checkforhits)) ; No Klingons here!
+  (if (string= *cond* "DOCKED")
+	  (princ "STARBASE PROTECTS ENTERPRISE.\n")
+	(dotimes (*i* 8)
+	  (if (> (aref *k3* *i*) 0)
+		  (progn
+			(setq *h* (* (aref *k3* *i*) 0.4 (rnd)))
+			(setq *h* (/ *h* (pow (fnd) 0.4)))
+			(setq *e* (- *e* *h*))
+			(setq *es* "ENTERPRISE FROM")
+			(setq *n* *e*)
+			(showhit))))))
+
+;;; Show estimated time for repair
+(defun showestreptime ()
+  (princ (format nil "~D YEARS ESTIMATED FOR REPAIR.\n\n" (aref *d* *i*))))
+
+;;; Show damaged item
+(defun showdamage ()
+  (princ (format nil "~A DAMAGED.  " (nth *i* *ds*)))
+  (showestreptime))
+
+;;; Do short-range scan
+(defun srscan ()
+  (checkcond)
+  (if (= *a* 0) ; Initial entry into quadrant
+	  (progn
+		(checkforhits)
+		(if (<= *e* 0) ; Ran out of energy!
+			(return-from srscan))))
+  (setq *i* 1)
+  (if (> (aref *d* *i*) 0) ; Short-range scan inoperative
+	  (progn
+		(showdamage)
+		(return-from srscan)))
+  (dotimes (*i* 8)
+	(dotimes (*j* 8)
+	  (princ (format nil "~A " (nth (- (aref *sect* *i* *j*) 1) *qs*))))
+	(princ "  ")
+	(case *i*
+	  (0 (princ (format nil "YEARS = ~D\n" (- *t9* *t*))))
+	  (1 (princ (format nil "STARDATE = ~D\n" *t*)))
+	  (2 (princ (format nil "CONDITION: ~A\n" *cond*)))
+	  (3 (princ (format nil "QUADRANT = ~D - ~D\n" (+ *q1* 1) (+ *q2* 1))))
+	  (4 (princ (format nil "SECTOR = ~D - ~D\n" (+ *s1* 1) (+ *s2* 1))))
+	  (5 (princ (format nil "ENERGY = ~G\n" *e*)))
+	  (6 (princ (format nil "~A = ~D\n" (nth 4 *ds*) *p*)))
+	  (7 (princ (format nil "KLINGONS LEFT = ~D\n" *k9*))))))
+
+;;; Set up string for lr scan or galactic records
+(defun qstr ()
+  (setq *es* (format nil "~3,D" (aref *quad* *i* *j*))))
+
+;;; Do long-range scan
+(defun lrscan ()
+  (setq *i* 2)
+  (if (> (aref *d* *i*) 0) ; Long-range scan inoperative
+	  (progn
+		(showdamage)
+		(return-from lrscan)))
+  (princ (format nil "~A FOR QUADRANT ~D - ~D\n" (nth *i* *ds*) (+ *q1* 1) (+ *q2* 1)))
+  (dotimes (ii 3)
+	(setq *i* (+ ii *q1* -1))
+	(dotimes (jj 3)
+	  (setq *j* (+ jj *q2* -1))
+	  (princ "   ")
+	  (if (or (< *i* 0) (> *i* 7) (< *j* 0) (> *j* 7))
+		  (princ "***")
+		(progn
+		  (setf (aref *quad* *i* *j*) (abs (aref *quad* *i* *j*)))
+		  (qstr)
+		  (princ *es*))))
+	(princ "\n")))
+
+;;; Do galactic records
+(defun galrecs ()
+  (setq *i* 5)
+  (if (> (aref *d* *i*) 0) ; Galactic records inoperative
+	  (progn
+		(showdamage)
+		(return-from galrecs)))
+  (princ (format nil "CUMULATIVE GALACTIC MAP FOR STARDATE ~D\n" *t*))
+  (dotimes (*i* 8)
+	(dotimes (*j* 8)
+	  (princ "   ")
+	  (if (< (aref *quad* *i* *j*) 0)
+		  (princ "***")
+		(progn
+		  (qstr)
+		  (princ *es*))))
+	(princ "\n")))
+
+;;; Gets course and places in variable *c*
+(defun getcourse ()
+  (let ((gb))
+	(setq gb (read-string "COURSE (1-8.99)? "))
+	(handler-case
+		(setq *c* (parse-integer gb))
+	  (error (c)
+		(setq *c* 0)))))
+
+;;; Gets warp and places in variable *w*
+(defun getwarp()
+  (let ((gb))
+	(setq gb (read-string "WARP (0-12.0)? "))
+	(handler-case
+		(setq *w* (parse-integer gb))
+	  (error (c)
+		(setq *w* 0)))))
+
+;;; Do the path for warp or torpedo
+(defun dopath()
+  (let ((inquad)(shortmove))
+	(setq *yy* (+ *s1* 0.5))
+	(setq *x1* (+ *s2* 0.5))
+	(setq *y3* (* (- *c* 1) 0.785398))
+	(setq *x3* (cos *y3*))
+	(setq *y3* (- (sin *y3*)))
+	(setq inquad t)
+	(if (= *a* 1)
+		(setq shortmove *t*)
+	  (setq shortmove nil))
+	(dotimes (*i* *n*)
+	  (setq *yy* (+ *yy* *y3*))
+	  (setq *x1* (+ *x1* *x3*))
+	  (setq *y2* (floor *yy*))
+	  (setq *x2* (floor *x1*))
+	  (setq *y7* *y2*)
+	  (setq *x7* *x2*)
+	  (if (or (< *x7* 0) (> *x7* 7) (< *y7* 0) (> *y7* 7))
+		  (progn
+			(setq inquad nil)
+			(setq shortmove nil)
+			(return)))
+	  (if (= *a* 5) ; Show torpedo track
+		  (princ (format nil "~D - ~D  " (+ *y7* 1) (+ *x7* 1))))
+	  (if (/= (aref *sect* *y7* *x7*) 1) ; Object blocking move or hit by torpedo
+		  (progn (setq shortmove nil) (return))))
+	(if inquad ; Still in quadrant -- short move, block, or torpedo hit
+		(progn
+		  (setq *newquad* nil)
+		  (princ "\n")
+		  (if (not shortmove)
+			  (progn
+				(if (= *a* 1)
+					(princ "BLOCKED BY "))
+				(case (aref *sect* *y7* *x7*)
+				  (3 (princ "KLINGON") ; Klingon
+					 (if (= *a* 5) ; Torpedo
+						 (dotimes (*i* 8)
+						   (if (and (= *y7* (aref *k1* *i*)) (= *x7* (aref *k2* *i*)))
+							   (setf (aref *k3* *i*) 0)))
+					   (decf *k*)
+					   (decf *k9*)))
+				  (4 (princ "STARBASE") ; Starbase
+					 (if (= *a* 5) (setq *b* 5))) ; Torpedo
+				  (5 (princ "STAR") ; Star
+					 (if (= *a* 5) (decf *s*)))) ; Torpedo
+				(if (= *a* 1) ; Enterprise move
+					(progn
+					  (princ (format " AT SECTOR ~D - ~D\n" (+ *y7* 1) (+ *x7* 1)))
+					  (setq *y2* (floor (- *yy* *y3*)))
+					  (setq *c2* (floor (- *x1* *x3*)))
+					  (setq *y7* *y2*)
+					  (setq *x7* *x2*)))))
+		  (if (= *a* 1)
+			  (progn
+				(setq *s1* *y2*)
+				(setq *s2* *x2*)
+				(setf (aref *sect* *s1* *s2*) 2)
+				(setq *a* 2))) ; Flag to show we stayed within quadrant
+		  (if (= *a* 5) ; Torpedo
+			  (progn
+				(princ " DESTROYED!")
+				(if (= *b* 2)
+					(progn
+					  (setq *b* 0)
+					  (princ " . . . GOOD WORK!")))
+				(princ "\n")
+				(setf (aref *sect* *y7* *x7*) 1)
+				(setf (aref *quad* *q1* *q2*) (+ (* *k* 100) (* *b* 100) *s*)))))
+	  (progn ; Out of quadrant -- move to new quadrant or torpedo miss
+		(if (= *a* 1) ; Move
+			(progn
+			  (setq *newquad* t)
+			  (setq *q1* (floor (+ *q1* (* *w* *y3*) (/ (+ *s1* 0.5) 8))))
+			  (setq *q2* (floor (+ *q2* (* *w* *x3*) (/ (+ *s2* 0.5) 8))))
+			  (setq *q1* (- *q1* (+ (lt *q1* 0) (gt *q1* 7))))
+			  (setq *q2* (- *q2* (+ (lt *q2* 0) (gt *q2* 7))))))
+		(if (= *a* 5) ; Torpedo
+			(princ "MISSED!\n"))))))
+
+;;; Fire phasers
+(defun phasers ()
+  (let ((gb))
+	(setq *x* 0)
+	(setq *i* 3)
+	(if (> (aref *d* *i*) 0) ; Phasers inoperative
+		(progn
+		  (showdamage)
+		  (return-from phasers)))
+	(loop
+	  (setq gb (read-string "PHASERS READY: ENERGY UNITS TO FIRE? "))
+	  (handler-case
+		  (setq *x* (parse-integer gb))
+		(error (c)
+		  (setq *x* 0)))
+	  (if (<= *x* *e*) (return))
+	  (princ (format nil "ONLY GOT ~G\n" *e*)))
+	(setq *e* (- *e* *x*))
+	(setq *y3* *k*)
+	(dotimes (*i* 8)
+	  (if (> (aref *k3* *i*) 0)
+		  (progn
+			(setq *h* (/ *x* (* *y3* (pow (fnd) 0.4))))
+			(setf (aref *k3* *i*) (- (aref *k3* *i*) *h*))
+			(showhit)
+			(if (<= (aref *k3* *i*) 0)
+				(progn
+				  (princ "**KLINGON DESTROYED**\n")
+				  (decf *k*)
+				  (decf *k9*)
+				  (setf (aref *sect* (aref *k1* *i*) (aref *k2* *i*)) 1)
+				  (setf (aref *quad* *q1* *q2*) (- (aref *quad* *q1* *q2*) 100)))))))))
+
+;;; Display current star date
+(defun showstardate ()
+  (princ (format nil "\nIT IS STARDATE ~D.\n" *t*)))
+
+(defun startrek ()
+  (with-output-to-temp-buffer ("*star trek*")
+	(let ((gamecomp) ; 0 = in progress; 1 = won; -1 = lost; -99 = quit
+		  (alldone)(rating)(moved)(drate))
+	  (setq alldone nil)
+	  (while (not alldone)
+		(title)
+		(init)
+		(setq gamecomp 0)
+		(setq *newquad* t)
+		(while (= gamecomp 0)
+		  (if *newquad* (setupquad))
+		  (setq *newquad* nil)
+		  (setq *moved nil)
+		  (srscan)
+		  (if (<= *e* 0) ; Ran out of energy
+			  (setq gamecomp -1)
+			(progn
+			  (loop
+				(setq *a* (read-string "COMMAND? "))
+				(erase-buffer "*star trek*")
+				(handler-case
+					(setq *a* (parse-integer *a*))
+				  (error (c)
+					(setq *a* 0)))
+				(if (= *a* -99)
+					(if (y-or-n-p "ARE YOU SURE YOU WANT TO QUIT? ")
+						(progn
+						  (setq gamecomp -99)
+						  (return))))
+				(if (or (< *a* 1) (> *a* 6))
+					(progn
+					  (dotimes (*i* 6)
+						(princ (format nil "  ~D = ~S\n" (+ *i* 1) (nth *i* *ds*))))
+					  (princ "  -99 TO QUIT\n\n")))
+				(case *a*
+				  (1 (while t
+					   (while t
+						 (getcourse)
+						 (if (< *c* 9) (return)))
+					   (if (>= *c* 1)
+						   (while t
+							 (getwarp)
+							 (if (or (<= *w* 0) (> *w* 12))
+								 (progn
+								   (setq *c* 10)
+								   (return)))
+							 (if (and (> (aref *d* 0) 0) (> *w* 0.2))
+								 (progn
+								   (setq *i* 0)
+								   (princ (format nil "~A DAMAGED; MAX IS 0.2; " (nth *i* *ds*))))
+							   (return))))
+					   (if (< *c* 9) (return)))
+					 (if (< *c* 1) (return))
+					 (checkforhits)
+					 (if (<= *e* 0)
+						 (progn
+						   (setq gamecomp -1)
+						   (return)))
+					 (if (<= (rnd) 0.25)
+						 (progn
+						   (setq *x* (floor (* (rnd) 6)))
+						   (if (<= (rnd) 0.5)
+							   (progn
+								 (setf (aref *d* *x*) (+ (aref *d* *x*) (floor (- 6 (* (rnd) 5)))))
+								 (princ (format nil "**SPACE STORM, ~A DAMAGED**\n" (nth *x* *ds*)))
+								 (setq *i* *x*)
+								 (showestreptime)
+								 (incf (aref *d* *x*))))
+						   (progn
+							 (setq *j* -1)
+							 (dotimes (ii (- 6 *x*))
+							   (setq *i* (+ ii *x*))
+							   (if (> (aref *d* *i*) 0)
+								   (progn
+									   (setq *j* *i*)
+									 (return))))
+							 (if (< *j* 0)
+								 (dotimes (*i* *x*)
+								   (if (> (aref *d* *i*) 0)
+									   (progn
+										   (setq *j* *i*)
+										 (return)))))
+							 (if (>= *j* 0)
+								 (progn
+								   (setf (aref *d* *j*) 1)
+								   (princ "**SPOCK USED A NEW REPAIR TECHNIQUE**\n"))))))
+					   (dotimes (*i* 6)
+						 (if (/= (aref *d* *i*) 0)
+							 (progn
+							   (decf (aref *d* *i*))
+							   (if (<= (aref *d* *i*) 0)
+								   (progn
+									 (setf (aref *d* *i*) 0)
+									 (princ (format nil "~A ARE FIXED!\n" (nth *i* *ds*))))))))
+					 (setq *n* (floor (* *w* 8)))
+					 (setq *e* (- *e* *n* *n* -0.5))
+					 (incf *t*)
+					 (setf (aref *sect* *s1* *s2*) 1)
+					 (if (> *t* *t9*)
+						 (progn
+						   (setq gamecomp -1)
+						   (return)))
+					 (dopath)
+					 (if (<= *e* 0) ; Ran out of energy
+						 (progn
+						   (setq gamecomp -1)
+						   (return)))
+					 (setq moved t))
+				  (2 (srscan)) ; Short-range scan
+				  (3 (lrscan)) ; Long-range scan
+				  (4 (phasers) ; Phasers
+					 (if (> *x* 0)
+						 (progn
+						   (if (<= *e* 0) (setq gamecomp -1))
+						   (checkforhits)
+						   (if (<= *e* 0) (setq gamecomp -1)) ; Ran out of energy
+						   (if (< *k9* 1) (setq gamecomp 1)) ; All Klingons destroyed!
+						   (if (= gamecomp 0) (checkcond)))))
+				  (5 ; Photon torpedos
+				   (if (> (aref *d* 4) 0) ; Torpedoes damaged
+					   (progn
+						 (princ "SPACE CRUD BLOCKING TUBES.  ")
+						 (setq *i* 4)
+						 (showestreptime))
+					 (progn
+					   (setq *n* 15)
+					   (if (< *p* 1)
+						   (progn
+							 (princ "NO TORPEDOES LEFT!\n"))
+						 (progn
+						   (setq *c* 10)
+						   (while (>= *c* 9)
+							 (princ "TORPEDO ")
+							 (getcourse))
+						   (if (< *c* 1) ; Abort firing of torpedo
+							   nil
+							 (progn
+							   (decf *p*)
+							   (princ "TRACK: ")
+							   (dopath)
+							   (if (<= *e* 0) (setq gamecomp -1)) ; Ran out of energy
+							   (checkforhits)
+							   (if (<= *e* 0) (setq gamecomp -1)) ; Ran out of energy
+							   (if (< *k9* 1) (setq gamecomp 1)) ; All Klingons destroyed!
+							   (if (= gamecomp 0) (checkcond)))))))))
+				  (6 ; Galactic records
+				   (galrecs))))
+			  (showstardate)
+			  (case gamecomp
+				(1 (setq drate (- *t* *t0*))
+				   (setq rating (* (/ *k0* drate) 1000))
+				   (princ "THE FEDERATION HAS BEEN SAVED!\n")
+				   (princ "YOU ARE PROMOTED TO ADMIRAL.\n")
+				   (princ (format nil "~D KLINGONS IN ~D YEARS.  RATING = ~D\n\n" *k0* (- *t* *t0*) rating)))
+				(-1
+				 (if (> *t* *t9*) (princ "YOU RAN OUT OF TIME!\n"))
+				 (if (<= *e* 0) (princ "YOU RAN OUT OF ENERGY!\n"))
+				 (princ "THANKS TO YOUR BUNGLING, THE FEDERATION WILL BE\n")
+				 (princ (fomat nil "CONQUERED BY THE REMAINING ~D KLINGON CRUISERS!\n" *k9* ))
+				 (princ "YOU ARE DEMOTED TO CABIN BOY!\n"))
+				(-99
+				 (princ "OKAY, QUITTER -- NO KUDOS FOR YOU.\n")))
+			  (if (not (y-or-n-p "TRY AGAIN? ")) (setq alldone 1)))))))))
+
+(provide "startrek")

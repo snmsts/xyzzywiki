@@ -1,0 +1,26 @@
+[[tips]]
+
+* rss-modeをcontent:encodedとdc:dateに対応させる
+
+description 要素がないのに content:encoded 要素があったりすると悲しいので作ってみました。
+ついでなので、dc:date にもなんとなく対応。
+
+オリジナルの関数をいじっているので差分で出すべきでしょうが、
+導入が大変になるので ~/.rss/config.l からロードする形にしています。
+
+#ref(rss-modules.l)
+**具体的に何ができるのか
+
+RSS の item 要素の中身に description 要素がなく、かつ content:encoded 要素がある場合に、
+v(rss-popup-current-item)などで description 要素の代わりに content:encoded 要素を表示します。
+content:encoded 要素の中身はそのままだとタグが書いてあったりして読みにくいので、
+適当に削除したり改行を入れたりしています。
+
+dc:date 要素は title 要素と一緒に表示するようにしてみました。*rss-attribute-date* で色を指定できます。
+
+需要がありそうなら服部さんにrss-modeへ取り込んでもらうようにお願いするので、
+ご意見、ご感想などお寄せください。
+
+文責 NANRI
+----
+#comment

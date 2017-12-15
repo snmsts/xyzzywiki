@@ -1,0 +1,44 @@
+[[Memo]]
+
+* Memo/2ch のスレッド [#jda84ecb]
+
+** 現行スレッド [#u849185e]
+:[Windows板] xyzzy Part16|http://pc11.2ch.net/test/read.cgi/win/1209098133/l50
+:[ソフトウェア板] xyzzyの使い方が分からぬやし 励ましあえ その12|http://pc11.2ch.net/test/read.cgi/software/1226425897/
+** 過去ログ [#l515e88d]
+
+カッコ内はにくちゃんねるへのリンクです
+
+*** [Windows板] xyzzy [#g6972b98]
+xyzzy Part13|http://pc8.2ch.net/test/read.cgi/win/1127783135/
+-  Part12 http://pc8.2ch.net/test/read.cgi/win/1103400818/ （[[2chmain12:1]]）
+-  Part11 http://pc5.2ch.net/test/read.cgi/win/1085301777/ （[[2chmain11:1]]）
+-  Part10 http://pc5.2ch.net/test/read.cgi/win/1067394259/ （[[2chmain10:1]]）
+-  Part9 http://pc5.2ch.net/win/kako/1053/10538/1053880433.html （[[2chmain9:1]]）
+-  Part8 http://pc2.2ch.net/win/kako/1041/10416/1041613876.html （[[2chmain8:1]]）
+-  Part7 http://pc3.2ch.net/win/kako/1032/10329/1032910212.html （[[2chmain7:1]]）
+-  Part6 http://pc3.2ch.net/win/kako/1019/10196/1019691417.html （[[2chmain6:1]]）
+-  Part5 http://pc.2ch.net/win/kako/1013/10130/1013042550.html （[[2chmain5:1]]）
+-  Part4 http://pc.2ch.net/win/kako/1008/10080/1008057054.html （[[2chmain4:1]]）
+-  Part3 http://pc.2ch.net/win/kako/1001/10017/1001707308.html （[[2chmain3:1]]）
+-  Part2 http://yasai.2ch.net/win/kako/994/994321779.html （[[2chmain2:1]]）
+-  Part1 http://yasai.2ch.net/win/kako/979/979930156.html （[[2chmain:1]]）
+
+*** [ソフトウェア板] xyzzyの使い方が分からぬやし 励ましあえ [#x9114a53]
+
+- 9: http://pc7.2ch.net/test/read.cgi/software/1143621919/
+- 8: http://pc7.2ch.net/test/read.cgi/software/1130806828/
+- 7: http://pc7.2ch.net/test/read.cgi/software/1116710824/  （[[2chbeginner7:1]]）
+- 6: http://pc8.2ch.net/test/read.cgi/software/1103791938/  （[[2chbeginner6:1]]）
+- 5: http://pc5.2ch.net/test/read.cgi/software/1088948470/  （[[2chbeginner5:1]]）
+- 4: http://pc5.2ch.net/test/read.cgi/software/1073911622/  （[[2chbeginner4:1]]）
+- 3: http://pc2.2ch.net/test/read.cgi/software/1063367821/（DAT落ち？）  （[[2chbeginner3:1]]）
+- 2: http://pc2.2ch.net/software/kako/1054/10541/1054141308.html  （[[2chbeginner2:1]]）
+- 1: http://pc2.2ch.net/software/kako/1041/10413/1041326960.html（[[2chbeginner:1]]）
+
+*** [Web制作板] xyzzyでタグ打ってる人の数 → [#t2e11781]
+
+- http://pc8.2ch.net/hp/kako/1005/10050/1005046309.html（[[2chtag:1]]）
+-- datファイル：&ref(1005046309.dat);
+
+----

@@ -1,0 +1,185 @@
+(load-library "csv-mode")
+
+;(setq-default *csv-header-flag* t)                 ; t, nil
+;(setq-default *csv-max-column-number-strict* nil)  ; t, nil
+;(setq-default *csv-separator-char* #\,)            ; <character>
+(setq-default *csv-encode-string* :nil) ; t, nil, :except-integer
+;(setq *csv-edit-dialog-width* 256)                 ; <integer>
+;(setq *csv-edit-dialog-header-width* 50)           ; <integer>
+(setq-default *csv-edit-dialog-move* :nil)        ; :next, :previous, nil
+;(setq ed::*csv-line-number* t)         ; t, nil, <OTHER (:remain)>
+;(setq ed::*csv-cursor-line* t)         ; t, nil, <OTHER (:remain)>
+;(setq ed::*csv-buffer-fold-width* nil) ; t, nil, <integer>, <OTHER (:remain)>
+
+(define-key ed::*csv-mode-map* '#\RET 'my-csv-view-line)
+(define-key ed::*csv-mode-map* '#\n 'my-csv-next-line-view)
+(define-key ed::*csv-mode-map* '#\p 'my-csv-previous-line-view)
+(define-key ed::*csv-mode-map* '#\@ 'my-csv-new-record)
+(define-key ed::*csv-mode-map* '#\F21 'my-csv-insert-return)
+(define-key ed::*csv-mode-map* '#\v 'other-window)
+
+(defvar *csv-view-map* nil)
+(unless *csv-view-map*
+  (setq *csv-view-map* (make-sparse-keymap))
+  (define-key *csv-view-map* #\C-s 'my-csv-save-record)
+  (define-key *csv-view-map* #\C-n 'my-csv-next-line-view)
+  (define-key *csv-view-map* #\C-p 'my-csv-previous-line-view)
+  (define-key *csv-view-map* #\C-@ 'my-csv-new-record)
+  (define-key *csv-view-map* #\C-w 'my-csv-kill-element)
+  (define-key *csv-view-map* #\M-w 'my-csv-copy-element)
+  (define-key *csv-view-map* #\C-y 'my-csv-yank-element)
+  (define-key *csv-view-map* #\F21 'my-csv-add-element)
+  (define-key *csv-view-map* #\RET 'my-csv-other-window)
+  )
+
+(defun my-csv-view-line (&optional (decode t))
+; csv-viewバッファを作り　そこへレコード内容を表示
+  (interactive)
+  (let ((column-list (ed::csv-get-column-list nil decode))
+        (max-column-number (ed::csv-max-column-number))
+		header-list max-width-header cell-list)
+	(dotimes (i (- max-column-number (length column-list)))
+      (nconc column-list (list (copy-string ""))))
+    (if *csv-header-flag*
+		(save-excursion
+		  (goto-char (point-min))
+		  (setq header-list (ed::csv-get-column-list nil decode))
+		  (dotimes (i (- max-column-number (length header-list)))
+			(nconc header-list (list (copy-string ""))))
+		  (dotimes (i max-column-number)))
+	  (progn
+		(setq header-list (list "1"))
+		(dotimes (i (1- max-column-number))
+		  (nconc header-list (list (format nil "~D" (+ i 2)))))))
+	(setq max-width-header (apply #'max (mapcar #'count-column header-list)))
+	(my-csv-set-buffer-view)
+	(dotimes (i max-column-number)
+	  (insert (nth i header-list))
+	  (if (string= (nth i column-list) "")
+		  (progn
+			(my-csv-insert-spaces (+ 2 max-width-header))
+			(insert ": \n"))
+		(progn
+		  (setq cell-list (split-string (nth i column-list) #\;))
+		  (dotimes (j (length cell-list))
+			(my-csv-insert-spaces (+ 2 max-width-header))
+			(insert ": " (nth j cell-list) "\n"))))))
+  (other-window))
+
+(defun my-csv-next-line-view ()
+; 次のレコード内容を表示
+  (interactive)
+  (if (string= (buffer-name (selected-buffer)) "*csv-view*")
+	  (other-window))
+  (forward-line)
+  (my-csv-view-line))
+
+(defun my-csv-previous-line-view ()
+; 前のレコード内容を表示
+  (interactive)
+  (if (string= (buffer-name (selected-buffer)) "*csv-view*")
+	  (other-window))
+  (forward-line -1)
+  (my-csv-view-line))
+
+(defun my-csv-save-record ()
+; csv-viewバッファの内容をデータベースに反映
+  (interactive)
+  (let ((record "") line connection-char)
+	(if (string/= (buffer-name (selected-buffer)) "*csv-view*")
+		(other-window))
+	(save-excursion
+	  (goto-char (point-min))
+	  (while (not (eobp))
+		(setq line (my-csv-get-line))
+		(setq connection-char (if (string= (substring line 0 1) " ") ";" ","))
+		(setq line (substring line (+ 2 (string-match ":" line))))
+		(setq record (concat record connection-char line))
+		(forward-line))
+	  (setq record (substring record 1)))
+	(other-window)
+	(delete-region (progn (goto-bol) (point))
+				   (progn (goto-eol) (point)))
+	(insert record)
+	(goto-bol)))
+
+(defun my-csv-new-record ()
+; csv-viewバッファに新しいレコードを追加するための欄を表示
+  (interactive)
+  (if (string= (buffer-name (selected-buffer)) "*csv-view*")
+	  (other-window))
+  (goto-char (point-max))
+  (open-line)
+  (my-csv-view-line)
+  (other-window)
+  (goto-char (point-min))
+  (goto-eol))
+
+(defun my-csv-add-element ()
+; 同じフィールドにデータを追加する準備をする
+  (interactive)
+  (let ((line (my-csv-get-line)))
+	(goto-eol) (insert "\n")
+	(my-csv-insert-spaces (string-match ":" line))
+	(insert ": ")))
+
+(defun my-csv-copy-element ()
+; カーソルのあるフィールドのデータをcopy-region-as-kill
+  (interactive)
+  (let (from to)
+	(save-excursion
+	  (goto-bol)
+	  (setq from (+ 2 (progn (scan-buffer ":") (point)))
+			to (progn (goto-eol) (point)))
+	  (copy-region-as-kill from to))))
+
+(defun my-csv-kill-element ()
+; カーソルのあるフィールドのデータをkill-region
+  (interactive)
+  (let (from to)
+	(save-excursion
+	  (goto-bol)
+	  (setq from (+ 2 (progn (scan-buffer ":") (point)))
+			to (progn (goto-eol) (point)))
+	  (kill-region from to))))
+
+(defun my-csv-yank-element ()
+; カーソルのあるフィールドにyank
+  (interactive)
+  (save-excursion
+	(goto-eol)
+	(yank)))
+
+(defun my-csv-get-line ()
+' カーソルのある一行を取得
+  (save-excursion
+	(buffer-substring
+	 (progn (goto-bol) (point))
+	 (progn (goto-eol) (point)))))
+
+(defun my-csv-insert-spaces (until)
+; 桁数がuntilになるまでspaceで埋める
+  (interactive)
+  (while (< (current-column) until)
+	(insert " ")))
+
+(defun my-csv-insert-return ()
+; returnを挿入
+  (interactive)
+  (insert "\n"))
+
+(defun my-csv-set-buffer-view ()
+; csv-viewバッファをセット
+  (get-buffer-create "*csv-view*")
+  (erase-buffer "*csv-view*")
+  (delete-other-windows)
+  (split-window)
+  (other-window)
+  (set-buffer "*csv-view*")
+  (make-local-variable 'need-not-save)
+  (setq need-not-save t)
+  (use-keymap *csv-view-map*))
+
+(defun my-csv-other-window ()
+  (interactive)
+  )

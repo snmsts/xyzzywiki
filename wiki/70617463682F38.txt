@@ -1,0 +1,69 @@
+*www-mode の折り返し&右クリックメニュー [#zadac0e5]
+
+-ページ: [[patch]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: その他
+-投稿日: 2005-08-09 20:01:36 (火)
+-バージョン: 
+
+**メッセージ [#t6f8a0f3]
+単なる好みです。
+
+前半が折り返し時に禁則を有効にする。後半が右クリックメニューの順番の変更。
+
+&ref(before.jpg,nolink);
+→
+&ref(after.jpg,nolink);
+ --- www-view.l~	Mon Mar  3 22:53:26 2003
+ +++ www-view.l	Tue Aug  9 19:49:40 2005
+ @@ -317,8 +317,8 @@
+  (defun www-view-fold-line ()
+    (save-excursion
+      (loop
+ -      ;(kinsoku-goto-column www-width)
+ -      (goto-column www-width)
+ +      (kinsoku-goto-column www-width)
+ +      ;(goto-column www-width)
+        (and (eolp)
+  	   (return))
+        (forward-char 1)
+ @@ -944,6 +944,13 @@
+  	   (add-menu-separator menu)
+  	  )
+      );cond
+ +    (add-menu-item menu nil "戻る"
+ +		   'www-history-back
+ +		   #'(lambda () (unless *www-history-back-list* :disable)))
+ +    (add-menu-item menu nil "進む"
+ +		   'www-history-next
+ +		   #'(lambda () (unless *www-history-forward-list* :disable)))
+ +    (add-menu-separator menu)
+      (add-menu-item menu nil "ページをリロード"
+  		   'www-view-reload)
+      (add-menu-item menu nil "ページを他のブラウザで開く"
+ @@ -961,13 +968,13 @@
+  		   'www-encoding-lock-toggle
+  		   #'(lambda () (when *www-use-previous-encoding* :check)))
+      (add-menu-separator menu)
+ -    (add-menu-item menu nil "戻る"
+ -		   'www-history-back
+ -		   #'(lambda () (unless *www-history-back-list* :disable)))
+ -    (add-menu-item menu nil "進む"
+ -		   'www-history-next
+ -		   #'(lambda () (unless *www-history-forward-list* :disable)))
+ -    (add-menu-separator menu)
+ +;    (add-menu-item menu nil "戻る"
+ +;		   'www-history-back
+ +;		   #'(lambda () (unless *www-history-back-list* :disable)))
+ +;    (add-menu-item menu nil "進む"
+ +;		   'www-history-next
+ +;		   #'(lambda () (unless *www-history-forward-list* :disable)))
+ +;    (add-menu-separator menu)
+      (add-popup-menu menu (www-view-list-popup-menu) "履歴")
+      (add-menu-separator menu)
+      (add-menu-item menu nil "ブックマークを開く"
+
+----
+- 0.0.1.4で取り込まれたようです。 -- [[NANRI]] &new{2005-11-28 (月) 21:35:21};

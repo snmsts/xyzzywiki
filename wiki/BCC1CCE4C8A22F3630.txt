@@ -1,0 +1,34 @@
+* 正規表現 + エスケープシーケンスの置換について [#ad058775]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2005-01-26 (水) 16:25:00
+
+** メッセージ [#yed02fd1]
+.xyzzy に以下のように書いて正規表現置換を行っています。
+
+ ;置換処理
+ (define-key *global-keymap* #\M-r #'(lambda (text1 text2)
+	 (interactive "s正規表現置換: \ns正規表現置換:")
+	 (progn
+	(call-interactively 'beginning-of-buffer)
+	(perform-replace text1 text2 nil t (interactive-p) t)
+	)))
+
+これに、エスケープシーケンスを理解させることはできるでしょうか。
+
+----
+-decode-escape-sequence を使ってください。 -- [[NANRI]] &new{2005-01-26 (水) 18:37:33};
+-回答ありがとうございます。以下のようにしたらOKになりました。 -- [[質問者]] &new{2005-01-27 (木) 10:51:23};
+ ;置換処理
+ (define-key *global-keymap* #\M-r #'(lambda (text1 text2)
+ (interactive "s正規表現置換: \ns正規表現置換:")
+ (progn
+ (call-interactively 'beginning-of-buffer)
+ (perform-replace  (decode-escape-sequence text1 t)
+ (decode-escape-sequence text2 t) nil t (interactive-p) t)
+ )))
+-どうでもいいことなんですが、(call-interactively 'beginning-of-buffer) という書き方が不思議な感じです。(beginning-of-buffer)で十分だと思いますが。もし、マークが不要なら(goto-char (point-min))ですね。 -- [[NANRI]] &new{2005-01-27 (木) 12:21:45};
+-たしかに、マークをつける意味はないので(goto-char(point-min))でOKですね。 -- [[質問者]] &new{2005-01-27 (木) 14:12:28};
+
+#comment

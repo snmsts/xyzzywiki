@@ -1,0 +1,373 @@
+#freeze
+#contents
+
+*NetInstallerを導入しよう [#m0d89809]
+
+**前口上 [#h9e5a9da]
+
+このページでは、NetInstallerの導入の仕方を説明や、便利な使い方の紹介をします。
+
+**NetInstallerって何? [#k425199a]
+
+NetInstallerは、公開されている拡張Lispファイルを簡単に導入するためのものです。このNetInstallerを使うと、
+
+ ダウンロード → 解凍 → $XYZZY/site-lisp/へ移動 → .xyzzyやsiteinit.l設定を追加
+
+というようなインストール作業の一部を省略できます。NetInstallerの作者である服部さんご自身の説明((このあとインストールする$XYZZY/site-lisp/ni/readme.txtに書かれています。))は以下の通りです。
+
+ ■ NetInstaller for xyzzy とは？
+ 
+        xyzzy のユーザー拡張ものへなちょこインストーラです。
+ 
+
+一応補足しますと、「へなちょこ」と書かれていますが、あまり気にしないで下さい。普通にしっかり動きます。うだうだ説明するよりも、やればすぐわかると思うので、とりあえずやってみましょう。
+
+***その前に [#xab238f7]
+
+用意するものがあります。と言うのは、解凍をする時にxyzzy単体では解凍作業が行えないので、解凍に[[統合アーカイバプロジェクト>http://www.csdinc.co.jp/archiver/]]仕様のDLLを利用するのです。そんな訳で、それをダウンロードしてきます。
+
+このDLLが入っているかどうかはヘルプ（?）→について（A）...を見ればわかります。入っていない場合には、以下のようにダイアログの所に表示されているはずです。
+
+#br
+#br
+
+CENTER:''DLLが入っていない場合にはこんな感じ''
+CENTER:#ref(01.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){下の所が真っ白の場合には入っていません。};
+
+#br
+#br
+
+入っている場合には、下のようになっているはずです。
+
+#br
+#br
+
+CENTER:''このようになっていればOK''
+CENTER:#ref(02.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){DLLが入っている場合にはこんな感じ};
+
+#br
+#br
+
+既に入っている場合にはここにインストール済みのDLLが表示されてます。
+
+このDLLが入っていないとNetInstallerを導入しても拡張Lispを解凍することが出来ないので必ずインストールしてください。
+
+***「DLLのダウンロードめんどいなぁ」という人は [#y7cc83d4]
+
+使用するDLLはzipやlha、cabのものです。もちろんそれら3つのDLLを逐一ダウンロードして、パスの通った所において……、としても全然OKなんですけれど、それがめんどうな人は、[[K.INABAさん>http://www.kmonos.net/]]が作成した[[caldix>http://www.kmonos.net/lib/caldix.ja.html]]というソフトを使ってみて下さい。面倒な作業がボタン一つで行えます。
+
+
+#br
+#br
+
+CENTER:''caldixをダウンロードしてくる''
+CENTER:#ref(03.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){がらくた→caldixからダウンロードできます。};
+
+#br
+#br
+
+ダウンロードすると、 caldix.exeと言う名前のプログラムがあるので、それをクリックして、「開始」のボタンを押します。するとDLLのインストールが始まります。
+
+#br
+#br
+
+CENTER:''caldixの画面''
+CENTER:#ref(04.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){カスタムを押すと色々設定できるけど、気にしなくても良いような。};
+
+#br
+#br
+
+終わったら、xyzzyの画面でDLLがインストールされているかどうか確認してみましょう。そしたら、DLLの事はおしまいです。
+
+ただし、zip系のDLL（のどれか）を企業内で使う場合にはライセンス契約が必要なので、該当する人は、
+
+-（新たに作成された）cldx/読んでね.txt
+-http://www.csdinc.co.jp/archiver/lib/unzip32.html
+
+の指示に従ってください。
+
+**NetInstallerを導入する [#wfb61269]
+
+***NetInstallerの入手 [#b643f945]
+
+やっと本題ですね。と言うわけで準備が整ったのでNetInstallerを導入します。 さすがにNetInstaller自体をnetinstallは出来ないので、これはアーカイブを取得して設定を行います。
+
+[[服部さんのページ>http://www7a.biglobe.ne.jp/~hat/]]からNetInstallerをダウンロードしてください。そして解凍してniフォルダを$XYZZY/site-lispに移動させます。
+
+#br
+#br
+
+CENTER:''site-lisp内へ''
+CENTER:#ref(06.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){niのフォルダごと持ってきます。};
+
+#br
+#br
+
+***NetInstallerの設定 [#x0d75a85]
+
+ni/readme.txtに説明が載っているとおりです。.xyzzyやsiteinit.lに以下を追加してください。
+
+ (require "ni/setup")
+ ;; 自動設定を利用する
+ (ni-autoload)
+
+proxyを通している人の場合には、上記の記述に加えて
+
+ ;; PROXYを通す場合
+ (setq ni::*http-proxy-host* "proxy.host")  ; PROXY のホスト
+ (setq ni::*http-proxy-port* 8080)          ; PROXY のポート
+
+も書かないといけないようです。ホスト名やポート番号はそれなりに変更させましょう。((よく知らない。))記述しおわったら、siteinit.lに書いた人はダンプファイルを作成しながら再起動、.xyzzyに書いた人は特に何もせずに再起動します。これでインストールは終了です。
+
+**NetInstallerを使う [#j89c20bc]
+
+***NetInstallerにサイトを登録する [#udb07f00]
+
+これで準備はすべて終わりです。実際に使ってみましょう。おもむろに
+
+ M-x netinstaller
+
+と入力します。するとNetInstallerのモードになります。すると、下みたいな画面になるはずです。
+
+#br
+#br
+
+CENTER:''NetInstallerを起動したところ''
+CENTER:#ref(07.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){モードラインが*NetInstaller Site*になってます};
+
+#br
+#br
+
+起動したら、まず拡張Lispの配布場所を設定します。xyzzywikiのページにてNetInstallerに対応した一覧が見れます。今回は[[山本]]さんのサイトを登録してみましょう。
+
+[[山本]]さんのパッケージリストのURLは、
+
+ http://www1.odn.ne.jp/ymtz/archive/packages.l
+
+ですので、aを押した後に、ミニバッファに上のURLを入力してください。実際にやってみると下みたいな画面になります。
+
+#br
+#br
+
+CENTER:''66mhz.comのパッケージリストを登録する''
+CENTER:#ref(08.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){コピペするのが楽です。};
+
+#br
+#br
+
+そうしたら、パッケージリストがダウンロードされ、下のような画面になると思います。
+
+#br
+#br
+
+CENTER:''パッケージリストが更新される''
+CENTER:#ref(09.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){66mhz.comが追加されました。};
+
+#br
+#br
+
+
+ちなみに括弧内はインストールできる拡張Lispの数を示しているようです。他の方の拡張Lispも同様に行えば追加できると思います。
+
+***NetInstallerから拡張Lispをインストールする [#y84daf56]
+
+サイトを登録したら、NetInstallerから拡張Lispをインストールしてみましょう。今回は試しに、switch-bar.lを導入してみます。まず、上記の画面で、66mhz.comの行にキャレットを移動させてある状態で、SPACEを押してください。
+
+#br
+#br
+
+CENTER:''SPACEを押したところ''
+CENTER:#ref(10.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){66mhz.comの拡張Lisp一覧が表示されます。};
+
+#br
+#br
+
+そうしたら、もう一度 SPACEを押します。すると、キャレットがある行の拡張Lispについての詳細画面が表示されます。
+
+#br
+#br
+
+CENTER:''さらにSPACEを押したところ''
+CENTER:#ref(11.png,center,50%)
+CENTER:#img(,clear)
+
+#br
+#br
+
+n（Ctrlキーとか無しで単純にnだけ）を押すと、次の行にキャレットが移動します。next-lineみたいな感じです。（ってか、見た目的にはそれと同じかも）
+
+#br
+#br
+
+CENTER:''nを押したところ''
+CENTER:#ref(12.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){favoritesにカーソルが移動しました。};
+
+#br
+#br
+
+ちなみにpを押すと前の行に移動します。そのほかにもNetInstallerにはキーバインドがありますが、とりあえず今回はswitch-bar.lが目当てなので、適当にnを押して、switch-bar.lにカーソルを合わせます。そうしたら iを押します。すると、下みたいな画面が出るはずです。((「書込み禁止バッファです」と出ちゃったらC-x pなどで右上のウィンドウに切り替えましょう。))
+
+#br
+#br
+
+CENTER:''確認画面''
+CENTER:#ref(13.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){まよわずyで。};
+
+#br
+#br
+
+yを押すと実際にインストールされ、nを押せばキャンセルです。インストールが終了すると、次のダイアログが表示されます。
+
+#br
+#br
+
+CENTER:''インストール完了のダイアログ''
+CENTER:#ref(14.png,center,50%)
+CENTER:#img(,clear)
+
+#br
+#br
+
+インストールがすんだら、完了の画面が表示され、三つのウィンドウが表示された状態へと戻ります。switch-bar.lのところが
+
+ [ ][I]
+
+となりました。インストール済みのものは、このように[I]と表示されます。
+
+#br
+#br
+
+CENTER:''インストール済みの表示''
+CENTER:#ref(15.png,center,50%)
+CENTER:#img(,clear)
+
+#br
+#br
+
+インストールし終わったら、 qを押してください。どんどんウィンドウが減っていき、最終的にNetInstallerが終了します。他の拡張Lispをinstallする時も同様にすればOKです。
+
+***パッケージリストを更新する [#f148cebe]
+
+NetInstallerの導入直後には気にしなくても良いのですが、パッケージリストは気が向いた時に更新してください。（更新は自動的には行われません。なので手動で更新します。）
+
+パッケージリストを更新するには、*NetInstaller Site*バッファの更新したいサイトにカーソルを合わせてrを押します。
+
+全部のパッケージリストを一度に更新したいときには、小文字のrの代わりに大文字のRを押してください。（*NetInstaller Site*バッファ内ならば、どこでrを押してもOKです。）
+
+**拡張Lispの設定を行う [#ja82735d]
+
+NetInstallerでインストールが終わったら、設定を行います。また、ダンプファイルを作成しなおさないと機能しないので注意してください。ダンプファイルって何？？って人は、[[置き場所を決める>QuickTour/置き場所を決める]]を参照してください。
+
+***正常に動くかどうか確認 [#f29c606b]
+
+導入し終わったら、 メニューバーに
+
+ Switch(C)
+
+というメニューが新たに追加されています。このメニューが今回導入したswitch-bar.lで拡張された機能です。
+
+#br
+#br
+
+CENTER:''Switch(c)が追加される''
+CENTER:#ref(16.png,center,50%)
+CENTER:#img(,clear)
+
+#br
+#br
+
+実際にどのような機能なのかはSwitch(c)を押してもらえばわかると思います。もしくは、$XYZZY/site-lisp/switch-bar.lを開いて説明を読んでください。
+
+
+#br
+#br
+
+CENTER:''Switch(c)押してみる''
+CENTER:#ref(17.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){押してみると、共通設定ダイアログの表示タブで表示/非表示を変更できるいろいろなものをトグルしてくれます。カスタマイズすると便利に使えます。};
+
+#br
+#br
+
+**NetInstallerを使うときに便利なもの [#k2022dc4]
+
+まぁこんな感じで他の拡張Lispもインストールできると思います。これ以降は、NetInstallerを少し便利にしてくれるものについて説明します。
+
+***[[ネットインストーラのsiteを無理やり最新に>tips/ネットインストーラのsiteを無理やり最新に]] [#a01cb384]
+
+いちいちaを押してURLを追加するのがわずらわしい人向けです。[[このページ>tips/ネットインストーラのsiteを無理やり最新に]]にあるLispを.xyzzyやsiteinit.lに追加すれば、xyzzywikiの一覧をもとに、自動的にNetInstallerに登録されているサイトを更新してくれます。
+
+***[[niseabout>拡張lisp/niseabout]] [#s6cf60d8]
+
+niseaboutを使うと、ページの最初にあったヘルプ（?）→について（A）...のダイアログを拡張して、netinstallされている拡張Lispを表示してくれます。どの拡張Lispがインストール済みであるのかを確認するのに便利です。
+
+#br
+#br
+
+CENTER:''niseabout.lってこんなの''
+CENTER:#ref(18.png,center,50%)
+CENTER:#img(,clear)
+CENTER:&size(10){インストールしている拡張Lispが一覧できる};
+
+#br
+#br
+
+NetInstallerでインストールするか、もしくは[[拡張lisp/niseabout]]からダウンロードしてください。
+
+***さらに [#df1ead55]
+
+ToyさんのページにあったものをHIEさんが拡張されたバイトコンパイル & ダンプファイルを削除を一発でやるキーバインドを追加しておくと便利かと思います。（私はA型ですけど良いよね）
+
+ (defun compile-and-delete-dump-file ()
+   (interactive)
+   (and (find-buffer "siteinit.l")
+        (eval-buffer "siteinit.l"))
+   (byte-compile-file
+    (concat (si:system-root) "site-lisp/siteinit.l"))
+   (let ((dumpfile
+          (concat (si:system-root) "xyzzy."
+                  (case (os-platform)
+                    (whistler "wxp")
+                    (windows-2000 "w2k")
+                    (windows-nt "wnt")
+                    (windows-me "wme")
+                    (windows-98 "w98")
+                    (windows-95 "w95")
+                    (win32s "32s")
+                    (t "nt")))))
+     (and (file-exist-p dumpfile)
+          (delete-file dumpfile))))
+ (global-set-key '(#\C-c #\b) 'compile-and-delete-dump-file)
+
+これを.xyzzyやsiteinit.lに書いておくと、 C-c bでカレントバッファをバイトコンパイルし、ダンプファイルを削除します。xyzzy.exeを終了させて、新たに起動するときに（ダンプファイルがなくなっているので）新たにダンプファイルを作りながら起動してくれます。ダンプファイルはゴミ箱に入れずに即座に削除するので注意してください。
+
+***キーマップとかカスタマイズ用の変数 [#v4190fc4]
+
+NetInstaller自体のキーバインドを変更したりすることも可能です。
+
+**このあたりで終了 [#ze2b1965]
+
+です。

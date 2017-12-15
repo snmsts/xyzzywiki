@@ -1,0 +1,40 @@
+*kept-undo-information [#i0154ef6]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[OHKUBO]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2004-11-17 (水) 01:23:30
+-バージョン: 20041115
+
+**メッセージ [#rac6951b]
+引数の説明の誤りを修正しました。
+
+ <chapter>
+ <title>kept-undo-information</title>
+ <type>BufferLocal</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ undo 可能回数を指定する変数です。
+ 
+   &lt;integer&gt; : 指定回数分の undo 情報を保持します。
+   上記以外  : undo 情報を保持しません。(undo できません。)
+ 
+ 使用例：
+   ;;; 現在開いているファイルではundoできないようにします。
+   (make-local-variable 'kept-undo-information)
+   =&gt; t
+   (setq kept-undo-information nil)
+   =&gt; nil
+ </description>
+ <section>バッファ</section>
+ </chapter>
+
+----
+-description 中の ">" と "<" を実体参照に書き直しました。 -- [[NANRI]] &new{2004-11-17 (水) 02:28:03};
+-修正ありがとうございました。 -- [[OHKUBO]] &new{2004-11-18 (木) 01:02:02};
+-[[refwiki:kept-undo-information]] に取り込みました。 -- [[NANRI]] &new{2004-12-18 (土) 01:16:52};
+
+#comment

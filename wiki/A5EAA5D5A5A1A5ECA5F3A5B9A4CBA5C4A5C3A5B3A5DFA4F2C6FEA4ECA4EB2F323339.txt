@@ -1,0 +1,60 @@
+* parse-integer [#d0f450c5]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-10-12 (木) 01:00:44
+-バージョン: 
+
+** メッセージ [#w137479e]
+引用文書の削除。書き直し。
+ <chapter>
+ <title>parse-integer</title>
+ <type>Function</type>
+ <arguments>parse-integer STRING &amp;key :start :end :radix :junk-allowed</arguments>
+ <package>lisp</package>
+ <description>
+ 文字列から整数を読み取ります。
+ C言語のatoiに相当します。
+ 
+   STRING  : 対象の文字列
+   :start  : 読み取り開始位置
+   :end    : 読み取り終了位置
+   :radix  : 基数
+   :junk-allowed
+           : non-nilなら前後の空白を無視します
+ 
+ 多値で二つの値を返します。
+ 一つ目は読み込んだ整数値です。読み込めなかった場合はnilを返します。
+ 二つ目は読んだ最後の文字の次の文字のインデックスです。文字列の最後まで読
+ んだ場合は文字列の長さになります。
+ 
+ 例:
+   (parse-integer "16")
+   =&gt;16
+   =&gt;2
+   (parse-integer "016")
+   =&gt;16
+   =&gt;3
+   (parse-integer " 16 ")
+   =&gt;不正な数値の形式です: " 16 "
+   (parse-integer " 16 " :junk-allowed t)
+   =&gt;16
+   =&gt;3
+ 
+ 備考:
+   Common Lispの同名の関数と動作が異なります。
+   Common Lispのparse-integerは:junk-allowedがnilでも前後の空白を無視し、
+   non-nilのときは前後の空白のみならず数字以外の文字も無視します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+
+--------
+
+#comment

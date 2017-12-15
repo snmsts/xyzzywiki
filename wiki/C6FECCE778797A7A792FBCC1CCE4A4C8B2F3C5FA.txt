@@ -1,0 +1,13 @@
+#freeze
+[[入門xyzzy]]
+
+*質問と回答のページ [#top]
+-[[入門xyzzy]]に関する質問を受け付けます。
+-正誤の指摘についてもここで受け付けています。もちろん、正誤の指摘以外の質問についても受け付けています。よろしくお願いします。
+
+** 質問する [#tracker]
+#tracker(質問と回答)
+
+** 質問の一覧 [#list]
+#tracker_list(質問と回答,,state:SORT_ASC;_past:SORT_ASC)
+#norelated

@@ -1,0 +1,23 @@
+[[tips]]
+
+[[雪見酒さん:http://homepage3.nifty.com/Yukimi_Sake/]]作のruby-modeでコメントを付けます。無いと不便なので作ってみました。
+
+ ;; .xyzzyあたりに
+ (defun insert-ruby-line-comment ()
+   (interactive "*")
+   (save-restriction
+     (let (bol eol)
+       (goto-eol)
+       (setq eol (point))
+       (goto-bol)
+       (setq bol (point))
+       (narrow-to-region bol eol)
+       (cond ((re-search-forward "[ \t]*#\\{1,\\} +\\|^[ \t]*#\\{1,\\}" t) ;; コメントがすでにある場合
+              (goto-char (match-end 0)))
+             ((re-search-forward "^[ \t]*$" t) ;; 空白文字だけで構成される行の場合
+              (progn (goto-char bol)
+                (insert "# ")))
+             (t (goto-char eol)  ;; その他 rubyの文が行にあって、コメントがない場合
+                (insert " # ")))))
+   (ruby-refresh))
+ (define-key ed::*ruby-mode-map* '(#\M-\; ) 'insert-ruby-line-comment)

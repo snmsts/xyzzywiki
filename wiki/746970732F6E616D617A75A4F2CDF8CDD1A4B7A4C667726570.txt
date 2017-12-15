@@ -1,0 +1,108 @@
+[[tips]]
+
+**about [#h33b6501]
+namazuで抽出したファイルに対して grep をかけます。
+
+※動作には、Namazu for Win32 と namazu.l が必要です。
+
+このlispを作成するにあたり、HATTORI Masashi さんの namazu.l を参考にさせていただきました。m(_ _)m
+
+作者が書いた部分については自由に引用・改変・再配布などしても構わないものとします。
+
+ご自身の責任にてお使い下さい。
+
+*使い方 [#q2451aad]
+- M-x namazu-grep で検索語を入力して検索。C-u M-x namazu-grep でインデックスを指定して検索。※AND検索などには対応していません。
+- 検索語を *foo* のように入力した場合、namazu では *foo* で検索（部分一致検索）し、grep では foo で検索するようになっています。
+
+
+ ;;; -*- Mode: Lisp; Package: EDITOR -*-
+ 
+ ;; Last updated: <2005/05/01 16:38:54 +0900>
+ 
+ (provide "namazu-grep")
+ 
+ (in-package "editor")
+ 
+ (export '(namazu-grep))
+ 
+ (defvar *namazu-grep-max* 1000000)
+ 
+ (defun namazu-grep-initialize-buffer (buffer)
+   (set-buffer buffer)
+   (erase-buffer buffer)
+   (set-buffer-fold-width nil)
+   (setq buffer-read-only nil)
+   (setq need-not-save t)
+   (setq kept-undo-information nil)
+   (setq auto-save nil))
+ 
+ (defun namazu-grep (pattern &optional index)
+   (interactive "snamazu-grep: \np" :default0 (or (selection-start-end (start end)
+ 						   (buffer-substring start end))
+ 						 (car *minibuffer-search-string-history*) "")
+     :history0 'search)
+   (when index
+     (setq user::*namazu-index*
+ 	  (read-directory-name "Index: " :default (or user::*namazu-index* (default-directory)))))
+   (when (string= pattern "")
+     (plain-error "文字列が入力されていません")
+     (return-from namazu-grep))
+   (let (tmpbuf com file tlist no-dup)
+     (save-excursion
+       (setq tmpbuf (create-new-buffer "*namazu-grep-tmp*"))
+       (namazu-grep-initialize-buffer tmpbuf)
+       (setq com (format nil
+ 			"~A -n ~D -w ~D \"~A\""
+ 			user::*namazu-command*
+ 			*namazu-grep-max*
+ 			0
+ 			pattern))
+       (when user::*namazu-index*
+ 	(setq com (concat com " " user::*namazu-index*)))
+       (execute-shell-command com nil tmpbuf)
+       (goto-char (point-min))
+       (while (scan-buffer "^/\\([a-zA-Z]\\)|\\(.*\\)[ \t]*\\(\\(size[ \t]+\\)?\([0-9,]+ bytes\)\\)"
+ 			  :no-dup no-dup :regexp t :tail nil)
+ 	(setq no-dup t)
+ 	(setq file (buffer-substring (match-beginning 0) (match-end 2)))
+ 	(setq file (string-trim "[/ \t]" (substitute-string file "|/" ":/")))
+ 	(push file tlist))
+       (unless (setq tlist (nreverse tlist))
+ 	(delete-buffer tmpbuf)
+ 	(plain-error "ないよん")
+ 	(return-from namazu-grep)))
+     (setq pattern (string-trim "*" pattern))
+     (let ((common-path (glob-common-path tlist))
+ 	  (sbuffer (get-buffer-create "*namazu-grep*")))
+       (when *grep-understand-escape-sequences*
+ 	(setq pattern (decode-escape-sequence pattern *grep-regexp-search*)))
+       (when *grep-regexp-search*
+ 	(setq pattern (compile-regexp pattern *grep-case-fold-search*)))
+       (with-output-to-buffer (sbuffer)
+ 	(let ((scanner (grep-scanner pattern *grep-case-fold-search* *grep-word-search*)))
+ 	  (save-excursion
+ 	    (namazu-grep-initialize-buffer sbuffer)
+ 	    (set-default-directory common-path)
+ 	    (make-local-variable '*find-error-scanner*)
+ 	    (setq *find-error-scanner* scanner)
+ 	    (dolist (file tlist)
+ 	      (let ((file-buffer (get-file-buffer file)))
+ 		(if file-buffer
+ 		    (set-buffer file-buffer)
+ 		  (progn
+ 		    (set-buffer tmpbuf)
+ 		    (erase-buffer tmpbuf)
+ 		    (ignore-errors (insert-file-contents file))))
+ 		(save-excursion
+ 		  (goto-char (point-min))
+ 		  (message "scanning (~A)" (subseq file (length common-path)))
+ 		  (grep-scan-file (subseq file (length common-path)) scanner))))
+ 	    (delete-buffer tmpbuf))))
+       (set-buffer sbuffer)
+       (goto-char (point-min))
+       (set-buffer-modified-p nil))
+     (run-hooks '*grepd-hook*)
+     (message "done")))
+
+----

@@ -1,0 +1,26 @@
+* LESSの//コメントを有効に [#oe4e2bc1]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2012-03-22 (木) 10:22:59
+
+** メッセージ [#dd10a20f]
+xyzzyでLESSを記述してます。cssmodeにしてますが、LESSでは//もコメントとして有効なので、これをコメント表示にしたいです。どこをいじればいいですか？
+----
+- LESS って ttp://lesscss.org/ ですかね？
+ (require "css-mode")
+ 
+ ;; LESS 用に // でも行コメント
+ (set-syntax-start-c++-comment ed::*css-mode-syntax-table* #\/)
+これを .xyzzy に書いておけばたぶんおｋ -- [[bowbow99]] &new{2012-03-22 (木) 18:41:19};
+- ！コメント感謝です。もらえるかどうかかなり疑問でしたが…ありがとうございます。ただこれを記述すると、// 以降の行がすべてコメントに…（涙） --  &new{2012-03-23 (金) 16:28:45};
+- これはひどい回答をしてしまったｗ 
+ (require "css-mode")
+ 
+ ;; LESS 用に // でも行コメント
+ (set-syntax-start-c++-comment ed::*css-mode-syntax-table* #\/)
+ (set-syntax-end-c++-comment ed::*css-mode-syntax-table* #\LFD)
+ごんなさい、こっちで。 -- [[bowbow99]] &new{2012-03-23 (金) 17:37:47};
+- きてあああ。ありがとうございます。見事希望通りの動作です。本当に感謝です。 --  &new{2012-03-26 (月) 14:26:54};
+
+#comment

@@ -1,0 +1,19 @@
+[[L10N/english]]
+
+ pascal.l:65:	   (message "一致する括弧が見つかりません")))
+-The matched parenthesis is not found.
+-No matching brace. --  &new{2005-03-11 00:07:54 (金)};
+
+#comment
+ pascal.l:68:	   (message "一致する括弧が見つかりません")))
+-The matched parenthesis is not found.
+
+#comment
+ pascal.l:81:				   (message "一致するendが見つかりません")
+-The matched `end' is not found.
+
+#comment
+ pascal.l:89:				   (message "一致するbeginが見つかりません")
+-The matched `begin' is not found.
+
+#comment

@@ -1,0 +1,31 @@
+*mapc [#k49aa487]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2004-12-26 (日) 10:36:42
+-バージョン: 
+
+**メッセージ [#md7404fe]
+ --- 原文 ---
+ Description: similar to mapcar except that the value returned is list 
+ rather than a list of values returned by the calls to function. As such, 
+ a mapc form is evaluated for its side effects rather than the value it 
+ returns.
+ 
+ --- 原文 ---
+ mapcはFUNCTIONによって返された値が、多値ではなくlistである点を除いて、
+ macpcarに良く似ている。そのため、mapcは戻り値ではなく副作用を目的として
+ 評価される。
+
+前半部分の訳が変な気がします。
+ mapcは返り値が、FUNCTIONによって返された値のリストではなくLISTである
+ 点を除いて、・・・
+ぐらいの意味では。
+あと、両方とも「原文」になってます。
+----
+-取り込みました->[[refwiki:mapc]]。変更がないまま一月以上経過しているのはここまで。 -- [[NANRI]] &new{2005-03-02 01:04:07 (水)};
+
+#comment

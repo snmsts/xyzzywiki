@@ -1,0 +1,23 @@
+* delete-trailing-spaces [#t3812ec9]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-01-08 (日) 17:56:00
+-バージョン: 20051220
+
+** メッセージ [#lcc2f86a]
+「行末のスペースを削除します」とありますが、ソースを見るとポイント後方のスペースを削除しているようです。
+
+ ;; cmds.l より
+ (defun delete-trailing-spaces ()
+   (delete-region (point)
+                  (progn
+                    (skip-chars-backward " \t")
+                    (point))))
+--------
+- 修正しました。「スペース」という言葉は気になってますが、後回しで。→[[delete-trailing-spaces>refwiki:delete-trailing-spaces]] -- [[NANRI]] &new{2006-01-09 (月) 20:14:31};
+
+#comment

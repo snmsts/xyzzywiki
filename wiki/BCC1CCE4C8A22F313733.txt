@@ -1,0 +1,85 @@
+* ポップアップの候補の絞込み方法 [#n1b85084]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2006-05-31 (水) 14:48:28
+
+** メッセージ [#sb2cd307]
+ポップアップのコード補完で候補の絞込みはどうやって行えばいいでしょうか？
+例えば"abc","abd", "bcd"の３つが補完候補としてポップアップで表示されているとき、"a"を押すと
+"abc","abd"の２つに絞られるという機能です。
+----
+- ポップアップがdabbrevを指すならばこれでしょうか？http://d.hatena.ne.jp/nazoking/20040305/1078421068 --  &new{2006-05-31 (水) 17:54:35};
+- ご回答、ありがとうございます。 
+上記サイトを参考に、候補のリストを引数にポップアップを絞り込むメソッドを作ってみました。
+おそらく正しく動くとおもうので、よろしければどうぞ。
+
+  (defun test ()
+    (interactive)
+    (focus-popup-list '("abcdef" "abcef" "abdef")));こうやって使う
+
+  ;;;ポップアップリストの絞込みを行うメソッド
+  ;;;pops: ポップアップ表示させる文字列のリスト
+  (defun focus-popup-list (pops)
+    (let ((cs "^"))
+     (focus-popup-list2 pops cs)))
+
+  (defun focus-popup-list2 (pops typed)
+    (popup-list pops
+            #'(lambda (x)
+              (insert
+               (substring x (-(length typed) 1)));正規表現の^を頭につけているので、その分をマイナス１している
+              (refresh-screen)))
+    (setq c (read-char ed:*keyboard*)) ;キーボードから一文字読み取る
+    (if (and (eq (lookup-key-command c) 'self-insert-command)
+          ; もし、そのキーに割り当てられたコマンドが 'self-insert-command で
+          (or (syntax-word-p c)       ; word 文字か
+            (syntax-symbol-p c)))   ; symbol 文字でなかったら
+      (progn
+        (insert c)
+        (let ((cs (concat typed (string c))))
+         (refresh-screen)
+         (focus-popup-list2 (re-select-string pops cs) cs)))
+     (progn
+      (unread-char c))))
+
+  ;;;文字列のリストを正規表現で絞り込む
+  ;;;slist: 文字列のリスト
+  ;;;reg: 正規表現の文字列
+  (defun re-select-string (slist reg)
+    (when (equal reg nil) (return slist))
+    (remove-if  #'(lambda (x)
+        (not (string-match reg x)))
+          slist))
+--  &new{2006-06-11 (日) 19:28:48};
+
+ (defun focus-popup-list (pops &optional no-ins)
+   (let ((str "")
+ 	(matched pops)
+ 	selected
+ 	input
+ 	ret)
+     (while (not ret)
+       (unless no-ins (insert str))
+       (popup-list matched (lambda (x) (setq selected x)))
+       (refresh-screen)
+       (while (not (or selected (setq input (read-char-no-hang ed:*keyboard*))))
+ 	(do-events))
+       (unless no-ins (delete-region (- (point) (length str)) (point)))
+       (cond (selected (setq ret selected))
+ 	    ((eq #\C-h input) (if (zerop (length str))
+ 				  (setq ret "")
+ 				(setq str (substring str 0 -1))))
+ 	    (t (setq str (format nil "~A~C" str input))))
+       (let ((qregexp (regexp-quote str)))
+ 	(setq matched (remove-if-not #'(lambda (x) (string-looking-at qregexp x)) pops))
+ 	(when (not matched)
+ 	  (setq ret str))))
+     ret))
+
+ありがとうございます。今まで出来ると思っていなかったです。~
+なんとなし短く出来る気がしたのでしてみましたこんな感じで大丈夫でしょうか？~
+佐野
+- 佐野さん作のが "a" "ab" というような候補があるときに、 a b と入力するとエラーが出るので直しました。 -- [[中野]] &new{2006-06-14 (水) 12:11:26};
+
+#comment

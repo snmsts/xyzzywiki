@@ -1,0 +1,35 @@
+*user-config-path [#x5083529]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2003-11-09 (日) 20:58:08
+-バージョン: 20031002
+
+**メッセージ [#x2292251]
+ <chapter>
+ <title>user-config-path</title>
+ <type>Function</type>
+ <arguments>user-config-path</arguments>
+ <package>editor</package>
+ <description>
+ ユーザ設定を格納しているディレクトリを返します。
+ 
+ ダイアログでの規定値等が格納されるディレクトリです
+ 使用例： 
+   (user-config-path)
+   =>"H:/xyzzy/usr/Administrator/w2k/"
+
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-すいません、またほったらかしにしてしまいました。更新しました。 -- [[山本]] &new{2003-12-06 (土) 18:21:13};
+
+#comment

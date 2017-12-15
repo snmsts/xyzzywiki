@@ -1,0 +1,18 @@
+[[tips]]
+
+ (defun write-file-and-compress (file &optional name nowarn)
+   (interactive "FWrite File: ")
+   (when (or (not (file-exist-p file))
+             nowarn
+             (no-or-yes-p "~aは既に存在します。続行しますか?" file))
+     (let ((tmp (merge-pathnames (file-namestring (or name
+                                                      (get-buffer-alternate-file-name)
+                                                      (get-buffer-file-name)
+                                                      (make-temp-file-name)))
+                                 (make-temp-file-name nil nil nil t))))
+       (save-restriction
+         (widen)
+         (write-region (point-min) (point-max) tmp nil (buffer-fileio-encoding) (buffer-eol-code)))
+       (create-archive file (list tmp) (directory-namestring tmp)))))
+----
+#comment

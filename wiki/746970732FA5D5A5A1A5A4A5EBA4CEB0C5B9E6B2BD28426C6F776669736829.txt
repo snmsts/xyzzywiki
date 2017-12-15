@@ -1,0 +1,50 @@
+[[tips]]
+
+勢いでこっちも作ってしまいました。
+
+[[BRBF.DLL>http://www.vector.co.jp/soft/win95/prog/se216087.html]] ファイル、メモリのBlowfish暗号/復号化を行えるDLL を使ってファイルの暗号化を行ったり、暗号化されたファイルを復号して読み込んだりします。
+
+同じようにreadとwriteを作ってます。
+
+DLLは、
+
+> 非商用個人利用に限りフリーソフトです。
+
+だそうなので注意してください。
+
+一時ファイルを経由せずにできないかやってみましたが、挫折しました。chunkはよく分からんです。
+
+#ref(blowfish.lzh);
+*使い方 [#pcfc07f9]
+**blowfishパッケージ外部シンボル [#o044c2bd]
+:blowfish:init-iv IV| イニシャルベクタの設定
+-IV : 文字列
+:blowfish:init-key KEY| パスワードの設定
+-KEY : 文字列
+:blowfish:encrypt-file SOURCE DEST KEY| ファイルを暗号化
+-SOURCE : 入力ファイル
+-DEST : 出力ファイル
+-KEY : パスワード
+:blowfish:decrypt-file SOURCE DEST KEY| ファイルを復号
+-SOURCE : 入力ファイル
+-DEST : 出力ファイル
+-KEY : パスワード
+:blowfish:set-enc-mode MODE| モードの設定
+-MODE : blowfish:*mode-OFB*, blowfish:*mode-CFB* blowfish:*mode-CBC*のどれか
+**userパッケージシンボル [#uc4dfaff]
+:*brbf-dll-path*| BRBF.DLLの位置を指定
+-デフォルトは$XYZZY/BRBF.DLL。別の位置に置くときはblowfish/dllのロードよりも先に設定すること。
+:read-encrypted-file FILE &optional KEY| 復号して読み込み
+-FILE : 読み込むファイル名
+-KEY : パスワード
+:write-file-and-encrypt FILE &optional KEY NOWARN| 暗号化して書き込み
+-FILE : 保存時のファイル名
+-KEY : パスワード
+-NOWARN : 上書き確認ダイアログを抑止
+**備考 [#p0011be1]
+-read-encrypted-fileとwrite-file-and-encryptは、現在一時ファイルを経由しています。
+-[[tips/ファイルの暗号化(Rijndael)]]の使い方もほぼ同様。
+----
+- lcとlが違う気がします。 --  &new{2007-07-07 (土) 15:27:10};
+
+#comment

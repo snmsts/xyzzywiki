@@ -1,0 +1,56 @@
+* looking-at [#b375ff56]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[anonymous]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: ツッコミをいれる
+-投稿日:     2007-02-22 (木) 13:50:03
+-バージョン: 
+
+** メッセージ [#rb02c3d1]
+looking-at-backward を参考として載せました。
+
+ <chapter>
+ <title>looking-at</title>
+ <type>Function</type>
+ <arguments>looking-at REGEXP &amp;optional CASE-FOLD</arguments>
+ <package>editor</package>
+ <description>
+ 現在のカーソル位置で前方向に正規表現でマッチしたらt、しなかったらnilを返します。
+ 
+ 使用例：
+   ;;; 行頭が(とマッチするか?
+   (defun rrr ()
+     (interactive)
+     (if (looking-at "^(")
+       (message "ok") (message "bad")))
+ 
+   ;;; 空白やタブや全角スペースがあれば削除する
+   (if (looking-at "[ \t　]*")
+       (delete-region (match-beginning 0) (match-end 0)))
+ 
+ 参考：
+   ;;; looking-at の後方版 (正規表現で後方マッチ)
+   ;;; XyzzyWiki 質問箱/175 より
+   (defun looking-at-backward (regexp &optional case-fold)
+     (save-excursion
+       (save-restriction
+         (narrow-to-region (point-min) (point))
+         (goto-char (point-min))
+         (scan-buffer (format nil "~A\\'" regexp)
+                      :regexp t :case-fold case-fold))))
+ </description>
+ <seealso>looking-for</seealso>
+ <seealso>scan-buffer</seealso>
+ <seealso>string-match</seealso>
+ <seealso>string-looking-at</seealso>
+ <seealso>正規表現の表記</seealso>
+ <section>検索・正規表現</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+- どーもです。ライセンス上問題が無いことが確認されるまでは保留です。 -- [[NANRI]] &new{2007-02-23 (金) 01:43:57};
+- 上記版の looking-at-backward は私が書きました。その部分についてのライセンスということであれば、「xyzzyリファレンスのライセンス」として検討されているライセンスに従います。 -- [[OHKUBO]] &new{2007-02-24 (土) 03:17:50};
+
+#comment

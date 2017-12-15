@@ -1,0 +1,44 @@
+よく使うファイルを一覧表示して、選択すると、そのファイルを開きます。
+
+ ; よく使うファイル一覧ダイアログ
+ (defun favorite-file-dialog ()
+   (interactive)
+   (let ((list *faviote-files*))
+     (multiple-value-bind (result data)
+        (dialog-box '(dialog 0 0 200 115
+                      (:caption "よく使うファイル一覧")
+                      (:font 9 "ＭＳ Ｐゴシック")
+                      (:control
+                       (:listbox list nil #x50b10101 5 5 190 90)
+                       (:button IDOK "読みこむ" #x50010001 87 100 50 14)
+                       (:button IDCANCEL "やめる" #x50010000 142 100 50 14)))
+                    (list (cons 'list list))
+                    '((list :must-match t :enable (IDOK))))
+       (when result
+        (set-buffer (ed::find-file-internal (cdr (assoc 'list data))))))))
+
+で、「*faviote-files*」にファイル名を指定します。
+
+ (setq *faviote-files* '(
+   "~/.xyzzy"
+   "C:/xyzzy/site-lisp/siteinit.l"
+ ))
+
+ついでに、過去開いたファイルを(たぶん)全部、一覧表示するダイアログです。利用用途がないような…気はするのですが。
+
+ ;;昔つかったファイル選択ダイアログ
+ (defun minibuffer-file-name-history-dialog ()
+   (interactive)
+   (let ((list *minibuffer-file-name-history*))
+     (multiple-value-bind (result data)
+         (dialog-box '(dialog 0 0 320 200
+                       (:caption "昔つかったファイルの選択")
+                       (:font 9 "ＭＳ Ｐゴシック")
+                       (:control
+                        (:listbox list nil #x50b10101 7 7 307 160)
+                        (:button IDOK "読みこむ" #x50010001 107 176 50 14)
+                        (:button IDCANCEL "やめる" #x50010000 162 176 50 14)))
+                     (list (cons 'list list))
+                     '((list :must-match t :enable (IDOK))))
+       (when result
+         (set-buffer (ed::find-file-internal (cdr (assoc 'list data))))))))

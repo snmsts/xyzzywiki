@@ -1,0 +1,251 @@
+* =, equal [#d5bbea83]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[砂]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-08-16 (水) 05:12:06
+-バージョン: 20060329
+
+** メッセージ [#z85b45fc]
+= での比較は数値のみなので
+Seealso に equalも入れてはどうでしょうか
+--------
+- どーもです。「= での比較は数値のみ」であることと「Seealso に equalも入れ」ることのつながりがよく分かりません。もう少し詳しい理由をお教えください。それと追加するのはequalだけですか? eqやeqlやequalpもありますけど。 -- [[NANRI]] &new{2006-08-16 (水) 22:58:40};
+- =からの誘導というかしつけ箸的なガイドが欲しいという感じですかね。equalはつぶしが利きますし。ただseealsoに入っていて本文にフォローがないと意味不明な気もします。 -- [[佐野]] &new{2006-08-16 (水) 23:46:06};
+- 言葉足らずですいません…。佐野さんの言うように躾箸的なものがあったほうが良いと思いました。本文には「=での比較は数字のみが対象です。文字列の比較を行いたい場合はequalを使用してください」と付け加える形でお願いします。また「eq, eql, equalp, equal, =」の5つは全て相互参照できる方が個人的には使いやすく感じます。 -- [[砂]] &new{2006-08-21 (月) 13:53:07};
+- ついでにequalpの本文[equalと同じように X と Y を比較します。例えば大文字と小文字は区別しません。]とありますが若干日本語がおかしいので[equalと同じように X と Y を比較します、equalと違い大文字と小文字を区別しません]の方が良いのではないでしょうか？#こういうのは新規投稿すべきですか？wiki系の常識がさっぱりなので…。 -- [[砂]] &new{2006-08-21 (月) 13:59:45};
+- どーもです。equalpの説明は直しておきます。(ちなみに、「こういうのは新規投稿すべきですか？」についてはどちらでもかまいません。明らかに扱いに困る場合は自分で直しますので、細かい形式はこだわらないでください) -- [[NANRI]] &new{2006-08-21 (月) 19:05:03};
+- 文字列の比較といったらequalよりもstring=でしょうから、追加する説明文は別のを何か考えておきます。『「eq, eql, equalp, equal, =」の5つは全て相互参照』というのは悩ましいです。なぜかというと自分にとってはequalと=の関係はequalとchar=の関係やequalとstring=の関係と等しいからです。(汎用なデータ型同士の比較とあるデータ型において値の比較ということで)　やるとしたらこの辺りを全部という感じでしょうか。 -- [[NANRI]] &new{2006-08-21 (月) 19:14:00};
+-- ところで文字列でも単純な比較なら string= より equal の方が高速でしたよ。 string= はキーワードパラメータがある分だけ遅いみたいです。 自分は文字列の一部を比較するときのみ string= を使います。 -- [[中野]] &new{2006-08-21 (月) 19:37:35};
+-- 自分はデータ型のチェックがあるので、引数が文字列だと明らかな場合はstring=を好んで使っています((string=のデータ型のチェックはシンボルが許されたりしていて微妙に信用できませんけど))が、速度のことは知りませんでした。自分の環境でも試してみましたが、コンパイルなしだと明らかな差が出ましたが(1000000回の比較で平均0.2sec程度equalが速い)、コンパイルすると誤差の範囲におさまってしまうような感じでした。 -- [[NANRI]] &new{2006-08-22 (火) 23:04:44};
+#ref(string-test.l)
+-- 総時間で比較するのはdotimesがかなり分母を稼いでしまう気がしますが気のせいでしょうか。 -- [[佐野]] &new{2006-08-23 (水) 03:05:15};
+-- [[trash/benchmark1]]と同じことをやっているつもりですが。表現がまずいのでしょうか。1000000回の比較を1セットとして、1セット当たりで平均0.2sec程度equal使う方が速かった。ということです。試行回数はせいぜい数十回程度でしたし、平均も見た感じで出した値なので、数字はまったくあてになりませんけど。 -- [[NANRI]] &new{2006-08-23 (水) 23:24:30};
+-- 特になにかの裏づけがあったわけではなく、バイトコンパイルしかなされない環境で明らかな差が出ないときはループの負荷を考慮に入れないとうまくベンチマークする関数の速度比がでないかも？といっているだけでした。実際空のループと比べてると半分以上の時間がループに食われているように見えました。NANRIさんの書いたものは私のところではstring=の方が勝つ… -- [[佐野]] &new{2006-08-24 (木) 01:13:34};
+----
+ <chapter>
+ <title>eq</title>
+ <type>Function</type>
+ <arguments>eq X Y</arguments>
+ <package>lisp</package>
+ <description>
+ X と Y が同一オブジェクトならt、そうでないならnilを返します。数値や文字
+ 列に対しては見かけ上同じでもtとなる保障はありません。xyzzyでは、数値はt
+ となるが文字列ではnilとなるように実装されているようです。
+ 
+ 使用例：
+   ;;; eqで比較してみる。
+   (eq 'foo 'foo)        =&gt; t    ; 仕様
+   (eq 2 2)              =&gt; t    ; 処理系依存
+   (eq "foo" "foo")      =&gt; nil  ; 処理系依存
+   (eq '(1 2) '(1 2))    =&gt; nil  ; 処理系依存
+ </description>
+ <seealso>eql</seealso>
+ <seealso>equal</seealso>
+ <seealso>equalp</seealso>
+ <section>データ型</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>eql</title>
+ <type>Function</type>
+ <arguments>eql X Y</arguments>
+ <package>lisp</package>
+ <description>
+ X と Y が同一オブジェクトか、同じ型の数値または文字型で値が等しいかを返
+ します。等しければtを、そうでなければnilを返します。eqとは異なり、値とし
+ て等しいかを判断します。ただし、中身までは見ないので文字列は対象外となり
+ ます。
+ 
+ 使用例：
+   ;;; eqlで比較してみる。
+   (eql 'foo 'foo)       =&gt; t    ; 仕様
+   (eql 2 2)             =&gt; t    ; 仕様
+   (eql "foo" "foo")     =&gt; nil  ; 処理系依存
+   (eql '(1 2) '(1 2))   =&gt; nil  ; 処理系依存
+ </description>
+ <seealso>eq</seealso>
+ <seealso>equal</seealso>
+ <seealso>equalp</seealso>
+ <section>データ型</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>equal</title>
+ <type>Function</type>
+ <arguments>equal X Y</arguments>
+ <package>lisp</package>
+ <description>
+ X と Y が同じ構造を持っていればtを、そうでなければnilを返します。
+ 
+ 使用例：
+   ;;; equalで比較してみる。
+   (equal 'foo 'foo)     =&gt; t    ; 仕様
+   (equal 2 2)           =&gt; t    ; 仕様
+   (equal "foo" "foo")   =&gt; t    ; 仕様
+   (equal '(1 2) '(1 2)) =&gt; t    ; 仕様
+ </description>
+ <seealso>eq</seealso>
+ <seealso>eql</seealso>
+ <seealso>equalp</seealso>
+ <section>データ型</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>equalp</title>
+ <type>Function</type>
+ <arguments>equalp X Y</arguments>
+ <package>lisp</package>
+ <description>
+ equalと同じように X と Y を比較します。
+ ただし、一部の差異を許容します。
+ 例えば文字・文字列の比較では大文字と小文字を区別しません。
+ 
+ 使用例：
+   ;;; equalpで比較してみる。
+   (equalp "Foo" "foo")  =&gt; t
+ </description>
+ <seealso>eq</seealso>
+ <seealso>eql</seealso>
+ <seealso>equal</seealso>
+ <section>データ型</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>=</title>
+ <type>Function</type>
+ <arguments>= NUMBER &amp;rest MORE-NUMBERS</arguments>
+ <package>lisp</package>
+ <description>
+ 引数の数値がすべて等しければt、そうでなければnilを返します。
+ 
+ 使用例：  
+   (= 3 3)
+   =&gt; t
+   (= 3 4)
+   =&gt; nil
+   (= 3 3 3 3)
+   =&gt; t
+   (= 3 3 3 4)
+   =&gt; nil
+ </description>
+ <seealso>equal</seealso>
+ <seealso>equalp</seealso>
+ <seealso>/=</seealso>
+ <section>数値</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>char=</title>
+ <type>Function</type>
+ <arguments>char= CHARACTER &amp;rest MORE-CHARACTERS</arguments>
+ <package>lisp</package>
+ <description>
+ 引数の文字がすべて等しければt、そうでなければnilを返します。
+ 
+ 使用例：  
+   (char= #\a #\a #\a)
+   =&gt; t
+   (char= #\a #\d)
+   =&gt; nil
+   (char= #\a #\A)
+   =&gt; nil
+ 
+ 参考：
+   case-sensitive        case-insensitive
+   ----                  ----
+   char=                 char-equal
+   char/=                char-not-equal
+   char&lt;                 char-lessp
+   char&gt;                 char-greaterp
+   char&lt;=                char-not-greaterp
+   char&gt;=                char-not-lessp
+ </description>
+ <seealso>equal</seealso>
+ <seealso>char-equal</seealso>
+ <section>文字</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>char-equal</title>
+ <type>Function</type>
+ <arguments>char-equal CHARACTER &amp;rest MORE-CHARACTERS</arguments>
+ <package>lisp</package>
+ <description>
+ 引数がすべて大文字小文字関係なく等しければt、そうでなければnilを返します。
+ 
+ 使用例：  
+   (char-equal #\A #\a)
+   =&gt; t
+ </description>
+ <seealso>equalp</seealso>
+ <seealso>char=</seealso>
+ <section>文字</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>string=</title>
+ <type>Function</type>
+ <arguments>string= STRING1 STRING2 &amp;key :start1 :end1 :start2 :end2</arguments>
+ <package>lisp</package>
+ <description>
+ STRING1とSTRING2を比較して等しければt、そうでなければnilを返します。
+ 英字の大文字と小文字は区別します。
+ 
+ 使用例：
+   (string= "foo" "foo")
+   =&gt; t
+   (string= "foo" "Foo")
+   =&gt; nil
+   (string= "together" "frog" :start1 1 :end1 3 :start2 2)
+   =&gt; t
+ 
+ 参考：
+   case-sensitive        case-insensitive
+   ----                  ----
+   string=               string-equal
+   string/=              string-not-equal
+   string&lt;               string-lessp
+   string&gt;               string-greaterp
+   string&lt;=              string-not-greaterp
+   string&gt;=              string-not-lessp
+ </description>
+ <seealso>equal</seealso>
+ <seealso>string-equal</seealso>
+ <section>文字列</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>string-equal</title>
+ <type>Function</type>
+ <arguments>string-equal STRING1 STRING2 &amp;key :start1 :end1 :start2 :end2</arguments>
+ <package>lisp</package>
+ <description>
+ STRING1とSTRING2を大文字小文字に関係なく比較して等しければt、そうでなけ
+ ればnilを返します。
+ 
+ 使用例：
+   (string-equal "foo" "foo")
+   =&gt; t
+   (string-equal "foo" "Foo")
+   =&gt; t
+ </description>
+ <seealso>equalp</seealso>
+ <seealso>string=</seealso>
+ <section>文字列</section>
+ <file>builtin.l</file>
+ </chapter>
+- 今のところこういう方針で。 -- [[NANRI]] &new{2006-08-31 (木) 23:00:24};
+- 対応ありがとうございます -- [[砂]] &new{2006-09-13 (水) 07:45:01};
+
+#comment

@@ -1,0 +1,59 @@
+**about [#u4005ee8]
+
+rubyでcgiをいじる機会が多かったので.cgiをperl-modeに決めうちされるのが~
+嫌になりました。作ってみて気が付いたことは私はruby-modeを使ったことが無い~
+ということでした。佐野　2004/12/09~
+~関数名は微妙なのでなんかいい名前が思いついた人は教えてください。 
+ (delete "\\.cgi$"  *auto-mode-alist* :key 'car :test 'string=)
+ (defvar *decide-shebang-alist*
+   '(("perl" . perl-mode)
+     ("ruby" . ruby-mode)))
+ 
+ (defun decide-shebang ()
+   (interactive)
+   (when (eq buffer-mode 'fundamental-mode)
+     (let (bgn end lstr mname)
+       (save-excursion
+ 	(beginning-of-buffer)
+ 	(setq bgn (point))
+ 	(end-of-line)
+ 	(setq end (point)))
+       (setq lstr (buffer-substring bgn end))
+       (and
+        (> (length lstr) 2)
+        (string-match  "#!.*/\\([^/ \t\n]+\\)" lstr)
+        (setq mname (match-string 1)))
+       (when (string= mname "env")
+ 	(string-match "[ \t]\\([^ \t]+\\)" lstr)
+ 	(setq mname (match-string 1)))
+       (setq mname (cdr (assoc mname *decide-shebang-alist* :test 'string=)))
+       (when mname
+ 	(funcall mname)))))
+ (add-hook '*find-file-hooks*
+ 	  'decide-shebang)
+
+**使い方 [#e8133331]
+
+-上のソースを.xyzzyとかsiteinit.lに貼り付けるだけです。
+-.cgiの拡張子をもつファイルを開く時に適切なモードで開かれるようになります。
+-- #!/usr/bin/perl ならば、perl-mode
+-- #!/usr/bin/ruby ならば、ruby-mode（導入済みであれば）
+-- #!/usr/bin/perl -v や、 #!/usr/bin/env ruby みたいな行にも対応しています。
+
+----
+
+このソースではPerlとRubyのみに対応してますが、変更すれば他の言語にも対応します。例えば、
+
+  (setq *decide-shebang-alist*
+    '(("perl" . perl-mode)
+      ("ruby" . ruby-mode)
+      ("gosh" . scheme-mode)))
+
+とすれば、#!/usr/bin/goshと記述されたファイルを開く時にscheme-modeで開くようになります。
+
+
+----
+-使い方を追加してみました。 -- [[稲原]] &new{2004-12-10 (金) 01:49:37};
+-謎の文字化けを直しました\が?になってた。 -- [[佐野]] &new{2004-12-10 (金) 17:20:15};
+
+#comment

@@ -1,0 +1,116 @@
+* skip-white-forward skip-white-backward skip-chars-forward skip-chars-backward [#o0442a5e]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[中野]]
+-優先順位:   低
+-状態:       着手
+-カテゴリー: ツッコミをいれる
+-投稿日:     2008-08-16 (土) 15:39:55
+-バージョン: 
+
+** メッセージ [#za004dee]
+気づいた機能やseealsoを加筆・追加
+ <chapter>
+ <title>skip-white-forward</title>
+ <type>Function</type>
+ <arguments>skip-white-forward</arguments>
+ <package>editor</package>
+ <description>
+ 空白文字やコメントを前方にスキップします
+ シンタックステーブル上で whitespace やコメントとして規定されて
+ いる文字を前方にスキップします。
+ </description>
+ <seealso>skip-white-backward</seealso>
+ <seealso>skip-syntax-spec-forward</seealso>
+ <seealso>set-syntax-whitespace</seealso>
+ <seealso>set-syntax-start-comment</seealso>
+ <seealso>set-syntax-start-c++-comment</seealso>
+ <seealso>set-syntax-start-multi-comment</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ 
+ <chapter>
+ <title>skip-white-backward</title>
+ <type>Function</type>
+ <arguments>skip-white-backward</arguments>
+ <package>editor</package>
+ <description>
+ 空白文字やコメントを後方にスキップします
+ シンタックステーブル上で whitespace やコメントとして規定されて
+ いる文字を後方にスキップします。
+ </description>
+ <seealso>skip-white-forward</seealso>
+ <seealso>skip-syntax-spec-backward</seealso>
+ <seealso>set-syntax-whitespace</seealso>
+ <seealso>set-syntax-start-comment</seealso>
+ <seealso>set-syntax-start-c++-comment</seealso>
+ <seealso>set-syntax-start-multi-comment</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ 
+ <chapter>
+ <title>skip-chars-forward</title>
+ <type>Function</type>
+ <arguments>skip-chars-forward CHARS</arguments>
+ <package>editor</package>
+ <description>
+ 指定された文字群を前方方向にスキップします。
+ 
+   CHARS : スキップする文字群を指定します。
+ 
+ skip-syntax-spec-forward も似た動作をしますが、これはバッファのシンタック
+ ステーブルを見てスキップする文字を判断します。また、正規表現の [...] 
+ のような指定も可能です。
+ 目的がはっきりしていれば、skip-chars-forward を使用しましょう。
+ 
+ 使用例：
+   ;;; 半角空白とタブ文字をスキップします。
+   (skip-chars-forward " \t")
+   ;;; アルファベットと数字以外をスキップします。
+   (skip-chars-forward "^A-Za-z0-9")
+ </description>
+ <seealso>skip-chars-backward</seealso>
+ <seealso>skip-syntax-spec-forward</seealso>
+ <seealso>skip-white-forward</seealso>
+ <section>検索・正規表現</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>skip-chars-backward</title>
+ <type>Function</type>
+ <arguments>skip-chars-backward CHARS</arguments>
+ <package>editor</package>
+ <description>
+ 指定された文字群を後方方向にスキップします。
+ skip-chars-forward の後ろ向きのものです。
+ 
+   CHARS : スキップする文字群を指定します。
+ 
+ skip-syntax-spec-backward も似た動作をしますが、これはバッファのシンタック
+ ステーブルを見てスキップする文字を判断します。また、正規表現の [...] 
+ のような指定も可能です。
+ 目的がはっきりしていれば、skip-chars-backward を使用しましょう。
+ 
+ 使用例：
+   ;;; 半角空白とタブ文字を後方にスキップします。
+   (skip-chars-backward " \t")
+   ;;; アルファベットと数字以外を後方にスキップします。
+   (skip-chars-backward "^A-Za-z0-9")
+ </description>
+ <seealso>skip-chars-forward</seealso>
+ <seealso>skip-syntax-spec-backward</seealso>
+ <seealso>skip-white-backward</seealso>
+ <section>検索・正規表現</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+- どーもです。 -- [[NANRI]] &new{2010-04-29 (木) 04:03:11};
+
+#comment

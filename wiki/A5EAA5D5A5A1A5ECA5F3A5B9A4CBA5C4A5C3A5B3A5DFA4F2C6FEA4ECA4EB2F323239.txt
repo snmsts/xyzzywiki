@@ -1,0 +1,33 @@
+* get-ime-mode [#a68b34f5]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-08-21 (月) 17:34:51
+-バージョン: 
+
+** メッセージ [#ncdd27a2]
+ <chapter>
+ <title>get-ime-mode</title>
+ <type>Function</type>
+ <arguments>get-ime-mode</arguments>
+ <package>editor</package>
+ <description>
+ IMEのON/OFF状態を返します。
+ 
+ 戻り値は以下の通りです
+   t   変換モード
+   nil 直接入力モード
+ </description>
+ <seealso>toggle-ime</seealso>
+ <link></link>
+ <section>キーマップ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+--------
+- どーもです。 -- [[NANRI]] &new{2006-08-21 (月) 19:15:06};
+
+#comment

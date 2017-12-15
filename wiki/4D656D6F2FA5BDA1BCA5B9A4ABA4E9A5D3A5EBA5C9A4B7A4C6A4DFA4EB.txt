@@ -1,0 +1,79 @@
+#freeze
+*用意するもの [#d291a61e]
+**visual c++ [#zbf05b6b]
+ここで用意したのはいつだったかのCマガジンについてきたベータ版のVisual Studio DVDです。((時期的にすでに利用規約違反))
+**xyzzyのソース [#k62b0d4f]
+MLのログをじっくりと眺めてください。見つかるはず。
+**うにこーどがらみ [#d05a994a]
+ソースアーカイブ付属のreadmeを熟読してください。
+
+*実行手順 [#aaafecad]
+これもreadmeを読んで適当にやるしか…。~
+[パスはどこだかよくわかんね]vsvargs32~
+nmake~
+
+*エラーが出るぞ [#z59db9aa]
+よく把握していないのですが適当にパッチを当てました。
+
+ --- arc-if.cc   Fri Jun 20 14:23:21 2003
+ +++ arc-if.cc.1~        Sun Feb 25 08:45:00 2001
+ @@ -224,11 +224,11 @@
+    for (; desc->Name; desc++)
+      for (IMAGE_THUNK_DATA *thunk = (IMAGE_THUNK_DATA *)P(base, desc->FirstThunk);
+           thunk->u1.Function; thunk++)
+ -      if (thunk->u1.Function == (DWORD )beep)
+ +      if (thunk->u1.Function == (DWORD *)beep)
+          {
+            DWORD o;
+            VirtualProtect (&thunk->u1.Function, 4, PAGE_READWRITE, &o);
+ -          thunk->u1.Function = DWORD (fake_MessageBeep);
+ +          thunk->u1.Function = PDWORD (fake_MessageBeep);
+            VirtualProtect (&thunk->u1.Function, 4, o, &o);
+            return 1;
+          }
+
+ --- cdecl.h     Fri Jun 20 14:16:50 2003
+ +++ cdecl.h.1~  Sat Apr 08 03:54:51 2000
+ @@ -71,7 +71,7 @@
+  {
+    return a > b ? a : b;
+  }
+ -/*
+ +
+  inline char min (char a, char b) {return a < b ? a : b;}
+  inline char max (char a, char b) {return a > b ? a : b;}
+  inline u_char min (u_char a, u_char b) {return a < b ? a : b;}
+ @@ -92,9 +92,6 @@
+  inline float max (float a, float b) {return a > b ? a : b;}
+  inline double min (double a, double b) {return a < b ? a : b;}
+  inline double max (double a, double b) {return a > b ? a : b;}
+ -*/
+ -#define min( a, b) ( (a) < (b) ? (a) : (b))
+ -#define max( a, b) ( (a) > (b) ? (a) : (b))
+ 
+  template <class T>
+  inline void
+
+ --- noLZW.c     Fri Jun 20 14:26:15 2003
+ +++ noLZW.c.1~  Sun Feb 20 04:47:36 2000
+ @@ -318,13 +318,13 @@
+      for (thunk = PTR (IMAGE_THUNK_DATA, base, desc->FirstThunk);
+           thunk->u1.Function; thunk++)
+        for (i = 0; i < numberof (api); i++)
+ -        if (thunk->u1.Function == (DWORD )api[i].proc)
+ +        if (thunk->u1.Function == (DWORD *)api[i].proc)
+            {
+              DWORD o;
+              if (VirtualProtect (&thunk->u1.Function, sizeof thunk->u1.Function,
+ 
+                                  PAGE_READWRITE, &o))
+                {
+ -                thunk->u1.Function = (DWORD )api[i].hack;
+ +                thunk->u1.Function = (DWORD *)api[i].hack;
+                  VirtualProtect (&thunk->u1.Function, sizeof thunk->u1.Function, o, &o);
+                }
+              break;
+
+*めでたく [#w2cc655c]
+0.2.2.232のEXEが出来ました。
+なんか配布版よりも小さいんだけど。そんな門？

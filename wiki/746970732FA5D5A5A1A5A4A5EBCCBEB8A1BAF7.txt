@@ -1,0 +1,39 @@
+[[tips]]
+
+[[filer-search:http://xyzzy.s53.xrea.com/wiki/index.php?%A5%D5%A5%A1%A5%A4%A5%E9%A4%CEManual#m42a4f0c]]をバッファから使えるようにしただけ。
+
+ (defun search-filename ()
+   (interactive)
+   (multiple-value-bind (result data)
+       (dialog-box '(dialog 0 0 251 73
+                     (:caption "ファイルの検索")
+                     (:font 9 "MS UI Gothic")
+                     (:control
+                      (:static nil "ファイル名(&F):" #x50020000 7 28 37 8)
+                      (:combobox name nil #x50210042 47 25 143 85)
+                      (:button IDOK "OK" #x50010001 194 7 50 14)
+                      (:button IDCANCEL "キャンセル" #x50010000 194 24 50 14)
+                      (:button ref "参照(&R)..." #x50010000 194 41 50 14)
+                      (:static nil "探す場所(&D):" #x50020000 7 11 39 8)
+                      (:combobox dir nil #x50210002 47 7 143 85)))
+                   (list (cons 'dir ed::*filer-search-directory-history*)
+                         (cons 'name ed::*filer-search-pattern-history*)
+                         (cons 'dir (default-directory)))
+                   '((ref :related dir :directory-name-dialog (:title "参照"))
+                     (name :non-null "ファイル名を入力して" :enable (IDOK))))
+     (when result
+       (message "検索中...")
+       (let ((pattern (cdr (assoc 'name data)))
+             (directory (merge-pathnames (cdr (assoc 'dir data))
+                                         (default-directory))))
+         (add-history directory 'ed::*filer-search-directory-history*)
+         (add-history pattern 'ed::*filer-search-pattern-history*)
+         (let ((found (directory directory
+                                 :absolute t :recursive t
+                                 :wild (split-string pattern #\; t " "))))
+           (clear-message)
+           (cond (found
+                  (with-output-to-temp-buffer ("*Filename*")
+                    (format t "~{~A~%~}" found)))
+                 (t
+                  (error "~{~A~^, ~}:~%見つかりません" pattern))))))))

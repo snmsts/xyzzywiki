@@ -1,0 +1,24 @@
+* move-to-window-line [#h281e8d4]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2006-05-15 (月) 15:47:45
+
+** メッセージ [#rf551180]
+
+- emacs の M-r を使いたいのですが、move-to-window-line 自体が実装されていません。どうやって見えているページの位置を (point) を得たらいいのでしょうか。実はスクロール (C-v) したときのカーソル位置を emacs 風にしたくて、move-to-window-line を使おうとしたのですが。。。 --  &new{2006-05-15 (月) 15:23:35};
+
+
+ (defun move-to-window-line (&optional arg)
+   (interactive "p")
+   (cond
+    ((null arg) (next-line (- (/ (window-height) 2) (get-window-line))))
+    ((zerop arg) (previous-line (get-window-line)))
+    ((> arg 0) (previous-line (- (get-window-line) arg)))
+    ((< arg 0) (next-line (+ (- (window-height) (get-window-line)) arg)))))
+
+----
+- emacsのほうはdescribe-functionしか見てないので違うかも -- [[佐野]] &new{2006-05-15 (月) 15:48:27};
+- ありがとうございます。これで安心して使えます。(window-height) というのがあるんですね。 --  &new{2006-05-18 (木) 12:46:29};
+
+#comment

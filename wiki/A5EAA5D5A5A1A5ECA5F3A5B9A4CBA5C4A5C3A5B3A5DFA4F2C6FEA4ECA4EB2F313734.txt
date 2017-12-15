@@ -1,0 +1,54 @@
+* 破壊的修正についての表現 [#t307d9d3]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 記述形式
+-投稿日: 2005-11-13 (日) 21:45:57
+-バージョン: 
+
+** メッセージ [#pa9dddf2]
+リストやシーケンスの破壊的修正については現在、「変更される」「変更されない」という表現が使われているのですが、「破壊される」「保存される」という表現にしたいと思っています。
+
+現在の表現だと修正が行われた結果が戻り値と一致していると思い込まれる危険性があるのではないかと心配だからというのが理由です。
+--------
+- 確かにそうですね。私もはじめはnreverseとか勘違いしてましたし。表現の修正には賛成ですが、それ以外にも一言、破壊的修正の使い方・注意点などもあってもいいかもしれません。ってこれはリファレンスの範囲外ですかね？ --  &new{2005-11-14 (月) 00:08:04};
+- 範囲外ってことはないと思いますが、一言の内容次第のように思います。 -- [[NANRI]] &new{2005-11-14 (月) 20:44:54};
+- 個人的に考えていたのは「破壊的修正は速度や効率のためにするものであり、参照渡しのような変更をするためのものではありません。元のシーケンスが二度と必要ないときに使います。」みたいなことをどこかに書いておくことです。どこに？と言われると困りますが。Tipsの新規追加はあまり好ましくないようですし。nreverseの備考ぐらいですかね。 --  &new{2005-11-14 (月) 21:44:19};
+- そのくらいの分量だと、各関数に書くとちょっとくどくなるような気がします。Tipsはちょっと悩みます。破壊的修正を行うものと引数を保存するものとの対応表みたいなのは欲しいでしょうか? そのくらいの分量になったら作ってもよいかもと思ったりします。 -- [[NANRI]] &new{2005-11-14 (月) 22:10:18};
+- 調べてみました。以下の３つのファイルについてnで始まる関数とdelete、removeを含む関数を調べただけなのでまだあるかもしれません。 --  &new{2005-11-15 (火) 20:12:33};
+ <builtin.l>
+   reverse           nreverse
+   append            nconc
+   revappend         nreconc 
+   subst             nsubst
+   subst-if          nsubst-if
+   subst-if-not      nsubst-if-not
+   sublis            nsublis
+   string-upcase     nstring-upcase
+   string-downcase   nstring-downcase
+   string-capitalize nstring-capitalize
+   remove            delete
+   remove-if         delete-if
+   remove-if-not     delete-if-not
+ <sequence.l>
+   substitute        nsubstitute
+   substitute-if     nsubstitute-if
+   substitute-if-not nsubstitute-if-not
+   remove-duplicates delete-duplicates
+ <list.l>
+   butlast           nbutlast
+   union             nunion
+   intersection      nintersection
+   set-difference    nset-difference
+   set-exclusive-or  nset-exclusive-or
+- わざわざありがとうございます。これを放っておくのも勿体無いのでTipsで取り込むことにしましょう。 -- [[NANRI]] &new{2005-11-15 (火) 21:21:33};
+- 破壊性、非破壊性に項目を取ると言うことですか？個人的に破壊非破壊の区別は自明だと思っていたのですが…関数や特殊式ごとの特性というよりは言語的な特性の方に足を突っ込んでいませんか？ -- [[佐野]] &new{2005-11-15 (火) 22:20:24};
+- もちろんここの項目は取り込みたい内容には違いは無いのですが、各項目毎に「破壊的である」「非破壊的である」という但し書きとseealsoを埋めるのがリファレンスとしてあるべき姿かと思っています。 -- [[佐野]] &new{2005-11-15 (火) 22:22:07};
+- 言われてみれば、seealsoを見れば対応する関数が見つかるはずなんですよね。もう一度考えます。 -- [[NANRI]] &new{2005-11-16 (水) 00:12:05};
+- 破壊非破壊は少なくとも昔の私には自明ではなかったので上のような書き込みをしたわけですが…。知っている人にとっては不要な情報ですが、知らない人にとってはどこかに書いてあると親切かなと。個人的にはどこか代表的な関数の備考に一、二行付け加えれば十分だと思います。 --  &new{2005-11-16 (水) 00:45:33};
+- その意見ももっともだとも思うんですけど、前置引数やリスト構造など、つっかかりどころを今までつっぱねてきたことの理由付けと正規表現をとりこんだこととの整合性をとらなくてはいけないと思います。自分が提案しておいて消したくなっている項目もあります。 -- [[佐野]] &new{2005-11-16 (水) 01:05:22};
+- 今のリファレンスには「言語仕様をわかった上で覚えきれない有用な関数や特殊式、マクロ」に特化すべきだと思っています。言語仕様的な受け皿が別に必要という意味です。破壊非破壊が誰にとっても自明だとは思っていません。 -- [[佐野]] &new{2005-11-16 (水) 01:13:38};
+- lispなのでそこに言語仕様的な部分が混じるのは仕方が無いのですが… -- [[佐野]] &new{2005-11-16 (水) 01:15:01};
+- とりあえずこれで様子を見て、やっぱりまだ説明が不十分な様であればまた考えましょう。→[[refwiki:set-exclusive-or]], [[refwiki:nset-exclusive-or]], [[refwiki:set-difference]], [[refwiki:nset-difference]], [[refwiki:nintersection]], [[refwiki:intersection]], [[refwiki:union]], [[refwiki:nbutlast]], [[refwiki:nunion]], [[refwiki:butlast]], [[refwiki:delete-duplicates]], [[refwiki:remove-duplicates]], [[refwiki:substitute-if]], [[refwiki:substitute-if-not]], [[refwiki:nsubstitute]], [[refwiki:substitute]], [[refwiki:nsubstitute-if]], [[refwiki:nsubstitute-if-not]], [[refwiki:delete]], [[refwiki:delete-if]], [[refwiki:delete-if-not]], [[refwiki:remove]], [[refwiki:remove-if]], [[refwiki:remove-if-not]], [[refwiki:nstring-capitalize]], [[refwiki:string-capitalize]], [[refwiki:nstring-downcase]], [[refwiki:string-downcase]], [[refwiki:string-upcase]], [[refwiki:nstring-upcase]], [[refwiki:nsublis]], [[refwiki:sublis]], [[refwiki:nsubst-if-not]], [[refwiki:subst-if-not]], [[refwiki:nsubst-if]], [[refwiki:subst-if]], [[refwiki:subst]], [[refwiki:nsubst]], [[refwiki:nreconc]], [[refwiki:nconc]], [[refwiki:revappend]], [[refwiki:nreverse]], [[refwiki:reverse]] -- [[NANRI]] &new{2006-05-06 (土) 05:12:10};

@@ -1,0 +1,27 @@
+[[tips]]
+
+ (require "complete+")
+ (in-package "complete+")
+ (let ((completion-do-file-internal #'completion-do-file-internal))
+   (defun completion-do-file-internal (x)
+     (let ((minibuf-str (buffer-substring (point-min) (point-max))))
+       (if (or (equal minibuf-str "")
+               (string-match (compile-regexp "^\\([A-Z]:\\|\\.\\)\\|/" t) minibuf-str))
+           (funcall completion-do-file-internal x)
+         (progn
+           (setf (completion-candidate-all x)
+                 (if (eq (completion-type x) :directory-name)
+                     *minibuffer-directory-name-history*
+                   *minibuffer-file-name-history*)
+                 (completion-string x) minibuf-str
+                 (completion-prefix x) nil
+                 (completion-candidate-prefix x) nil)
+           (completion-do-sub-migemo-skip x))))))
+ (in-package "user")
+
+[[complete+>http://white.s151.xrea.com/wiki/index.php?script%2Fcomplete%2B]] を使って Emacs の minibuf-isearch っぽいことをします。~
+具体的には、補完対象がファイル（ディレクトリ）名のときパス名でない文字列がミニバッファに入っていると、それにマッチするものをミニバッファのヒストリから探してきます。~
+complete+ のスキップマッチングや migemo などの機能もちゃんと利用できます。
+
+*** コメント [#qe874941]
+#comment

@@ -1,0 +1,76 @@
+* process-filterのサンプル [#kebdabe8]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[佐野]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: ツッコミをいれる
+-投稿日:     2006-12-25 (月) 12:40:11
+-バージョン: 
+
+** メッセージ [#k8302717]
+自分で調べて満足していた部分がだいぶ増えてきたような気がするので
+リハビリかねて
+
+ プロセスからの入力があるとset-process-filter関数でプロセスと関係づけられた
+ フィルタ関数が呼ばれます。
+ フィルタの第一引数はプロセスで第二引数は入力文字列です。
+ フィルタの戻り値は捨てられるようです。
+
+ 使用例：
+ ;;プロセスへの出力を試すミニマルではないかも
+ (let ((buf (create-new-buffer "hoge")))
+   (unwind-protect ;;念の為感が強い
+       (save-excursion
+	 (make-process *eshell* :output buf)
+	 (set-process-filter (buffer-process buf)
+			     (lambda (prc str)
+			       (yes-or-no-p "proc ~S str ~S" prc str)))
+	 (process-send-string (buffer-process buf)
+			      (concat "dir&exit" *shell-ret*)))
+     (delete-buffer buf)))
+
+----
+- どーもです。こういうことですね。 -- [[NANRI]] &new{2007-01-10 (水) 01:54:27};
+ <chapter>
+ <title>set-process-filter</title>
+ <type>Function</type>
+ <arguments>set-process-filter PROCESS FILTER</arguments>
+ <package>editor</package>
+ <description>
+ プロセスの出力を加工するためのフィルタを指定します。
+ プロセスからの入力があるとset-process-filter関数でプロセスと関係づけられた
+ フィルタ関数が呼ばれます。
+ フィルタの第一引数はプロセスで第二引数は入力文字列です。
+ フィルタの戻り値は捨てられるようです。
+ 
+ 使用例:
+   ;;; プロセスへの出力を試すミニマルではないかも
+   (let ((buf (create-new-buffer "hoge")))
+     (unwind-protect ;;念の為感が強い
+         (progn
+            (make-process *eshell* :output buf)
+            (set-process-filter (buffer-process buf)
+                                (lambda (prc str)
+                                  (yes-or-no-p "proc ~S str ~S" prc str)))
+            (process-send-string (buffer-process buf)
+                                 (concat "dir&amp;exit" *shell-ret*))
+            (sleep-for 0.9))
+       (delete-buffer buf)))
+ </description>
+ <seealso>process-filter</seealso>
+ <seealso>set-process-outcode</seealso>
+ <seealso>set-process-incode</seealso>
+ <seealso>set-process-sentinel</seealso>
+ <seealso>process-send-string</seealso>
+ <link></link>
+ <section>プロセス</section>
+ <file>builtin.l</file>
+ </chapter>
+- こういうことです。私にどうこうというのは必要ないと判断していただけていると思ってますが一応。 -- [[佐野]] &new{2007-03-04 (日) 02:08:39};
+- 了解です。ここに書く以上、皆に分かる方が好ましいですし、xml形式にして後々の自分の作業量を減らす意味もあります。 -- [[NANRI]] &new{2007-03-05 (月) 21:36:44};
+- 使用例に、sleep-for を追加しました。 xyzzy は Emacs 同じで、何らかの形でメインのプロセスが sleep しないと、サブのプロセスである process-filter 等に制御が移らないので、明示するため書きました。 --  &new{2007-03-10 (土) 17:58:27};
+- あとこの場合、 save-excursion は何のためにあるのでしょうか？ --  &new{2007-03-10 (土) 17:59:39};
+- letでよさそうですね。 -- [[佐野]] &new{2007-03-10 (土) 18:16:28};
+- 直しました。 progn にしましたけど、いいですよね？ --  &new{2007-03-11 (日) 14:35:44};
+
+#comment

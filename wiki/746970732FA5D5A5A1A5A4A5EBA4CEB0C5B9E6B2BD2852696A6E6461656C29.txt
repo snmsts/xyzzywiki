@@ -1,0 +1,129 @@
+[[tips]]
+
+[[ファイル暗号化DLL「ラインダール」>http://type74.org/modules/mydownloads/singlefile.php?cid=17&lid=5]]を使ってファイルの暗号化を行ったり、暗号化されたファイルを復号して読み込んだりします。
+
+http://pc8.2ch.net/test/read.cgi/win/1127783135/888-辺りで話題になっていたのを見て、検索したらDLLが見つかったので作ってみました。
+
+CENTER:''暗号化・復号化ダイアログ''(rijndael-filer.l)
+CENTER:#ref(rijndael-filer.png,nolink,center,100%)
+
+
+//最低限としてreadとwriteは作ったので一応使えますが、使いやすいようにするにはもっと肉付けしないとダメだと思います。どなたかよろしく。
+
+ ;;; rijndael.l
+ ;;;
+ (provide "rijndael")
+ 
+ (eval-when (:compile-toplevel :load-toplevel :execute)
+   (require "foreign")
+   (unless (find-package "rijndael")
+     (defpackage "rijndael"
+       (:use "lisp" "editor")
+       (:nicknames "rijn")
+       (:import-from "user" *rijn-dll-path* read-encrypted-file write-file-and-encrypt getpass))))
+ 
+ (in-package "rijndael")
+ 
+ (export '(encrypt-file decrypt-file))
+ 
+ (defvar *rijn-dll-path* nil)
+ (unless *rijn-dll-path*
+   (setq *rijn-dll-path* (merge-pathnames "rijn.dll" (si:system-root))))
+ 
+ (c:define-dll-entry c:int Rijndael-encrypt-file ((c:char *) (c:char *) (c:char *))
+   *rijn-dll-path* "EncryptFile")
+ (c:define-dll-entry c:int Rijndael-decrypt-file ((c:char *) (c:char *) (c:char *))
+   *rijn-dll-path* "DecryptFile")
+ 
+ (defun encrypt-file (source dest key)
+   (if (path-equal source dest)
+       (error "入出力のファイルが一致")
+     (case (Rijndael-encrypt-file (si:make-string-chunk source)
+                                  (si:make-string-chunk dest)
+                                  (si:make-string-chunk key))
+       (-1 (error "暗号化元ファイルオープン時エラー"))
+       (-2 (error "暗号化先ファイル作成時エラー"))
+       (-3 (error "暗号化時エラー"))
+       (t t))))
+ 
+ (defun decrypt-file (source dest key)
+   (if (path-equal source dest)
+       (error "入出力のファイルが一致")
+     (case (Rijndael-decrypt-file (si:make-string-chunk source)
+                                  (si:make-string-chunk dest)
+                                  (si:make-string-chunk key))
+       (-1 (error "復号元ファイルオープン時エラー"))
+       (-2 (error "復号先ファイル作成時エラー"))
+       (-3 (error "復号時エラー"))
+       (t t))))
+ 
+ (defmacro with-temp-file ((temp-file) &body body)
+   `(let ((,temp-file ,(make-temp-file-name)))
+      (unwind-protect
+          (progn ,@body)
+        (delete-file ,temp-file :if-does-not-exist :skip :if-access-denied :error))))
+ 
+ (setf (get 'with-temp-file 'ed:lisp-indent-hook) 1)
+ 
+ (defun read-encrypted-file (file &optional key)
+   (interactive "fRead File: ")
+   (unless key
+     (setq key (getpass)))
+   (with-temp-file (dest)
+     (and (decrypt-file (map-slash-to-backslash file) (map-slash-to-backslash dest) key)
+          (let ((buffer (create-new-buffer (file-namestring file))))
+            (set-buffer buffer)
+            (insert-file-contents dest t))))
+   t)
+ 
+ (defun write-file-and-encrypt (file &optional key nowarn)
+   (interactive "FWrite File: ")
+   (when (or (not (file-exist-p file))
+             nowarn
+             (no-or-yes-p "~aは既に存在します。上書きしますか?" file))
+     (unless key (setq key (getpass)))
+     (with-temp-file (source)
+       (save-restriction
+         (widen)
+         (write-region (point-min) (point-max) source nil (buffer-fileio-encoding) (buffer-eol-code)))
+       (encrypt-file (map-slash-to-backslash source) (map-slash-to-backslash file) key))
+     t))
+ 
+ ;;; from $XYZZY/lisp/wip/ftp.l
+ (defun getpass (&optional (prompt "Password: "))
+   (let ((pw (make-vector 16 :element-type 'character :fill-pointer 0 :adjustable t)))
+     (loop
+       (minibuffer-prompt "~A~v@{~a~:*~}" prompt (length pw) #\*)
+       (let ((c (read-char *keyboard*)))
+         (case c
+           (#\RET
+            (return pw))
+           (#\C-g
+            (quit))
+           (#\C-q
+            (vector-push-extend (read-char *keyboard*) pw))
+           (#\C-h
+            (or (zerop (length pw))
+                (vector-pop pw)))
+           (t
+            (vector-push-extend c pw)))))))
+- importのタイミングをさっそく修正。 --  &new{2006-05-25 (木) 20:59:35};
+- よくわからないけど、すごいですね。これに圧縮機能がついたら最強ですね。何はともあれ、がんばってください！！ --  &new{2006-05-25 (木) 22:17:12};
+- むこうの 889 です。まだ不自由ですがインタフェース部分っぽいものを書いてみたので添付してみます。 --  &new{2006-05-26 (金) 00:02:43};
+- 900です。拝見しました。一点お願いです。set-buffer-file-nameの代わりにset-buffer-alternate-file-nameを使ってください。set-buffer-file-nameをしてしまうと平文のファイルができてしまう危険性がありますので。(例えば自動セーブとか)　あと、save-bufferライクに使うなら上書き確認をしなくてすむ手段が必要と感じたのでnowarnを足しておきました。 --  &new{2006-05-26 (金) 00:45:05};
+- 早速対応してみました。 060526-2 のほうです。また何か気づいたことがあればお願いします。 -- [[889]] &new{2006-05-26 (金) 08:37:35};
+- 入力と出力のファイルが一緒だとファイルの内容が消失する問題に対処。with-temp-fileマクロを作成。読み込み関数の名前をread-encrypted-fileに。write-file時にバッファの改行コード・文字エンコーディングを見るようにした。パッケージにニックネームをつけた。getpassは本来の定義のままuserパッケージに。ファイラから使うためのサンプルを作った。いじょ。 -- [[900]] &new{2006-05-27 (土) 00:23:52};
+- パスワードの保存周りでいくつかバグがあったのを修正。あとはパスワードの変更ができたらいいかなと思ってます。 -- [[889]] &new{2006-05-27 (土) 12:44:14};
+- 圧縮機能がほしいです。無理ですか？ --  &new{2006-05-27 (土) 13:25:37};
+- 5時間ぐらいLispとニラメッコしてやっと使えました。ありがとうございます。更新待てばよかった…orz -- [[888]] &new{2006-05-27 (土) 14:13:33};
+- 自分の環境ではnichnamesで指定した名前が使えないようなのでrijn-interface.lのrequire は rijndaelにしないと動きませんでした。参考までに。 -- [[888]] &new{2006-05-27 (土) 14:14:16};
+- 圧縮機能って具体的にはどんな感じでしょう。ファイルを指定→圧縮→暗号化とか？ -- [[889]] &new{2006-05-27 (土) 15:14:13};
+- :import-fromあるんじゃん、ってことで修正。ところで、rijn-interface.lで(in-package "rijndael")してありますがあんまりメリット無いと思います。rijn-interface.lで使われているrijndael.lの関数はすべてuserパッケージのシンボルですので。getpassはuserパッケージに戻したのには、rijndaelパッケージに依存しないですむようにという意図もありましたし、(in-package "rijndael")しないようにしていただいたほうが個人的にうれしいです。 -- [[900]] &new{2006-05-30 (火) 21:44:21};
+- そうです。暗号化と同時に圧縮機能があると便利かなと。ものすごい圧縮率はなくてもよいので・・・無理でしょうか？難しいですかね？ --  &new{2006-05-30 (火) 21:45:10};
+- 圧縮してから暗号化する関数と復号してから解凍する関数を書いてみました。モードレスにしておけばファイラからも普通の圧縮・解凍と同じようにできるつもりです。 -- [[889]] &new{2006-05-30 (火) 22:58:10};
+- interface のほう、 in-package しないようにしました。あと保存の際に前置引数を付けるとパスワードを聞くようにしました。これでパスワードの変更ができるはず。 -- [[889]] &new{2006-05-30 (火) 23:17:30};
+- すこいですね。圧縮機能つきとは、あとはネットインストーラ対応ぐらい？ --  &new{2006-05-31 (水) 07:36:43};
+- ファイラから圧縮するときはパスワードをダイアログで入力するようにしました。interface のほうはファイル内で rijn.l を require しないようにしました。 -- [[889]] &new{2006-06-01 (木) 09:29:42};
+- *auto-mode-alist* に従ったモード設定とかファイルパラメタの処理とかをするようにしてみました。あとメッセージの表示をいくらか改善。 -- [[889]] &new{2006-10-15 (日) 20:55:04};
+
+#comment

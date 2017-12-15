@@ -1,0 +1,126 @@
+* emacs.lのcall-processとcall-process-region [#udbca322]
+
+-ページ: [[patch]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 提案
+-カテゴリー: 訂正
+-投稿日: 2007-02-09 (金) 21:21:05
+-バージョン: 
+
+** メッセージ [#r95d4c7f]
+emacsの動作を知らないのでコードで。
+editor::call-processのキーワード引数が間違ってました。
+
+ (elisp-shadow '(call-process))
+ (defun call-process (program &optional infile destination display &rest args)
+   (let (outfile (error nil) (wait t))
+     (unless exec-directory
+       (setq exec-directory (default-directory)))
+     (when args
+       (dolist (arg args)
+         (setq program (concat program " " arg))))
+     (when (and (numberp destination)
+                (= destination 0))
+       (setq destination nil
+             wait nil))
+     (when (listp destination)
+       (setq error (cdr destination))
+       (setq destination (car destination)))
+     (unwind-protect
+         (prog2
+             (when destination
+               (setq outfile (make-temp-file-name)))
+             (editor::call-process program
+                                   :input infile
+                                   :output outfile
+                                   :exec-directory exec-directory
+                                   :error error
+                                   :show :minimize
+                                   :wait wait)
+           (when destination
+             (let (new)
+               (unless (or (bufferp destination)
+                           (eq destination 't))
+                 (setq destination (or (find-buffer destination)
+                                       (progn
+                                         (setq new t)
+                                         (create-new-buffer destination)))))
+               (if (eq destination 't)
+                   (setq destination (selected-buffer))
+                 (erase-buffer destination))
+               (update-visited-file-modtime)
+               (pop-to-buffer destination t)
+               (insert-file-contents outfile)
+               (and new
+                    (setq need-not-save t))
+               (set-buffer-modified-p nil)))
+           (when (and outfile
+                      (/= 0 (file-length outfile)))
+             (delete-file outfile))
+           (when display (refresh-screen))))))
+ 
+ (defun call-process-region (start end program &optional delete destination display &rest args)
+   (let (infile outfile string (error nil) (wait t) (sb (selected-buffer)))
+     (if (/= start end)
+         (progn
+           (setq string (buffer-substring start end))
+           (when delete (delete-region start end))
+           (setq infile (make-temp-file-name))
+           (set-buffer infile)
+           (inseret string)
+           (save-buffer))
+       (setq infile nil))
+     (set-buffer sb)
+     (unless exec-directory
+       (setq exec-directory (default-directory)))
+     (when args
+       (dolist (arg args)
+         (setq program (concat program " " arg))))
+     (when (and (numberp destination)
+                (= destination 0))
+       (setq destination nil
+             wait nil))
+     (when (listp destination)
+       (setq error (cdr destination))
+       (setq destination (car destination)))
+     (unwind-protect
+         (prog2
+             (when destination
+               (setq outfile (make-temp-file-name)))
+             (editor::call-process program
+                                   :input infile
+                                   :output outfile
+                                   :exec-directory exec-directory
+                                   :error error
+                                   :show :minimize
+                                   :wait wait)
+           (when destination
+             (let (new)
+               (unless (or (bufferp destination)
+                           (eq destination 't))
+                 (setq destination (or (find-buffer destination)
+                                       (progn
+                                         (setq new t)
+                                         (create-new-buffer destination)))))
+               (if (eq destination 't)
+                   (setq destination (selected-buffer))
+                 (erase-buffer destination))
+               (update-visited-file-modtime)
+               (pop-to-buffer destination t)
+               (insert-file-contents outfile)
+               (and new
+                    (setq need-not-save t))
+               (set-buffer-modified-p nil)))
+           (when (and outfile
+                      (/= 0 (file-length outfile)))
+             (delete-file outfile))
+           (when (and infile
+                      (/= 0 (file-length infile)))
+             (delete-file infile))
+           (when display (refresh-screen))))))
+
+--------
+
+
+#comment

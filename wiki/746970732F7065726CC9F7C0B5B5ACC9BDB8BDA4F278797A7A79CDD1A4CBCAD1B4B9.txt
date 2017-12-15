@@ -1,0 +1,195 @@
+[[tips]]
+* perl風正規表現をxyzzy用に変換 [#scca8e71]
+どれに\つけるんだっけー　みたいな
+
+ (defun regexp-perl->xyzzy (str)
+  "perl風正規表現をxyzzy正規表現に変換"
+  ; 対応表
+  (let ((reps '((#\A . "\\`")
+ 		(#\z . "\\'")
+ 		(#\Z . "\\'")
+ 		(#\f . "\f")
+ 		(#\n . "\n")
+ 		(#\r . "\r")
+ 		(#\t . "\t")
+ 		(#\d . "[0-9]")
+ 		(#\D . "[^0-9]")
+ 		(#\w . "[a-zA-Z_0-9]")
+ 		(#\W . "[^a-zA-Z_0-9]")
+ 		(#\s . "[ \n\r\f\t]")
+ 		(#\S . "[^ \n\r\f\t]"))
+ 	      ))
+    (labels ((repp (lis)
+ 	       (if lis
+ 		   (let ((b (car lis)))
+ 		     (case b
+ 		       ((#\\)
+ 			(let ((c (cadr lis)))
+ 			  (cond
+ 			   ((eq c nil) nil)
+ 			   ; \\ ならそのまま
+ 			   ((char= c #\\)
+ 			    (append '(#\\ #\\) (repp (cddr lis))))
+ 			   ; A-Z,a-z 以外なら \ を取り除く
+ 			   ((not (or (and (char<= #\a c) (char>= #\z c))
+ 				     (and (char<= #\A c) (char>= #\Z c))))
+ 			    (cons c (repp (cddr lis))))
+ 			   ; reps に登録されている物はコンバート
+ 			   ((assoc c reps)
+ 			    (append (concatenate 'list (cdr (assoc c reps))) (repp (cddr lis))))
+ 			   ; それ以外はそのまま
+ 			   (t
+ 			    (cons #\\ (cons c (repp (cdr lis))))))))
+ 		       ; {}[]()<>| には \をつける
+ 		       ((#\{ #\} #\( #\) #\< #\> #\|)
+ 			(cons #\\ (cons b (repp (cdr lis)))))
+ 		       (t (cons b (repp (cdr lis))))))
+ 		 lis)))
+      (concatenate 'string (repp (concatenate 'list str))))))
+
+
+あとは誰かがこれをつかってラップした scan-buffer とかを作ってここに書く。
+
+[[xyzzyでプログラミング/正規表現]]
+**対応表 [#x55f0779]
+|xyzzy|perl||h
+|>|BGCOLOR(LightGreen):\         |メタキャラクタのエスケープ|
+|>|BGCOLOR(LightGreen):^         |行頭にマッチ|
+|>|BGCOLOR(LightGreen):$         |行末にマッチ|
+|>|BGCOLOR(LightGreen):.         |改行文字を除く任意の 1 文字にマッチ|
+|>|BGCOLOR(LightGreen):[...]     |文字クラスのどれか 1 文字にマッチ|
+|>|BGCOLOR(LightGreen):[^...]    |文字クラスの補集合のどれか 1 文字にマッチ|
+|>|BGCOLOR(LightGreen):*         |直前の正規表現の 0 回以上の繰り返しにマッチ (={0,})|
+|>|BGCOLOR(LightGreen):+         |直前の正規表現の 1 回以上の繰り返しにマッチ (={1,})|
+|>|BGCOLOR(LightGreen):?         |直前の正規表現の 0 回か 1 回の繰り返しにマッチ (={0,1})|
+|\{M,N\}   |{M,N}   |直前の正規表現の M 回以上 N 回以下の繰り返しにマッチ|
+|\{M,\}    |{M,}    |直前の正規表現の M 回以上の繰り返しにマッチ|
+|\{,N\}    |{,N}    |直前の正規表現の N 回以下の繰り返しにマッチ|
+|\{N\}     |{N}     |直前の正規表現の N 回の繰り返しにマッチ|
+|\( \)     |( )     |グルーピング|
+|\&#x7c;|&#x7c;|選択|
+|>|BGCOLOR(LightGreen):\1 〜 \9  |後方参照|
+|\<        ||単語の開始にマッチ|
+|\>        ||単語の終了にマッチ|
+|>|BGCOLOR(LightGreen):\b        |単語の境界にマッチ|
+|>|BGCOLOR(LightGreen):\B        |単語の境界以外にマッチ|
+||\G|前回のマッチの末尾にマッチ|
+||\a|アラーム|
+||\e|エスケープ|
+||\f|改頁|
+||\n|改行|
+||\r|キャリッジリターン|
+||\t|タブ|
+||\xXX|16進法で表すASCII文字。（ ex. \x1b, \x00 など ）|
+||\0XX|8進法で表すASCII文字。（ ex. \033, \040 など ）|
+||\cX|対応するコントロール文字（cdはコントロール-d)|
+|        |\d        |数字[0-9]|
+|        |\D        |数字以外 [^0-9]|
+|        |\w        |英数字単語 [_a-zA-Z0-9]|
+|        |\W        |英数字単語以外 [^_a-zA-Z0-9]|
+|        |\s        |空白 [ \t\n\r\f]|
+|        |\S        |空白以外 [^ \t\n\r\f]|
+||\Q|\Eまでパターンのキャラクタを無効に|
+|>|BGCOLOR(LightGreen):\l|次のキャラクタを小文字に|
+|>|BGCOLOR(LightGreen):\u|次のキャラクタをTitlecaseに|
+|>|BGCOLOR(LightGreen):\L|\Eまでを小文字に|
+|>|BGCOLOR(LightGreen):\U|\Eまでを大文字に|
+|>|BGCOLOR(LightGreen):\E|\L \U \Q を終了|
+|>|BGCOLOR(LightGreen):\w        |英数字にマッチ|
+|>|BGCOLOR(LightGreen):\W        |英数字以外にマッチ|
+|\`        |\A|文字列の先頭にマッチ|
+|          |\Z|文字列の末尾。末尾に改行がある場合はその直前|
+|\'        |\z|文字列の最後にマッチ|
+|>|BGCOLOR(LightGreen):*?        |直前の正規表現の 0 回以上の最短の繰り返しにマッチ|
+|>|BGCOLOR(LightGreen):+?        |直前の正規表現の 1 回以上の最短の繰り返しにマッチ|
+|>|BGCOLOR(LightGreen):??        |直前の正規表現の 0 回か 1 回の最短の繰り返しにマッチ|
+|\{M,N\}?  |{M,N}?  |直前の正規表現の M 回以上 N 回以下の最短の繰り返しにマッチ|
+|\{M,\}?   |{M,}?   |直前の正規表現の M 回以上の最短の繰り返しにマッチ|
+|\{,N\}?   |{,N}?   |直前の正規表現の N 回以下の最短の繰り返しにマッチ|
+|\(?:regexp\)|(?:regexp)|部分正規表現のグルーピングを行うが，後方参照を行わない|
+||(?#text)         |コメント|
+||(?imxs-imsx:...) |オプションを有効にしたり無効にしたりします (m// 修飾子のものと同じ)|
+||(?=...)          |ゼロ幅の肯定先読み表明|
+||(?!...)          |ゼロ幅の否定先読み表明|
+||(?<=...)         |ゼロ幅の肯定後読み表明|
+||(?<!...)         |ゼロ幅の否定後読み表明|
+||(?>...)          |出来うる限りマッチし、バックトラックしない|
+||(?{ code })     |埋め込みコード。 戻り値は $^R に格納されます|
+||(??{ code })    |動的正規表現。戻り値は正規表現として扱われます|
+||(?(cond)yes&#x7c;no) |キャプチャしたグループに対応する整数値による条件|
+||(?(cond)yes)    |もしくは lookaround/eval のゼロ幅の表明|
+|\sc       ||シンタックスが c の 1 文字にマッチ|
+|\Sc       ||シンタックスが c 以外の 1 文字にマッチ|
+|\_<       ||シンボルの開始位置にマッチ |
+|\_>       ||シンボルの終了位置にマッチ |
+|\_b       ||シンボルの境界にマッチ |
+|\_B       ||シンボルの境界以外にマッチ |
+|\_s       ||シンボル文字にマッチ |
+|\_S       ||シンボル文字以外にマッチ |
+
+**コメント [#s8623014]
+- 再帰とかdefunの中でdefunとか再帰とかschemeっぽいので、ループで書き直してみました。 --  &new{2009-11-12 (木) 21:24:28};
+ (defun regexp-perl->xyzzy (str)
+   "perl風正規表現をxyzzy正規表現に変換"
+   (do* ((reps '((#\A . "\\`")
+                 (#\Z . "\\'")
+                 (#\d . "[0-9]")
+                 (#\D . "[^0-9]")
+                 (#\w . "[a-zA-Z_0-9]")
+                 (#\W . "[^a-zA-Z_0-9]")
+                 (#\s . "[ \n\r\f\t]")
+                 (#\S . "[^ \n\r\f\t]")))
+         (i 0 (1+ i))
+         (len (length str))
+         (vec (make-vector len :element-type 'character :fill-pointer 0 :adjustable t)))
+       ((>= i len) vec)
+     (case (char str i)
+       ((#\\)
+        (incf i)
+        (cond ((>= i len)
+               (error "不正なパターンです"))
+              ; \\ ならそのまま
+              ((char= (char str i) #\\)
+               (vector-push-extend #\\ vec)
+               (vector-push-extend #\\ vec))
+              ; A-Z,a-z 以外なら \ を取り除く
+              ((not (char-not-greaterp #\a (char str i) #\z))
+               (vector-push-extend (char str i) vec))
+              ; reps に登録されている物はコンバート
+              ((assoc (char str i) reps)
+               (map nil (lambda (x) (vector-push-extend x vec)) (cdr (assoc (char str i) reps))))
+              ; それ以外はそのまま
+              (t
+               (vector-push-extend #\\ vec)
+               (vector-push-extend (char str i) vec)))
+        )
+       ; {}[]()<>| には \をつける
+       ((#\{ #\} #\( #\) #\< #\> #\|)
+        (vector-push-extend #\\ vec)
+        (vector-push-extend (char str i) vec))
+       (t
+        (vector-push-extend (char str i) vec)))))
+- perlが分からないので同じものか分かりませんが、正規表現の置換時のメタ文字\U, \L, \u, \l, \Eだったらxyzzyでも実装されています。=>「Fri Jul 16 1999 Version 0.0.0.94」 --  &new{2009-11-12 (木) 21:27:14};
+- 有益な情報ありがとうございます。それを信じて表を更新しました　というか表を更新してください＞＜ --  &new{2009-11-13 (金) 12:03:17};
+- え schemeぽいとダメなの? --  &new{2009-11-13 (金) 12:19:10};
+- \n \r などに対応 --  &new{2009-11-13 (金) 15:12:43};
+- schemeのdefineのつもりでdefunを使うのはダメです。defunは常にtop-levelに関数を定義します。内部関数を定義したい時はlabelsを使ってください。 --  &new{2009-11-13 (金) 20:37:47};
+ (regexp-perl->xyzzy "(a|b)")
+ =>"\\(a\\|b\\)"
+ (repp (coerce "(a|b)" 'list))
+ =>(#\\ #\( #\a #\\ #\| #\b #\\ #\))    ; top-levelに定義がされてしまう
+ (defun repp (lst)
+   nil)
+ =>repp
+ (repp (coerce "(a|b)" 'list))
+ =>nil
+ (regexp-perl->xyzzy "(a|b)")
+ =>"\\(a\\|b\\)"
+ (repp (coerce "(a|b)" 'list))
+ =>(#\\ #\( #\a #\\ #\| #\b #\\ #\))
+- しらんかった＞defunは常にtop-levelに関数を定義します --  &new{2009-11-15 (日) 06:39:17};
+- 1 -- [[1]] &new{2014-05-21 (水) 16:06:40};
+- 1 -- [[-1']] &new{2014-05-21 (水) 16:06:45};
+- 1 -- [[1]] &new{2014-05-21 (水) 16:07:04};
+
+#comment

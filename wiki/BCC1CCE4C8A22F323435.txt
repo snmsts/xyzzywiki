@@ -1,0 +1,116 @@
+* KaMail V3でメールファイルそのものを月別に選択して抜き出す [#le42806d]
+-ページ: [[質問箱]]
+-投稿者: [[premiere]]
+-状態: 完了
+-投稿日: 2008-06-09 (月) 04:51:40
+
+** メッセージ [#g340b1f9]
+Sylpheedを使っていたんですが，せっかくXyzzyにも慣れたことだしKaMail V3に乗り換えてみようと思って少し触ってみました。
+予想どおりのレスポンスの良さとHEでの検索に非常に満足なのですが，一つだけ気になる点があります。
+
+毎日1000通弱の業務メール（大半は返信の必要はないんですが，保存しておく必要はあります）を受け取るのですが，メーラー本体上には常に半年分を置いておき，それ以前のものはすべて月別にバックアップを取って，ローカルからは削除する必要があるのです。
+
+触ってみた感じ，KamailV3にはそれができなさそうなのですが，なんらかの手法で可能なんでしょうか。
+----
+普段KamalV3は使っていないので、おかしなところもあるかもしれませんが、
+以下のような感じでいかがでしょうか？
+config.lにでもコピーしてください。
+
+作ってみて把握している良くない点は、
++ expireの設定を利用しているので、まちがってexpireを実行するとメールのファイルを消してしまう(expireのキーアサインを変更することである程度は防いでいるつもり)
++ expireの設定ごとに移動するフォルダを聞いてくる
+
+あたり。
+
+試してみるときは、メールをバックアップしてからにしてください。
+
+使い方は検索条件で、"date>=20060201 date<20060301" とすると2006年2月のメールを検索、というように日付で検索できるようなので(KamailV3のreadmeより)、その条件をExpire条件として保存してください。
+
+それから、summary-mail-move-execute を実行すると、Expire条件のものを移動できます。
+
+  ;;; メールを指定のフォルダへ移動
+  ;; expireの設定を利用してメールのファイルを移動にする。
+  ;; 移動先のデフォルトを変えたいときは、he-move-files の expire-dir を設定しているところを変えてください。
+  
+  ;; キーアサインを変更
+  ;; expireのかわりに移動にする
+  (undefine-key *summary-map* #\X)
+  (define-key *summary-map* #\X 'summary-mail-move-execute)
+  
+  ;; summary.lの summary-expire-execute より
+  (defun summary-mail-move-execute ()
+    (interactive)
+    (let ((cnt (mail-move-execute)))
+      (summary-reload)
+      (kamail3-message "Moved ~D message~P." cnt cnt)))
+  
+  ;; expire.l の expire-execute より
+  (defun mail-move-execute ()
+    (let ((cnt 0))
+      (when *expire-config-list*
+        (dolist (query *expire-config-list*)
+  	(kamail3-message "moving ~@[~A~] ..."
+  			 (query-folder-name-default query))
+  	(let ((deleted-cnt (query-search-and-move query)))
+  	  (when deleted-cnt
+  	    (incf cnt deleted-cnt)))))
+      cnt))
+  
+  ;; queary.l の query-search-and-delete より
+  (defun query-search-and-move (q)
+    (let ((*query-result-offset* 0)
+  	(*query-result-max* -1)
+  	(cnt 0)
+  	result
+  	dirs
+  	cmd-list)
+      (declare (special *query-result-offset*
+  		      *query-result-max*))
+      (unless (setq result (query-search-do q))
+        (return-from query-search-and-move))
+      (he-move-files result)))
+  
+  ;; estcmd.l の he-purge-files より
+  (defun he-move-files (result)
+    (let ((cnt 0)
+  	dirs
+    	cmd-list)
+      (let (
+  	  ; メールを出力するフォルダ
+  	  
+  	  ; フォルダ名聞いてくるので入力する。:defaultは適当に変えてください。
+  	  ; read-directory-nameだと存在しないのは指定できないっぽいのでread-file-nameで。
+  	  (expire-dir (read-file-name "directory: " :default "~/.kamail3/expire/"))
+  	  
+  	  ; 勝手に作ってよいのであれば以下のような感じ(?)で。
+  	  ; (expire-dir (format-date-string "~/.kamail3/expire/%Y%m%d-%H%M%S")) ; ~/.kamail3/expire/YYYYMMDD-HHMMSS
+  	  )
+        (create-directory expire-dir :if-exists :error)
+        (dolist (document (heresult-documents result))
+  	(let* ((num (car document))
+  	       (header (cdr document))
+  	       (file (summary-message-file header))
+  	       (number (fetch-file-number file))
+  	       (draft (fetch-draft-file number))
+  	       (dir (directory-namestring file)))
+  	  (when (file-exist-p file)
+  	    ;		(delete-file file)
+  	    ; expire-dir にメールをリネーム
+  	    ; ファイル名は6桁で0を付けてある 
+  	    (rename-file file (format nil "~A/~6,'0D" expire-dir (+ cnt 1))))
+  	  (incf cnt)
+  	  (when (file-exist-p draft)
+  	    (delete-file draft))
+  	  (unless (member dir dirs :test #'equal)
+  	    (push (he-cmd-purge dir) cmd-list)
+  	    (push dir dirs))))
+        (when cmd-list
+  	(he-execute-batch (nreverse cmd-list)))
+        cnt)))
+----
+- うおおお。わざわざ書いていただきありがとうございます。泣くほど感謝です。時間をみてすぐにでも試してみます。 -- [[premiere]] &new{2008-06-16 (月) 17:24:17};
+- うおおお。わざわざ書いていただきありがとうございます。泣くほど感謝です。時間をみてすぐにでも試してみます。 -- [[premiere]] &new{2008-06-16 (月) 18:11:57};
+- やっとゆっくり時間がとれました。半年分のメールを食わせてテストしてみましたが，順調に動いております！　本当にありがとうございました。 -- [[premiere]] &new{2008-06-19 (木) 04:18:15};
+- お役に立てたようでなにより。 -- [[作ってみた人]] &new{2008-06-20 (金) 15:45:07};
+
+#comment

@@ -1,0 +1,24 @@
+* タグジャンプに"*.lsp"もお仲間に [#mf9f1ba1]
+-ページ: [[質問箱]]
+-投稿者: [[くま]]
+-状態: 完了
+-投稿日: 2005-10-20 14:13:20 (木)
+
+** メッセージ [#x46992ea]
+AutoCADでリスプをちまちまと書いています。
+TAGSファイルの作成では"*.l"のリスプファイルは作成してくれる
+のですが、"*.lsp"は空になってしまいます。
+
+シロートなりにlispmode.l内の
+(pushnew '(lisp-maketags "*.l") *maketags-list* :key #'car)
+をいじってみたりもしましたがうまくは行きませんでした
+よろしくお願いいたします
+----
+// 間違ってたのでやり直し
+- .xyzzyあたりに以下でいかがでしょう。
+ (in-package "editor")
+ (pushnew  "*.lsp" (cdr (assoc 'lisp-maketags *maketags-list*)) :test #'equal)
+ (in-package "user")
+-ありがとうございます。無事*.lも*.lspも作成、動作できました。 -- [[くま]] &new{2005-10-21 09:51:01 (金)};
+
+#comment

@@ -1,0 +1,88 @@
+* プロセス関連 [#cf1de080]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-09-30 (土) 12:26:35
+-バージョン: 
+
+** メッセージ [#t0a91ef0]
+ <chapter>
+ <title>execute-region</title>
+ <type>Function</type>
+ <arguments>execute-region FROM TO</arguments>
+ <package>editor</package>
+ <description>
+ リージョンの内容をバッチファイルとして実行します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>プロセス</section>
+ <file>process.l</file>
+ </chapter>
+
+ <chapter>
+ <title>run-console</title>
+ <type>Function</type>
+ <arguments>run-console</arguments>
+ <package>editor</package>
+ <description>
+ xyzzy の外部でコンソールを起動します。
+ 変数 *eshell* または *shell* の値が実行されるコマンドとして使われます。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>プロセス</section>
+ <file>process.l</file>
+ </chapter>
+
+ <chapter>
+ <title>launch-application</title>
+ <type>Function</type>
+ <arguments>launch-application APP</arguments>
+ <package>editor</package>
+ <description>
+ プログラムを xyzzy の外部で実行します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>プロセス</section>
+ <file>dialogs.l</file>
+ </chapter>
+
+ <chapter>
+ <title>process-send-n</title>
+ <type>Function</type>
+ <arguments>process-send-n</arguments>
+ <package>editor</package>
+ <description>
+ バッファに割り付けられているプロセスに "n\n" を送ります。
+ </description>
+ <seealso>process-send-y</seealso>
+ <link></link>
+ <section>プロセス</section>
+ <file>process.l</file>
+ </chapter>
+
+ <chapter>
+ <title>process-send-y</title>
+ <type>Function</type>
+ <arguments>process-send-y</arguments>
+ <package>editor</package>
+ <description>
+ バッファに割り付けられているプロセスに "y\n" を送ります。
+ </description>
+ <seealso>process-send-n</seealso>
+ <link></link>
+ <section>プロセス</section>
+ <file>process.l</file>
+ </chapter>
+
+--------
+- どーもです。「割り付け」という言葉はリファレンスに合わせていただいたのだと思いますが、いまいちしっくりきません。自分だけでしょうか?「関連付け」辺りに変えようかと思いますがいかがです＞皆さん -- [[NANRI]] &new{2006-10-04 (水) 00:46:47};
+- 「関連付け」のほうが近いですね。 buffer-process では「結び付け」となっていて、こっちでもいいかなと思いました。 --  &new{2006-10-04 (水) 23:21:31};
+- 「結び付け」にそろえておきました。 -- [[NANRI]] &new{2006-11-18 (土) 21:25:36};
+
+#comment

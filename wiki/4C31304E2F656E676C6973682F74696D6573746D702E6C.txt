@@ -1,0 +1,19 @@
+[[L10N/english]]
+
+ timestmp.l:207:		    (:caption "日付と時刻")
+-Date and Time --  &new{2005-03-04 20:52:43 (金)};
+
+#comment
+ timestmp.l:208:		    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-04 20:52:01 (金)};
+-DIALOG-FONTで統一？ --  &new{2005-03-04 20:52:20 (金)};
+
+#comment
+ timestmp.l:211:		     (:button IDOK "OK" #x50030001 205 5 52 14)
+-OK --  &new{2005-03-04 20:54:16 (金)};
+
+#comment
+ timestmp.l:212:		     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50030000 205 22 52 14)))
+-Cancel --  &new{2005-03-04 20:54:08 (金)};
+
+#comment

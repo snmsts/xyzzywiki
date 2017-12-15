@@ -1,0 +1,69 @@
+*up-list [#h52c495c]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-02-25 23:50:46 (金)
+-バージョン: 
+
+**メッセージ [#ebb906b7]
+ <chapter>
+ <title>up-list</title>
+ <type>Function</type>
+ <arguments>up-list &amp;optional ARG NO-ERRORS</arguments>
+ <package>editor</package>
+ <description>
+ カーソルを ARG 個外側の括弧の後ろに移します。
+ 
+   (setq lst '(a b c)) ; ここから
+                ^
+   (setq lst '(a b c)) ; ここへ
+                     ^
+ 
+ ARG が負の場合には、前の方の括弧へ移動します。
+ 
+   (setq lst '(a b c)) ; ここから
+                ^
+   (setq lst '(a b c)) ; ここへ
+              ^
+ 
+ 外側に括弧が見つからなかった場合、
+ NO-ERRORS が nil の場合にはエラーを、 t の場合には nil を返します。
+ </description>
+ <seealso>down-list</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>down-list</title>
+ <type>Function</type>
+ <arguments>down-list &amp;optional ARG NO-ERRORS</arguments>
+ <package>editor</package>
+ <description>
+ カーソルを前方にある ARG 個内側の括弧の後ろに移します。
+ 
+   (setq lst '(a b c)) ; ここから
+        ^
+   (setq lst '(a b c)) ; ここへ
+               ^
+ 
+ 前方に括弧が見つからなかった場合、
+ NO-ERRORS が nil の場合にはエラーを、 t の場合には nil を返します。
+ また、直近にある括弧しか見つけられないようです。
+ 
+   (defun test () (setq lst '(a b c))) ; ここから ARG = 2 で down-list すると
+      ^                                ; エラーになる
+ </description>
+ <seealso>up-list</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+----
+-取り込みます。＞[[refwiki:up-list]], [[refwiki:down-list]] -- [[NANRI]] &new{2005-03-14 11:02:12 (月)};
+
+#comment

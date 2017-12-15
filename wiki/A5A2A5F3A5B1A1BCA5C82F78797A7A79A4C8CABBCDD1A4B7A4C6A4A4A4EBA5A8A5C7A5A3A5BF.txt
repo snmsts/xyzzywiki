@@ -1,0 +1,29 @@
+[[アンケート一覧]]
+
+拡張にもないしなー。自作する技術も無い、もしくはLispじゃフォローできない。
+
+等の理由で併用しているエディタはありますか？(項目が足りないときは適当に足しちゃってください。IDE環境とか仕事で止むを得なく使っている場合は除きます。)
+
+#vote([[xyzzy:http://www.jsdlab.co.jp/~kamei/]]だけ[170],[[秀丸:http://hide.maruo.co.jp/software/hidemaru.html]][93],[[サクラエディタ:http://sakura-editor.sourceforge.net/]][125],[[EmEditor:http://www.emurasoft.com/jp/]][26],[[TeraPad:http://www5f.biglobe.ne.jp/~t-susumu/library/tpad.html]][34],[[紙 2001:http://www.kamilabo.jp/2001/]][22],[[K2Editor:http://k2top.jpn.org/index.php?K2Editor]][11],[[Meadow:http://www.meadowy.org/meadow/wiki/]][53],[[メモ帳:http://www.notepad.org/]][26],[[JmEditor2:http://www.hi-ho.ne.jp/jun_miura/jmedit.htm]][3],[[NoEditor:http://www.yokka.com/yokkasoft/]][9],[[Dana(≒Becky!):http://www.rimarts.co.jp/dana-j.htm]][5],[[vim:http://www.kaoriya.net/]][46],[[ViVi:http://vivi.dyndns.org/]][2],[[QX:http://www2k.biglobe.ne.jp/~araken/qxw.htm]][47],[[UnEditor:http://www.yokka.com/yokkasoft/]][4],[[XEmacs on MS-Windows:http://www.suiyokai.org/tomonori/xemacs/]][2],[[MIFES:http://www.megasoft.co.jp/mifes/]][3],[[GreenPad:http://www.kmonos.net/lib/gp.ja.html]][13],[[WZEditor:http://www.villagecenter.co.jp/]][44],[[Alpha:http://alpha.sourceforge.jp/]][4],[[NTEmacs:http://homepage.mac.com/matsuan_tamachan/emacs/index.html#2]][4],[[Peggy:http://www.anchorsystems.co.jp/anchor/ashp/peggy/pegindex.html]][6])
+
+ 項目の追加は画面上下の編集をクリックすればできます。 
+
+----
+-サクラエディタ。PL/SQLを書くときに少しだけ。 --  &new{2005-07-04 00:33:19 (月)};
+-K2Editor。diffのときちょっと。 --  &new{2005-07-04 18:29:06 (月)};
+-JmEditor2,NoEditor。grep 結果を比較するときごくまれに。NoEditor や WzEditor はgrep 結果が文字列単位で表示されるのがいいなぁと思いました。 --  &new{2005-07-04 22:57:29 (月)};
+-Terapad。全半変換楽。会社では半角カタカナ全角英数字な人が多いから。 --  &new{2005-07-31 23:51:20 (日)};
+-Uneditor。異なるファイルを同時に見れるからとPerlとか --  &new{2005-08-02 01:29:40 (火)};
+-紙 2001。Webページのスクラップに。 --  &new{2005-08-13 13:32:22 (土)};
+-edlinとかex使ってる人いないのかな？ --  &new{2005-08-31 04:36:41 (水)};
+- EmEditorです。タイ語はxyzzyもサポートしてないので、仕方なく使っています。（アカデミックライセンスですので金銭的負担は0ですが。） -- [[fen]] &new{2005-11-18 (金) 13:36:21};
+- EMeditor。&#35689;勝ﾆなどの特有文字が入力・表示・印刷可能なため。もっともXPでないと無理なんですが(実際に確認済み)。 --  &new{2005-12-03 (土) 19:02:09};
+- GrepだけはWzEditorの結果表示が一番なじみます。xyzzyでも上の画面でカーソルが当たっているファイルを下の画面に即座に表示できれば完全移行してもいいかなあ。 -- [[michael]] &new{2005-12-26 (月) 04:37:46};
+- meadow。skk が簡単に使えるから。あと ange-ftp とか。 --  &new{2006-02-04 (土) 13:18:23};
+- 秀丸。お手軽にマクロ作るにはこっちの方が簡単なので。 -- [[まる]] &new{2006-03-07 (火) 18:17:04};
+- Peggy. フォルダ単位のdiffとか、CVS連携とか、文字コード変換とか、時間をかけずに高度な機能が使えるので -- [[Lichten]] &new{2006-10-30 (月) 11:24:48};
+- サクラエディタの矩形編集が便利すぎる。 --  &new{2009-03-23 (月) 03:56:21};
+- jdeeが欲しすぎてmeadow入れてる。meadowから印刷するためサクラエディタも入れた。泥沼である。 --  &new{2011-02-19 (土) 13:45:10};
+- ファイル比較するときXyZzyは不便なのでサクラエディタを使っている． -- [[Corgi]] &new{2012-04-19 (木) 01:14:39};
+
+#comment

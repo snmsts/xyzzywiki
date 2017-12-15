@@ -1,0 +1,38 @@
+[[tips]]
+
+*aproposでsystemパッケージ・editorパッケージも検索する [#i988f05d]
+デフォルトだと，ユーザパッケージのシンボルしか探さないのを，
+systemパッケージ・editorパッケージも検索するようにします．
+
+-注意
+apropos-find-matches を再定義します．
+
+ (in-package "editor")
+ (defun apropos-find-matches (pattern pred)
+   (let ((regexp (compile-regexp pattern))
+         (result nil))
+     (flet ((push-matched-symbols (package)
+              (cond ((and regexp pred)
+                     (do-symbols (sym package)
+                       (and (funcall pred sym)
+                            (string-match regexp (symbol-name sym))
+                            (push sym result))))
+                    (pred
+                     (do-symbols (sym package)
+                       (and (funcall pred sym)
+                            (push sym result))))
+                    (regexp
+                     (do-symbols (sym package)
+                       (and (string-match regexp (symbol-name sym))
+                            (push sym result))))
+                    (t
+                     (do-symbols (sym package)
+                       (push sym result))))))
+       (push-matched-symbols (find-package "user"))
+       (push-matched-symbols (find-package "si"))
+       (push-matched-symbols (find-package "ed"))
+       (delete-duplicates result)
+       )))
+ (in-package "user")
+----
+#comment

@@ -1,0 +1,23 @@
+~->[[tips]]
+
+ブラウザでUTF-8とかで表示している"Д"とかの文字をそのままコピー＆ペーストすると、xyzzy上では半角文字として表示される。これはUTF-8の"Д"の文字をxyzzyの内部文字として保持する時に、JIS X 0208文字セットの文字ではなく、他の文字セット（ISO8859_5？）の文字として認識するからっぽい。
+ペーストしたバッファをそのままShift_JISで保存すれば、その保存したファイルを読み込む時にはその文字は（Shift_JISのファイルであるということから）JIS X 0208文字セットの文字として扱われ、全角で表示される。
+なのでほとんど問題はないのだが、バッファを保存しないままその中身を使用する場合等はJIS X 0208文字セットの文字として認識して欲しいということがあると思ったので、yankを修正して関数を作ってみた。
+
+ (defun yank-insert-sjis (arg rev)
+   (if rev
+       (goto-char (prog1
+          (point)
+        (funcall #'insert (map-internal-to-sjis (apply 'concat (ed::current-kill arg))))
+        (setq *last-yank-point* (point))))
+     (progn
+       (setq *last-yank-point* (point))
+       (funcall #'insert (map-internal-to-sjis (apply 'concat (ed::current-kill arg)))))))
+ 
+ (defun yank-sjis (&optional prefix (arg 0))
+   (interactive "*P\np")
+   (if (eq prefix 'universal-argument)
+       (yank-insert-sjis 0 t)
+     (yank-insert-sjis arg nil)))
+ 
+ (global-set-key '(#\C-c #\C-y) 'yank-sjis)

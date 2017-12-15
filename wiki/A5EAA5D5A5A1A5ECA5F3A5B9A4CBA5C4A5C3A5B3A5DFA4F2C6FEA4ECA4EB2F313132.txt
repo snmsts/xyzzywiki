@@ -1,0 +1,47 @@
+*rest [#rd224de5]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-03-14 04:49:35 (月)
+-バージョン: 20041115
+
+**メッセージ [#yfe3f3ed]
+firstにあわせて書いてみました。
+ <chapter>
+ <title>rest</title>
+ <type>Function</type>
+ <arguments>rest LIST</arguments>
+ <package>lisp</package>
+ <description>
+ cdrの別名です。 
+ 全く同じ動きをします。 
+ 
+ 使用例： 
+   ;;; cdrと同じ動きをする。 
+   (cdr '(1 2 3))
+   =&gt; (2 3)
+   (rest '(1 2 3))
+   =&gt; (2 3)
+   (symbol-function 'cdr)
+   =&gt; #&lt;function: cdr&gt;
+   (symbol-function 'rest)
+   =&gt; #&lt;function: cdr&gt;
+  
+ 参考： 
+   ;;; evalmacs.lの定義
+   (si:*fset 'rest #'cdr)
+ 
+ </description>
+ <seealso>cdr</seealso>
+ <link></link>
+ <section>リスト</section>
+ <file>evalmacs.l</file>
+ </chapter>
+
+----
+-取り込みます。＞[[refwiki:rest]] -- [[NANRI]] &new{2005-03-14 11:03:00 (月)};
+
+#comment

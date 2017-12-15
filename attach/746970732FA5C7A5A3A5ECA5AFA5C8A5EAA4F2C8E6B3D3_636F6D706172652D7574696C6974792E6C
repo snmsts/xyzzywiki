@@ -1,0 +1,327 @@
+;; 
+;;    少し使いやすくする
+;; 
+;;  使う人(いるのか？)の為に説明
+;;
+;; 比較ディレクトリから取得するファイルの設定
+;;  ・*compare-directory-recursive*
+;;     サブディレクトリも検索対象にするか  t:対象にする  nil:対象にしない
+;;  ・*compare-directory-wild*
+;;     ワイルドカードの指定  区切り文字は「;」  例: *.c;*.h
+;;  ・*compare-directory-depth*
+;;     検索の深さ  *compare-directory-recursive* が t の時のみ動作
+;;     0 だと無制限
+;;
+;; それぞれ引数に(表示属性番号,比較ディレクトリのパスを除いたファイルパス)が
+;; 入ってきます
+;;  ・compare-directory-exec-update
+;;      更新「!」の列が選択された場合に動作
+;;  ・compare-directory-exec-same
+;;      同じ「 」の列が選択された場合に動作
+;;  ・compare-directory-exec-add
+;;      追加「+」の列が選択された場合に動作
+;;  ・compare-directory-exec-delete
+;;      削除「-」の列が選択された場合に動作
+;;
+;; だいぶ元のソースと変わってしまいました。まぁ仕事で4000とかの差分を取ると、
+;; 現行のでは時間がかかってしまうため色々いじっています（汗
+;; 自分では満足してしまっているので・・・とりあえずUPです
+;;                                                              by 岩本
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   おまじない
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; require の 多重読込を禁止する
+(provide "compare-utility")
+(require "diff")
+;; パッケージ化(とりあえずeditorに)
+(in-package "editor")
+;; 外部公開変数の設定
+(export
+ '(; hooks
+   compare-directory-end-hook
+   ; funcs
+   compare-directory
+   compare-directory-next
+   compare-directory-previous
+   compare-directory-exec
+   compare-directory-toggle-disp
+   compare-directory-mask-file
+   compare-directory-refresh
+   compare-directory-quit
+   ; directory option
+   *compare-directory-recursive*
+   *compare-directory-wild*
+   *compare-directory-depth*
+   ; compare-directory-exec option
+   compare-directory-exec-update
+   compare-directory-exec-same
+   compare-directory-exec-add
+   compare-directory-exec-delete
+   ; key map
+   *compare-directory-mode-map*
+   ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   変数定義
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; compare-directory の hooks
+;; (defvar diff-utility-mode-hook nil)
+(defvar compare-directory-end-hook nil)
+;; compare-directory関連のキーマップ
+(defvar *compare-directory-mode-map* nil)
+;; compare-directoryするディレクトリ
+(defvar new-dir nil)
+(defvar old-dir nil)
+;; compare-directoryのバッファ名
+(defvar-local *make-buffer-name* "*compare-directory*")
+;; compare-directoryの表示属性
+(defvar-local *sel-attribute* '(("!" "更新") (" " "同じ") ("+" "追加") ("-" "削除") (nil "全部")) )
+;; directoryのパラメータ
+(defvar *compare-directory-recursive* t)
+(defvar *compare-directory-wild*      "*")
+(defvar *compare-directory-depth*     0)
+;; file-infoで無視する属性
+;; ちょっと保留
+; (defvar *hide-file-attribute* ed::*file-attribute-hidden*)
+;; compare-directoryの表示属性変更
+(defvar *compare-directory-toggle-disp* (position nil *sel-attribute* :test #'string= :key #'car))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   変数設定
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; compare-directory-execでsel毎に起動する処理をここに
+(defvar compare-directory-exec-update  'compare-directory-diff-file)
+(defvar compare-directory-exec-same    'compare-directory-find-file)
+(defvar compare-directory-exec-add     'compare-directory-add-file)
+(defvar compare-directory-exec-delete  'compare-directory-del-file)
+;; 表示言語や書式が変わった時のために、メッセージは全てハッシュテーブルで定義
+(defvar *compare-directory-text* nil)
+(unless *compare-directory-text*
+  (setf *compare-directory-text* (make-hash-table))
+  (setf (gethash 'other_point       *compare-directory-text*) "ないっす")
+  (setf (gethash 'wrong_place       *compare-directory-text*) "場所が変だよん")
+  (setf (gethash 'non_exist_proc    *compare-directory-text*) "処理がないよん")
+  (setf (gethash 'draw_finish       *compare-directory-text*) "描画かんりょー")
+  (setf (gethash 'exec_find_file    *compare-directory-text*) "これ開くの？:")
+  (setf (gethash 'exec_add_file     *compare-directory-text*) "これ追加するの？:")
+  (setf (gethash 'exec_del_file     *compare-directory-text*) "これ削除するの？:")
+  (setf (gethash 'unexec            *compare-directory-text*) "じゃあやめとくね")
+  ;; (setf (gethash 'non_comp          *compare-directory-text*) "違いはありません")
+  (setf (gethash 'unexist_file_add  *compare-directory-text*) "追加したいファイルがないよん")
+  (setf (gethash 'unexist_file_diff *compare-directory-text*) "どっちかのファイルがないよん")
+  (setf (gethash 'unexist_file      *compare-directory-text*) "もうファイルがないよん")
+  (setf (gethash 'exist_file        *compare-directory-text*) "もうファイルがあるよん")
+  (setf (gethash 'access-denied     *compare-directory-text*) "アクセスが拒否されちゃった＞＜")
+  )
+;; foramat-ctrl-str
+(defvar *foramat-ctrl-str* nil)
+(unless *foramat-ctrl-str*
+  (setf *foramat-ctrl-str* (make-hash-table))
+  (setf (gethash 'front-cover *foramat-ctrl-str*) "new dir: ~A~%old dir: ~A~%~%")
+  (setf (gethash 'hit-num *foramat-ctrl-str*)
+		"更新: ~A, 同じ: ~A, 追加: ~A, 削除: ~A, 総数: ~A~%~%")
+  (setf (gethash 'disp-attri *foramat-ctrl-str*) "表示中の属性: \"~A\"~%~%")
+  (setf (gethash 'print-out *foramat-ctrl-str*) " ~A ~A~%")
+  (setf (gethash 'diff-point *foramat-ctrl-str*) "^ [!+-]")
+  (setf (gethash 'file-mask *compare-directory-text*) "ファイルマスク:")
+  (setf (gethash 'get-sel-path *foramat-ctrl-str*) "^ \\([! +-]\\) \\(\.+\\)$")
+  )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   公開関数定義
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ディレクトリを比較
+(defun compare-directory (ndir odir)
+  (interactive "Dnew dir: \nDold dir: " :default0 "" :default1 "")
+;;; フルパスを追加して保持
+  (setf new-dir (namestring ndir))
+  (setf old-dir (namestring odir))
+  (long-operation
+	(let ((new-file-list (compare-directory-get-files new-dir))
+		  (old-file-list (compare-directory-get-files old-dir))
+		  all-list work-list count-list diff-num same-num add-num del-num)
+;;; 差分のカウントアップ
+	  ; 同じファイルを登録
+	  ; new-file-list と old-file-list にあるものが比較対照
+	  (setf work-list (intersection new-file-list old-file-list :test #'string=))
+	  (dolist (comp-file work-list)
+		(setf new-file-path (merge-pathnames comp-file new-dir))
+		(setf old-file-path (merge-pathnames comp-file old-dir))
+		; 比較
+		(if (compare-file new-file-path old-file-path)
+			(push comp-file count-list)))
+	  (setf same-num  (list-length count-list))
+	  (setf all-list  (pairlis (make-list same-num :initial-element 1) count-list))
+	  ; 更新ファイルを登録
+	  (setf work-list (set-difference work-list count-list :test #'string=))
+	  (setf diff-num  (list-length work-list))
+	  (nconc all-list (pairlis (make-list diff-num :initial-element 0) work-list))
+	  ; 追加ファイルは new-file-list にあって old-file-list に無いもの
+	  (setf work-list (set-difference new-file-list old-file-list :test #'string=))
+	  (setf add-num   (list-length work-list))
+	  (nconc all-list (pairlis (make-list add-num :initial-element 2) work-list))
+	  ; 削除ファイルは old-file-list にあって new-file-list に無いもの
+	  (setf work-list (set-difference old-file-list new-file-list :test #'string=))
+	  (setf del-num   (list-length work-list))
+	  (nconc all-list (pairlis (make-list del-num :initial-element 3) work-list))
+;;; 書き出し
+	  (with-output-to-temp-buffer (*make-buffer-name* nil)
+		; 表紙
+		(format t (gethash 'front-cover *foramat-ctrl-str*) new-dir old-dir)
+		(format t (gethash 'hit-num *foramat-ctrl-str*)
+				diff-num same-num add-num del-num (list-length all-list))
+		; 表示属性種別
+		(format t (gethash 'disp-attri *foramat-ctrl-str*)
+				(second (nth *compare-directory-toggle-disp* *sel-attribute*)))
+		; ファイル表示
+		; 名前順で並べ替え
+		(setq all-list (sort all-list #'string-lessp :key #'cdr))
+		(dolist (one-file all-list)
+		  (let ((file (cdr one-file))
+				(sel (car one-file)))
+			; 表示するか決める
+			; *compare-directory-toggle-disp* が nil でない
+			; 表示属性がマッチしてる
+			(if (/= *compare-directory-toggle-disp* (1- (list-length *sel-attribute*)))
+				(and (= sel *compare-directory-toggle-disp*)
+					 (format t (gethash 'print-out *foramat-ctrl-str*) (car (nth sel *sel-attribute*)) file))
+			  ; *compare-directory-toggle-disp* が nil の場合は全部表示
+			  (format t (gethash 'print-out *foramat-ctrl-str*) (car (nth sel *sel-attribute*)) file)))))
+	  ))
+  ;; バッファ設定
+  (compare-directory-mode))
+
+;; 次の不一致行に移動
+(defun compare-directory-next (&optional p)
+  (interactive)
+  (unless (scan-buffer (compile-regexp (gethash 'diff-point *foramat-ctrl-str*))
+					   :no-dup t
+					   :reverse p)
+	(plain-error (gethash 'other_point *compare-directory-text*))))
+;; 前の不一致行に移動
+(defun compare-directory-previous ()
+  (interactive)
+  (compare-directory-next t))
+;; compare-directory に付加機能を搭載
+(defun compare-directory-exec()
+  (interactive)
+  ; 現在行の sel と file を取得
+  (setf current-string
+		(buffer-substring (save-excursion (goto-bol) (point))
+						  (save-excursion (goto-eol) (point))))
+  (if (string-match (gethash 'get-sel-path *foramat-ctrl-str*) current-string)
+	  (progn
+		(setf sel  (position (match-string 1) *sel-attribute* :test #'string= :key #'car))
+		(setf file (match-string 2)))
+	(plain-error (gethash 'wrong_place *compare-directory-text*)))
+  (case sel
+	(0 (funcall compare-directory-exec-update sel file))
+	(1 (funcall compare-directory-exec-same   sel file))
+	(2 (funcall compare-directory-exec-add    sel file))
+	(3 (funcall compare-directory-exec-delete sel file))
+	(t (message (gethash 'non_exist_proc *compare-directory-text*)))))
+;; compare-directoryの表示属性変更
+(defun compare-directory-toggle-disp ()
+  (interactive)
+  (incf *compare-directory-toggle-disp*)
+  (setf *compare-directory-toggle-disp*
+		(mod *compare-directory-toggle-disp* (list-length *sel-attribute*)))
+  (compare-directory-refresh))
+;; compare-directoryの表示マスク指定
+(defun compare-directory-mask-file ()
+  (interactive)
+  (setf *compare-directory-wild*
+		(read-string (gethash 'file-mask *compare-directory-text*) :default *compare-directory-wild*))
+  (compare-directory-refresh))
+;; compare-directoryの再描画
+(defun compare-directory-refresh ()
+  (interactive)
+  (save-excursion
+	(compare-directory (copy-seq new-dir) (copy-seq old-dir)))
+  (message (gethash 'draw_finish *compare-directory-text*)))
+;; compare-directoryの終了
+(defun compare-directory-quit ()
+  (interactive)
+  (delete-buffer (selected-buffer))
+  (run-hooks 'compare-directory-end-hook))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   内部関数定義
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun compare-directory-get-files ( dir )
+  "new-file-list と old-file-list を取ってくる"
+  (directory dir
+			 :recursive *compare-directory-recursive*
+			 :wild      (split-string *compare-directory-wild* #\; nil " ")
+			 :depth     *compare-directory-depth*
+			 :file-only t))
+
+(defun compare-directory-find-file ( s f )
+  "同じファイル「 」を開く"
+  ; 古い方にマージするはずだから、古い方を開く
+  (setf o (merge-pathnames f old-dir))
+  (if (and (y-or-n-p (gethash 'exec_find_file *compare-directory-text*))
+		   (file-exist-p o))
+	  (find-file o)
+	(plain-error (gethash 'unexec *compare-directory-text*))))
+(defun compare-directory-diff-file ( s f )
+  "更新されているファイル「!」のdiffを取る"
+  (setf n (merge-pathnames f new-dir))
+  (setf o (merge-pathnames f old-dir))
+  (if (not (and (file-exist-p n) (file-exist-p o)))
+	  (plain-error (gethash 'unexist_file_diff *compare-directory-text*)))
+  (if (and (fboundp 'diff-detail-char) (eq *last-command-char* #\M-d))
+	  (diff-detail-char n o)
+	(diff n o)))
+(defun compare-directory-add-file ( s f )
+  "追加されているファイル「+」を反映する"
+  ; 古い方に追加するはず
+  (setf n (merge-pathnames f new-dir))
+  (setf o (merge-pathnames f old-dir))
+  (if (not (and f (file-exist-p n)))
+	  (plain-error (gethash 'unexist_file_add *compare-directory-text*)))
+  (if (and (file-exist-p o))
+	  (plain-error (gethash 'exist_file *compare-directory-text*)))
+  (if (not (y-or-n-p (gethash 'exec_add_file *compare-directory-text*)))
+	  (plain-error (gethash 'unexec *compare-directory-text*)))
+  ; ディレクトリが存在しない場合は作る
+  (unless (valid-path-p o)
+	(if (not (create-directory (directory-namestring o)))
+		(plain-error (gethash 'access-denied *compare-directory-text*))))
+  (if (not (copy-file n o :if-access-denied :skip))
+	  (plain-error (gethash 'access-denied *compare-directory-text*)))
+  (compare-directory-refresh))
+(defun compare-directory-del-file ( s f )
+  "削除されているファイル「-」を反映する"
+  ; 古い方を削除するはず
+  (setf o (merge-pathnames f old-dir))
+  (if (not (file-exist-p o))
+	  (plain-error (gethash 'unexist_file *compare-directory-text*)))
+  (if (not (y-or-n-p (gethash 'exec_del_file *compare-directory-text*)))
+	  (plain-error (gethash 'unexec *compare-directory-text*)))
+  (if (not (delete-file o :if-access-denied :skip))
+	  (plain-error (gethash 'access-denied *compare-directory-text*)))
+  (compare-directory-refresh))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   compare-directory-mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun compare-directory-mode()
+  (set-buffer *make-buffer-name*)
+  (setq buffer-read-only t)
+  (use-keymap *compare-directory-mode-map*)
+  )
+
+;; *compare-directory-mode-map*設定
+(unless *compare-directory-mode-map*
+  (setf *compare-directory-mode-map* (make-sparse-keymap))
+  (define-key *compare-directory-mode-map* #\RET   'compare-directory-exec)
+  (define-key *compare-directory-mode-map* #\n     'compare-directory-next)
+  (define-key *compare-directory-mode-map* #\p     'compare-directory-previous)
+  (define-key *compare-directory-mode-map* #\r     'compare-directory-refresh)
+  (define-key *compare-directory-mode-map* #\t     'compare-directory-toggle-disp)
+  (define-key *compare-directory-mode-map* #\M     'compare-directory-mask-file)
+  (define-key *compare-directory-mode-map* #\q     'compare-directory-quit)
+  )

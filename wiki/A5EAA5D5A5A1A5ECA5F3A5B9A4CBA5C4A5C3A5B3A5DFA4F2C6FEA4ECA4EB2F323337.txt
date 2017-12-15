@@ -1,0 +1,226 @@
+* リードマクロ関係 [#o4c79c55]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-09-29 (金) 22:18:33
+-バージョン: 
+
+** メッセージ [#v7fff150]
+reader 周りの関数とか。あまりちゃんと使ったことはないのですが。
+
+用語の説明が不足気味かもしれません。
+
+ <chapter>
+ <title>set-dispatch-macro-character</title>
+ <type>Function</type>
+ <arguments>set-dispatch-macro-character DISP-CHAR SUB-CHAR FUNCTION &amp;optional READTABLE</arguments>
+ <package>lisp</package>
+ <description>
+ ディスパッチマクロ文字を設定します。
+ SUB-CHAR は大文字小文字を区別しません。
+ 
+ DISP-CHAR がディスパッチマクロ文字でなければエラーとなります。
+ また SUB-CHAR に [0-9] は指定できません。
+ </description>
+ <seealso>make-dispatch-macro-character</seealso>
+ <seealso>get-dispatch-macro-character</seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>make-dispatch-macro-character</title>
+ <type>Function</type>
+ <arguments>make-dispatch-macro-character CHAR &amp;optional NON-TERMINATING-P READTABLE</arguments>
+ <package>lisp</package>
+ <description>
+ ディスパッチマクロ文字を新たに作成します。
+ CHAR が既にディスパッチマクロ文字であれば何もしません。
+ </description>
+ <seealso>set-dispatch-macro-character</seealso>
+ <seealso>get-dispatch-macro-character</seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>get-dispatch-macro-character</title>
+ <type>Function</type>
+ <arguments>get-dispatch-macro-character DISP-CHAR SUB-CHAR &amp;optional READTABLE</arguments>
+ <package>lisp</package>
+ <description>
+ ディスパッチマクロを取得します。
+ SUB-CHAR は大文字小文字を区別しません。
+ 
+ DISP-CHAR がディスパッチマクロ文字でなければエラーとなります。
+ </description>
+ <seealso>make-dispatch-macro-character</seealso>
+ <seealso>set-dispatch-macro-character</seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>get-macro-character</title>
+ <type>Function</type>
+ <arguments>get-macro-character CHAR &amp;optional READTABLE</arguments>
+ <package>lisp</package>
+ <description>
+ マクロ文字 CHAR に割り当てられている関数を返します。マクロ文字でない
+ 場合は nil を返します。
+ また、マクロ文字である場合には二番目の戻り値として CHAR が 
+ non-terminating かどうかを返します。
+ 
+ 使用例：
+   ;;; # は non-terminating macro character
+   (get-macro-character #\#)
+   =&gt; system:|#-reader|
+   =&gt; t
+   ;;; ' は terminating macro character
+   (get-macro-character #\')
+   =&gt; system:|'-reader|
+   =&gt; nil
+   ;;; A はマクロ文字ではない
+   (get-macro-character #\A)
+   =&gt; nil
+ </description>
+ <seealso>set-macro-character</seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>set-macro-character</title>
+ <type>Function</type>
+ <arguments>set-macro-character CHAR FUNCTION &amp;optional NON-TERMINATING-P READTABLE</arguments>
+ <package>lisp</package>
+ <description>
+ マクロ文字を設定します。
+ 
+   CHAR                  マクロ文字にする文字
+   FUNCTION              CHAR が読まれたときに呼ばれる関数
+   NON-TERMINATING-P     トークンの途中に現れた CHAR をマクロ文字とみなさない
+   READTABLE             設定するリードテーブル
+ 
+ 使用例：
+   (set-macro-character #\? 'read-test)
+   (defun read-test (stream ch)
+     (list '*question* (read stream)))
+   (read-from-string "?a")
+   =&gt; (*question* a)
+   =&gt; 2
+ </description>
+ <seealso>get-macro-character</seealso>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>si:*set-readtable-case</title>
+ <type>Function</type>
+ <arguments>READTABLE CASE</arguments>
+ <package>system</package>
+ <description>
+ READTABLE の case sensitivity を CASE に設定します。
+ </description>
+ <seealso>readtable-case</seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>readtable-case</title>
+ <type>Function</type>
+ <arguments>readtable-case READTABLE</arguments>
+ <package>lisp</package>
+ <description>
+ READTABLE の case sensitivity を返します。
+ この値はシンボルの read および print の際の挙動に影響します。
+ 
+ 戻り値
+   :upcase       read の際にアルファベットを大文字に変換
+ 	        print の際に小文字を含むシンボル名をエスケープ
+   :downcase     read の際にアルファベットを小文字に変換
+ 	        print の際に大文字を含むシンボル名をエスケープ
+   :preserve     大文字小文字の変換・エスケープをしない (デフォルト)
+   :invert       read 時は :preserve と同じ？
+ 	        print の際にアルファベットを含むシンボル名をエスケープ
+ 
+ リードテーブルの case sensitivity を変更するには si:*set-readtable-case
+ または setf を使います。
+ 
+ 例:
+   (let ((*readtable* (copy-readtable *readtable*)))
+     (dolist (rtc '(:upcase :downcase :preserve :invert))
+       (setf (readtable-case *readtable*) rtc)
+       (print (read-from-string "Foo"))))
+   -&gt; FOO
+   -&gt; foo
+   -&gt; Foo
+   -&gt; |Foo|
+   =&gt; nil
+ </description>
+ <seealso>si:*set-readtable-case</seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>*readtable*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>lisp</package>
+ <description>
+ 現在のリードテーブルを格納している変数です。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>入出力</section>
+ <file></file>
+ </chapter>
+
+ <chapter>
+ <title>copy-readtable</title>
+ <type>Function</type>
+ <arguments>copy-readtable &amp;optional FROM-READTABLE TO-READTABLE</arguments>
+ <package>lisp</package>
+ <description>
+ リードテーブルをコピーします。
+ 
+   FROM-READTABLE : コピー元 (デフォルトは *readtable*)
+ 		   nil を明示的に与えるとデフォルトのリードテーブルをコピー。
+   TO-READTABLE   : コピー先。省略時は新しく作成。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>readtablep</title>
+ <type>Function</type>
+ <arguments>readtablep OBJECT</arguments>
+ <package>lisp</package>
+ <description>
+ OBJECT がリードテーブルなら t 、それ以外なら nil を返します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+
+--------
+- どーもです。用語の説明は厳しいですね。Webにも見当たりませんし。いずれフォローすることになるのかな...(^ ^; -- [[NANRI]] &new{2006-10-04 (水) 00:43:30};
+
+#comment

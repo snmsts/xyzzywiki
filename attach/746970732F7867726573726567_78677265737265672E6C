@@ -1,0 +1,81 @@
+;;; xgresreg
+;
+;                        Last updated: <2005-05-24T19:40:00+09:00>
+;
+; 基本的には
+; ・大文字と小文字を区別する
+; ・単語単位で検索しない
+; ・サブディレクトリも検索する
+; ・勝手にセーブする
+; 正規表現を使う・使わない、確認あり・無しの組み合わせで
+; 4つのコマンドがあります。
+;
+;; 設定例
+;; (require "xgresreg")
+;; 
+;; もしくは、こんな感じ
+;; (in-package "editor")
+;; (export '(xgresreg re-xgresreg query-xgresreg query-xgresreg-regexp))
+;; (autoload 'xgresreg "xgresreg" t)
+;; (autoload 're-xgresreg "xgresreg" t)
+;; (autoload 'query-xgresreg "xgresreg" t)
+;; (autoload 'query-xgresreg-regexp "xgresreg" t)
+;; (in-package "user")
+
+(provide "xgresreg")
+
+(require "gresregd")
+
+(in-package "editor")
+
+(export '(xgresreg re-xgresreg query-xgresreg
+          query-xgresreg-regexp))
+
+(defun xgresreg (pattern replacement directory files)
+  "xgresreg: 確認なし・正規表現使わず"
+  (interactive "sxgresreg: \nswith: \nDdirectory: \nsfiles: "
+    :default0 *last-gresreg-string* :history0 'search
+    :default1 *last-gresreg-replace-string* :history1 'search)
+  (setq *last-gresreg-string* pattern)
+  (setq *last-gresreg-replace-string* replacement)
+  (xgresreg1 pattern replacement directory files nil nil))
+
+(defun re-xgresreg (pattern replacement directory files)
+  "xgresreg: 確認なし・正規表現あり"
+  (interactive "sxgresreg: \nswith: \nDdirectory: \nsfiles: "
+    :default0 *last-gresreg-regexp* :history0 'search
+    :default1 *last-gresreg-replace-regexp* :history1 'search)
+  (setq *last-gresreg-regexp* pattern)
+  (setq *last-gresreg-replace-regexp* replacement)
+  (xgresreg1 pattern replacement directory files nil t))
+
+(defun query-xgresreg (pattern replacement directory files)
+  "xgresreg: 確認あり・正規表現使わず"
+  (interactive "squery xgresreg: \nswith: \nDdirectory: \nsfiles: "
+    :default0 *last-gresreg-string* :history0 'search
+    :default1 *last-gresreg-replace-string* :history1 'search)
+  (setq *last-gresreg-string* pattern)
+  (setq *last-gresreg-replace-string* replacement)
+  (xgresreg1 pattern replacement directory files t nil))
+
+(defun query-xgresreg-regexp (pattern replacement directory files)
+  "xgresreg: 確認あり・正規表現あり"
+  (interactive "squery xgresreg: \nswith: \nDdirectory: \nsfiles: "
+    :default0 *last-gresreg-regexp* :history0 'search
+    :default1 *last-gresreg-replace-regexp* :history1 'search)
+  (setq *last-gresreg-regexp* pattern)
+  (setq *last-gresreg-replace-regexp* replacement)
+  (xgresreg1 pattern replacement directory files t t))
+
+(defun xgresreg1 (pattern replacement directory files query regexpp
+                  &optional (case-fold nil) (word-search nil) (subdirp t) (savep t))
+  (let ((*gresreg-case-fold-search* case-fold)
+        (*gresreg-word-search* word-search)
+        (*gresreg-regexp-search* regexpp)
+        (*gresreg-subdir* subdirp)
+        (*gresreg-save-buffer* savep))
+    (gresreg-process pattern replacement
+                     (split-string files #\; t " ")
+                     directory
+                     query
+                     *gresreg-save-buffer*)))

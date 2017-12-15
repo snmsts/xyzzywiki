@@ -1,0 +1,68 @@
+*概要 [#uc5dfecc]
+xyzzy lispで正規表現を書いてると`\'が多くなってわけがわからなくなるので
+色付けしてみました。多少は見やすくなるんじゃないかと思います。
+ (defun regexp-colorize ()
+   (interactive)
+   (unless (local-variable-p 'regexp-keyword-list)
+     (make-local-variable 'regexp-keyword-list))
+   (setq regexp-keyword-list (append regexp-keyword-list *regexp-colorize-keyword-list*)))
+ 
+ (defvar *regexp-colorize-keyword-list*
+   (compile-regexp-keyword-list
+    '(("\\\\\\\\\\\\\\\\" nil (:color 12 0) :string)
+      ("\\(\\\\\\\\\\([{}()|1-9<>bBwW`']\\|[sS][.()$\"<>/\\'_wkjx{}]\\|\(\\?:
+ \\|}\\?\\|_[<>bBsS]\\|{[0-9]*,[0-9]*\\\\\\\\}\\?\\)\\)\\|[?*+]\\?" nil (:color 13 0) :string)
+      ("[][.?*+^$\\]" nil (:color 10 0) :string)
+      )))
+
+*補足 [#n8f86449]
+&#42;regexp-colorize-keyword-list*は上から順に`\'に対応するもの（`\'４個分）、二文字以上の正規表現、一文字の正規表現となっています。
+
+*実施例 [#e9925de6]
+
+こういうのが
+#ref(before.png,nolink)
+
+こうなります。
+#ref(after.png,nolink)
+
+*コメント [#r0e4715b]
+-必要ない文字列があることに気づいたので一部削りました。 -- [[書いた人]] &new{2005-02-18 01:30:42 (金)};
+-勝手に実施例を追加 --  &new{2005-02-21 02:54:52 (月)};
+-いまさらながら一部の正規表現の使い方を勘違いしていることに気づいたので修正しました。 -- [[書いた人]] &new{2005-06-20 22:29:57 (月)};
+ (defun lisp-regexp-colorize ()
+   (unless (local-variable-p 'regexp-keyword-list)
+     (make-local-variable 'regexp-keyword-list))
+   (setf regexp-keyword-list
+         (append regexp-keyword-list *regexp-colorize-keyword-list*)))
+ (defvar *regexp-colorize-keyword-list*
+   (compile-regexp-keyword-list
+    '(("\\\\\\\\\\\\\\\\" nil (:color 12 0) :string)
+      ("\\(\\\\\\\\\\([{}()|1-9<>bBwWuUlLE`']\\|[sS]\\(?:[.()$<>/\\'_wkjx{}@]\\|\\\\\"\\)\\|\(\\?:\\|}\\?\\|_[<>bBsS]\\|{[0-9]*,[0-9]*\\\\\\\\}\\?\\)\\)\\|[?*+]\\?" nil (:color 13 0) :string)
+      ("[][.?*+^$\\]" nil (:color 10 0) :string))))
+ (add-hook '*lisp-mode-hook* 'lisp-regexp-colorize)
+ (add-hook '*lisp-interaction-mode-hook* 'lisp-regexp-colorize)
+- \u \U \l \L \Eとシンタックスの@が無かったです。 --  &new{2007-02-10 (土) 21:48:21};
+- シンタックスの"はエスケープがいる(lispを書くときは\\s\")のでこうなんじゃないかと思いました。 -- [[２つめの書いた人]] &new{2007-02-19 (月) 05:07:58};
+- どうもです。そうするとバックスラッシュもエスケープが必要そうですね。だんだん訳がわからなくなってきたのと、もう少し細かく色分けしたくなった（グルーピングを目立たせたかった）ので少し書き直してみました。 -- [[最初の書いた人]] &new{2007-02-20 (火) 05:21:22};
+ (defun lisp-regexp-colorize ()
+   (unless (local-variable-p 'regexp-keyword-list)
+     (make-local-variable 'regexp-keyword-list))
+   (setf regexp-keyword-list
+         (append regexp-keyword-list *regexp-colorize-keyword-list*)))
+ (defvar *regexp-colorize-keyword-list*
+   (compile-regexp-keyword-list
+    '(("\\\\\\\\\\\\\\\\" nil (:color 14 0) :string) ; \ 4つ -> バックスラッシュそのものの正規表現
+      ("[?*+]\\?" nil (:color 9 0) :string) ; 最短一致
+      ("\\\\\\\\{\\([0-9]+,[0-9]*\\|,?[0-9]+\\)\\\\\\\\}\\?" nil (:color 9 0) :string) ; 回数指定（最短一致）
+      ("\\\\\\\\{\\([0-9]+,[0-9]*\\|,?[0-9]+\\)\\\\\\\\}" nil (:color 13 0) :string) ; 回数指定
+      ("\\\\\\\\\\((\\?:\\|[()|]\\)" nil (:color 12 0) :string) ; グルーピング
+      ("\\\\\\\\[&0-9uUlLE]" nil (:color 11 0) :string) ; 後方参照、置換時の変換
+      ("\\\\\\\\[sS]\\([.()$\<>/'_wkjx{}@]\\|\\\\[\"\\]\\)" nil (:color 13 0) :string) ; シンタックス
+      ("\\\\\\\\[<>bBwW`']" nil (:color 13 0) :string) ; その他
+      ("\\\\\\\\_[<>bBsS]" nil (:color 13 0) :string)  ; その他
+      ("[][.?*+^$\\]" nil (:color 10 0) :string)))) ; 1文字
+ (add-hook '*lisp-mode-hook* 'lisp-regexp-colorize)
+ (add-hook '*lisp-interaction-mode-hook* 'lisp-regexp-colorize)
+
+#comment

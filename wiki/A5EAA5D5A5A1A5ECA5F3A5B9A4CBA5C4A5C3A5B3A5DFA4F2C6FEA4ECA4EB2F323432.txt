@@ -1,0 +1,30 @@
+* set-number-of-function-bar-labels [#r9539abe]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-10-12 (木) 01:08:29
+-バージョン: 
+
+** メッセージ [#de22de2a]
+「ファンクションバー」の説明が無い代わりに。
+ <chapter>
+ <title>set-number-of-function-bar-labels</title>
+ <type>Function</type>
+ <arguments>set-number-of-function-bar-labels N</arguments>
+ <package>editor</package>
+ <description>
+ ファンクションバーのラベルの数を設定します。指定できる数は、
+ 4/5/8/10/12/15です。
+ [共通設定] - [表示] - [ファンクションキー] のところでも値を設定できます。
+ </description>
+ <seealso>number-of-function-bar-labels</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>builtin.l</file>
+ </chapter>
+--------
+
+#comment

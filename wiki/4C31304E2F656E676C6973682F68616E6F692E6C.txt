@@ -1,0 +1,6 @@
+[[L10N/english]]
+
+ hanoi.l:17:      (error "ウィンドウが小さすぎます"))
+-The window is too small. --  &new{2005-03-04 21:49:56 (金)};
+
+#comment

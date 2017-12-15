@@ -1,0 +1,44 @@
+[[tips]]
+
+- [[こちら:http://www.fsci.fuk.kindai.ac.jp/kakuto/soft.html]]から[[GNU patch and GNU diff for Win32:http://www.fsci.fuk.kindai.ac.jp/aftp/pub/win32/patch-diff-w32.zip]]を頂いて、patch.exeを~/binに置く。
+- オリジナルファイルとパッチファイルを同じディレクトリに置く。
+- M-x patchしてパッチファイルを指定するとオリジナルにパッチが適用される。
+ (defvar *patch-command-name* (map-slash-to-backslash (merge-pathnames "bin/patch.exe" (si:system-root))))
+ (defvar *patch-command-option* "-b --dos")
+ (defun patch (patchfile)
+   (interactive "fpatch(patchfile): ")
+   (let ((buffer (get-buffer-create "*patch*")))
+     (execute-shell-command (format nil "~A ~A < \"~A\""
+ 				   *patch-command-name*
+ 				   *patch-command-option*
+ 				   (map-slash-to-backslash patchfile))
+ 			   nil buffer nil
+ 			   (map-slash-to-backslash (directory-namestring patchfile)))))
+
+- ついでに差分の出力は多分こんな感じで（diff.exeと*diff-command-name*の設定が必要）。
+ (defun diff-output (new-file old-file)
+   (interactive "fdiff(new file): \nfdiff(old file): ")
+   (setq new-file (namestring new-file))
+   (setq old-file (namestring old-file))
+   (let ((buffer (get-buffer-create "*diff-output*")))
+     (flet ((rep (&optional f)
+ 	     (when (looking-at (format nil "^~A \\(.+?\\)\t" (if f "\\-\\-\\-" "\\+\\+\\+")))
+ 	       (let ((file (file-namestring (match-string 1))))
+ 		 (goto-char (match-beginning 1))
+ 		 (delete-region (match-beginning 1) (match-end 1))
+ 		 (insert file (if f "~" ""))))))
+       (execute-shell-command (format nil "~A ~A \"~A\" \"~A\""
+ 				     *diff-command-name*
+ 				     "-u"
+ 				     old-file new-file)
+ 			     nil buffer)
+       (switch-to-buffer buffer)
+       (rep t)
+       (forward-line)
+       (rep)
+       (goto-char (point-min))
+       (set-buffer-modified-p nil))))
+
+------
+
+#comment

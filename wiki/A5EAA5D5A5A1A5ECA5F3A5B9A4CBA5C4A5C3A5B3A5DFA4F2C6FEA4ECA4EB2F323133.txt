@@ -1,0 +1,47 @@
+* map [#e7a6a1d6]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-05-17 (水) 19:15:29
+-バージョン: 
+
+** メッセージ [#fb9c96c2]
+少し整形し、RESULT-TYPE が nil の場合を書き加えました。
+
+ <chapter>
+ <title>map</title>
+ <type>Function</type>
+ <arguments>map RESULT-TYPE FUNCTION SEQUENCE &amp;rest MORE-SEQUENCES</arguments>
+ <package>lisp</package>
+ <description>
+ SEQUENCE に FUNCTION を適用して、RESULT-TYPE に応じたシーケンスを返します。
+ mapcar との違いは、リストだけでなく文字列や配列等のシーケンスにも適用できる
+ ことと、RESULT-TYPE の指定が必要なことです。
+ 
+   RESULT-TYPE : nil、又は make-sequence の TYPE と同じものが使えます。
+                 nil の場合 戻り値は常に nil で、通常 副作用を目的として
+                 使用されます。
+   FUNCTION    : mapcar と同様、SEQUENCE の各要素をひとつずつ取り出したも
+                 のとなります。 MORE-SEQUENCES がある場合もやはり mapcar 
+                 と同じように適用されます。
+ 
+ 使用例:
+   ;;; 文字列の場合は一つ一つの要素が string ではなく char になることに注意
+   (map 'list #'char-code "abc")
+   =&gt; (97 98 99)
+ </description>
+ <seealso>map-into</seealso>
+ <seealso>make-sequence</seealso>
+ <seealso>mapcar</seealso>
+ <link></link>
+ <section>シーケンス</section>
+ <file>sequence.l</file>
+ </chapter>
+
+--------
+- どーもです。 -- [[NANRI]] &new{2006-05-19 (金) 00:17:34};
+
+#comment

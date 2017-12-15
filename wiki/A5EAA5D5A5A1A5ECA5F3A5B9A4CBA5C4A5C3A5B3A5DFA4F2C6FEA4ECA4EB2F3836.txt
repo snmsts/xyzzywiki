@@ -1,0 +1,133 @@
+*char-after, char-before, char-code-limit, char-columns [#j8cbc436]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[OHKUBO]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-11-20 (土) 02:33:35
+-バージョン: 20041115
+
+**メッセージ [#yd4315ea]
+ <chapter>
+ <title>char-after</title>
+ <type>Function</type>
+ <arguments>char-after POINT &amp;optional NOT-USED</arguments>
+ <package>editor</package>
+ <description>
+ カレントバッファの POINT 位置の文字を返します。
+ (point-min)以下の値が指定された場合(point-min)の文字を返す。
+ (point-max)以上の値が指定された場合 #\NUL を返す。
+ 
+   POINT    : INTEGER か MARKER でポイントを指定
+   NOT-USED : 不使用
+ 
+ 戻り値：
+   文字
+ 
+ 使用例：
+   ;;; ポイント c の位置で ESC ESC (char-after (point)) した場合
+   abcdefg
+     ^ このポイントで ESC ESC (char-after (point)) =&gt; #\c
+ </description>
+ <seealso>char-before</seealso>
+ <section>文字</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>char-before</title>
+ <type>Function</type>
+ <arguments>char-before POINT &amp;optional NOT-USED</arguments>
+ <package>editor</package>
+ <description>
+ カレントバッファの POINT の前の位置の文字を返します。
+ (point-max)以上の値が指定された場合(point-max)の前の位置の文字を返す。
+ (point-min)以下の値が指定された場合 #\NUL を返す。
+ 
+   POINT    : INTEGER か MARKER でポイントを指定
+   NOT-USED : 不使用
+ 
+ 戻り値:
+   文字
+ 
+ 使用例：
+   ;;; ポイント c の位置で ESC ESC (char-before (point)) した場合
+   abcdefg
+     ^ このポイントで ESC ESC (char-before (point)) =&gt; #\b
+ </description>
+ <seealso>char-after</seealso>
+ <section>文字</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>char-code-limit</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>lisp</package>
+ <description>
+ 文字コードの限界値を定めている定数(65536)です。
+ *character-name-hash-table* を設定する
+ (make-character-name-hash-table) 関数の定義中でのみ使用されています。
+ xyzzy ソース内で定義されています。
+ </description>
+ <seealso>*character-name-hash-table*</seealso>
+ <seealso>make-character-name-hash-table</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>char-columns</title>
+ <type>Function</type>
+ <arguments>char-columns CHAR</arguments>
+ <package>editor</package>
+ <description>
+ 文字 CHAR の文字幅を返します。
+ 
+ 使用例：
+   (char-columns #\a)        =&gt; 1
+   (char-columns #\あ)       =&gt; 2
+   (char-columns #\asterisk) =&gt; 1
+   ;;; UNICODE 半角表示時
+   (setq *unicode-to-half-width* t)   =&gt; t
+   (char-columns (unicode-char 180))  =&gt; 1
+   ;;; UNICODE 全角表示時
+   (setq *unicode-to-half-width* nil) =&gt; nil
+   (char-columns (unicode-char 180))  =&gt; 2
+ </description>
+ <seealso>*unicode-to-half-width*</seealso>
+ <link></link>
+ <section>文字</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*unicode-to-half-width*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ non-nil なら、UNICODE 文字の表示に半角文字を使用します。
+ デフォルトでは t が xyzzy ソース内で設定されています。
+ 
+ 使用例：
+   ;;; 半角文字で表示
+   (setq *unicode-to-half-width* t)   =&gt; t
+   (unicode-char 180)                 =&gt; #\x0134
+   ;;; 全角文字で表示
+   (setq *unicode-to-half-width* nil) =&gt; nil
+   (unicode-char 180)                 =&gt; #\´
+ </description>
+ <seealso>unicode-char</seealso>
+ <link></link>
+ <section>文字</section>
+ <file></file>
+ </chapter>
+
+----
+-[[refwiki:*unicode-to-half-width*]], [[refwiki:char-columns]], [[refwiki:char-code-limit]], [[refwiki:char-before]], [[refwiki:char-after]] に取り込みました。builtin.l での char-before の引数は間違っているっぽいですね。 -- [[NANRI]] &new{2004-12-18 (土) 01:32:53};
+
+#comment

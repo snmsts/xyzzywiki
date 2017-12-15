@@ -1,0 +1,17 @@
+;;; ロードパスに KaTeX のあるディレクトリを追加
+(pushnew (merge-pathnames "site-lisp/katex" (si:system-root)) *load-path* :test #'equal)
+; ;;; elispパッケージを有効にする
+; (require "elisp")
+; ; ;;; 拡張子と関数の関連付け
+; ; (pushnew '("\\.tex$" . elisp::katex-mode) *auto-mode-alist* :test #'equal)
+; ; ;;; オートロード
+; ; (autoload 'elisp::katex-mode "katex" t)
+; ; 
+; ; ; ;;; ショートカット
+; ; ; (defun user::katex-mode ()
+; ; ;   (interactive)
+; ; ;   (elisp::katex-mode))
+; ; ; ;;; 自動改行なし
+; ; ; (add-hook 'elisp::katex-mode-hook
+; ; ;           #'(lambda ()
+; ; ;               (auto-fill-mode nil)))

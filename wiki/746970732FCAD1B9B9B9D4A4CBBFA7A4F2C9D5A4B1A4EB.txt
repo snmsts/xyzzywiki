@@ -1,0 +1,112 @@
+[[tips]]
+
+変更された行の行番号に色を付けます。
+
+MLと２ちゃんで見つけたlispを併せて、行番号の１の位をつぶさないよう改良しました。
+
+ ;------------------------------
+ ; 編集された行にマークを付ける
+ ;------------------------------
+ 
+ ; text-attribute のセット。色等は適当に。
+ (defun set-modified-line-mark (pos line)
+   (let ((prefix (code-char (+ (rem line 10) (char-code #\0)))))
+     (set-text-attribute pos pos 'modified-line
+ 			:foreground 0 :background 2
+ 			:prefix prefix :extend t)))
+ ; フック関数。
+ (defun buffer-modified-hook (buffer operation from to undo-p) 
+   (let ((pos from))
+     (save-excursion
+       (goto-char pos)
+       (while (<= pos to) 
+ 	(progn 
+ 	  (goto-bol) 
+ 	  (set-modified-line-mark (point) (current-line-number)) 
+ 	  (if (not (next-line)) 
+ 	      (return)) 
+ 	  (setq pos (point)) 
+ 	  ))))) 
+ 
+ ; フックの登録。
+ (add-hook 'post-buffer-modified-hook 'buffer-modified-hook)
+ 
+ ; 編集行を前方に検索する。
+ (defun search-modified-line-forward ()
+   (interactive)
+   (goto-char (or (find-text-attribute
+ 		  'modified-line
+ 		  :start (+ 1 (save-excursion (goto-eol) (point))))
+ 		 (plain-error "編集された行はありません"))))
+ 
+ ; 編集行を後方に検索する。
+ (defun search-modified-line-backward ()
+   (interactive)
+   (goto-char (or (find-text-attribute
+ 		  'modified-line
+ 		  :end (- (save-excursion (goto-bol) (point)) 1)
+ 		  :from-end t)
+ 		 (plain-error "編集された行はありません"))))
+ 
+ ; 編集行マークの削除
+ (defun delete-modified-line-mark ()
+   (interactive)
+   (delete-text-attributes 'modified-line))
+ 
+ (global-set-key #\M-Down 'search-modified-line-forward)
+ (global-set-key #\M-Up 'search-modified-line-backward)
+ 
+ (add-hook '*find-file-hooks* 
+ 	  #'(lambda () 
+ 	      (enable-post-buffer-modified-hook t))) 
+ 
+ (add-hook '*after-save-buffer-hook* 
+ 	  #'(lambda () 
+ 	      (delete-modified-line-mark)))
+
+----
+2008/01/19 行数表示がずれないように変更してみました（多分）
+
+ (defun modified-lines-mark-again ()
+   (dolist (attr (list-text-attributes))
+     (when (eq (third attr) 'modified-line)
+       (save-excursion
+ 	(goto-char (first attr))
+ 	(if (if (buffer-line-number-mode)
+ 		(virtual-bolp)
+ 	      (bolp))
+ 	    (set-modified-line-mark (point) (if (buffer-line-number-mode)
+ 						(current-virtual-line-number)
+ 					      (current-line-number)))
+ 	  (delete-text-attribute-point (point))))))
+   (refresh-screen))
+ 
+ (defun buffer-modified-hook (buffer operation from to undo-p)
+   (save-excursion
+     (goto-char from)
+     (while (<= from to)
+       (progn
+ 	(if (buffer-line-number-mode)
+ 	    (goto-virtual-bol)
+ 	  (goto-bol))
+ 	(set-modified-line-mark (point) (if (buffer-line-number-mode)
+ 					    (current-virtual-line-number)
+ 					  (current-line-number)))
+ 	(if (not (if (buffer-line-number-mode)
+ 		     (next-virtual-line)
+ 		   (next-line)))
+ 	    (return))
+ 	(setq from (point))))
+     (stop-timer 'modified-lines-mark-again)
+     (start-timer 0.1 'modified-lines-mark-again t)))
+----
+-paren.lを入れていると、括弧の対応処理で色が消されちゃうみたいです。 --  &new{2004-08-14 (土) 16:18:26};
+-paren.l は diff-mode でも色を消しちゃいますね。併用は無理？ --  &new{2004-08-14 (土) 17:02:42};
+-diff-mode に関しては (add-hook 'ed::*diff-mode-hook* 'turn-off-paren) こちらで。 --  &new{2004-08-14 (土) 18:20:29};
+-open-line で改行しつづけると，行数表示おかしくないですか？ --  &new{2004-10-12 (火) 23:37:34};
+-open-line連続すると、確かに行数表示おかしくなりますね。 --  &new{2004-10-30 (土) 18:13:28};
+-一度色を付けたところは基本的にそのままなので、色を付けた位置の行が変化するような操作をするとずれます。気になるなら下手に番号にしないほうがよいと思われます。 --  &new{2004-10-31 (日) 01:40:49};
+- 1 -- [[1]] &new{2014-11-07 (金) 15:41:59};
+-- 1' -- [[1]] &new{2014-11-07 (金) 15:42:55};
+
+#comment

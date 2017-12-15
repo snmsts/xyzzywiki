@@ -1,0 +1,17 @@
+* 半角×が認識できない [#g2c681e1]
+-ページ: [[質問箱]]
+-投稿者: [[hoiho]]
+-状態: 提案
+-投稿日: 2009-03-19 (木) 13:22:45
+
+** メッセージ [#a894bb5d]
+半角"×"(みためが濃いx)が検索で認識できないみたいなんです。引っかかりません。
+ここに貼り付けても全角×になってしまうので何とも表現のしようがないのですが・・・/
+----
+- 文字コードにunicodeを使っている場合、一部半角文字になることがあるのでそれでしょうか (×、λなど)~
+それならば設定を直せば全角表示になります。 -- [[kosh]] &new{2009-03-22 (日) 22:26:51};~
+[[http://xyzzy.s53.xrea.com/reference/wiki.cgi?p=*unicode-to-half-width*:http://xyzzy.s53.xrea.com/reference/wiki.cgi?p=*unicode-to-half-width*]]
+ (setq *unicode-to-half-width* nil)
+- xyzzyで表示できている文字ならば「C-x = (what-cursor-position)」で文字の情報が分かりますので、それを教えていただければ状況がつかめるかもしれません。 --  &new{2009-03-23 (月) 12:44:52};
+
+#comment

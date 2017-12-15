@@ -1,0 +1,16 @@
+*outline-tree [#e50e17ee]
+#contents
+
+**概要 [#z0824b23]
+[[outline-tree>http://ohkubo.s53.xrea.com/xyzzy/index.html#outline-tree]]([[雑記帖>http://ohkubo.s53.xrea.com/]])は、メソッド、インナークラスなどのアウトラインをツリー表示することができます。
+
+#ref(./olt.png,50%)
+-注：旧バージョンの画像です。
+
+**関連情報 [#q4ea9a2e]
+-[[outline-tree>http://ohkubo.s53.xrea.com/xyzzy/index.html#outline-tree]]
+
+**コメント [#a2fe5529]
+- outline-tree2出てるの全然知らなかった… --  &new{2005-11-11 (金) 19:06:17};
+
+#comment

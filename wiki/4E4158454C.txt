@@ -1,0 +1,89 @@
+[[NetInstaller/その他]]
+
+multiframe版ではnetinstallerが最初から入っていて、設定無しで使える状態にあります。ただし	(ni-autoload)は今の所呼んでない為、もし必要なら.xyzzyで
+
+> (require "ni/setup")
+> (ni-autoload)
+
+として下さい。
+
+また、マルチフレーム版で使えるパッケージの一覧を https://bitbucket.org/mumurik/xyzzy/wiki/NAXEL という形で集めていて、niの初回起動時はこのサイトが追加されています。
+
+* NAXEL/動作確認 [#c25b07cf]
+
+現状は集める方に集中している都合で確認がおろそかになっています。
+試してみて動いているのを確認出来たら、以下の（未確認）を（確認済み）に変えて下さい。
+動かなかったら現象も書いていただけると助かります。
+
+- elisp （%%未確認%% KaTeXが動く分には動く）
+- iswitchb 1.1 （未確認）
+- katex （%%未確認%% 確認済み）
+- buf2html （%%未確認%% 確認済み）
+- Browser.dll （%%未確認%% browserexで確認）
+- browserex （%%未確認%% 動く人と動かない人がいる。Windows 7 32bitだと動いてVista 64bitやWindows Server 2008 64bitだと動いている？（環境の問題か不明））
+- anything （未確認）
+- 2ch-mode （未確認）
+- tterm (未確認)
+- chini (未確認)
+- csv-mode (未確認)
+- ggrep (未確認)
+- layered-window (%%未確認%% 確認済み)
+- guidgen (未確認)
+- py-mode (未確認)
+- session-ext (未確認)
+- xtal-mode (未確認)
+
+他のサイトで配られている物を追加しただけの物（たぶん動くので優先度は低め）
+
+- AutoHotKey-mode (未確認)
+- bash-mode (未確認)
+- bat-mode (未確認)
+- clickable-uri (未確認)
+- color (未確認)
+- complete+ (未確認)
+- cygwin-mount (未確認)
+- describe-bindings-mode (未確認)
+- ffap (未確認)
+- ggrep (未確認)
+- gmark-select (未確認)
+- grep-a-lot (未確認)
+- igsearch (未確認)
+- json (未確認)
+- mayu-mode (未確認)
+- http-client (未確認)
+- ini-mode (未確認)
+- lisp-minibuffer-mode (未確認)
+- luna (未確認)
+- paren (未確認)
+- properties-mode (未確認)
+- snippet (未確認)
+- sort-line (未確認)
+- treeview (未確認)
+- vi-mode (%%未確認%% 確認済み）
+- virtual-file-archive (未確認)
+- virtual-file-ftp (未確認)
+- virtual-file (未確認)
+- virtual-file-pscp (未確認)
+- warn-if-read-1mb-over-file (未確認)
+- win-window (未確認)
+- xl-alexandria (未確認)
+- xl-interpol (未確認)
+- xl-ppcre (未確認)
+- xl-open-uri (未確認)
+- xl-winhttp (未確認)
+- xml-http-request (未確認)
+- xyzzydiff (未確認)
+- xyzzytail (未確認)
+
+ただ再パックしてライセンスファイル足しただけ
+
+- api (%%未確認%% 確認済み)
+- diff-backup (未確認)
+- html+-mode (未確認)
+- tdict (未確認)
+
+
+ni化されてなかったのでni化した
+
+- info2 (未確認)
+- texinfo-mode (未確認)

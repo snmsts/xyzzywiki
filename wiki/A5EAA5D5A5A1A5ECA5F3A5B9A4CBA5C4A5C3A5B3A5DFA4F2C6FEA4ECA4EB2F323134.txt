@@ -1,0 +1,34 @@
+* file-newer-than-file-p [#s78c4237]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-05-17 (水) 21:44:37
+-バージョン: 20060329
+
+** メッセージ [#sccd78da]
+ <chapter>
+ <title>file-newer-than-file-p</title>
+ <type>Function</type>
+ <arguments>file-newer-than-file-p FILE1 FILE2</arguments>
+ <package>editor</package>
+ <description>
+ ファイルの最終更新日を比較します。
+ 戻り値は以下のとおりです。
+ 
+   t   file1の方が新しい、もしくはfile2が無効。
+   nil file2の方が新しい、file1が無効、時間差が無い、のいずれか。
+ </description>
+ <seealso>file-write-time</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>builtin.l</file>
+ </chapter>
+
+時間の差が無い時の記述を追加しました。
+--------
+- どーもです。 -- [[NANRI]] &new{2006-05-19 (金) 00:15:52};
+
+#comment

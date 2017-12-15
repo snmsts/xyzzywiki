@@ -1,0 +1,84 @@
+*random系 [#g6444782]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-06-18 06:05:21 (土)
+-バージョン: 20050330
+
+**メッセージ [#od2fea34]
+randomだけ新規じゃないです。
+ <chapter>
+ <title>random</title>
+ <type>Function</type>
+ <arguments>random NUMBER &amp;optional STATE</arguments>
+ <description>
+ 0以上NUMBER未満の乱数を返します。
+ 
+   STATE: 乱数の状態変数です。破壊的に処理されます。
+ </description>
+ <seealso>*random-state*</seealso>
+ <seealso>make-random-state</seealso>
+ <section>数値</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>make-random-state</title>
+ <type>Function</type>
+ <arguments>make-random-state &amp;optional STATE</arguments>
+ <package>lisp</package>
+ <description>
+ 乱数の状態を初期化します
+ 
+   STATE:
+     nil          初期化はせずに現在の*random-state*のコピーを返します。
+     t            時刻に基づいて新しい状態を作ります。
+     random-state この関数(make-random-state)の戻り値を渡すとコピーが返ります。
+ 
+ 使用例:
+  ;;;乱数列の再現
+  (let ((rs1 (make-random-state nil))
+        (rs2 (make-random-state nil)));;現状の乱数状態のコピーを二つ作る
+    (dotimes (i 10)
+      (format t "~A " (random 100 rs1))) ;;一つ目
+    (terpri)
+    (dotimes (i 10)
+      (format t "~A " (random 100 rs1))) ;;一つ目やりすぎて
+    (terpri)
+    (dotimes (i 10)
+      (format t "~A " (random 100 rs2))) ;;二つ目を少し見てみる。
+    (terpri))
+  =&gt;3 41 81 70 73 66 32 72 2 55 ;ここと
+  21 97 83 14 86 26 99 69 18 46 
+  3 41 81 70 73 66 32 72 2 55 ;ここが同じになる
+ </description>
+ <seealso>*random-state*</seealso>
+ <seealso>random</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*random-state*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>lisp</package>
+ <description>
+ 現在の乱数の状態を保持してます。
+ randomがSTATE無し呼ばれたとき使われます。
+ </description>
+ <seealso>random</seealso>
+ <seealso>make-random-state</seealso>
+ <link></link>
+ <section>数値</section>
+ <file></file>
+ </chapter>
+
+----
+-取り込みました→[[refwiki:*random-state*]], [[refwiki:make-random-state]], [[refwiki:random]] -- [[NANRI]] &new{2005-07-23 22:13:54 (土)};
+
+#comment

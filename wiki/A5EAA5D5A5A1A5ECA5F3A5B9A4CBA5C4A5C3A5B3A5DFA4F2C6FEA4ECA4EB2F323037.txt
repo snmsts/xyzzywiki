@@ -1,0 +1,94 @@
+* make-condition, define-condition [#qbd20066]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[Nomura]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-04-23 (日) 01:27:14
+-バージョン: 
+
+** メッセージ [#r09cb6d1]
+ <chapter>
+ <title>make-condition</title>
+ <type>Function</type>
+ <arguments>make-condition TYPE &amp;rest ARGS</arguments>
+ <package>lisp</package>
+ <description>
+ TYPE 型のコンディションを作成して返します。
+ 作成するだけで、エラーにはなりません。
+ エラーを発生させるには error などで投げる必要があります。
+ 
+ 使用例:
+   (make-condition 'simple-error)
+   =&gt; #S(simple-error format-string nil format-arguments nil)
+ </description>
+ <seealso>handler-case</seealso>
+ <seealso>error</seealso>
+ <seealso>エラー処理関係</seealso>
+ <seealso>define-condition</seealso>
+ <link></link>
+ <section>エラー</section>
+ <file>condition.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>define-condition</title>
+ <type>Macro</type>
+ <arguments>define-condition NAME (PARENT-TYPE) &amp;rest BODY</arguments>
+ <package>lisp</package>
+ <description>
+ 新しいコンディションを定義します。
+ 新しく定義したコンディションは error で投げたり
+ handler-case で処理したりできます。
+ 
+ コンディションは構造体からできています。
+ 親となるコンディションにスロットが定義されている場合、
+ 新しいコンディションにもそれらのスロットが引き継がれます。
+ 
+   NAME        : コンディションの名前
+   PARENT-TYPE : 親となるコンディション
+   BODY
+     第一要素  コンディションに追加するスロットの名前のリスト
+     それ以降  以下のどれか一つを car として持つリスト
+       :documentation  コンディションの説明を設定します。
+       :report         エラー報告用の関数を指定します。
+       :important      important な構造体になる？（詳細不明）
+ 
+ 使用例:
+   ;; lisp/condition.l より
+   (define-condition check-type-error (type-error)
+     (string place)
+     (:report (lambda (c s)
+                (format s "`~A'の値`~S'は~:[~S~;~:*~A~]ではありません"
+                        (check-type-error-place c)
+                        (check-type-error-datum c)
+                        (check-type-error-string c)
+                        (check-type-error-expected-type c)))))
+ 
+   ;; 自分で定義してみる
+   (define-condition my-error (error)
+     (string) ; 新しいスロット :string を追加
+     (:documentation "自分で定義したコンディション")
+     (:report (lambda (c s) ; c はコンディション、s は出力ストリーム
+                (format s "エラーです: ~A"
+                        (my-error-string c))))
+     (:important t))
+   =&gt; t
+   (error 'my-error :string "test")
+   =&gt; エラーです: test
+   (documentation 'my-error 'type)
+   =&gt; "自分で定義したコンディション"
+ </description>
+ <seealso>handler-case</seealso>
+ <seealso>error</seealso>
+ <seealso>エラー処理関係</seealso>
+ <seealso>make-condition</seealso>
+ <link></link>
+ <section>エラー</section>
+ <file>condition.l</file>
+ </chapter>
+--------
+- どーもです。 -- [[NANRI]] &new{2006-04-23 (日) 23:07:42};
+
+#comment

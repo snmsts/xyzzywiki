@@ -1,0 +1,82 @@
+* rename-file,copy-file [#qafffbb3]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[lambda]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: ツッコミをいれる
+-投稿日:     2007-02-27 (火) 07:33:23
+-バージョン: 
+
+** メッセージ [#k6c720d5]
+それぞれ、
+:if-exists に :newer
+:if-access-denied に :force
+が足りないみたいです。
+----
+- どーもです。 -- [[NANRI]] &new{2007-02-27 (火) 21:33:09};
+ <chapter>
+ <title>rename-file</title>
+ <type>Function</type>
+ <arguments>rename-file FILE NEW-NAME &amp;key :if-exists :if-access-denied</arguments>
+ <package>lisp</package>
+ <description>
+ ファイル名を変更します。
+   
+   FILE              : 変更前のファイル名を指定します。
+   NEW-NAME          : 変更後のファイル名を指定します。
+   :if-exists        : ファイルが存在する場合の動作を指定します。
+         :error          エラーを出力します。
+         :skip           エラーは出力せず、nilを返します。
+         :overwrite      上書きします。
+         :newer          新しければ上書きします。
+   :if-access-denied : アクセスが拒否された場合の動作を指定します。
+         :error          エラーを出力します。
+         :skip           エラーは出力せず、nilを返します。
+         :force          強制的にファイル名の変更を試みます。
+ 
+ 変更できたかどうかで戻り値が変わります。
+ 
+   t   変更に成功
+   nil 変更に失敗
+ 
+ 使用例：
+   (rename-file "C:/xyzzy/test.txt" "C:/xyzzy/test2.txt")
+   =&gt; t
+ </description>
+ <section>ファイルシステム</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>copy-file</title>
+ <type>Function</type>
+ <arguments>copy-file FILE NEW-FILE &amp;key :if-exists :copy-attributes :if-access-denied</arguments>
+ <package>lisp</package>
+ <description>
+ ファイルをコピーします。
+ 
+   FILE             : コピー元のファイル名を指定します。
+   NEW-FILE         : コピー先のファイル名を指定します。
+   :copy-attributes : コピーするときの属性を指定します。
+                      指定できる属性はget-file-infoを参照して下さい。
+   :if-exists       : ファイルが存在しない場合の動作を指定します。
+         :error          エラーを出力します。
+         :skip           エラーは出力せず、nilを返します。
+         :overwrite      上書きします。
+         :newer          新しければ上書きします。
+   :if-access-denied : アクセスが拒否された場合の動作を指定します。
+         :error          エラーを出力します。
+         :skip           エラーは出力せず、nilを返します。
+         :force          強制的にファイルのコピーを試みます。
+ 
+ 使用例：
+   ;;; ローカルのautoexec.batを マシン名 VENUSの /work/autoexec.batにコピーする。
+   (copy-file "c:/autoexec.bat" "//VENUS/work/autoexec.bat"
+              :if-exists :overwrite)
+ </description>
+ <seealso>rename-file</seealso>
+ <section>ファイルシステム</section>
+ <file>builtin.l</file>
+ </chapter>
+
+#comment

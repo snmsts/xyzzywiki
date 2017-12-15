@@ -1,0 +1,70 @@
+;;
+;;
+;; Licence: Gnu Public Licence
+;;
+;;
+;; Editor: m-nakano
+;;
+
+
+
+(in-package "editor")
+(export 'grep-context)
+
+(defun grep-context-scanner (pattern ignore-context case-fold word-search)
+  #'(lambda (&optional limit)
+      (let ((val (scan-buffer pattern
+			      :case-fold case-fold
+			      :left-bound word-search
+			      :right-bound word-search
+			      :limit limit)))
+	(while (find (parse-point-syntax) ignore-context)
+	  (or (forward-char 1)
+	      (return))
+	  (setq val (setq val (scan-buffer pattern
+					   :case-fold case-fold
+					   :left-bound word-search
+					   :right-bound word-search
+					   :limit limit))))
+	val)))
+	    
+
+(defun grep-context1 (pattern arg context)
+  (long-operation
+    (and arg
+	 (setq arg (selected-buffer)))
+    (with-output-to-temp-buffer ("*compilation*")
+      (let ((sbuffer (buffer-stream-buffer *standard-output*))
+	    (scanner (grep-context-scanner pattern context *case-fold-search* *word-search*)))
+	(save-excursion
+	  (set-buffer sbuffer)
+	  (make-local-variable '*find-error-scanner*)
+	  (setq *find-error-scanner* scanner)
+	  (set-buffer-fold-width nil sbuffer)
+	  (dolist (buffer (if arg (list arg) (buffer-list)))
+	    (let ((bufname (buffer-name buffer)))
+	      (unless (or (eq buffer sbuffer)
+			  (string-match "^ " bufname))
+		(message "Scanning (~A)" bufname)
+		(set-buffer buffer)
+		(save-excursion
+		  (goto-char (point-min))
+		  (grep-scan-file (concatenate 'string "<" bufname ">") scanner))))))))
+    (run-hooks '*grep-hook*)
+    (message "completed.")
+    t))
+
+(defun grep-context (regexp contexts &optional arg)
+  "指定したコンテキストを無視してgrepします"
+  (interactive (list
+		(read-string "grep: " :default *last-grep-regexp* :history 'search)
+		(let ((alist '(("comment". :comment) (":comment" . :comment)
+			       (":string" . :string) ("string" . :string)
+			       (":tag" . :tag) ("tag" . :tag))))
+		  (mapcar #'(lambda (x) (cdr (assoc x alist :test #'equal)))
+			  (split-string (read-string "ignore contexts: " :history 'context) #\SPC)))
+		(call-interactively #'(lambda (&optional a) (interactive "p") a))))
+  (setq *last-grep-regexp* regexp)
+  (grep-context1 (compile-regexp regexp *case-fold-search*) arg contexts))
+
+

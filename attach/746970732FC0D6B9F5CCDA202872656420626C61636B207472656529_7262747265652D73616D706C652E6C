@@ -1,0 +1,202 @@
+;; -*- Mode: lisp-interaction; olt-param: lisp-dots; -*-
+;;;  sample code
+(with-output-to-buffer ((get-buffer-create "*tmp output*"))
+  (require "rbtree/rbtree")
+  (in-package "rbt")
+  (let ((items '(("a" . 0) ("b". 5) ("aa" . 0) ("bb" . 1) ("ab" . 2 )
+                 ("ba" . 1) ("aaa" . 3) ("bbb" . 4) ("a" . 1)
+                 ("ac" . 2) ("bc" . 3) ("b" . 3) ("ca" . 2) ("cb" . 3)))
+        (items2 '("a" "b" "aa" "bb" "ab" "ba" "aaa" "bbb" "a" "ac" "bc" "ca" "cb" ))
+        (ow1 #'(lambda (x y) (if (< (cdr x) (cdr y)) x y)))
+        (ow2 #'(lambda (x y) (cons (car x) (+ (cdr x) (cdr y)))))
+        f tree tree2 tree3 tree4 val success)
+
+    (dolist (overwrite (list nil ;; 同一データがあったとき，木の別の場所に挿入
+                             ow1 ;; 同一データがあったとき， ow1 の返り値が格納される
+                             ow2 ;; 同一データがあったとき， ow2 の返り値が格納される
+                             t   ;; 同一データがあったとき，上書き
+                             ))
+      (format t "~&\n----------------------------------------\n★ overwrite: ~A\n" overwrite)
+      ;; 空の赤黒木の生成
+      ;; 追加するデータは (list string data) というタイプ．
+      (setq tree (rbt::create-rb-tree #'string< #'car))
+
+      ;; データの追加
+      (format t "■ 追加\n")
+      (dolist (item items)
+        (format t "  □ adding item: ~A\n" item)
+        (rbt::insert-rb-tree item tree :overwrite overwrite)
+        ;; 木の表示
+        (rbt::print-rb-tree tree 1)
+        )
+
+      ;; データの検索
+      (format t "■ 検索\n")
+      (dolist (x (mapcar #'list '("a" "aa" "bb" "cc" "ab" "ba" "aaa" "bbb")))
+        ;; 見つかったときに，dはデータ，flag は t
+        ;; 見つからなかったとき， d は nil, flag は nil
+        ;; nil をデータとして持たなければ，dの値で検索結果を判定可能
+        (multiple-value-bind (d flag)
+            (rbt::search-rb-tree x tree)
+          (format t "search ~A : ~A (~A)\n" x d flag)))
+
+      ;; イテレータでデータを処理
+      (format t "■ イテレータ\n")
+      (multiple-value-bind (iter has-next)
+          (rbt::iterator-rb-tree tree) ; イテレータを生成
+        (while (funcall has-next)
+          (setq val (funcall iter))   ; イテレータを呼び出し
+          (format t "value = ~A\n" val)
+          ))
+      ; イテレータ処理中に木に追加・削除してはいけない
+
+      ;; イテレータの使用法 その２
+      (setq f (rbt::iterator-rb-tree tree))
+      (loop
+        (multiple-value-setq (val success)
+          (funcall f))
+        (unless success (return))
+        (format t "value = ~A\n" val))
+
+      (format t "\n■ カウント\n")
+      (print-rb-tree tree 1)
+      (format t "\n treeのcar部にaを含む要素をカウント\n")
+      (format t "   (count-if-rb-tree #'(lambda (x) (string-match \"a.*\" x)) tree :key #'car) = ~A\n"
+              (count-if-rb-tree #'(lambda (x) (string-match "a.*" x)) tree :key #'car))
+      (format t " treeのcar部にaを含まない要素をカウント\n")
+      (format t "   (count-if-not-rb-tree #'(lambda (x) (string-match \"a.*\" x)) tree :key #'car) = ~A\n"
+              (count-if-not-rb-tree #'(lambda (x) (string-match "a.*" x)) tree :key #'car))
+
+
+      (format t "\n■ 削除\n")
+      ;; 木を表示
+      (rbt::print-rb-tree tree 1)
+
+      ;; 木からデータを削除
+      (format t "  □ delete a\n")
+      (rbt::delete-rb-tree '("a") tree)
+      (rbt::print-rb-tree tree 1)
+      (format t "size: ~A\n\n" (rbt::size-of-rb-tree tree))
+
+      (format t "  □ delete bbb\n")
+      (rbt::delete-rb-tree '("bbb") tree)
+      (rbt::print-rb-tree tree 1)
+      (format t "size: ~A\n\n" (rbt::size-of-rb-tree tree))
+
+      (format t "  □ delete ba\n")
+      (rbt::delete-rb-tree '("ba") tree)
+      (rbt::print-rb-tree tree 1)
+      (format t "size: ~A\n\n" (rbt::size-of-rb-tree tree))
+
+      ;; aから始まる要素を残す
+      (format t "  □ aから始まる要素を残す (tree2)\n")
+      (setq tree2 (rbt::remove-if-not-rb-tree
+                   #'(lambda (x) (string-match "a.*" x)) tree :key #'car))
+      (rbt::print-rb-tree tree2 1)
+      (format t "size: ~A\n\n" (rbt::size-of-rb-tree tree2))
+
+      ;; aから始まる要素を削除
+      (format t "  □ aから始まる要素を削除 (tree3)\n")
+      (setq tree3 (rbt::remove-if-rb-tree
+                   #'(lambda (x) (string-match "a.*" x)) tree :key #'car))
+      (rbt::print-rb-tree tree3 1)
+      (format t "size: ~A\n\n" (rbt::size-of-rb-tree tree3))
+
+      ;; コピー
+      (format t "■ コピー\n")
+      (format t "(setq tree4 (copy-rb-tree tree2))\n")
+      (setq tree4 (copy-rb-tree tree2))
+      (print-rb-tree tree4 1)
+      (format t "\n(delete-rb-tree '(\"aa\") tree4)\n")
+      (delete-rb-tree '("aa") tree4)
+      (format t "\ntree2\n")
+      (print-rb-tree tree2 1)
+      (format t "\ntree4\n")
+      (print-rb-tree tree4 1)
+
+      ;; 集合演算
+      (format t "■ 集合演算\n")
+      (format t "  □ tree2とtree3を併合 tree2とtree3は変更なし\n")
+      (setq val (union-rb-tree tree2 tree3))
+      (format t "  (union-rb-tree tree2 tree3)\n")
+      (print-rb-tree val 1)
+      (format t "\n tree2\n")
+      (print-rb-tree tree2 1)
+      (format t "\n tree3\n")
+      (print-rb-tree tree3 1)
+
+      (format t "  □ tree2とtree3を併合 tree2は変更あり，tree3は変更なし\n")
+      (setq val (merge-rb-tree tree2 tree3))
+      (format t "  (merge-rb-tree tree2 tree3)\n")
+      (print-rb-tree val 1)
+      (format t "\n tree2\n")
+      (print-rb-tree tree2 1)
+      (format t "\n tree3\n")
+      (print-rb-tree tree3 1)
+
+      (insert-rb-tree '("ad" . 2) tree4)
+      (format t "  □ treeとtree4の積集合 tree, tree4は変更なし\n")
+      (setq val (intersection-rb-tree tree tree4))
+      (format t "  (intersection-rb-tree tree tree4)\n")
+      (print-rb-tree val 1)
+      (format t "\n tree\n")
+      (print-rb-tree tree 1)
+      (format t "\n tree4\n")
+      (print-rb-tree tree4 1)
+
+      (format t "  □ treeとtree4の差集合 tree, tree4は変更なし\n")
+      (setq val (difference-rb-tree tree tree4))
+      (format t "  (difference-rb-tree tree tree4)\n")
+      (print-rb-tree val 1)
+      (format t "\n tree\n")
+      (print-rb-tree tree 1)
+      (format t "\n tree4\n")
+      (print-rb-tree tree4 1)
+
+      ;; 写像関数
+      (format t "\n■ 写像関数\n")
+      (format t "  □ map-rb-tree\n")
+      (setq val (rbt::map-rb-tree #'car tree))
+      (format t "   (rbt::map-rb-tree #'car tree) = ~A\n" val)
+      (setq val (rbt::map-rb-tree #'cdr tree))
+      (format t "   (rbt::map-rb-tree #'cdr tree) = ~A\n" val)
+      )))
+
+
+
+;; 赤黒木の性能テスト
+(progn
+  (defun rbtree-test ()
+    (let ((counts '(100 1000 10000 100000))
+          search insertion t1 t2 tree lc)
+      (dolist (count counts)
+        (setq tree (create-rb-tree #'< #'identity)
+              t1 (get-internal-real-time))
+        (dotimes (n count)
+          (insert-rb-tree n tree))
+        (setq t2 (get-internal-real-time))
+        (push (cons count (- t2 t1)) insertion)
+
+        (setq t1 (get-internal-real-time))
+        (dotimes (n count)
+          (search-rb-tree n tree))
+        (setq t2 (get-internal-real-time))
+        (push (cons count (- t2 t1)) search)
+        (setq t1 (get-internal-real-time))
+        (dotimes (n count))
+        (setq t2 (get-internal-real-time))
+        (push (cons count (- t2 t1)) lc))
+      (list (nreverse insertion) (nreverse search) (nreverse lc))))
+  
+  (compile 'rbtree-test)
+  (rbtree-test))
+(((100 . 16) (1000 . 156) (10000 . 1984) (100000 . 25750))
+ ((100 . 0) (1000 . 63) (10000 . 828) (100000 . 12172))
+ ((100 . 0) (1000 . 0) (10000 . 0) (100000 . 16)))
+
+
+
+
+
+
+

@@ -1,0 +1,74 @@
+* write [#u2202d95]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[シロ]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: ツッコミをいれる
+-投稿日:     2006-11-18 (土) 00:18:08
+-バージョン: 
+
+** メッセージ [#z9b09594]
+ <chapter>
+ <title>write</title>
+ <type>Function</type>
+ <arguments>write OBJECT &amp;key :stream :escape :pretty :base :radix :circle :level :length :readably</arguments>
+ <package>lisp</package>
+ <description>
+ OBJECTを印字表現でストリームに出力します。
+ 
+   OBJECT       : 出力するオブジェクトを指定します。
+ 
+   :stream      : 出力するストリームを指定します。
+                  省略すると*standard-output*に出力します。
+ 
+   :escape      : エスケープするかどうか指定します。
+                  デフォルトの値は*print-escape*です。
+         non-nil  prin1やformat指定子の~Sと同じように出力されます。
+         nil      princやformat指定子の~Aと同じように出力されます。
+ 
+   :pretty      : 式の表示を見やすくするかどうかを指定します。
+                  デフォルトの値は*print-pretty*です。
+         non-nil  見やすくします。
+         nil      見やすくしません。
+ 
+   :base        : 基数を指定します。
+                  2〜36までを指定でき、それ以外は10進数になります。
+                  デフォルトの値は*print-base*です。
+ 
+   :radix       : 基数を主力するかどうかを指定します。
+                  デフォルトの値は*print-radix*です。
+         non-nil  #(基数)r(数)の形で出力します。
+                  10進数の時はこの形ではなく、最後に . が付きます。
+                  2進数,8進数,16進数の基数はそれぞれ、b,o,xと表示され、
+                  それ以外の時は基数自体は10進数で表示されます。
+         nil      数のみ出力します。
+ 
+   :circle      : 循環リストを考慮するかどうかを指定します。
+                  デフォルトの値は*print-circle*です。
+         non-nil  考慮し、#1=(a . #1#) のような形で表示します。
+         nil      考慮しません。無限に表示されるのでC-gで止める必要があります。
+ 
+   :level       : リスト出力の深さの制限を指定します。
+                  制限よりも深い位置にあるリストは、#で表示されます。
+                  デフォルトの値は*print-level*です。
+ 
+   :length      : リスト出力の長さの制限を指定します。
+                  制限よりも長いリストは途中で打ち切られ、
+                  ... で表示されます。
+                  デフォルトの値は*print-length*です。
+ 
+   :readably    : 読めるように出力します。
+                  デフォルトの値は*print-readably*です。
+         non-nil  :lengthや:levelのnon-nil指定を無効にし、
+                  :escapeがnilでもnon-nilを指定したように出力します。
+ </description>
+ <seealso>read</seealso>
+ <link></link>
+ <section>入出力</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+- どーもです。 -- [[NANRI]] &new{2006-11-18 (土) 20:59:08};
+
+#comment

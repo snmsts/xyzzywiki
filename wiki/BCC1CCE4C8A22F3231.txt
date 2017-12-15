@@ -1,0 +1,22 @@
+* howm関係のバッファタブを表示しない [#i865c21a]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2004-04-07 (水) 13:26:53
+
+** メッセージ [#dd942934]
+ツールバーにバッファを表示して、howmを使っています。
+howm関係のバッファタブが大量に開いてしまいまが、
+これを表示しない方法はあるでしょうか。
+
+**lisp [#n2d26b22]
+
+howm-init.l に以下のように書いて、xyzzy.exeと同じディレクトリに置く。
+
+ (setq howm-menu-name-format " *howmM:%s*")
+ (setq howm-view-summary-name " *howmS:%s*")
+ (setq howm-view-contents-name " *howmC:%s*")
+
+Thanks to 835さん xyzzy Part10
+----
+#comment

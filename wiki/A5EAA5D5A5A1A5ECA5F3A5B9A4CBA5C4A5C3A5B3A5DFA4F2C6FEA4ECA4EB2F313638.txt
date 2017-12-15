@@ -1,0 +1,94 @@
+*:test、:test-not、:key [#r065a5eb]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-11-08 02:21:05 (火)
+-バージョン: 
+
+**メッセージ [#m203b255]
+:case-fold や :no-dup があるならこの辺もあっていいかなと。
+
+ <chapter>
+ <title>:key</title>
+ <type>Keyword</type>
+ <arguments></arguments>
+ <package>keyword</package>
+ <description>
+ assoc や member、find などの関数で検索をする際に
+ 各要素に適用する関数を指定します。
+ 言い換えると、:test や :test-not で指定された関数に渡す値を
+ 各要素から“取り出す”方法をこの関数で指定します。
+ 
+ 使用例:
+   ;; car が 'a である要素を除去する
+   (remove 'a '((a . b) (b . x) (c d e) (a f h i) (x y)) :key #'car)
+   =&gt; ((b . x) (c d e) (x y))
+   ;; :test と組み合わせることも可能
+   (remove "a" '(("a" . "b") ("b" . "c") ("d" . "a") ("a" . "e") ("b". "b"))
+           :test #'string= :key #'car)
+   =&gt; (("b" . "c") ("d" . "a") ("b" . "b"))
+ </description>
+ <seealso>:test</seealso>
+ <seealso>:test-not</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file></file>
+ </chapter>
+
+ <chapter>
+ <title>:test-not</title>
+ <type>Keyword</type>
+ <arguments></arguments>
+ <package>keyword</package>
+ <description>
+ assoc や member、find などの関数で検索をする際に、
+ このキーワードに設定した関数の逆（not）を用いて真偽の判定をします。
+   
+ なお :test と同時に指定することはできません。
+ 
+ 使用例:
+   ;; "abc" を含む文字列を選ぶ = "abc" を含まない文字列を除去する
+   (remove "abc" '("abcd" "test" "xabcx" "abc" "xyz") :test-not #'string-match)
+   =&gt; ("abcd" "xabcx" "abc")
+ </description>
+ <seealso>:test</seealso>
+ <seealso>:key</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file></file>
+ </chapter>
+
+ <chapter>
+ <title>:test</title>
+ <type>Keyword</type>
+ <arguments></arguments>
+ <package>keyword</package>
+ <description>
+ assoc や member、find などの関数で検索をする際に、
+ このキーワードに設定した関数を用いて真偽の判定をします。
+ 
+ なお :test-not と同時に指定することはできません。
+ 
+ 使用例:
+   (assoc "b" '(("a" . 1) ("B" . 2) ("b" . 3) ("c" . 4)))
+   =&gt; nil
+   (assoc "b" '(("a" . 1) ("B" . 2) ("b" . 3) ("c" . 4)) :test #'string=)
+   =&gt; ("b" . 3)
+   (assoc "b" '(("a" . 1) ("B" . 2) ("b" . 3) ("c" . 4)) :test #'string-equal)
+   =&gt; ("B" . 2)
+ </description>
+ <seealso>:test-not</seealso>
+ <seealso>:key</seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file></file>
+ </chapter>
+
+----
+-どーもです。<package>を足しておきました。 -- [[NANRI]] &new{2005-11-08 21:07:12 (火)};
+- 取り込みました。 -- [[NANRI]] &new{2005-12-12 (月) 02:30:38};
+
+#comment

@@ -1,0 +1,71 @@
+*pathname-match-p [#b7e985e2]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[OHKUBO]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2004-12-08 (水) 21:17:18
+-バージョン: 20041115
+
+**メッセージ [#q3a2e818]
+引数 WILDNAME の説明と使用例を補足しました。
+
+ <chapter>
+ <title>pathname-match-p</title>
+ <type>Function</type>
+ <arguments>pathname-match-p PATHNAME WILDNAME</arguments>
+ <package>lisp</package>
+ <description>
+ PATHNAME が WILDNAME で指定されたワイルドカードにマッチするかどうかを
+ 返します。
+ 
+   PATHNAME : 検査対象のパス文字列
+   WILDNAME : ワイルドカード文字列
+              先頭文字が | の場合は否定の意味となる。
+              *brackets-is-wildcard-character* の値が non-nil の場合は
+              文字列中の [...] をワイルドカードと見なす。
+ 
+ 戻り値：
+   t    PATHNAME が WILDNAME にマッチする。
+   nil  PATHNAME が WILDNAME にマッチしない。
+ 
+ 使用例：
+   (setq p (merge-pathnames "xyzzy.exe" (si:system-root)))
+   =&gt;"C:/Applications/xyzzy/xyzzy.exe"
+ 
+   (setq w (merge-pathnames "xyzzy.*" (si:system-root)))
+   =&gt;"C:/Applications/xyzzy/xyzzy.*"
+ 
+   (wild-pathname-p p)
+   =&gt;nil
+ 
+   (wild-pathname-p w)
+   =&gt;t
+ 
+   (pathname-match-p p w)
+   =&gt;t
+ 
+   (pathname-match-p p (concat "|" w))
+   =&gt;nil
+ 
+   (setq w "*/xyzzy.ini")
+   =&gt;"*/xyzzy.ini"
+ 
+   (pathname-match-p p w)
+   =&gt;nil
+ 
+   (pathname-match-p p (concat "|" w))
+   =&gt;t
+ </description>
+ <seealso>wild-pathname-p</seealso>
+ <seealso>*brackets-is-wildcard-character*</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-取り込みました->[[refwiki:pathname-match-p]] -- [[NANRI]] &new{2005-03-02 00:56:46 (水)};
+
+#comment

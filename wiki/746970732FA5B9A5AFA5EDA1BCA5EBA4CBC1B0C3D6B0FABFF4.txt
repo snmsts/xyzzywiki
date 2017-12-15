@@ -1,0 +1,52 @@
+[[tips]]
+
+emacs みたいにスクロールする行数を前置引数で与えたかったんですけど、
+そういうのが見当たらなかったので作ってみました。
+
+前置引数を与えた場合、基本的にポイントの位置はそのままですが見えなくなってしまう場合はスクロール量と同じだけ移動します。
+この辺の挙動は好みが分かれるかもしれません。
+
+ (defun scroll-up (&optional arg)
+   (interactive "p")
+   (if arg
+       (let ((p (point))
+             (l (current-virtual-line-number)))
+         (scroll-window arg)
+         (if (< (+ (get-window-start-line)
+                   *scroll-margin*)
+                l
+                (+ (get-window-start-line)
+                   (window-lines)
+                   (- *next-screen-context-lines*)
+                   (- *scroll-margin*)))
+             (goto-char p)
+           (goto-virtual-line (+ arg l))))
+     (next-page)))
+ 
+ (defun scroll-down (&optional arg)
+   (interactive "p")
+   (if arg (scroll-up (- arg))
+     (previous-page)))
+ 
+ (defun scroll-other-window-up (&optional arg)
+   (interactive "p")
+   (other-window 1)
+   (if arg
+       (scroll-up arg)
+     (next-page))
+   (other-window -1))
+ 
+ (defun scroll-other-window-down (&optional arg)
+   (interactive "p")
+   (other-window 1)
+   (if arg
+       (scroll-down arg)
+     (previous-page))
+   (other-window -1))
+ 
+ (global-set-key #\C-v 'scroll-up)
+ (global-set-key #\C-z 'scroll-down)
+ (define-key esc-map #\C-v 'scroll-other-window-up)
+ (define-key esc-map #\C-z 'scroll-other-window-down)
+
+#comment

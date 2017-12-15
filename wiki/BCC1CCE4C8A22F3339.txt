@@ -1,0 +1,34 @@
+* 構造体へのタグジャンプ [#m5e55e3b]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2004-08-23 (月) 13:06:43
+
+** メッセージ [#l3b1c4b7]
+xyzzy0.2.2.233を使用しています。
+c言語のタグジャンプについて教えて下さい。
+
+ typedef struct {
+     int hoge;
+ } HogeType;
+ 
+ HogeType hoge;
+
+のようなソースにおいて、"HogeType hoge;"のところでタグジャンプをしたいのですが、「HogeTypeは見つかりません」というメッセージが出てジャンプできません。
+ChangeLogを見ると Version 0.2.2.232で「Cのmaketagsでtypedefも対象とするようにした。」とあるのですが、上記のようなことは出来ないのでしょうか?
+またはやり方が違うのでしょうか?
+
+----
+
+ typedef struct _HogeType {
+     int hoge;
+ } HogeType;
+ 
+ HogeType hoge;
+
+とすればいけるみたいですね。_HogeTypeの部分を省略するとだめでした。
+
+----
+-構造体タグが必要なのですね。私は通常構造体タグは使わないのですが、しょうがないですね。 -- [[anonymous]] &new{2004-08-24 (火) 14:32:27};
+
+#comment

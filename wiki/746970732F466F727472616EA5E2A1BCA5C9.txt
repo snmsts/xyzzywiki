@@ -1,0 +1,108 @@
+*FORTRAN モードについて [#x72dac68]
+FORTRAN のプログラミングを支援します。
+FORTRAN の固定フォーマットに従ってインデントしたり，
+キーワードの色分けをしたりします。
+
+*ダウンロード [#o969fe0a]
+「http://raido.sakura.ne.jp/southly/xyzzy/site-lisp/」から
+ダウンロードしてください。
+[[fortran.l:http://raido.sakura.ne.jp/southly/xyzzy/site-lisp/fortran-20050913.lzh]] です。((「[[fortran.l について:http://homepage2.nifty.com/seiya-suda/fortran.html]]」からリンクされている fortran.l は，現在は 404 でダウンロードできません。))
+
+[[NetInstaller]] からインストールする事も可能です。
+
+*~/.xyzzy の設定サンプル [#w39ded1e]
+UNIX 系 OS での FORTRAN 77 ソースの拡張子 “.f” の場合に FORTRAN モードで xyzzy を起動するための設定。
+
+[[NetInstaller]] の自動設定を利用している場合は必要ありません。
+
+ご利用の際は ~/.xyzzy または xyzzy/site-lisp/siteinit.l に
+コピー＆ペーストなどしてください。
+
+ (require "fortran")
+ (pushnew '("\\.f$" . fortran-mode) *auto-mode-alist* :test #'equal)
+//  ↓このあたりは fortran.l 自体に取り込んでいます。
+// (set-syntax-option fortran-mode-syntax-table *syntax-option-column-comment-char*)
+// (set-syntax-start-column-comment fortran-mode-syntax-table #\C)
+// (set-syntax-start-column-comment fortran-mode-syntax-table #\c)
+// (set-syntax-comment-column fortran-mode-syntax-table 0)
+
+----
+-まじめにパッケージングしなおしたので、それにあわせて記述を修正しました。それと個人的にFORTRANは「FORTRAN」という風にすべて大文字だったりします。 -- [[NANRI]] &new{2005-09-01 01:56:51 (木)};
+- 以前[[質問箱/163]]で質問させて頂いた（Tuck 改め） Tackaschi です。FORTRAN モードに対する要望を下にまとめておきます。
+私は Common Lisp については素人ですので，無理な要望も含まれているかもしれませんがご容赦下さい。
+お時間がおありでしたら，実装をご検討お願い致します。~
+また，自分がまとめた FORTRAN 77 のキーワードファイル (for77kwd.zip) を添付しておきます。
+もし使えるようでしたら，修正するなりなさって配布ファイルの末端にでも加えて頂ければ幸いです。 -- [[Tackaschi]] &new{2006-07-13 (木) 23:21:08};~
+#ref(for77kwd.zip,wrap)
+以下，要望（敬語略）
+--インデント後に入力された文字 “$”, “&” は継続文用文字として6桁目に移動させる。
+---FORTRAN 77 規格において，
+文字定数以外の FORTRAN 文に使える文字の中で命令文に使わない唯一の文字が “$” であり，
+これは継続文用文字によく使われている。
+---一方，Fortran 90, Fortran 95 規格では（FORTRAN 77 規格とは用法が違うが，）継続文に文字 “&” を使う。
+（FORTRAN 77 規格には定められていないが，）今日手に入る FORTRAN 77 コンパイラのほぼ全てが継続文用文字として “&” を扱えるので，
+これもよく使われている。
+
+--注釈行開始用の文字として，“C” の他に “*”, “!” も追加する。
+---1桁目に “!” がある場合に限らず何桁目に “!” があっても，
+文字 “!” 以降を注釈として認識するようにする。
+---文字 “!” で始まる注釈は Fortran 90 規格以降のものであるが，
+今日手に入る FORTRAN 77 コンパイラのほぼ全てが文字 “!” で始まる注釈を扱えるので，
+これもよく使われている。
+
+--6桁目の背景色を（例えば&color(black,yellow){黄色};に）変えられないか？ または，6桁目の文字が “0” とスペース以外の場合に，6桁目の文字の色を（例えば&color(olive){暗い黄色 [#808000]}; に）変えられないか？
+
+--73桁目以降の扱いを例えば次のような扱いにできないか？
+---73桁目以降の文字色を（例えば&color(maroon){暗い赤 [#800000]}; に）変えるか，
+または73桁目以降の背景色を（例えば&color(black,yellow){黄色};に）変えられないか？
+---72桁を越えると自動的に改行できないか？
+
+--括弧の部分にカーソルがある場合に，
+対となる括弧と共に（色を付けたり，背景色を変えたり，太字にしたりするような）強調表示ができないか？
+
+--TAB の扱いについて例えば次のような扱いはできないか？
+---ファイルを保存する時に TAB をスペース数個（6個）に置き換えて保存するようにできないか？
+---FORTRANモードのときだけ TAB の表示をスペース6個分にしたり，
+TAB の表示を（例えば灰色の “&color(gray){-TAB->};” のように）変えることができないか？
+
+--モード行~
+“&color(white,black){ ----- *.for (Fortran) [sjis:cflf]&nbsp; &nbsp; &nbsp; 1:1&nbsp; &nbsp; &nbsp; File: C:/.../*.for };”~
+の “&color(white,black){(Fortran)};” の部分を “&color(white,black){(FORTRAN77)};” に変えてはどうか。
+- できるかどうかわかりませんが、とりあえずやってみます。 -- [[NANRI]] &new{2006-07-14 (金) 22:10:02};
+- 簡単なところだけ先に。 -- [[NANRI]] &new{2006-07-24 (月) 03:15:44};
+ (require "fortran")
+ 
+ ;;; “!”以降はコメント
+ (set-syntax-start-comment fortran-mode-syntax-table #\!)
+ ;;; “*”はコメント行
+ (set-syntax-start-column-comment fortran-mode-syntax-table #\*)
+ 
+ ;;; 6桁目の背景色
+ (defvar fortran-regexp-keyword
+   (compile-regexp-keyword-list
+    '(("^[^\t\n]\\{5\\}\\([^\t\n]\\)" t (:color 0 3) nil 1 1))))
+ 
+ (add-hook 'fortran-mode-hook #'(lambda ()
+                                  ;; モード行
+                                  (setq mode-name "FORTRAN77")
+                                  (set-tab-columns 6 (selected-buffer))
+                                  ;; 6桁目の背景色
+                                  (make-local-variable 'regexp-keyword-list)
+                                  (setq regexp-keyword-list fortran-regexp-keyword)
+                                  ))
+ 
+ ;;; 保存前にタブをスペースに変換
+ (add-hook '*before-save-buffer-hook*
+           #'(lambda ()
+               (when (eq buffer-mode 'fortran-mode)
+                 (set-tab-columns 6 (selected-buffer))
+                 (untabify 0 (buffer-size)))))
+- >>NANRIさん&br;ありがとうございます。早速 xyzzy/site-lisp/siteinit.l に組み込ませて頂きました。特に，6桁目の背景色の変更によって使い勝手は抜群に良くなりました。“!” によるコメントの表示機能も重宝しています。 -- [[Tackaschi]] &new{2006-07-29 (土) 17:52:42};
+- 添付したキーワードファイル (&ref(for77kwd.zip);) をダウンロードなさった方にうかがいたいのですが，キーワードファイルの書き方や使い勝手はいかがでしょうか？ 素人がキーワードファイルの書き方のマニュアルを見ながら書いたものなので，何かご意見・ご不満がおありでしたら，参考として是非頂きたいのですが。 -- [[Tackaschi]] &new{2006-07-29 (土) 17:56:52};
+- はじめまして、fortran-mode愛用させていただいております -- [[Ume]] &new{2007-06-25 (月) 23:13:08};
+- まちがえて送ってしまいましたごめんなさい。既出でしたら重ねて申し訳ないのですが、上記の !以降はコメント を用いて、コメント文は ! で書いているのですが、このコメント文をTabキーを用いて(またはカーソルが!の前の位置でRETして)オートインデントしようとするときにフリーズしてしまいます。MLなども覗いてみたのですが、こういった事例には言及されていないようでしたので、報告させていただきました。できれば対処の検討をよろしくお願いします。 -- [[Ume]] &new{2007-06-25 (月) 23:22:23};
+-- 情報感謝です。インデント周りにバグがあるのは気付いていましたが、当時は直しきれなかったんですよね。（理由が何だったのか覚えていませんが） いただいた情報を元にもう一回追いかけてみます。 -- [[NANRI]] &new{2007-06-27 (水) 01:43:12};
+-- 開発を続けてくださる意思があることを確認できて安心しました。ありがとうございます。そこでお願いなのですが、FORTRAN90以降のフリーフォーマット形式を意識した、7桁目までのインデントのみなくした(構文からのインデントは生かしたまま)のFORTRAN-modeの開発、もしくは解除できるような.xyzzy用コードなどがあれば教えていただきたいのですが可能でしょうか。fortran.lを眺めもせずお願いばかりで申し訳ありません。併せて検討のほどよろしくお願いします。 -- [[Ume]] &new{2007-06-28 (木) 13:17:30};
+-- Fortran 90は使ったことがありませんし、これから先も使いそうにないので自分には無理ですね。インデントをあきらめて[[instant.l>http://www.geocities.jp/kiaswebsite/xyzzy/instant.html]]でキーワードの色付けだけするのが現状の解だと思います。もしくは素直にemacsを使うとか。 -- [[NANRI]] &new{2007-07-05 (木) 05:14:08};
+-- 分かりました。無理を言って申し訳ありません、行頭のインデントは正規表現などで取り除くことで対処します。 -- [[Ume]] &new{2007-07-07 (土) 14:04:43};
+#comment

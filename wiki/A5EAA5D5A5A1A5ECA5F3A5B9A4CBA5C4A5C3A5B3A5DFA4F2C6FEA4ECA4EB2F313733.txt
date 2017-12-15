@@ -1,0 +1,310 @@
+* cmds.l の残り [#ybae9cf7]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: 名無しさん
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-11-13 (日) 21:08:22
+-バージョン: 20050929
+
+** メッセージ [#s79f4ea5]
+cmds.l でまだ書いてなかったものです。
+
+ <chapter>
+ <title>quote-char</title>
+ <type>Function</type>
+ <arguments>quote-char &amp;optional (ARG 1)</arguments>
+ <package>editor</package>
+ <description>
+ プロンプトを表示して、入力に従ってバッファに文字を挿入します。[C-q]
+ 制御文字の入力などに使われます。
+ 文字コードによる入力も可能です。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>文字</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>universal-argument</title>
+ <type>Function</type>
+ <arguments>universal-argument RAW &amp;optional ARG</arguments>
+ <package>editor</package>
+ <description>
+ 後に続くコマンドに前置引数として 'universal-argument を渡します。[C-u]
+ 
+ 'universal-agument を数値として処理する場合は 4 と解釈されます。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>関数</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>negative-argument</title>
+ <type>Function</type>
+ <arguments>negative-argument RAW &amp;optional ARG</arguments>
+ <package>editor</package>
+ <description>
+ 後に続くコマンドに負の前置引数を渡します。[ESC -]
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>関数</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>digit-argument</title>
+ <type>Function</type>
+ <arguments>digit-argument RAW &amp;optional ARG</arguments>
+ <package>editor</package>
+ <description>
+ 後に続くコマンドに前置引数を渡します。[ESC 0 ... ESC 9]
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>関数</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>quit</title>
+ <type>Function</type>
+ <arguments>quit</arguments>
+ <package>editor</package>
+ <description>
+ コマンドの実行などを中止します。[C-g]
+ 
+ 実行に時間がかかりすぎる場合や無限ループに陥ったときなどに使われます。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>エラー</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>undefined</title>
+ <type>Function</type>
+ <arguments>undefined</arguments>
+ <package>editor</package>
+ <description>
+ ベルを鳴らします。 ding の interactive 版です。
+ 
+ キーにコマンドが割り当てられてないことを表すのに使われることがあるようです。
+ </description>
+ <seealso>ding</seealso>
+ <link></link>
+ <section>その他</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>repeat-complex-command</title>
+ <type>Function</type>
+ <arguments>repeat-complex-command SEXP</arguments>
+ <package>editor</package>
+ <description>
+ execute-extended-command（いわゆるM-x）でのコマンド実行をそのままの引数
+ で再度実行します。[ESC p]
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>set-variable</title>
+ <type>Function</type>
+ <arguments>set-variable VAR</arguments>
+ <package>editor</package>
+ <description>
+ 変数 VAR をプロンプトから入力した値に設定します。[C-x a]
+ VAR の値が文字列なら文字列として、それ以外なら S 式として入力を読み取ります。
+ 
+ VAR が boundp でないとエラーになります。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>変数と定数</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>eval-expression</title>
+ <type>Function</type>
+ <arguments>eval-expression X</arguments>
+ <package>editor</package>
+ <description>
+ lisp 式 X を評価します。[ESC ESC]
+ 対話的に呼び出された場合はミニバッファで入力された式を評価します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>評価</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>overwrite-mode</title>
+ <type>Function</type>
+ <arguments>overwrite-mode &amp;optional (ARG () SV)</arguments>
+ <package>editor</package>
+ <description>
+ 上書き用マイナーモードを制御します。 toggle-over と同じです。
+ </description>
+ <seealso>toggle-over</seealso>
+ <link></link>
+ <section>モード</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>mark-whole-buffer</title>
+ <type>Function</type>
+ <arguments>mark-whole-buffer &amp;optional ARG</arguments>
+ <package>editor</package>
+ <description>
+ バッファ全体をリージョンにします。
+ 
+ ARG が
+   nil ならバッファの末尾にマークを設定し、バッファの先頭に移動
+   non-nil ならバッファの先頭にマークを設定し、バッファの末尾に移動
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>リージョン</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>goto-last-modified-line</title>
+ <type>Function</type>
+ <arguments>goto-last-modified-line</arguments>
+ <package>editor</package>
+ <description>
+ 現在のバッファで最近変更された行の先頭に移動します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>scroll-left</title>
+ <type>Function</type>
+ <arguments>scroll-left &amp;optional ARG</arguments>
+ <package>editor</package>
+ <description>
+ ウィンドウを指定桁数分、左にスクロールします。[C-x <]
+ 負の数値を指定すると逆方向にスクロールします。
+ 
+ 補足:
+   version 0.2.2.234 では方向が逆になっています。
+ </description>
+ <seealso>scroll-right</seealso>
+ <seealso>scroll-window-horizontally</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>scroll-right</title>
+ <type>Function</type>
+ <arguments>scroll-right &amp;optional ARG</arguments>
+ <package>editor</package>
+ <description>
+ ウィンドウを指定桁数分、右にスクロールします。[C-x >]
+ 負の数値を指定すると逆方向にスクロールします。
+ 
+ 補足:
+   version 0.2.2.234 では方向が逆になっています。
+ </description>
+ <seealso>scroll-left</seealso>
+ <seealso>scroll-window-horizontally</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>scroll-down-other-window</title>
+ <type>Function</type>
+ <arguments>scroll-down-other-window &amp;optional (ARG 1)</arguments>
+ <package>editor</package>
+ <description>
+ 次のウィンドウを指定行数分上スクロールします。
+ </description>
+ <seealso>scroll-window</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>scroll-up-other-window</title>
+ <type>Function</type>
+ <arguments>scroll-up-other-window &amp;optional (ARG 1)</arguments>
+ <package>editor</package>
+ <description>
+ 次のウィンドウを指定行数分スクロールします。
+ </description>
+ <seealso>scroll-window</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>cmds.l</file>
+ </chapter>
+
+ <chapter>
+ <title>scroll-other-window</title>
+ <type>Function</type>
+ <arguments>scroll-other-window &amp;optional ARG</arguments>
+ <package>editor</package>
+ <description>
+ 次のウィンドウをスクロールします。
+ ARG が nil なら下スクロールし、 non-nil であれば上スクロールします。
+ </description>
+ <seealso>scroll-window</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>cmds.l</file>
+ </chapter>
+
+export されているものは [[リファレンスにツッコミを入れる/166]], [[リファレンスにツッコミを入れる/169]] と合わせて全部入ってると思います。
+
+半分ぐらいは section をどれにするかで迷いました。
+--------
+- どーもです。universal-argumentを連続したとき、値が4倍になることもどこかで説明をしたいところですが… -- [[NANRI]] &new{2005-11-13 (日) 21:38:15};
+- そうですね。前置引数関連の説明はもう少し詳しいほうがいいような気はしてます。 --  &new{2005-11-14 (月) 09:55:26};
+-- こんなのを追加するのもアリかな、とか。
+ <chapter>
+ <title>前置引数</title>
+ <type>Tips</type>
+ <arguments></arguments>
+ <package></package>
+ <description>
+ 
+ </description>
+ <seealso>negative-argument</seealso>
+ <seealso>digit-argument</seealso>
+ <seealso>universal-argument</seealso>
+ <seealso>interactive</seealso>
+ <link></link>
+ <section>関数</section>
+ </chapter>
+-- 個人的にはリファレンスに追加するのは無しです。現状ならQuickTourかQandAかなと思ってます。 -- [[NANRI]] &new{2005-11-14 (月) 20:20:13};
+- 少し手を入れました。 -- [[NANRI]] &new{2005-11-14 (月) 20:24:37};
+- 前置引数の説明はinteractiveに追記すればおさまりがいいと思います。 -- [[佐野]] &new{2005-11-15 (火) 01:35:22};
+- 確かに。ちょうどいい機会なのでinteractiveの項の内容の更新もやっちゃいましょうかねぇ〜 -- [[NANRI]] &new{2005-11-15 (火) 21:19:44};
+- commandp interactive-p call-interactivelyへの言及を… -- [[佐野]] &new{2005-11-15 (火) 22:28:24};
+- 了解です。善処します。 -- [[NANRI]] &new{2005-11-15 (火) 23:56:35};
+- 取り込みました。 -- [[NANRI]] &new{2005-12-12 (月) 02:32:45};
+
+#comment

@@ -1,0 +1,54 @@
+*gensym [#wc800404]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-10-11 09:16:18 (火)
+-バージョン: 
+
+**メッセージ [#g8aa1f55]
+ <chapter>
+ <title>*gensym-counter*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>lisp</package>
+ <description>
+ gensym で作られるシンボルの名前につく数字です。
+ 使われるたびにインクリメントされます。
+ </description>
+ <seealso>gensym</seealso>
+ <link></link>
+ <section>シンボル</section>
+ <file>evalmacs.l</file>
+ </chapter>
+
+ <chapter>
+ <title>gensym</title>
+ <type>Function</type>
+ <arguments>gensym &amp;optional X</arguments>
+ <package>lisp</package>
+ <description>
+ uninterned なシンボルを生成します。印字名は G の後に *gensym-counter* の
+ 値をつなげたものです。
+ 
+ 引数 X を指定すると、
+   X が整数のときは *gensym-counter* の代わりに X の値が使われます。
+   X が文字列のときは "G" の代わりに X の値が使われます。
+ </description>
+ <seealso>*gensym-counter*</seealso>
+ <seealso>make-symbol</seealso>
+ <seealso>unintern</seealso>
+ <link></link>
+ <section>シンボル</section>
+ <file>evalmacs.l</file>
+ </chapter>
+
+seealso に intern, unintern を入れるかどうか迷いました。
+とりあえず unintern だけ入れてあります。
+----
+-どーも、ありがとうございます。オレの理解が足りてないのでseealsoについてはコメント無しです。 -- [[NANRI]] &new{2005-10-11 20:07:07 (火)};
+- 取り込みました→[[refwiki:*gensym-counter*]], [[refwiki:gensym]] -- [[NANRI]] &new{2005-11-13 (日) 22:02:56};
+
+#comment

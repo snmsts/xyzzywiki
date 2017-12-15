@@ -1,0 +1,49 @@
+* キーボードマクロ記録をlispに [#lf6a867d]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 投稿者反応待ち
+-投稿日: 2005-08-28 12:27:25 (日)
+
+** メッセージ [#c8dc995f]
+キーボード操作を記録してlispコードにしてくれる、ってことはできますか？
+キーボードマクロ記録してとった結果の文字列部分がlispになってくれるとうれしいのですが･･･
+
+ (dotimes (x (length *last-kbd-macro*))
+ 	(format t "~:C " (svref *last-kbd-macro* x))
+ 	(when (> (si:*stream-column) 64)
+ 	  (terpri)))
+
+ひとまずhelp.lにあったのを上のようにコピーしてキーボードマクロの記録を
+入力されたキーバインディングにすることはできたんですが、
+そっからキーバインディングに割り当てられている各関数に変換できたらなと。
+----
+-とりあえず、describe-keyの定義が参考になると思います。完全に変換できるかどうかはやってみないことには分かりませんねぇ。 -- [[NANRI]] &new{2005-08-28 12:57:15 (日)};
+
+ (append '(progn)
+         (map 'list #'(lambda (x)
+                        (list (lookup-key-command (char (string x) 0))))
+              *last-kbd-macro*))
+- こんなかんじ？(遅レス杉？ --  &new{2007-01-23 (火) 17:11:34};
+
+
+ (defun read-key-briefly (key &optional arg)
+   (interactive "kDescribe key briefly: \np")
+   key)
+ 
+ (defmacro define-key-kbd-macro ()
+   (if *last-kbd-macro*
+       (let ((key (call-interactively 'read-key-briefly)))
+         `(define-key (or (local-keymap) *global-keymap*) ,key
+           #'(lambda ()
+               ,(format nil "kbdmacro ~A" *last-kbd-macro*)
+               (interactive)
+               (command-execute ,*last-kbd-macro*))))
+     '(error "*last-kbd-macro* is empty")))
+- こいつはどうよ。 --  &new{2007-01-23 (火) 22:43:56};
+- 引数では値を受け取らずに、実行途中で read-string や read-char で入力を受け取る関数もあるので(ex. isearch-forward)、キーボードマクロ文字列からの関数展開は無理そうですね。私はキーボードマクロ中でバッファ移動や isearch、execute-extended-command (M-x)、eval-expression (ESC ESC) も用いるので、変換はお手上げです (^^; -- [[OHKUBO]] &new{2007-01-24 (水) 00:12:39};
+- どうしてもlispにしたいってことじゃなければ、command-executeでいいんじゃないの？(command-execute "^X^Fあいうえお")みたいなこともできるよ。 --  &new{2007-01-24 (水) 22:05:22};
+- それができるのはわかった上で、やっぱり lisp に落としたいのですよ。 --  &new{2007-01-24 (水) 23:00:01};
+- じゃぁ、まずその理由から書いて欲しいな。 --  &new{2007-01-25 (木) 19:49:14};
+- 何が起ったかを記録するところから工夫しないとまず意味のあることをするのは無理だと思います。OHKUBOさんの言葉の繰り返しになりますがscratchでのキー操作とnetinstallerでのキー操作の意味はまるで違います。キー操作を残しておいてそれを再現しようとしても意味が殆どありません。 -- [[佐野]] &new{2007-01-25 (木) 20:12:50};
+
+#comment

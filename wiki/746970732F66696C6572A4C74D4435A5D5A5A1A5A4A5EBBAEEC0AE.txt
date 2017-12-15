@@ -1,0 +1,49 @@
+[[tips]]
+
+2004/04/13
+
+*filerでMD5ファイル作成 [#a6f6e60e]
+xyzzy万能化の為に作りました。(^^;~
+突っ込みよろしくお願いします。~
+
+**準備 [#n95ab89d]
+下記内容を.xyzzyに。~
+ ;;filerでMD5ファイル作成
+ (defun editor::filer-make-md5-string (name)
+   (long-operation
+     (with-open-stream (stream (open name :direction :input :encoding :binary))
+       (si:md5 stream))))
+ (defun editor::filer-make-md5-file ()
+   ;(let* ((name (editor::filer-get-current-file))
+   (let* ((name (editor::filer-fetch-file t))      ;by NANRIさん
+          (name5 (concat name ".md5")))
+     (if (file-directory-p name)
+         (message "フォルダはできません.")
+       (when (or (null editor::*filer-query-before-process*)
+                 (if (file-exist-p name5)
+                     (no-or-yes-p "~A~%のMD5は既にあります.~%MD5の生成を続けますか?" name)
+                   (yes-or-no-p "~A~%のMD5を生成しますか?" name)))
+         (message "MD5 creating...")
+         (with-open-stream (stream (open name5 :direction :output :encoding :binary))
+           (princ (editor::filer-make-md5-string name) stream))
+         (filer-reload)      ; 再表示
+         (and (filer-dual-window-p)
+              (filer-reload nil t))
+         (message "MD5 done.")))))
+ (define-key filer-keymap #\C-5 'editor::filer-make-md5-file)
+
+
+**使い方 [#p88f7935]
+filerで対象ファイルにカーソルを合わせて Ctrlキーを押しながら 5 キーを押す。~
+対象ファイルと同じフォルダにMD5ファイルが作成されます。
+
+**問題点 [#b3396ae7]
+巨大なファイルを処理した時、進捗度合が不明です。
+
+----
+-マークしたファイルを優先して欲しいかも。複数マークしてある場合は全部作成する or エラーにするで。もしエラーにするで構わないのでしたら、(ed::filer-get-current-file)→(ed::filer-fetch-file t)と変更するだけなので簡単。 -- [[NANRI]] &new{2004-04-13 (火) 19:21:14};
+-2画面ファイラの時にアクティブでないウィンドウが更新されていなかったので修正しました。 -- [[ 作成者]] &new{2005-04-14 19:03:36 (木)};
+-上をそのままコピペ=>実行したら、filer-fetch-fileが見つからないって怒られました。editor::を付ける事で解決したのですが、これは環境によるものなのでしょうか。 --  &new{2005-07-22 09:57:50 (金)};
+-スミマセン、(in-package "editor")していないとeditor::が必要だと思います -- [[作成者]] &new{2005-08-06 09:42:30 (土)};
+
+#comment

@@ -1,0 +1,25 @@
+そういえばいるかもと共感してなんとなく (佐野 03/04/18
+
+ (require "api");3/25以降のでお願い。
+                ;provideを書き忘れてるので何度も書くと痛いと思います。
+                ;そのうち直します。
+ (in-package "win-user")
+ (defun hwnd-xyzzy-htmlhelp ()
+   (FindWindow (si::make-string-chunk"HH Parent")
+               (si::make-string-chunk "xyzzy Reference")))
+ (defun close-xyzzy-ref-htmlhelp ()
+   (ed:interactive)
+   (SendMessage (hwnd-xyzzy-htmlhelp) WM_CLOSE 0 0))
+ 
+ (defun minimize-xyzzy-ref-htmlhelp ()
+   (ed:interactive)
+   (SendMessage (hwnd-xyzzy-htmlhelp) WM_SYSCOMMAND #xF020 0))
+ 
+ (defun restore-xyzzy-ref-htmlhelp ()
+   (ed:interactive)
+   (SendMessage (hwnd-xyzzy-htmlhelp) WM_SYSCOMMAND #xF120 0))
+ (in-package "user")
+----
+topmost(Ohkuboさん作)とかみてみるともう少し使い勝手を良くすることが出来るかもしれません。僕はどう調整したらよいのかよくわからないので、お気に入りの設定が出来たら書き加えていただけると幸せです。 (佐野 03/04/20
+
+#comment

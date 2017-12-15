@@ -1,0 +1,52 @@
+#freeze
+* xyzzy+howm(howm-wrap)で日付形式を変えたい [#r844afdd]
+-ページ: [[質問箱]]
+-投稿者: [[Miteba]]
+-状態: 完了
+-投稿日: 2005-07-10 22:08:17 (日)
+
+** メッセージ [#mcab613a]
+xyzzy+howm(howm-wrap)で使っているのですが――作者のかたがたありがとうございます――
+
+・Howm新規のときに開かれるファイルに自動的に書き出される日付形式は、[2005-06-23 11:20]
+　
+これを、[2005-06-23]のように、時間と分をとりたいのですが……。
+
+なぜかというと、Emacsでは、[2005-06-23 11:20]@　が予定としてhowmが拾ってくれるのに、xyzzy＋Howm（howm-wrap）では、これは予定として認知しない[2005-06-23]@ でないと予定として拾ってくれないのです。
+
+ところがxyzzy＋Howm（howm-wrap）でのdefault（preset option）では、C+C,, でHowm menuを開き、新規をひらくと、
+
+ =
+ [2005-06-23 11:20]
+
+となってしまいます。.xyzzyファイルに
+
+ ; 日時の入力
+ (global-set-key '(#\C-c #\C-d) 'my-get-date)
+ (defun my-get-date-gen (form) (insert (format-date-string form)))
+ (defun my-get-date () (interactive) (my-get-date-gen "[%Y-%m-%d]"))
+ (defun my-get-time () (interactive) (my-get-date-gen "[%H:%M]"))
+ (defun my-get-dtime () (interactive) (my-get-date-gen "[%Y-%m-%d %H:%M]"))
+　 
+を書き加えると、自分で、C-C C-Dで、
+
+ [2005-07-10]
+
+とファイルに書き出すことはできますが、howmのメニューをだして、新規からファイルを開くと、やはり、
+
+ =
+ [2005-07-10 22:06]
+
+というように、時間・秒までが書き出されます。
+
+
+----
+.howm-init.lに
+ (setq howm-template-date-format (concat "[" howm-date-format "]"))
+と書いて再ダンプしてみたらどうでしょう？ -Deecay
+
+----
+-ちょっと文章が読みづらかったので、読みやすくするためにソースと段落の部分を整理しました。 -- [[稲原]] &new{2005-07-10 22:56:25 (日)};
+-Deecayさんに書き込んでいただいた通りにしたら、うまくいきました。大変ありがとうございました。これに関連して、また別の質問があるのですが、あらためて別の質問箱でおたずねしたいと思います。 -- [[Miteba]] &new{2005-07-16 11:27:02 (土)};
+
+#comment

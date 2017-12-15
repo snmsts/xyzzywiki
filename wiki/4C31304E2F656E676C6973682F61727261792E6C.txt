@@ -1,0 +1,26 @@
+[[L10N/english]]
+
+ array.l:36:      (error ":initial-element, :initial-contents, :displaced-toは同時に指定できません"))))
+-:initial-element, :initial-contents, :displaced-to may not be used simultaneously. --  &new{2005-05-07 21:11:54 (土)};
+
+#comment
+ array.l:71:	   (error ":fill-pointerはベクタ以外には指定できません"))
+-Only vectors may have fill pointers. --  &new{2005-05-07 21:15:26 (土)};
+
+#comment
+ array.l:109:      (error "subscriptsの個数が配列のランクと異なります: ~S" subscripts))
+-Number of subscripts doesn't agree with array rank: ~S --  &new{2005-05-07 21:16:47 (土)};
+
+#comment
+ array.l:127:    (error "配列のランクが異なります"))
+-Array rank mismatch. --  &new{2005-05-07 21:16:59 (土)};
+
+#comment
+ array.l:136:	   (error "フィルポインタを持たない配列にフィルポインタが指定されました")))
+-Fill pointer is specified to an array without fill pointer. --  &new{2005-05-07 21:17:16 (土)};
+
+#comment
+ array.l:142:    (error "自分自身を共有することはできません"))
+-May not be displaced to itself. (あやしいかも) --  &new{2005-05-07 21:17:29 (土)};
+
+#comment

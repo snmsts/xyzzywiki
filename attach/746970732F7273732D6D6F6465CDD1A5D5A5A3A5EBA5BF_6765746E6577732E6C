@@ -1,0 +1,68 @@
+;;; -*- Mode: Lisp; Package: EDITOR -*-
+;;;
+; Last updated: <2004-02-10T18:20:49+09:00>
+;
+; rss/filters/getnews.l
+;
+;; ■ ゲットニュースを勝手に rss 化するフィルタ
+;; 
+;;    ・設定
+;;      - *getnews-items-max* に最大表示件数を指定
+;;    ・登録
+;;       1. "a" => "http://www.renpou.com/getnews/indexr.html"
+;;       2. タイトルを入力する。
+
+(require "rss/main")
+
+(provide "rss/filters/getnews")
+
+(in-package "rss")
+
+(defvar *getnews-url-base* "http://www.renpou.com/getnews/")
+(defvar *getnews-url-regexp* (concat *getnews-url-base* "\\(.*\\)"))
+(defvar *getnews-items-max* 30)
+
+(defun getnews-parse-buffer ()
+  (let (items
+        url
+        title)
+    (save-excursion
+      (goto-char (point-min))
+      (while (scan-buffer "■<a href=\"\\(http://[^\"]+\\)\"[^>]*>\\([^<]+\\)</a> <small>\\([^<]*\\)</small>"
+                          :regexp t
+                          :tail t)
+        (setq url (match-string 1))
+        (setq title (concat (match-string 2) (match-string 3)))
+        (setq title (ed::xmlpm-decode-special-chars title))
+        (push (rss-create-item title url)
+              items))
+      (setq items (nreverse items))
+      ; 間引き
+      (when (and *getnews-items-max*
+                 (< *getnews-items-max* (list-length items)))
+        (setq items (butlast items (- (list-length items) *getnews-items-max*))))
+      )
+    items))
+
+;; フィルタ関数
+;; (チャネル, ファイルを引数にfuncallされる)
+(defun getnews-filter (channel file)
+  (let ((url (rss-link channel))
+        (title (or (and (rss-title channel)
+                        (not (equal (rss-title channel) *rss-menu-temp-buffer-suffix*))
+                        (rss-title channel))
+                   (read-string "Site Title: ")))
+        items)
+    (save-excursion
+      (set-buffer (get-buffer-create *rss-buffer-temp*))
+      (erase-buffer (selected-buffer))
+      (insert-file-contents file)
+      (setq items (getnews-parse-buffer))
+      (delete-buffer (selected-buffer)))
+    ; 元のファイルを上書き
+    (convert-to-rss (rss-create title url nil items)
+                    file)))
+
+;; フィルタの登録
+;; (URLがマッチした時にフィルタが呼ばれる）
+(rss-filter-regist *getnews-url-regexp* 'getnews-filter)

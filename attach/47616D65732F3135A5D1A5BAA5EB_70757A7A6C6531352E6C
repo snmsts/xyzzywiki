@@ -1,0 +1,176 @@
+#|
+   15 パズル
+
+   puzzle15.l -- こばやし (更新日 2005-03-25)
+
+   このプログラムはフリーソフトです。ご自由にお使いください。
+
+   設定:
+      1. xyzzy/site-lisp に puzzle15.l を置いてバイトコンパイルします。
+      2. .xyzzy に (require "puzzle15") と書きます。
+
+   遊び方：
+      M-x puzzle15 で起動します。パネルをマウスでクリックすると、
+      スライドします。下図のようにパネルを順番に並べてください。
+
+   ┌─┬─┬─┬─┐
+   │ 1│ 2│ 3│ 4│
+   ├─┼─┼─┼─┤
+   │ 5│ 6│ 7│ 8│
+   ├─┼─┼─┼─┤
+   │ 9│10│11│12│
+   ├─┼─┼─┼─┤
+   │13│14│15│  │
+   └─┴─┴─┴─┘
+|#
+
+(provide "puzzle15")
+
+(in-package "editor")
+
+(export '(puzzle15))
+
+(defconstant puz15-top-margin   5)
+(defconstant puz15-left-margin  5)
+
+(defvar *puz15-board* (make-vector 16))
+
+(defvar *puz15-mode-map* nil)
+
+(unless *puz15-mode-map*
+  (setq *puz15-mode-map* (make-sparse-keymap))
+  (define-key *puz15-mode-map* #\LBtnDown 'puz15-lbtn-down))
+
+(defun puz15-lbtn-down ()
+  (interactive)
+  (save-excursion
+    (goto-last-mouse-point)
+    (let ((row (puz15-row))
+          (col (puz15-col)))
+      (when (and row col)
+        (dolist (l (exchange-list row col))
+          (when (puz15-spacep (car l) (cdr l))
+            (puz15-exchange-piece row col (car l) (cdr l))
+            (puz15-print-line row)
+            (unless (= row (car l))
+              (puz15-print-line (car l)))
+            (when (puz15-finishp)
+              (msgbox "おめでとう!"))
+            (return)))))))
+
+(defun puz15-exchange-piece (row col srow scol)
+  (let ((num (aref *puz15-board* (puz15-board-idx row col))))
+    (setf (aref *puz15-board* (puz15-board-idx srow scol)) num
+          (aref *puz15-board* (puz15-board-idx row  col)) #\spc)))
+
+(defun exchange-list (row col)
+  (labels ((in (n end &optional (begin -1))
+             (and (> n begin) (<= n end))))
+    (remove-if-not #'(lambda (lst)
+                       (and (in (car lst) 3) (in (cdr lst) 3)))
+                   (list (cons row (1- col))
+                         (cons (1- row) col)
+                         (cons row (1+ col))
+                         (cons (1+ row) col)))))
+
+(defun puz15-board-idx (row col)
+  (+ col (* 4 row)))
+
+(defun puz15-spacep (row col)
+  (eq #\SPC (aref *puz15-board* (puz15-board-idx row col))))
+
+(defun puz15-print-line (row)
+  (goto-line (puz15-row2line row))
+  (let ((p (point)))
+    (goto-eol)
+    (delete-region p (point)))
+  (insert #\SPC puz15-left-margin)
+  (dotimes (i 4)
+    (insert "│")
+    (insert (format nil "~2A" (aref *puz15-board* (puz15-board-idx row i)))))
+  (insert "│"))
+
+(defun puz15-initialize ()
+  (puz15-board-initialize)
+  (insert #\LFD (1- puz15-top-margin))
+  (insert #\SPC puz15-left-margin)
+  (insert "┌─┬─┬─┬─┐\n")
+  (dotimes (i 4)
+    (puz15-print-line i)
+    (insert #\LFD)
+    (unless (= i 3)
+      (insert #\SPC puz15-left-margin)
+      (insert "├─┼─┼─┼─┤\n")))
+  (insert #\SPC puz15-left-margin)
+  (insert "└─┴─┴─┴─┘\n"))
+  
+(defun puz15-row ()
+  (let ((n (/ (- (current-line-number) 1 puz15-top-margin) 2)))
+    (and (integerp n)
+         (find n '(0 1 2 3 4)))))
+
+(defun puz15-row2line (row)
+  (+ puz15-top-margin 1 (* 2 row)))
+
+(defun puz15-col ()
+  (let ((col (- (current-column) puz15-left-margin)))
+    (position col '((2 3) (6 7) (10 11) (14 15))
+              :key #'(lambda (lst) (find col lst)))))
+
+(defun puz15-finishp ()
+  (dotimes (i 15 t)
+    (when (or (eq #\SPC  (aref *puz15-board* i))
+              (/= (1+ i) (aref *puz15-board* i)))
+      (return nil))))
+
+(defun puz15-exist-answerp (lst) ; 解が存在する並びかチェック
+  (labels ((rec (lst acc)
+             (if (null lst)
+                 acc
+               (rec (cdr lst)
+                    (+ acc
+                       (length (remove-if #'(lambda (n)
+                                              (< (car lst) n))
+                                          (cdr lst))))))))
+    (zerop (mod (rec lst 0) 2))))
+
+(defun puz15-board-initialize ()
+  (labels ((rec (n acc)
+             (if (zerop n)
+                 acc
+               (rec (1- n) (loop
+                             (let ((n (1+ (random 15))))
+                               (unless (find n acc)
+                                 (return (cons n acc))))))))
+           (repeat-rec ()
+             (let ((lst (rec 15 nil)))
+               (if (puz15-exist-answerp lst)
+                   lst
+                 (repeat-rec)))))
+    (let ((lst (repeat-rec)))
+      (dotimes (i 15)
+        (setf (aref *puz15-board* i) (nth i lst)))
+      (setf (aref *puz15-board* 15) #\SPC))))
+
+(defun puzzle15 ()
+  (interactive)
+  (let ((buf-name "*puzzle15*"))
+    (set-buffer (or (find-buffer buf-name)
+                    (create-new-buffer buf-name)))
+    (erase-buffer (selected-buffer))
+    (set-buffer-fold-width nil)
+    (setq kept-undo-information nil)
+    (setq need-not-save t)
+    (setq auto-save nil)
+    (set-local-window-flags (selected-buffer) *window-flag-eof* nil)
+    (set-local-window-flags (selected-buffer) *window-flag-newline* nil)
+    (set-local-window-flags (selected-buffer) *window-flag-full-width-space* nil)
+    (set-local-window-flags (selected-buffer) *window-flag-half-width-space* nil)
+    (puz15-initialize)
+    (puz15-mode)
+    ))
+
+(defun puz15-mode ()
+  (setq mode-name "puzzle15")
+  (setq buffer-mode 'puz15-mode)
+  (use-keymap *puz15-mode-map*))

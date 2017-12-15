@@ -1,0 +1,57 @@
+;;; xgresreg
+;
+;                        Last updated: <2004-10-01T07:06:30+09:00>
+;
+
+(provide "xgresreg")
+
+(require "gresregd")
+
+(in-package "editor")
+
+(export '(xgresreg re-xgresreg query-xgresreg
+          query-xgresreg-regexp))
+
+(defun xgresreg (pattern replacement directory files)
+  (interactive "sxgresreg: \nswith: \nDdirectory: \nsfiles: "
+    :default0 *last-gresreg-string* :history0 'search
+    :default1 *last-gresreg-replace-string* :history1 'search)
+  (setq *last-gresreg-string* pattern)
+  (setq *last-gresreg-replace-string* replacement)
+  (xgresreg1 pattern replacement directory files nil nil))
+
+(defun re-xgresreg (pattern replacement directory files)
+  (interactive "sxgresreg: \nswith: \nDdirectory: \nsfiles: "
+    :default0 *last-gresreg-regexp* :history0 'search
+    :default1 *last-gresreg-replace-regexp* :history1 'search)
+  (setq *last-gresreg-regexp* pattern)
+  (setq *last-gresreg-replace-regexp* replacement)
+  (xgresreg1 pattern replacement directory files nil t))
+
+(defun query-xgresreg (pattern replacement directory files)
+  (interactive "squery xgresreg: \nswith: \nDdirectory: \nsfiles: "
+    :default0 *last-gresreg-string* :history0 'search
+    :default1 *last-gresreg-replace-string* :history1 'search)
+  (setq *last-gresreg-string* pattern)
+  (setq *last-gresreg-replace-string* replacement)
+  (xgresreg1 pattern replacement directory files t nil))
+
+(defun query-xgresreg-regexp (pattern replacement directory files)
+  (interactive "squery xgresreg: \nswith: \nDdirectory: \nsfiles: "
+    :default0 *last-gresreg-regexp* :history0 'search
+    :default1 *last-gresreg-replace-regexp* :history1 'search)
+  (setq *last-gresreg-regexp* pattern)
+  (setq *last-gresreg-replace-regexp* replacement)
+  (xgresreg1 pattern replacement directory files t t))
+
+(defun xgresreg1 (pattern replacement directory files query regexpp)
+  (let ((*gresreg-case-fold-search* nil)
+        (*gresreg-word-search* nil)
+        (*gresreg-regexp-search* regexpp)
+        (*gresreg-subdir* t)
+        (*gresreg-save-buffer* t))
+    (gresreg-process pattern replacement
+                     (split-string files #\; t " ")
+                     directory
+                     query
+                     *gresreg-save-buffer*)))

@@ -1,0 +1,44 @@
+*macroexpand-1 [#v436a379]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[pocari]]
+-優先順位: 普通
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2003-11-08 (土) 21:36:52
+-バージョン: 
+
+**メッセージ [#ab820683]
+  <chapter>
+  <title>macroexpand-1</title>
+  <type>Function</type>
+  <arguments>macroexpand-1 FORM &amp;optional ENV</arguments>
+  <package>lisp</package>
+  <description>
+    macroexpandに似ていますが、展開されるレベルが1レベルで終わるところが違います。
+    自作のマクロなどがどう展開されるのか調べるときに便利です。
+    
+    使用例:
+      (defmacro my-macro ()
+        `(dotimes (x 10)))
+      というマクロがあるとき
+      
+      (macroexpand '(my-macro))
+       =&gt; (block nil (let* ((x 0) (#1=#:count 10)) (lisp::*loop (if (&gt;= x #1#) (return (progn 'nil))) (tagbody) (setq x (+ x 1)))))   
+      とmy-macro展開後のdotimesまで(実際はdotimesを展開後さらにdo*を展開)が再帰的に展開されますが、
+    
+      (macroexpand-1 '(my-macro))
+       =&gt; (dotimes (x 10))
+      と、my-macroだけが展開されます。
+  </description>
+  <seealso>macroexpand</seealso>
+  <link></link>
+  <section>マクロ</section>
+  <file>builtin.l</file>
+  </chapter>
+
+
+----
+-取り込みました。ありがとうございます。 -- [[山本]] &new{2003-12-06 (土) 19:36:09};
+
+#comment

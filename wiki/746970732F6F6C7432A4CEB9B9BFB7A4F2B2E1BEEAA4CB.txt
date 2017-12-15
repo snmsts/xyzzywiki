@@ -1,0 +1,21 @@
+[[FrontPage]]
+
+
+[[tips/idle時間を数える]]を踏まえた上で。~
+なんかのIDEのつもりになろう！(なるか？) 佐野 2005/12/05
+
+ (let ((modified-count 0)
+       buf)
+   (defun on-idle-rewrite-olt2 (x)
+     (and (zerop (mod x 10))
+ 	 (or (not (zerop (- (buffer-modified-count) modified-count)))
+ 	     (not (eql buf (selected-buffer))))
+ 	 (setq modified-count (buffer-modified-count)
+ 	       buf (selected-buffer))
+ 	 (outline-tree2::outline-tree-create-outline-by-buffer (selected-buffer)))
+     ))
+ (add-hook '*on-idle-hook* 'on-idle-rewrite-olt2)
+
+----
+
+//#comment

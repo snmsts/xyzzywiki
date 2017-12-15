@@ -1,0 +1,32 @@
+* substring [#c60fcf3b]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[anonymous]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: ツッコミをいれる
+-投稿日:     2007-02-14 (水) 12:23:40
+-バージョン: 
+
+** メッセージ [#q67b9b98]
+subseqと異なりSTART, END に負の数値を指定できるようです。
+ <chapter>
+ <title>substring</title>
+ <type>Function</type>
+ <arguments>substring STRING START &amp;optional END</arguments>
+ <package>lisp</package>
+ <description>
+ 指定された文字列の部分文字列を返します。
+ START, END に負の数値を指定すると文字列の最後からカウントします。
+ 
+ 互換性：
+   Common Lispにはなし(commonではsubseqというらしい）
+   muleあり。
+ </description>
+ <seealso>subseq</seealso>
+ <section>文字列</section>
+ <file>builtin.l</file>
+ </chapter>
+----
+- どーもです。 -- [[NANRI]] &new{2007-02-17 (土) 05:21:11};
+
+#comment

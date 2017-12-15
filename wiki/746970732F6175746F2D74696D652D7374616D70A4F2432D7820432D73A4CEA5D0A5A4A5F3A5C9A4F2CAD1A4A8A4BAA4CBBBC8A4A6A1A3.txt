@@ -1,0 +1,15 @@
+かなり適当 佐野 掲載日 2003-04-27 ~
+[[tips/lisp 書いてるときは保存したらすぐに再ロードしてほしい。]]とかと併用するときには必須かも。
+ 
+ ;オートタイムスタンプはここら辺に引っ掛けるのが素敵かな？
+ ;write-fileとかにはどうにか引っかからないかなぁ…。
+ ;まぁ書き換えがあるわけじゃないのでぼかー満足しとるのですよ。
+ (add-hook
+  '*before-save-buffer-hook*
+  #'(lambda ()
+      (interactive)
+      (and *time-stamp-active*
+ 	  (ed::time-stamp))
+      nil))
+
+#comment

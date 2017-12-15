@@ -1,0 +1,60 @@
+* *default-eol-code* *default-fileio-encoding* buffer-eol-code [#c9024b06]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[anonymous]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: 新規項目
+-投稿日:     2007-02-04 (日) 20:18:57
+-バージョン: 
+
+** メッセージ [#g77b10ed]
+ <chapter>
+ <title>*default-eol-code*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ 新規に作ったバッファの改行コードのデフォルト値です。
+ </description>
+ <seealso>buffer-eol-code</seealso>
+ <seealso>*default-fileio-encoding*</seealso>
+ <section>バッファ</section>
+ <file></file>
+ </chapter>
+ 
+ <chapter>
+ <title>*default-fileio-encoding*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ 新規に作ったバッファの文字エンコーディングのデフォルト値です。
+ </description>
+ <seealso>buffer-fileio-encoding</seealso>
+ <seealso>*default-eol-code*</seealso>
+ <section>バッファ</section>
+ <file></file>
+ </chapter>
+
+(snip)
+// <chapter>
+// <title>buffer-eol-code</title>
+// <type>Function</type>
+// <arguments>buffer-eol-code &amp;optional BUFFER</arguments>
+// <package>editor</package>
+// <description>
+// BUFFER の改行コードを返します。
+// 
+// BUFFER: 改行コードを返すバッファ。デフォルト値は現在のバッファ。
+// </description>
+// <seealso>set-eol-code</seealso>
+// <seealso>*default-eol-code*</seealso>
+// <section>バッファ</section>
+// <file>builtin.l</file>
+// </chapter>
+----
+- *default-eol-code* と *default-fileio-encoding* の section は、バッファ と 定数と変数 どちらが良いでしょうか。 --  &new{2007-02-04 (日) 20:24:18};
+- buffer-eol-code はかぶっていましたね。無視してください。 --  &new{2007-02-04 (日) 20:26:06};
+- どーもです。でも、バッファ作成時に参照されるのでこんな感じです。セクションはバッファでよいと思います。 -- [[NANRI]] &new{2007-02-05 (月) 00:10:04};
+
+#comment

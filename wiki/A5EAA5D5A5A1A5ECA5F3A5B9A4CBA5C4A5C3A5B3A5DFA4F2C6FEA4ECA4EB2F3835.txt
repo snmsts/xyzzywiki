@@ -1,0 +1,159 @@
+*scan-buffer [#f0892ab2]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[OHKUBO]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2004-11-19 (金) 00:14:11
+-バージョン: 20041115
+
+**メッセージ [#v70b61fa]
+なにはなくとも scan-buffer なので書いてみました。
+誤字、脱字、誤り、言い回しの修正、:last-match の説明追加など宜しくお願いします。
+
+ <chapter>
+ <title>scan-buffer</title>
+ <type>Function</type>
+ <arguments>scan-buffer PATTERN &amp;key :no-dup :case-fold :reverse :tail :regexp :limit :left-bound :right-bound :last-match</arguments>
+ <package>editor</package>
+ <description>
+ バッファを検索します。
+ 
+   PATTERN      : 検索パターンとして、[文字列]、[正規表現]、[コンパイル済
+                  み正規表現]の何れかを指定する。
+                  コンパイル済み正規表現の場合は :regexp の値は無視する。
+                  また :case-fold 指定も無視され、compile-regexp 時の第2
+                  引数の指定が用いられる。
+ 
+   :no-dup      : 検索方向に対して次のポイントからの検索を指定する。
+         nil     - 現在のポイントから検索する。
+         non-nil - reverse が nil の場合は、次のポイントから検索する。
+                   non-nil の場合は、前のポイントから検索する。
+ 
+   :case-fold   : ASCII 文字の大文字小文字の区別の方法を指定する。
+                  PATTERN が[コンパイル済み正規表現]の場合は、:case-fold
+                  指定は意味をもたない。
+         nil     - 大文字小文字を区別して検索する。
+         :smart  - PATTERN に大文字が含まれていない場合、大文字小文字を区
+                   別せずに検索する。
+         上記以外- 大文字小文字を区別せずに検索する。
+ 
+   :reverse     : 検索方向を指定する。
+         nil     - バッファの末尾に向かって検索する。
+         non-nil - バッファの先頭に向かって検索する。
+ 
+   :tail        : 検索成功後の移動先ポイントをどこにするかを指定する。
+         nil     - 検索成功後、マッチ範囲の先頭((match-beginning 0)のポイ
+                   ント)に移動する。
+                   bar を検索した場合、:tail が nil なら
+                       foo bar baz qux quux ...
+                           ^ ポイントはここに移動する。
+         non-nil - 検索成功後、マッチ範囲の末尾((match-end 0)のポイント)
+                   に移動する。
+                   bar を検索した場合、:tail が non-nil なら
+                      foo bar baz qux quux ...
+                             ^ ポイントはここに移動する。
+ 
+   :regexp      : PATTERN が [正規表現] であることを指定する。
+                  PATTERN が[コンパイル済み正規表現]の場合は、:regexp 指
+                  定は意味をもたない。
+         nil     - PATTERN を[文字列]とみなす。
+         non-nil - PATTERN を[正規表現]とみなす。
+ 
+   :limit       : 検索範囲をポイント位置で制限する。 
+                  文字数制限ではない。
+         nil     - 制限なし。
+         INTEGER - :reverse が nil の場合は、マッチ末尾文字のポイントが
+                   INTEGER 未満となる範囲で検索する。non-nil の場合は、
+                   マッチ先頭文字のポイントが INTEGER 以上となる範囲で検
+                   索する。
+         MARKER  - MARKER に設定されたポイントを上記 INTEGER と見なし検索
+                   範囲を制限する。
+                   MARKER にポイントが設定されていない((marker-point
+                    MARKER) が nil)場合、scan-buffer は nil を返す。
+         上記以外- type-error が発生される。
+ 
+   :left-bound  : [文字列]検索時の左側境界マッチ条件を指定する。
+                  正規表現検索の場合は無効。
+         nil     - 左側境界に関わらずマッチ成立
+         :symbol - マッチ範囲左側境界((match-beginning 0)のポイント)が、
+                   以下の何れかの条件を満たせばマッチ成立
+                     - バッファの先頭である
+                     - バッファの末尾である
+                   マッチ範囲左側境界のポイント、もしくは、その前のポイン
+                   トの文字が、以下の何れかの条件を満たせばマッチ成立
+                     - ASCII 文字でない
+                     - syntax-table に word,symbol として登録されていない
+                       ((syntax-word-p 文字), (syntax-symbol-p 文字) が
+                        nil を返す。)
+         上記以外- マッチ範囲左側境界((match-beginning 0)のポイント)が、
+                   以下の何れかの条件を満たせばマッチ成立
+                     - バッファの先頭である
+                     - バッファの末尾である
+                   マッチ範囲左側境界のポイント、もしくは、その前のポイン
+                   トの文字が、以下の何れかの条件を満たせばマッチ成立
+                     - ASCII 文字でない
+                     - syntax-table に word として登録されていない
+                       ((syntax-word-p 文字)がnilを返す。)
+ 
+   :right-bound : [文字列]検索時の右側境界マッチ条件を指定する。
+                  正規表現検索の場合は無効。
+         nil     - 右側境界に関わらずマッチ成立
+         :symbol - マッチ範囲右側境界((match-end 0)のポイント)が、以下の
+                   何れかの条件を満たせばマッチ成立
+                     - バッファの先頭である
+                     - バッファの末尾である
+                   マッチ範囲右側境界のポイント、もしくは、その前のポイン
+                   トの文字が、以下の何れかの条件を満たせばマッチ成立
+                     - ASCII 文字でない
+                     - syntax-table に word,symbol として登録されていない
+                       ((syntax-word-p 文字), (syntax-symbol-p 文字) が
+                        nil を返す。)
+         上記以外- マッチ範囲右側境界((match-end 0)のポイント)が、以下の
+                   何れかの条件を満たせばマッチ成立
+                     - バッファの先頭である
+                     - バッファの末尾である
+                   マッチ範囲右側境界のポイント、もしくは、その前のポイン
+                   トの文字が、以下の何れかの条件を満たせばマッチ成立
+                     - ASCII 文字でない
+                     - syntax-table に word として登録されていない
+                       ((syntax-word-p 文字) が nil を返す。)
+ 
+   :last-match  : 使用効果不明
+                  (perform-replace) でのみ用いられている。
+                  (&lt;last-match&gt; . &lt;last-match-char&gt;) からなる。
+                  &lt;last-match&gt; : 直前のscan-buffer成功時の
+                      (match-beginning 0)のポイントを指定
+                  &lt;last-match-char&gt;: 直前のscan-buffer成功時の
+                      (match-end 0)の前のポイントの文字を指定
+ 
+ 戻り値は以下のとおりです。
+ 
+   t    検索に成功
+   nil  検索に失敗
+ 
+ 使用例：
+   (scan-buffer 検索文字列 :regexp t)
+   (scan-buffer 検索文字列 :tail t)
+   (scan-buffer 検索文字列 :limit 3000)
+   (scan-buffer 検索文字列 :reverse t)
+   (scan-buffer 検索文字列 :regexp t :no-dup t)
+ </description>
+ <seealso>regexpp</seealso>
+ <seealso>compile-regexp</seealso>
+ <seealso>match-beginning</seealso>
+ <seealso>match-end</seealso>
+ <seealso>perform-replace</seealso>
+ <seealso>markerp</seealso>
+ <seealso>make-marker</seealso>
+ <seealso>set-marker</seealso>
+ <section>検索・正規表現</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-引数の説明を多少修正しました。 -- [[OHKUBO]] &new{2004-12-08 (水) 21:14:25};
+-取り込みました->[[refwiki:scan-buffer]] -- [[NANRI]] &new{2005-03-02 00:43:41 (水)};
+
+#comment

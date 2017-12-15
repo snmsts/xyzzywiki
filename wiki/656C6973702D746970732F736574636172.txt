@@ -1,0 +1,6 @@
+- [[xyzzy-ml:08375]] より（須田さん）
+ (defun setcar (c-cell newcar)
+   (setf (car c-cell) newcar)
+   newcar)
+----
+#comment

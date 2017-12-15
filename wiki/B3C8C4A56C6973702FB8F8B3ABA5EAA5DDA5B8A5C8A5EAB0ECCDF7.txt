@@ -1,0 +1,33 @@
+[[拡張lisp]]
+xyzzy lispが公開されているリポジトリをまとめてみました。
+ 
+* [[CodeRepos::Share>http://coderepos.org/share/browser/lang/xyzzy]] [#ybab0769]
+- destructuring
+- hatena-bookmark-star-viewer
+- hotentry-maker-mode
+- pci-code
+- tdd-minor-mode
+- tdn-mode
+- xyscope
+
+* [[GitHub>http://github.com/search?langOverride=&q=xyzzy&repo=&type=Repositories]] [#h6df2d5a]
+- arikui1911/Xyzzy-lisps
+- bowbow99/xyzzy.deferred
+- bowbow99/xyzzy.lisp-indent-hook
+- bowbow99/xyzzy.macroexpand-all
+- bowbow99/xyzzy.setf-values
+- bowbow99/xyzzy.symbol-macrolet
+- bowbow99/xyzzy.xl-expectations
+- hokorobi/xyzzy
+- kosh04/xyzzy-lisp
+- southly/xyzzy.lisp.geometry
+- southly/xyzzy.lisp.hexl
+- southly/xyzzy.lisp.loop
+- southly/xyzzy.lisp.lyrical
+- southly/xyzzy.lisp.misc 
+- southly/xyzzy.lisp.rt
+- southly/xyzzy.lisp.universalchardet
+- youz/xlisp-mode
+- youz/xyzzy-lisp
+* sf.net [#u1ba0bb0]
+- [[KaMail:http://sourceforge.net/projects/kamail/]]

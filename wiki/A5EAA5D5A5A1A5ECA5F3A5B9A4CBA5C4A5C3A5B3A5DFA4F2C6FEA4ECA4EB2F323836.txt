@@ -1,0 +1,33 @@
+* get-window-line [#uacbe4bc]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[lambda]]
+-優先順位:   低
+-状態:       着手
+-カテゴリー: 新規項目
+-投稿日:     2007-07-01 (日) 01:04:35
+-バージョン: 
+
+** メッセージ [#u8592bfe]
+ <chapter>
+ <title>get-window-line</title>
+ <type>Function</type>
+ <arguments>get-window-line &amp;optional WINDOW</arguments>
+ <package>editor</package>
+ <description>
+ ウィンドウでのカーソルの表示行を返します。
+ ウィンドウ内の一番上の表示行にカーソルがある場合 0 を返します。
+ 現在のカーソル位置を正確に得るため、行数を取得する前に画面表示
+ を更新します。
+ 
+   WINDOW : ウィンドウを指定します。
+            指定しなければ (selected-window) が使われます。
+ </description>
+ <seealso>window-lines</seealso>
+ <seealso>refresh-screen</seealso>
+ <link></link>
+ <section>ウィンドウ</section>
+ <file>builtin.l</file>
+ </chapter>
+----
+
+#comment

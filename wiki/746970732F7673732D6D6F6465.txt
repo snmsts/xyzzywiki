@@ -1,0 +1,7 @@
+[[tips/vss-mode]]
+
+必要に応じて書いた vss-mode、簡易 scheme-mode、あやしい Xyki など
+
+[[xyzzy@FUN>http://fun.sci.fukuoka-u.ac.jp/wiki/index.php?xyzzy]]
+
+一回間違ってしまいました…

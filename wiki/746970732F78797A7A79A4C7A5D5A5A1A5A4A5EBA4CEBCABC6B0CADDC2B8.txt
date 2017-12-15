@@ -1,0 +1,63 @@
+[[Emacsでファイルの自動保存:http://www.namazu.org/~satoru/unimag/12/index.html#label:9]]
+を移植したもの
+
+ ;;
+ ;; xyzzy でファイルの自動保存
+ ;;
+ ;; Emacsでファイルの自動保存
+ ;;   http://www.namazu.org/~satoru/unimag/12/index.html#label:9
+ ;; を移植したもの
+ ;;
+ ;; (require "auto-save-buffers")
+ ;;
+ 
+ (provide "auto-save-buffers")
+ (in-package "editor")
+ 
+ (export '(auto-save-buffers
+           *auto-save-buffers-regexp*
+           *auto-save-buffers-p*
+           *auto-save-buffers-interval*))
+ 
+ ;; auto-save-buffers で対象とするファイルの正規表現
+ (defvar *auto-save-buffers-regexp* ".*"
+   "*Regexp that matches `buffer-file-name' to be auto-saved.")
+ 
+ ;; auto-save-buffers で保存中なら non-nil
+ (defvar *auto-save-buffers-p* nil
+   "*non-nil if auto saveing")
+ 
+ ;; 自動保存するまでのアイドル時間
+ (defvar *auto-save-buffers-interval* 0.5)
+ 
+ (defun auto-save-buffers ()
+   "Save buffers if `buffer-file-name' matches `auto-save-buffers-regexp'."
+   (save-excursion
+     (dolist (buffer (buffer-list))
+       (set-buffer buffer)
+       (when (and (buffer-modified-p)
+                  (not buffer-read-only)
+                  (get-buffer-file-name)
+                  (file-writable-p (get-buffer-file-name))
+                  (string-match *auto-save-buffers-regexp* (get-buffer-file-name)))
+         (setf *auto-save-buffers-p* t)
+         (save-buffer)
+         (setf *auto-save-buffers-p* nil)))))
+ 
+ (add-hook '*post-command-hook*
+           #'(lambda ()
+             (stop-timer 'auto-save-buffers)
+             (start-timer *auto-save-buffers-interval* 'auto-save-buffers t)))
+
+*使い方 [#af65bc6a]
++auto-save-buffers.l っていう名前で site-lisp に保存する。
++.xyzzyに (require "auto-save-buffers") を追加。
+
+で勝手に保存し始めます。
+
+保存までの間隔を変えたい場合は *auto-save-buffers-interval* を
+設定します。~
+デフォルトは 0.5 (秒) です。
+----
+#comment
+- 1 -- [[1]] &new{2015-04-01 (水) 04:48:45};

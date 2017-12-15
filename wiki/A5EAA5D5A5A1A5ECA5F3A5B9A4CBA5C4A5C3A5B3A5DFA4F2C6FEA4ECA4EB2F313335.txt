@@ -1,0 +1,106 @@
+*auto-fill-mode, expand-abbrev, dabbrev-expand, mouse-menu-popup[#a927ced5]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-07-03 23:01:49 (日)
+-バージョン: 
+
+**メッセージ [#bfa044b5]
+ <chapter>
+ <title>auto-fill-mode</title>
+ <type>Function</type>
+ <arguments>auto-fill-mode &amp;optional (ARG () SARG)</arguments>
+ <package>editor</package>
+ <description>
+ 自動詰め込みモードの開始と終了をトグルします。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>fill.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>expand-abbrev</title>
+ <type>Function</type>
+ <arguments>expand-abbrev</arguments>
+ <package>editor</package>
+ <description>
+ カーソル位置で静的略称展開を行います。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>abbrev.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>dabbrev-expand</title>
+ <type>Function</type>
+ <arguments>dabbrev-expand &amp;optional ARG</arguments>
+ <package>editor</package>
+ <description>
+ 動的略称展開により候補を順番に表示します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>dabbrev.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>mouse-menu-popup</title>
+ <type>Function</type>
+ <arguments>mouse-menu-popup &amp;optional APPS</arguments>
+ <package>editor</package>
+ <description>
+ ポップアップメニューを表示します。
+ 
+   APPS  : メニューの表示位置を指定します。
+      nil      マウスカーソル位置
+      non-nil  カーソル位置
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>メニュー</section>
+ <file>mouse.l</file>
+ </chapter>
+
+----
+seealsoに存在しないものの調整作業について
+-書いた
+--*standard-input*
+--auto-fill-mode
+--dabbrev-expand
+--delete-command-bar
+--delete-hook
+--display-rest-tab-char
+--eval-buffer
+--expand-abbrev
+--mouse-menu-popup
+--re-search-forward-again
+--search-forward-again
+--tail-f
+--with-input-from-string
+-削除する
+--copy-sequence
+--セレクション
+--フック変数
+-書けないのでそのまま
+--*character-name-hash-table*
+--coerce
+--go
+--labels
+--make-character-name-hash-table
+--nsbulis
+--nset-difference
+--set-syntax-close-tag
+--set-syntax-open-tag
+--si:performance-counter
+--syntax-start-column-comment
+-取り込みました。→[[refwiki:auto-fill-mode]], [[refwiki:expand-abbrev]], [[refwiki:dabbrev-expand]], [[refwiki:mouse-menu-popup]] -- [[NANRI]] &new{2005-08-11 23:23:05 (木)};
+
+#comment

@@ -1,0 +1,83 @@
+* next-xyzzy-window, previous-xyzzy-window, list-xyzzy-windows, activate-xyzzy-window [#o35878b3]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NYRL]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-05-10 (水) 17:17:30
+-バージョン: 
+
+** メッセージ [#qb106a56]
+ <chapter>
+ <title>next-xyzzy-window</title>
+ <type>Function</type>
+ <arguments>next-xyzzy-window</arguments>
+ <package>editor</package>
+ <description>
+ 次のxyzzyに移動します。
+ 移動順は起動した順です。
+ </description>
+ <seealso>previous-xyzzy-window</seealso>
+ <seealso>list-xyzzy-windows</seealso>
+ <link></link>
+ <section>プロセス</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>previous-xyzzy-window</title>
+ <type>Function</type>
+ <arguments>previous-xyzzy-window</arguments>
+ <package>editor</package>
+ <description>
+ 前のxyzzyに移動します。
+ 移動順は起動した順の逆です。
+ </description>
+ <seealso>next-xyzzy-window</seealso>
+ <seealso>list-xyzzy-windows</seealso>
+ <link></link>
+ <section>プロセス</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>list-xyzzy-windows</title>
+ <type>Function</type>
+ <arguments>list-xyzzy-windows</arguments>
+ <package>editor</package>
+ <description>
+ 起動中のxyzzyの一覧をリスト形式で返します。
+   
+   (list-xyzzy-windows)
+   =&gt;((0 . "*scratch* - xyzzy 0.2.2.235@XYZZY") (1 . "*untitled* - xyzzy 0.2.2.235@XYZZY") (2 . "*untitled*&lt;2&gt; - xyzzy 0.2.2.235@XYZZY"))
+ </description>
+ <seealso>next-xyzzy-window</seealso>
+ <seealso>previous-xyzzy-window</seealso>
+ <link></link>
+ <section>プロセス</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>activate-xyzzy-window</title>
+ <type>Function</type>
+ <arguments>activate-xyzzy-window INSTANCE</arguments>
+ <package>editor</package>
+ <description>
+ 指定したxyzzyをアクティブにします。
+   
+   INSTANCE : 起動中のxyzzyに割り当てられた非負の整数
+ </description>
+ <seealso>si:*instance-number</seealso>
+ <seealso>list-xyzzy-windows</seealso>
+ <link></link>
+ <section>プロセス</section>
+ <file>builtin.l</file>
+ </chapter>
+
+--------
+- どーもです。ちょこちょこと直しました。 -- [[NANRI]] &new{2006-05-10 (水) 22:48:30};
+- ちょっと seealso 加えました。 -- [[中野]] &new{2006-05-13 (土) 16:44:57};
+
+#comment

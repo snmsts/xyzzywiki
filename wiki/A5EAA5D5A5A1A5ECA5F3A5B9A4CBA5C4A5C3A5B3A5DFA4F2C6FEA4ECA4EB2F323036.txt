@@ -1,0 +1,361 @@
+* ファイル関連 [#n2e8b279]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[Nomura]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-04-23 (日) 01:15:08
+-バージョン: 
+
+** メッセージ [#m06cf847]
+大体新規項目ですが、*find-file-hooks*と*find-file-read-only-hook*は加筆です。
+
+ <chapter>
+ <title>create-shortcut-to-desktop</title>
+ <type>Function</type>
+ <arguments>create-shortcut-to-desktop PATH &amp;rest REST</arguments>
+ <package>editor</package>
+ <description>
+ デスクトップに PATH へのショートカットを作ります。
+ </description>
+ <seealso>create-shortcut</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>files.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>save-all-buffers-kill-xyzzy</title>
+ <type>Function</type>
+ <arguments>save-all-buffers-kill-xyzzy</arguments>
+ <package>editor</package>
+ <description>
+ すべてのバッファを保存して xyzzy を終了します。
+ save-all-buffers と kill-xyzzy の組み合わせです。
+ </description>
+ <seealso>save-buffers-kill-xyzzy</seealso>
+ <seealso>kill-xyzzy</seealso>
+ <seealso>save-some-buffers</seealso>
+ <seealso>save-all-buffers</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>files.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>save-all-buffers</title>
+ <type>Function</type>
+ <arguments>save-all-buffers</arguments>
+ <package>editor</package>
+ <description>
+ すべてのバッファを保存します。
+ ファイル名があるバッファに対しては確認せずに保存します。
+ ファイル名がないバッファに対しては、ダイアログで保存するファイルを指定させます。
+ </description>
+ <seealso>save-all-buffers-kill-xyzzy</seealso>
+ <seealso>save-some-buffers</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>files.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>save-buffers-kill-xyzzy</title>
+ <type>Function</type>
+ <arguments>save-buffers-kill-xyzzy &amp;optional VERBOSE</arguments>
+ <package>editor</package>
+ <description>
+ 開いているバッファを保存して xyzzy を終了します。
+ save-some-buffers と kill-xyzzy の組み合わせです。
+ 
+   VERBOSE : non-nil の場合保存するファイルごとにダイアログを表示して確認します。
+ </description>
+ <seealso>save-all-buffers-kill-xyzzy</seealso>
+ <seealso>kill-xyzzy</seealso>
+ <seealso>save-some-buffers</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>files.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>new-file</title>
+ <type>Function</type>
+ <arguments>new-file</arguments>
+ <package>editor</package>
+ <description>
+ ファイルに関連付けられていない新しいバッファ *untitled* を作ります。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>files.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>append-file</title>
+ <type>Function</type>
+ <arguments>append-file FILENAME &amp;optional NOMSG CHAR-ENCODING EOL-CODE</arguments>
+ <package>editor</package>
+ <description>
+ バッファの内容を FILENAME に追加書き込みします。
+ write-file で APPEND を non-nil にした場合と同じです。
+ 
+   NOMSG         : non-nil ならステータスバーに経過メッセージを表示しません。
+   CHAR-ENCODING : エンコーディングを指定します。
+   EOL-CODE      : 改行コードを指定します。
+ </description>
+ <seealso>write-file</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>files.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>save-buffer</title>
+ <type>Function</type>
+ <arguments>save-buffer &optional CHAR-ENCODING EOL-CODE</arguments>
+ <package>editor</package>
+ <description>
+ バッファの内容を、バッファに関連付けられたファイルに書き込みます。[C-x C-s]
+ 
+ バッファに変更が無かった場合は何もしません。
+ バッファに変更があり、関連付けられたファイルがない場合、エラーになります。
+ 
+   CHAR-ENCODING : エンコーディングを指定します。
+   EOL-CODE      : 改行コードを指定します。
+ </description>
+ <seealso>emacs-write-file</seealso>
+ <seealso>write-file</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>emacs-write-file</title>
+ <type>Function</type>
+ <arguments>emacs-write-file FILENAME</arguments>
+ <package>editor</package>
+ <description>
+ バッファの内容を FILENAME に書き込みます。
+ 同時にバッファ名およびバッファに関連付けられたファイルも変更します。
+ </description>
+ <seealso>save-buffer</seealso>
+ <seealso>write-file</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>files.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>write-file</title>
+ <type>Function</type>
+ <arguments>write-file FILENAME &amp;optional NOMSG APPEND CHAR-ENCODING EOL-CODE</arguments>
+ <package>editor</package>
+ <description>
+ バッファの内容を FILENAME に書き込みます。[C-x C-w]
+ バッファ名およびバッファに関連付けられたファイルは変更しません。
+ 
+   NOMSG         : non-nil ならステータスバーに経過メッセージを表示しません。
+   APPEND        : non-nil ならファイルに追加します。
+   CHAR-ENCODING : エンコーディングを指定します。
+   EOL-CODE      : 改行コードを指定します。
+ </description>
+ <seealso>append-file</seealso>
+ <seealso>save-buffer</seealso>
+ <seealso>emacs-write-file</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>files.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-file</title>
+ <type>Function</type>
+ <arguments>read-file FILENAME &amp;optional ENCODING NOMSG</arguments>
+ <package>editor</package>
+ <description>
+ バッファをクリアして FILENAME の内容を書き込みます。[C-x C-r]
+ バッファ名およびバッファに関連付けられたファイルは変更しません。
+ 
+   ENCODING : エンコーディングを指定します。
+   NOMSG    : non-nil ならステータスバーに経過メッセージを表示しません。
+ </description>
+ <seealso>find-file</seealso>
+ <seealso>insert-file-contents</seealso>
+ <seealso>insert-file</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>find-file-read-only</title>
+ <type>Function</type>
+ <arguments>find-file-read-only FILENAME &amp;optional ENCODING NOMSG</arguments>
+ <package>editor</package>
+ <description>
+ ファイル FILENAME を read-only で開きます。
+ FILENAME はファイルのリストであってもかまいません。
+ 
+ すでに FILENAME を読み込んでいるバッファがある場合、そのバッファを read-only に設定します。
+ FILENAME を読み込んでいるバッファがない場合は find-file と同様にファイルを読み込み、
+ バッファを read-only に設定して *find-file-hooks* を実行します。
+ 
+ いずれの場合も最後に *find-file-read-only-hook* を実行します。
+ 
+   ENCODING : エンコーディングを指定します。
+   NOMSG    : non-nil ならステータスバーに経過メッセージを表示しません。
+ </description>
+ <seealso>find-file</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>files.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*find-file-no-auto-encoding*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ non-nil なら、*auto-encoding-alist* によるエンコーディングの判定を行いません。
+ </description>
+ <seealso>*auto-encoding-alist*</seealso>
+ <seealso>find-file</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>files.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*auto-encoding-alist*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ エンコーディング判定用の連想リストです。(key . datum) の組で登録します。
+ find-file または find-file-read-only の際に ENCODING が指定されず、
+ *find-file-no-auto-encoding* が nil の時、
+ (string-matchp key filename) が non-nil となった場合、datum をfuncallします。
+ datum にはエンコーディングもしくはエンコーディングを表す文字列を返す関数を指定します。
+ </description>
+ <seealso>*find-file-no-auto-encoding*</seealso>
+ <seealso>find-file</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>files.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*find-file-auto-mode-function*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ find-file の際にモードを設定するための関数を登録します。
+ 
+ ファイルの先頭のパラメータ（-*- Mode: LISP -*- など）や 
+ *auto-mode-alist* よりも優先されます。
+ </description>
+ <seealso>*auto-mode-parameter-alist*</seealso>
+ <seealso>*auto-mode-alist*</seealso>
+ <seealso>find-file</seealso>
+ <link></link>
+ <section>モード</section>
+ <file>files.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*auto-mode-parameter-alist*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ ファイルの先頭のパラメータに対し、実行する関数を指定する alist です。
+ 書式は (文字列 . 関数) となっています。
+ 
+ ファイルの先頭にパラメータ -*- aaa: bbb -*- がある場合、
+ "aaa" に string-equal な文字列が *auto-mode-parameter-alist* に登録されていれば、
+ 対応する関数を "bbb" を引数にして funcall します。
+ 
+ デフォルト値は
+   '(("mode" . find-file-auto-mode)
+     ("package" . find-file-buffer-package))
+ です。
+ </description>
+ <seealso>*find-file-auto-mode-function*</seealso>
+ <seealso>*auto-mode-alist*</seealso>
+ <seealso>find-file</seealso>
+ <link></link>
+ <section>モード</section>
+ <file>files.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*find-other-file-requires-file-name*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ non-nil なら find-other-file のプロンプト時に現在のバッファ名を表示します。
+ </description>
+ <seealso>find-other-file</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>files.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*default-write-file-directory*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ write-file および emacs-write-file 時のデフォルトのディレクトリを指定します。
+ </description>
+ <seealso>emacs-write-file</seealso>
+ <seealso>write-file</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>files.l</file>
+ </chapter>
+
+ <chapter>
+ <title>*find-file-read-only-hook*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ find-file-read-only でファイルごとに最後に実行されます。
+ *find-file-hooks* と異なり、すでにファイルが開かれていた場合にも実行されます。
+ </description>
+ <seealso>*find-file-hooks*</seealso>
+ <seealso>find-file-read-only</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>files.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>*find-file-hooks*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>editor</package>
+ <description>
+ find-file および find-file-read-only で新しいファイルを開くたびに、最後に実行されます。
+ すでにファイルを開いているバッファが存在した場合には実行されません。
+ </description>
+ <seealso>*find-file-read-only-hook*</seealso>
+ <seealso>find-file-read-only</seealso>
+ <seealso>find-file</seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file>files.l</file>
+ </chapter>
+--------
+- どーもです。 -- [[NANRI]] &new{2006-04-23 (日) 23:07:11};
+
+#comment

@@ -1,0 +1,30 @@
+* CVS-Mode がうまく使えない。 [#i0806bd6]
+-ページ: [[質問箱]]
+-投稿者: [[あれっぽ]]
+-状態: 投稿者反応待ち
+-投稿日: 2004-10-07 (木) 14:37:57
+
+** メッセージ [#iee109a6]
+pserver 経由で、チェックアウトしたファイルを開こうとしたら、
+うまく開けません。以下のようなトレースを吐きます。
+どなたかお教えいただけないでしょうか。
+
+ >CALL STACK  8: (system:*byte-code ...)
+ >CALL STACK  7: (cvs::open-file)
+ >CALL STACK  6: (run-hooks *find-file-hooks*)
+ >CALL STACK  5: (system:*byte-code ...)
+ >CALL STACK  4: (editor::find-file-internal "C:/Home/PL_SQL/TEST_SPEC.SQL" nil nil nil nil)
+ >CALL STACK  3: (system:*byte-code ...)
+ >CALL STACK  2: (#<lexical-closure: find-file> "C:/Home/PL_SQL/TEST_SPEC.SQL" nil)
+ >CALL STACK  1: (command-execute find-file)
+ 不正なデータ型です: interactive: function
+
+----
+-.lc ファイルを削除してダンプしなおし，M-x toggle-trace-on-error してからもう一度試してください --  &new{2004-10-08 (金) 15:09:54};
+->CALL STACK  2: (#<lexical-closure: (anonymous)>) -- [[秘すれば花 ]] &new{2004-10-08 (金) 15:34:04};
+->CALL STACK  1: (command-execute #<lexical-closure: (anonymous)>) -- [[秘すれば花]] &new{2004-10-08 (金) 15:34:18};
+-最初のトレースに加えて、さらに以下のログが出ました。 -- [[秘すれば花]] &new{2004-10-08 (金) 15:34:54};
+-ちなみに、CVSNT です。 -- [[あれっぽ]] &new{2004-10-08 (金) 15:36:06};
+-cvs-mode のバージョンは? なかださんのパッチと wiki のパッチはあててある? pure な xyzzy 環境で一からやっても再現する? --  &new{2004-10-08 (金) 21:38:09};
+
+#comment

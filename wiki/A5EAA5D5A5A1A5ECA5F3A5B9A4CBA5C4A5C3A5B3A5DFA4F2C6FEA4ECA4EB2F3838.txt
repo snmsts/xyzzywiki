@@ -1,0 +1,46 @@
+*count-column [#g25c323b]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[OHKUBO]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-11-21 (日) 11:47:14
+-バージョン: 20041115
+
+**メッセージ [#yf891014]
+ <chapter>
+ <title>count-column</title>
+ <type>Function</type>
+ <arguments>count-column STRING &amp;optional START BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ 文字列 STRING を出力した場合の出力後の桁位置を返します。
+ START と BUFFER はタブ文字の幅の計算に影響を与えます。
+ 
+   STRING : 対象文字列
+   START  : 出力開始とする桁位置
+         nil      桁位置 0 からの出力
+         INTEGER  桁位置 INTEGER からの出力 (0 未満の場合 range-error)
+   BUFFER : 出力バッファ
+         nil      タブ幅として (tab-column) の値を用います。
+                  (tab-column (selected-buffer)) の値ではありません。
+         BUFFER   タブ幅として (tab-column BUFFER) の値を用います。
+ 
+ 戻り値：
+   INTEGER   文字列 STRING 出力後の桁位置
+ 
+ 補足：
+   改行文字 "\n" は桁位置の初期化としては働かず、幅 2 として扱われます。
+ </description>
+ <seealso>char-columns</seealso>
+ <seealso>current-column</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-[[refwiki:count-column]] に取り込みました。 -- [[NANRI]] &new{2004-12-18 (土) 01:49:50};
+
+#comment

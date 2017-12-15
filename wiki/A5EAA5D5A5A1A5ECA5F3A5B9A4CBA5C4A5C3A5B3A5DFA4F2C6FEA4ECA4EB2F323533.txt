@@ -1,0 +1,108 @@
+* or [#g38c392a]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[OMA]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: ツッコミをいれる
+-投稿日:     2007-01-17 (水) 13:24:33
+-バージョン: 
+
+** メッセージ [#t125975a]
+コメントが他の説明と意味が異なっているようです
+
+元：
+  ;;; exp1 がnilなら、そこで実行を中止しnilを返す。
+  ;;; exp2 がnilなら、そこで実行を中止しnilを返す。
+新：
+  ;;; exp1 がnonnilなら、そこで実行を中止しexp1の値を返す。
+  ;;; exp2 がnonnilなら、そこで実行を中止しexp2の値を返す。
+
+ <chapter>
+ <title>or</title>
+ <type>Macro</type>
+ <arguments>or {FORM}*</arguments>
+ <package>lisp</package>
+ <description>
+ フォームがnilの間だけ順番に評価します。
+ フォームが一つでもnilでなければ、そこで評価を中断してフォームの値を返し
+ て終了します。全てのフォームがnilならば、nilを返します。
+ 
+   ;;; exp1 がnonnilなら、そこで実行を中止しexp1の値を返す。
+   ;;; exp2 がnonnilなら、そこで実行を中止しexp2の値を返す。
+   ;;; ...
+   ;;; 最後に実行したexpの値を返す。
+   (or exp1 exp2 exp3 ...)
+ 
+ ルールに従って一つだけ値を定める場合に向いていると思います。
+ 
+   (or (get-buffer-file-name) ; バッファにファイル名があればそれを使う。
+       *foo*                  ; ファイル名がなければ、変数*foo*の値を使う。
+      (read-string "foo: ")) ; *foo*にも値が無ければ入力してもらう。
+ </description>
+ <seealso>and</seealso>
+ <section>制御構造</section>
+ <file>evalmacs.l</file>
+ </chapter>
+
+----
+- andにあわせて、  ;;; exp1 がnilなら exp2を実行し、  としてはどうでしょう？ --  &new{2007-01-17 (水) 17:38:43};
+- どーもです。orはかつて指摘されていた気がしますが、直りきっていなかったのですね(^^; andの記述も少しいじって表現をそろえました。 -- [[NANRI]] &new{2007-01-17 (水) 20:56:16};
+ <chapter>
+ <title>and</title>
+ <type>Macro</type>
+ <arguments>and &amp;rest FORMS</arguments>
+ <package>lisp</package>
+ <description>
+ フォームがnon-nilの間だけ順番に評価します。
+ フォームが一つでもnilならば、そこで評価を中断してnilを返して終了します。
+ 全てのフォームがnon-nilならば、最後に実行したフォームの値を返します。
+ 
+   ;;; exp1 がnon-nilなら exp2を実行し、
+   ;;; exp2 がnon-nilなら exp3を実行し、
+   ;;; exp3 がnon-nilなら.......
+   (and exp1 exp2 exp3 ...)
+ 
+ 例えば、以下の様にチェックを順番に記述するような場合に向いていると思います。
+ チェックに失敗すれば、以降の処理は実行しません。
+ 
+   (and (file-exist-p ...) ; 特定のファイルの存在チェック
+        (find-file ...)    ; そのファイルを読み込みチェック
+        (scan-buffer ...)  ; 正規表現で検索
+        (match-string 2)   ; 検索結果のチェック
+        ...)
+ </description>
+ <seealso>or</seealso>
+ <link></link>
+ <section>制御構造</section>
+ <file>evalmacs.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>or</title>
+ <type>Macro</type>
+ <arguments>or &amp;rest FORMS</arguments>
+ <package>lisp</package>
+ <description>
+ フォームがnilの間だけ順番に評価します。
+ フォームが一つでもnon-nilならば、そこで評価を中断してフォームの値を返し
+ て終了します。全てのフォームがnilならば、nilを返します。
+ 
+   ;;; exp1 がnilならexp2を実行し、
+   ;;; exp2 がnilならexp3を実行し、
+   ;;; exp3 がnilなら......
+   ;;; 最後に実行したexpの値を返す。
+   (or exp1 exp2 exp3 ...)
+ 
+ ルールに従って一つだけ値を定める場合に向いていると思います。
+ 
+   (or (get-buffer-file-name) ; バッファにファイル名があればそれを使う。
+       *foo*                  ; ファイル名がなければ、変数*foo*の値を使う。
+       (read-string "foo: ")) ; *foo*にも値が無ければ入力してもらう。
+ </description>
+ <seealso>and</seealso>
+ <link></link>
+ <section>制御構造</section>
+ <file>evalmacs.l</file>
+ </chapter>
+
+#comment

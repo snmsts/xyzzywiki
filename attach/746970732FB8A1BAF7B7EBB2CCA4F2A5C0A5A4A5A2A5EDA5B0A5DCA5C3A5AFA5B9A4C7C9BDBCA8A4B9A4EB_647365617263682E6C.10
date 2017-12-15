@@ -1,0 +1,358 @@
+;;; -*- Mode: Lisp; Package: EDITOR -*-
+;;;
+;;; dsearch.l
+;;;
+;;; Last updated: "2004/12/13 23:57:13 +0900"
+;;;
+#|
+このlispを作成するにあたり、深江さんの psearch.l と須田さんの文字列取得検索を
+参考にさせて頂きました。m(__)m
+また、OHKUBO Hiroshi さんの pickup-pattern.l を利用させて頂いています。m(__)m
+作者が書いた部分については改変・再配布など自由に行ってもらって構いません。
+使用は自己責任でお願いします。
+
+※使用には OHKUBO Hiroshi さんの pickup-pattern.l が必要です。
+search-dialog に「一覧表示」・「設定保存」・「行(文字列)単位」を追加しています。
+search-dialog での設定を引き継いで検索を行います。
+search-dialog で「行(文字列)単位」にチェックを入れると一覧を行単位で表示します（入れないと文字列単位）。
+dsearch-input の時セレクションがなければ、カーソル位置から前方検索（C-u M-x dsearch-input などで後方検索）
+してダイアログにフォーカスを設定します（search-dialog から一覧表示する場合も同様です）。
+
+設定例:
+(require "pickup-pattern")
+(require "dsearch")
+(global-set-key #\C-1 'dsearch-input)
+(global-set-key #\C-2 'dsearch)
+(global-set-key #\C-3 'dsearch-again)
+(global-set-key #\C-4 'dsearch-goto-return-point)
+
+アンインストール:
+Esc キーを二回押してミニバッファに
+(unregister-history-variable 'ed::*dsearch-form*)
+と記述し、Enterを押した後で dsearch.l に関する記述・ファイルを削除して下さい
+（siteinit.l に記述していた場合は再ダンプが必要）。
+|#
+
+(provide "dsearch")
+
+(in-package "editor")
+
+(export '(dsearch-input dsearch
+	  dsearch-again dsearch-goto-return-point))
+
+(defvar *dsearch-word* nil)
+(defvar *dsearch-return-marker* nil)
+(defvar *last-dsearch-line* nil)
+(defvar *last-dsearch-point* nil)
+(defvar *dsearch-count-matches* nil)
+(define-history-variable *dsearch-form* nil)
+
+(defun dsearch-input (str &optional arg)
+  (interactive "sdsearch: \np"
+    :default0 (or (dsearch-selection-start-end (start end) (buffer-substring start end))
+		  (car *minibuffer-search-string-history*)) :history0 'search)
+  (if (> (length str) 0)
+      (progn
+	(focus-dsearch-list str arg)
+	(dsearch-dialog str))
+    (plain-error "文字列が入力されていません。")))
+
+(defun focus-dsearch-list (str arg)
+  (cond ((pre-selection-p)
+	 (let ((from (selection-mark))
+	       (to (selection-point)))
+	   (when (> from to) (rotatef from to))
+	   (save-excursion (goto-char from)
+	     (setq *last-dsearch-line* (current-line-number)))
+	   (setq *last-dsearch-point* from)))
+	(t
+	 (when *understand-escape-sequences*
+	   (setq str (decode-escape-sequence str *regexp-search*)))
+	 (when *regexp-search*
+	   (setq str (compile-regexp str *case-fold-search*)))
+	 (save-excursion
+	   (scan-buffer str
+			:case-fold *case-fold-search*
+			:reverse arg
+			:left-bound *word-search*
+			:right-bound *word-search*)
+	   (setq *last-dsearch-line* (current-line-number))
+	   (setq *last-dsearch-point* (point))))))
+
+(defun dsearch ()
+  (interactive)
+  (let (from to)
+    (cond ((eq (get-selection-type) 2)
+	   (setq from (selection-mark))
+	   (setq to (selection-point))
+	   (when (> from to) (rotatef from to)))
+	  ((eq (get-selection-type) nil)
+	   (setq from (save-excursion (goto-word-head) (point)))
+	   (setq to (save-excursion (forward-word) (point)))))
+    (save-excursion (goto-char from)
+      (setq *last-dsearch-line* (current-line-number)))
+    (setq *last-dsearch-point* from)
+    (dsearch-dialog
+     (buffer-substring from to))))
+
+(defun goto-word-head ()
+  (cond ((looking-at " ")
+	 (backward-word 1))
+	((looking-at "\\<"))
+	(t
+	 (backward-word 1))))
+
+(defun dsearch-make-list (str)
+  (let (no-dup (line 0) matches from to num lnum front text)
+    (setq *dsearch-count-matches* 0)
+    (save-excursion
+      (goto-char (point-min))
+      (while (scan-buffer str
+			  :no-dup no-dup
+			  :case-fold *case-fold-search*
+			  :left-bound *word-search*
+			  :right-bound *word-search*)
+	(setq no-dup t)
+	(setq *dsearch-count-matches* (1+ *dsearch-count-matches*))
+	(if *dsearch-form*
+	    (progn
+	      (setq num (current-line-number))
+	      (when (/= line num)
+		(setq line num)
+		(setq from (save-excursion (goto-bol) (point)))
+		(setq to (save-excursion (goto-eol) (point)))
+		(setq text (string-left-trim
+			    '(#\SPC #\TAB #\　)
+			    (buffer-substring from to)))
+		(setq lnum (if (default-line-number-mode)
+			       (current-virtual-line-number)
+			     (current-line-number)))
+		(push (list lnum text num) matches)))
+	  (progn
+	    (setq num (point))
+	    (setq from (save-excursion (goto-bol) (point)))
+	    (setq to (save-excursion (goto-eol) (point)))
+	    (setq front (buffer-substring from num))
+	    (setq text (buffer-substring num to))
+	    (setq lnum (if (default-line-number-mode)
+			   (current-virtual-line-number)
+			 (current-line-number)))
+	    (push (list lnum num front text) matches)))))
+    (nreverse matches)))
+
+(defun dsearch-dialog (str)
+  (add-history str '*minibuffer-search-string-history*)
+  (setq *dsearch-word* str)
+  (if *understand-escape-sequences*
+      (setq *last-search-string-pair*
+	    (cons str
+		  (setq str (decode-escape-sequence
+			     str *regexp-search*))))
+    (setq *last-search-string-pair* nil))
+  (setq *last-search-p* t)
+  (setq *last-search-regexp-p* *regexp-search*)
+  (if *regexp-search*
+      (progn
+	(setq *last-search-regexp* str)
+	(setq str (compile-regexp str *case-fold-search*)))
+    (setq *last-search-string* str))
+  (let ((list (dsearch-make-list str))
+	pickup-item)
+    (if list
+	(progn
+	  (pickup-pattern-unset-all)
+	  (setq pickup-item (make-pickup-pattern-item :pattern str
+						      :regexp *regexp-search*))
+	  (pickup-pattern-set pickup-item t t)
+	  (refresh-screen)
+	  (setq *dsearch-return-marker* (set-marker (make-marker) (point)))
+	  (message "<~A> ~D個の文字列があります" *dsearch-word* *dsearch-count-matches*)
+	  (if *dsearch-form*
+	      (dsearch-dialog-1 list str)
+	    (dsearch-dialog-2 list str)))
+      (plain-error "文字列が見つかりません"))))
+
+(defun dsearch-dialog-1 (list str)
+  (multiple-value-bind (result data)
+      (dialog-box
+       '(dialog 0 0 500 126
+	 (:caption "検索結果(行単位)")
+	 (:font 9 "ＭＳ Ｐゴシック")
+	 (:control
+	  (:listbox list nil #x50b10111 4 5 450 117)
+	  (:button go "移動(&G)" #x50010001 457 5 40 14)
+	  (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 457 24 40 14)
+	  (:button change "切り替え(&C)" #x50010000 457 43 40 14)))
+       (list (cons 'list list)
+	     (cons 'list (find *last-dsearch-line* list :key #'caddr)))
+       `((list :column (-6 300 0) :must-match t :enable (go change))))
+    (when result
+      (setq *last-dsearch-line* (cadddr (assoc 'list data)))
+      (cond ((eq result 'change)
+	     (setq *dsearch-form* nil)
+	     (unless (and *last-dsearch-point*
+			  (save-excursion (goto-char *last-dsearch-point*)
+			    (= *last-dsearch-line* (current-line-number))))
+	       (save-excursion
+		 (goto-line *last-dsearch-line*)
+		 (scan-buffer str
+			      :case-fold *case-fold-search*
+			      :left-bound *word-search*
+			      :right-bound *word-search*)
+		 (setq *last-dsearch-point* (point))))
+	     (dsearch-dialog *dsearch-word*))
+	    (t
+	     (dsearch-jump-word *last-dsearch-line* str))))))
+
+(defun dsearch-dialog-2 (list str)
+  (multiple-value-bind (result data)
+      (dialog-box
+       '(dialog 0 0 500 126
+	 (:caption "検索結果(文字列単位)")
+	 (:font 9 "ＭＳ Ｐゴシック")
+	 (:control
+	  (:listbox list nil #x50b10111 4 5 450 117)
+	  (:button go "移動(&G)" #x50010001 457 5 40 14)
+	  (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 457 24 40 14)
+	  (:button change "切り替え(&C)" #x50010000 457 43 40 14)))
+       (list (cons 'list list)
+	     (cons 'list (find *last-dsearch-point* list :key #'cadr)))
+       `((list :column (-6 0 -60 300) :must-match t :enable (go change))))
+    (when result
+      (setq *last-dsearch-point* (caddr (assoc 'list data)))
+      (cond ((eq result 'change)
+	     (setq *dsearch-form* t)
+	     (save-excursion (goto-char *last-dsearch-point*)
+	       (setq *last-dsearch-line* (current-line-number)))
+	     (dsearch-dialog *dsearch-word*))
+	    (t
+	     (dsearch-jump-word *last-dsearch-point* str))))))
+
+(defun dsearch-jump-word (num str)
+  (if *dsearch-form*
+      (goto-line num)
+    (goto-char num))
+  (scan-buffer str
+	       :case-fold *case-fold-search*
+	       :left-bound *word-search*
+	       :right-bound *word-search*)
+  (show-match))
+
+(defun dsearch-again ()
+  (interactive)
+  (if *dsearch-word*
+      (dsearch-dialog *dsearch-word*)
+    (plain-error "ないよん")))
+
+(defun dsearch-goto-return-point ()
+  (interactive)
+  (if *dsearch-return-marker*
+      (if (marker-point *dsearch-return-marker*)
+	  (progn (when (pre-selection-p) (stop-selection))
+	    (goto-char (marker-point *dsearch-return-marker*)))
+	(plain-error "マーカーが削除されています。"))
+    (plain-error "マーカーが設定されていません。")))
+
+;; search-dialog の書き換え
+(setq *search-dialog-template*
+      '(dialog 0 0 242 95
+	(:caption "文字列の検索")
+	(:font 9 "ＭＳ Ｐゴシック")
+	(:control
+	 (:static nil "検索(&S):" #x50020000 7 10 31 8)
+	 (:combobox search nil #x50210842 39 8 140 96)
+	 (:button case-fold "大文字小文字を区別する(&C)" #x50010006 39 27 113 10)
+	 (:button word "単語単位で検索する(&W)" #x50010003 39 40 100 10)
+	 (:button regexp "正規表現(&E)" #x50010003 39 53 50 10)
+	 (:button escseq "ｴｽｹｰﾌﾟｼｰｹﾝｽを理解しろ(&Y)" #x50010003 39 66 105 10)
+	 (:button wrap "見つからなければ戻って検索(&V)" #x50010003 39 79 125 10)
+	 (:button backward "上検索(&P)" #x50010000 185 7 50 14)
+	 (:button forward "下検索(&N)" #x50010001 185 24 50 14)
+	 (:button IDCANCEL "ｷｬﾝｾﾙ" #x50010000 185 41 50 14)
+	 (:button form "行(文字列)単位(&F)" #x50010003 115 53 70 10)
+	 (:button catalog "一覧表示(&D)" #x50010000 185 58 50 14)
+	 (:button keep "設定保存(&K)" #x50010000 185 75 50 14))))
+
+(defun search-dialog (&optional arg)
+  (interactive "p")
+  (multiple-value-bind (result data)
+      (let ((string (or (dsearch-selection-start-end (start end)
+						     (buffer-substring start end))
+			(if *regexp-search*
+			    *last-search-regexp*
+			  *last-search-string*))))
+	(dialog-box *search-dialog-template*
+		    (list (cons 'search *minibuffer-search-string-history*)
+			  (cons 'case-fold (cfs2dialog *case-fold-search*))
+			  (cons 'word *word-search*)
+			  (cons 'regexp *regexp-search*)
+			  (cons 'search (if (eq (cdr *last-search-string-pair*)
+						string)
+					    (car *last-search-string-pair*)
+					  string))
+			  (cons 'escseq *understand-escape-sequences*)
+			  (cons 'wrap *wrap-search*)
+			  (cons 'form *dsearch-form*))
+		    '((word :disable (regexp))
+		      ;(search :non-null "検索文字列を入力して" :enable (forward backward))
+		      )))
+    (when result
+      (let ((string (cdr (assoc 'search data))))
+	(flet ((check-input ()
+		 (unless (and string (string/= "" string))
+		   (plain-error "検索文字列を入力して")
+		   (return-from search-dialog)))
+	       (keep-setting ()
+		 (setq *case-fold-search* (dialog2cfs (cdr (assoc 'case-fold data))))
+		 (setq *word-search* (cdr (assoc 'word data)))
+		 (setq *regexp-search* (cdr (assoc 'regexp data)))
+		 (setq *wrap-search* (cdr (assoc 'wrap data)))
+		 (setq *understand-escape-sequences* (cdr (assoc 'escseq data)))
+		 (setq *dsearch-form* (cdr (assoc 'form data)))))
+	  (cond ((eq result 'keep)
+		 (keep-setting))
+		((eq result 'catalog)
+		 (check-input)
+		 (keep-setting)
+		 (focus-dsearch-list string arg)
+		 (dsearch-dialog string))
+		(t
+		 (check-input)
+		 (add-history string '*minibuffer-search-string-history*)
+		 (keep-setting)
+		 (if *understand-escape-sequences*
+		     (setq *last-search-string-pair*
+			   (cons string
+				 (setq string (decode-escape-sequence
+					       string *regexp-search*))))
+		   (setq *last-search-string-pair* nil))
+		 (search-command string (eq result 'backward)
+				 (and (null *word-search*) *regexp-search*)
+				 t nil))))))))
+
+(defun dsearch-get-selection-start-end ()
+  (let (start end)
+    (save-excursion
+      (case (get-selection-type)
+	(1
+	 (setq start (progn
+		       (goto-char (selection-point))
+		       (goto-virtual-bol)
+		       (point)))
+	 (setq end (progn
+		     (goto-char (selection-mark))
+		     (goto-virtual-bol)
+		     (point))))
+	(2
+	 (setq start (selection-point))
+	 (setq end (selection-mark)))))
+    ;(stop-selection)
+    (values start end)))
+
+(defmacro dsearch-selection-start-end ((start end) &body body)
+  `(multiple-value-bind (,start ,end)
+       (dsearch-get-selection-start-end)
+     (when ,start
+       ,@body)))
+
+;;;

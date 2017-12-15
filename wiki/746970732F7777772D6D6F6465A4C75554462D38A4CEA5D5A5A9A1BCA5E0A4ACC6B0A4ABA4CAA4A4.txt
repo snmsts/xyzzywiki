@@ -1,0 +1,31 @@
+#freeze
+[[tips]]
+
+*www-modeでUTF-8のフォームが動かない [#y4442d47]
+
+www-modeでUTF-8のページを見ると、フォーム送信時のクエリに余計な文字が付いてしまうようです(たとえば http://delicious.com/search や http://b.hatena.ne.jp/search の検索フォームが使えません)。原因はconvert-encoding-from-internalで*encoding-utf8*に変換するとBOMが付加されることでした(www-form.lのwww-form-submit-formやwww.lのwww-get-encodeあたり)。
+
+ (www::www-url-encode (convert-encoding-from-internal *encoding-utf8* "query"))
+ "%EF%BB%BFquery"
+ 
+ (www::www-url-encode (convert-encoding-from-internal *encoding-utf8n* "query"))
+ "query"
+
+UTF-8のWebページはほとんどUTF-8Nだと思うので、www.lのwww-get-encodingを書き換えることにしました。ソースがutf-8だった場合も無理やりUTF-8Nとして扱います。
+
+ --- www.l.org   Sat May 16 01:25:33 2009
+ +++ www.l       Sat May 16 01:36:03 2009
+ @@ -503,7 +503,9 @@
+                (string-matchp "charset=\\([-_a-zA-Z0-9]+\\)" type))
+        (setq charset (substring type (match-beginning 1) (match-end 1))))
+      ;(message-box (format nil "charset: ~S" charset))
+ +    (if (equal charset "utf-8") (setq charset "utf-8n"))
+      (if (and charset
+ +            (setf (gethash "utf-8n" *mime-charset-name-hash-table*) *encoding-utf8n*)
+              (setq encoding (gethash charset *mime-charset-name-hash-table*)))
+         (progn
+           ;(message-box (format nil "encoding: ~S" encoding))
+
+もっと簡単に~/.wwwに以下を加えるだけでもいいのかもしれません。他に影響が出るかもしれないけど。
+
+ (setf (gethash "utf-8" *mime-charset-name-hash-table*) *encoding-utf8n*)

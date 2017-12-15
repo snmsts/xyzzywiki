@@ -1,0 +1,62 @@
+* vector-push-extend [#m097304a]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-05-21 (日) 19:41:32
+-バージョン: 
+
+** メッセージ [#a78d4b6d]
+
+アジャスタブルでないとエラーを出す事と、EXTENSIONのデフォルト値
+などを追加。
+
+ <chapter>
+ <title>vector-push-extend</title>
+ <type>Function</type>
+ <arguments>vector-push-extend NEW-ELEMENT VECTOR &amp;optional EXTENSION</arguments>
+ <package>lisp</package>
+ <description>
+ ベクタ VECTOR に新しい要素を追加します。長さが足りなければ拡張します。
+ VECTOR はフィルポインタを持ち、かつアジャスタブルなベクタである必要があります。
+ 
+   NEW-ELEMENT：新しい要素 
+   VECTOR     ：追加するベクタ
+   EXTENSION  ：拡張する時のサイズ増加量。
+                デフォルトでは 64 増えます。
+ 
+ 使用例：
+   ;;; 文字を要素とする長さ10のベクタを作成し文字を詰める。
+   (setq vec (make-vector 10 :element-type 'character
+                             :fill-pointer 0 :adjustable t))
+   =&gt; ""
+   (vector-push-extend #\a vec)  =&gt; 0
+   vec                           =&gt; "a"
+   (vector-push-extend #\b vec)  =&gt; 1
+   vec                           =&gt; "ab"
+ 
+   ;;; 文字を要素とする長さ10のベクタを作成し文字を詰める。
+   (setq s (make-vector 10 :element-type 'character
+                           :fill-pointer 0 :adjustable t))
+   =&gt; ""
+   (dotimes (i 20 s)
+     (vector-push-extend (code-char (+ 64 i)) s)
+     (vector-push-extend (code-char (+ 64 i)) s)
+     (vector-push-extend (code-char (+ 64 i)) s))
+   =&gt; "@@@AAABBBCCCDDDEEEFFFGGGHHHIIIJJJKKKLLLMMMNNNOOOPPPQQQRRRSSS"
+ </description>
+ <seealso>vector-push</seealso>
+ <seealso>adjustable-array-p</seealso>
+ <seealso>fill-pointer</seealso>
+ <seealso>vector</seealso>
+ <section>配列</section>
+ <file>builtin.l</file>
+ </chapter>
+
+--------
+- どーもです。vector-pushの表現にそろえました。 -- [[NANRI]] &new{2006-05-21 (日) 23:34:31};
+- 例の *stream* という変数名を， vec にしました． -- [[中野]] &new{2006-05-23 (火) 01:13:22};
+
+#comment

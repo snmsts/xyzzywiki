@@ -1,0 +1,219 @@
+;;; -*- Mode: Lisp; Package: EDITOR; olt-mode : lisp-dots; -*-
+
+(provide "drill")
+
+(in-package "editor")
+
+(export '(*drill-mode-hook* drill-mode *drill-mode-map*
+	  *drill-popup-completion-list* *drill-reg-kwd*
+	  drill-newline
+	  drill-plus
+	  )) ; このファイルに作った関数・変数を外部から使いたい場合はここに関数・変数名を追加
+;;. 変数
+;;.. フック
+(defvar *drill-mode-hook* nil
+  "drill-mode: フック変数")
+
+;;.. その他
+(defvar *drill-popup-completion-list* nil
+  "drill-mode: 補完リストのポップアップ")
+(defvar *drill-comment-column* nil
+  "drill-mode: コメントインデントの幅")
+(defvar *drill-reg-kwd*
+  (compile-regexp-keyword-list nil)
+  "drill-mode: 正規表現キーワード")
+
+(defvar *drill-score-path* "~/" "ドリルの成績を保存する場所")
+(defvar *drill-type* nil "ドリルの種類")
+;;. キーワード
+(defvar *drill-keyword-hash-table* nil)
+(defvar *drill-keyword-file* "drill") ; キーワードファイル名
+
+;;. シンタックステーブル
+(defvar *drill-mode-syntax-table* nil)
+(unless *drill-mode-syntax-table*
+  (setq *drill-mode-syntax-table* (make-syntax-table))
+  (do ((x #x21 (1+ x)))((>= x #x7f))
+    (let ((c (code-char x)))
+      (unless (alphanumericp c)
+	(set-syntax-punctuation *drill-mode-syntax-table* c))))
+  ; 以下modeに合わせて設定
+  (set-syntax-escape *drill-mode-syntax-table* #\\)
+  (set-syntax-string *drill-mode-syntax-table* #\")
+  (set-syntax-string *drill-mode-syntax-table* #\')
+  (set-syntax-match *drill-mode-syntax-table* #\( #\)) ; 対応する()に飛ぶ
+  (set-syntax-match *drill-mode-syntax-table* #\{ #\})
+  (set-syntax-match *drill-mode-syntax-table* #\[ #\])
+  (set-syntax-start-comment *drill-mode-syntax-table* #\; t )    ; 1字コメントの開始
+  (set-syntax-end-comment   *drill-mode-syntax-table* #\LFD t t) ; 1字コメントの終了
+  (set-syntax-start-multi-comment *drill-mode-syntax-table* "/*") ; マルチコメントの開始
+  (set-syntax-end-multi-comment   *drill-mode-syntax-table* "*/") ; マルチコメントの終了
+  )
+
+;;. キーマップ
+(defvar *drill-mode-map* nil)
+(setq *drill-mode-map* nil)
+(unless *drill-mode-map*
+  (setq *drill-mode-map* (make-sparse-keymap))
+  ; 以下キー割当
+  (define-key *drill-mode-map* #\RET 'drill-newline) ;
+  )
+
+
+;;------------------------------------------------------------------------
+;;. drillの編集
+
+(defun drill-newline ()
+  (interactive)
+  (if *drill-begin-time*
+      (unless (scan-buffer "=[ \t]+" :tail t :regexp t)
+	(goto-char (point-min))
+	(let ((time (get-internal-real-time))
+	      (fun *drill-markfun*)
+	      (num-of-problems 0)
+	      (correct 0)
+	      (wrong   0))
+	  (loop
+	    (multiple-value-bind (more-problems result)
+		(funcall fun)
+	      (if (not more-problems) (return))
+	      (incf num-of-problems)
+	      (if result
+		  (incf correct)
+		(incf wrong))))
+	  (refresh-screen)
+	  (setq time (- time *drill-begin-time*))
+	  (drill-save-score (user-name) *drill-type* *drill-number-of-problems* correct wrong time)
+	  (msgbox "~D問中 正解:~D 誤り:~D 正解率:~A%\n     回答時間:~A秒"
+		  *drill-number-of-problems* correct wrong
+		  (* 100.0 (/ (float correct) *drill-number-of-problems*))
+		  (/ time 1000.0))
+	  (setq *drill-begin-time* nil)))
+    (if (yes-or-no-p "もう一度？")
+	(make-drill))))
+    
+
+;;------------------------------------------------------------------------
+;;. drillの作成
+
+(defvar *drill-number-of-problems* 50)
+(defvar *drill-buffername* "*Drill*")
+(defvar *drill-makefun* nil)
+(defvar *drill-markfun* nil)
+(defvar *drill-begin-time* nil)
+
+(defun make-drill (&optional (makefun *drill-makefun*) (markfun *drill-markfun*))
+  (let* ((buffer (get-buffer-create *drill-buffername*))
+	 (stream (make-buffer-stream buffer)))
+    (switch-to-buffer buffer)
+    (delete-region (point-min) (point-max))
+    (drill-mode)
+    (setq *drill-makefun* makefun
+	  *drill-markfun* markfun)
+    (dotimes (i *drill-number-of-problems*)
+      (format stream "~A = \n" (funcall makefun)))
+    (goto-char (point-min))
+    (goto-eol)
+    (setq *drill-begin-time* (get-internal-real-time))))
+
+
+
+
+;;------------------------------------------------------------------------
+;;. 問題作成関数・採点関数
+
+(defun power (a b)
+  (if (< b 0) (simple-error "negative number"))
+  (let ((ret 1))
+    (while (not (= b 0))
+      (setq ret (* a ret))
+      (decf b))
+    ret))
+      
+(defmacro make-drill-plus (digit)
+  (let ((max (gensym))
+	(form (gensym)))
+    `(let ((,max (power 10 ,digit))
+	   (,form (format nil "~~~DD + ~~~DD" ,digit ,digit)))
+       (format nil ,form (random ,max) (random ,max)))))
+
+(defun drill-mark-+-*/ ()
+  (if (scan-buffer "^[ \t]*\\([0-9]+\\)[ \t]*\\([+*/-]\\)[ \t]*\\([0-9]+\\)[ \t]*=[ \t]*\\([0-9]+\\)" 
+		   :regexp t :tail t)
+      (let ((n1 (parse-integer (match-string 1)))
+	    (ms (match-string 2))
+	    (n2 (parse-integer (match-string 3)))
+	    (n3 (parse-integer (match-string 4)))
+	    opoint)
+	(if (cond 
+	     ((equal ms "+") 
+	      ;(msgbox "~D + ~D = ~D ~A" n1 n2 n3 (= (+ n1 n2) n3))
+	      (= (+ n1 n2) n3))
+	     ((equal ms "-") (= (- n1 n2) n3))
+	     ((equal ms "*") (= (* n1 n2) n3))
+	     ((equal ms "/") (= (/ n1 n2) n3))
+	     (t (msgox "unknown operator : ~A" ms) t))
+	    (values t t)
+	  (progn
+	    ;(msgbox "wrong")
+	    (setq opoint (point))
+	    (skip-syntax-spec-backward "w")
+	    (set-text-attribute opoint (point) 'wrong-answer :foreground 1 :bold t)
+	    (values t nil))))))
+
+(defun drill-plus (digit)
+  (interactive "n桁数: ")
+  (setq *drill-type* (format nil "足し算~D" digit))
+  (make-drill #'(lambda () (make-drill-plus digit)) #'drill-mark-+-*/))
+
+
+
+;;------------------------------------------------------------------------
+;;. 結果の保存
+
+(defun drill-save-score (username type nums correct wrong time)
+  (let ((scorefile (merge-pathnames "drill-score.txt" *drill-score-path*)))
+    (with-open-file (stream scorefile :direction :output
+			    :if-exists :append :if-does-not-exist :create)
+      (format stream "~A ~T~A ~T ~4D ~T ~4D ~T ~4D ~T ~A~%"
+	      username type nums correct wrong time))))
+
+
+;;------------------------------------------------------------------------
+;;. modeの実行
+(defun drill-mode ()
+  "drill-mode"
+  (interactive)
+  (kill-all-local-variables)
+  (setq mode-name "Drill") ; modelineに表示される名前。modeと違う名前でも可
+  (setq buffer-mode 'drill-mode)
+  (use-syntax-table *drill-mode-syntax-table*)
+  (use-keymap *drill-mode-map*)
+  ;(setq *local-abbrev-table* *drill-mode-abbrev-table*)
+  (make-local-variable 'regexp-keyword-list)
+  (setq regexp-keyword-list *drill-reg-kwd*)
+  (make-local-variable 'paragraph-start)
+  (setq paragraph-start "^$\\|\f") ; forward|backward-paragraph で移動する段落位置
+  (make-local-variable 'paragraph-separate)
+  (setq paragraph-separate paragraph-start)
+  ;(make-local-variable 'mode-specific-indent-command)
+  ;(setq mode-specific-indent-command 'drill-indent-line)
+  (make-local-variable 'mode-newline-and-indent-command)
+  (setq mode-newline-and-indent-command 'drill-newline)
+  (setq comment-start "; " comment-end "") ; indent-for-commentで挿入される奴
+  (setq comment-start-skip ";+[ \t]*")
+  (setq comment-indent-function 'c-comment-indent) ; c-modeを流用
+  (when *drill-comment-column*
+    (setq comment-column *drill-comment-column*))
+  ; キーワードのロード
+  (and *drill-keyword-file*
+       (null *drill-keyword-hash-table*)
+       (setq *drill-keyword-hash-table*
+	(load-keyword-file *drill-keyword-file* t))) ; t=大文字小文字を区別しない, nil=する
+  (when *drill-keyword-hash-table*
+    (make-local-variable 'keyword-hash-table)
+    (setq keyword-hash-table *drill-keyword-hash-table*))
+  ; フックの実行
+  (run-hooks '*drill-mode-hook*))
+
+

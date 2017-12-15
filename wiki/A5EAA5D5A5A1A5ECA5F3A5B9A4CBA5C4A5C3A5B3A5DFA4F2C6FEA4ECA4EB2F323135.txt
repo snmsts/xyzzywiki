@@ -1,0 +1,76 @@
+* mapcon mapcan [#n92103bf]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-05-20 (土) 11:40:24
+-バージョン: 
+
+** メッセージ [#i4b195c7]
+
+定義っぽいものと、使用例を追加しました。
+ <chapter>
+ <title>mapcon</title>
+ <type>Function</type>
+ <arguments>mapcon FN LISTS &amp;rest MORE-LISTS</arguments>
+ <package>lisp</package>
+ <description>
+ 引数の渡し方は maplist によく似ていますが、関数 FN の呼び出し結果をくっ
+ つけたリストを返します。
+ 
+   (mapcon f x1 ... xn) == (apply #'nconc (maplist f x1 ... xn))
+ 
+ 使用例：
+   (mapcon #'(lambda (x) (if (find 2 x) (list x))) '(1 a 2 b 3))
+   =&gt; ((1 a 2 b 3) (a 2 b 3) (2 b 3))
+   
+   (mapcon #'(lambda (x) (if (find 2 x) x)) '(1 a 2 b 3)) ; 無限ループ?
+   
+   (mapcon #'(lambda (x) (if (find 2 x) (copy-list x))) '(1 a 2 b 3))
+   =&gt; (1 a 2 b 3 a 2 b 3 2 b 3)
+ </description>
+ <seealso>maplist</seealso>
+ <seealso>mapcan</seealso>
+ <seealso>nconc</seealso>
+ <link></link>
+ <section>制御構造</section>
+ <file>evalmacs.l</file>
+ </chapter>
+
+引用と意訳を消して、定義っぽいものを追加しました。
+ <chapter>
+ <title>mapcan</title>
+ <type>Function</type>
+ <arguments>mapcan FN LISTS &amp;rest MORE-LISTS</arguments>
+ <package>lisp</package>
+ <description>
+ 引数の渡し方は mapcar によく似ていますが、関数 FN の呼び出し結果をくっつ
+ けたリストを返します。
+ 
+   (mapcan f x1 ... xn) == (apply #'nconc (mapcar f x1 ... xn))
+ 
+ 使用例：
+   ;;; mapcanとmapcarとの違い
+   (mapcan #'(lambda (x) (and (characterp x) (list (char-name x))))
+           '(456 #\A 789 #\b #\c 123))
+   =&gt; ("latin_capital_letter_a" "latin_small_letter_b" "latin_small_letter_c")
+   (mapcar #'(lambda (x) (and (characterp x) (list (char-name x))))
+           '(456 #\A 789 #\b #\c 123))
+   =&gt; (nil ("latin_capital_letter_a") nil ("latin_small_letter_b") ("latin_small_letter_c") nil)
+ </description>
+ <seealso>mapcar</seealso>
+ <seealso>mapcon</seealso>
+ <seealso>nconc</seealso>
+ <section>制御構造</section>
+ <file>evalmacs.l</file>
+ </chapter>
+
+--------
+- 便乗して一つ。「リストをくっつけた」というより「リストの各要素をくっつけた（結合した）」のほうが正確ですよね。はじめて読んだとき、何を何にくっつけたのかがわからず戸惑いました。 -- [[Nomura]] &new{2006-05-20 (土) 18:03:03};
+- それだったら単に「呼び出し結果をくっつけた」とするのがすっきりしているような気がします。いかがでしょうか。 --  &new{2006-05-20 (土) 18:49:34};
+- 元の表現の「関数の呼び出し結果のリスト」の関数はmaplistやmapcarではなく引数FNで、FNがリストを返す関数である必要があるのだと解釈すれば、何も問題ありませんよね。 -- [[NANRI]] &new{2006-05-20 (土) 21:45:01};
+- そう言われてみればそうですね。結果だけmapcarと比べていたのでわけがわからなくなっていました。 -- [[Nomura]] &new{2006-05-20 (土) 22:03:57};
+
+#comment

@@ -1,0 +1,47 @@
+*map-char-encoding-region, detect-char-encoding [#t60c6f27]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-08-21 18:57:10 (日)
+-バージョン: 
+
+**メッセージ [#ed303e48]
+コメントが書けなかったのでここで[[j-taroの日記>http://d.hatena.ne.jp/j-taro/20050819#p1]]に反応してみる。
+
+ <chapter>
+ <title>map-char-encoding-region</title>
+ <type>Function</type>
+ <arguments>map-char-encoding-region P1 P2 &amp;optional ENCODING</arguments>
+ <package>editor</package>
+ <description>
+ リージョンの文字列データを文字エンコーディングが ENCODING のデータとして、
+ xyzzy内部コードへ変換します。
+ ENCODING が指定されない時は自動判定します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>kanji.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>detect-char-encoding</title>
+ <type>Function</type>
+ <arguments>detect-char-encoding STRING-OR-STREAM</arguments>
+ <package>editor</package>
+ <description>
+ STRING-OR-STREAM の文字エンコーディングを判定します。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>テキスト</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-取り込みました。→[[refwiki:map-char-encoding-region]], [[refwiki:detect-char-encoding]] -- [[NANRI]] &new{2005-09-04 20:30:28 (日)};
+
+#comment

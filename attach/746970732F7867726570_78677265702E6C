@@ -1,0 +1,43 @@
+;;; xgrep
+;
+;                        Last updated: <2005-08-20T00:20:06+09:00>
+;
+;
+;; ê›íËó·
+;; (require "xgrep")
+;; 
+;; Ç‡ÇµÇ≠ÇÕÅAÇ±ÇÒÇ»ä¥Ç∂
+;; (in-package "editor")
+;; (export '(xgrep xfgrep))
+;; (autoload 'xgrep "xgrep" t)
+;; (autoload 'xfgrep "xgrep" t)
+;; (in-package "user")
+
+(provide "xgrep")
+
+(require "grep")
+(require "grepd")
+
+(in-package "editor")
+
+(export '(xgrep xfgrep))
+
+(defun xfgrep (pattern dir files)
+  (interactive "sfgrep: \nDdirectory: \nsfiles: "
+    :default0 *last-fgrep-pattern* :history0 'search)
+  (setq *last-fgrep-pattern* pattern)
+  (xgrep1 pattern dir files nil))
+
+(defun xgrep (regexp dir files)
+  (interactive "sgrep: \nDdirectory: \nsfiles: "
+    :default0 *last-grep-regexp* :history0 'search)
+  (setq *last-grep-regexp* regexp)
+  (xgrep1 (compile-regexp regexp) dir files t))
+
+(defun xgrep1 (pattern directory files regexpp
+             &optional (case-fold nil) (subdirp t))
+  (let ((*grep-case-fold-search* case-fold)
+        (*grep-regexp-search* regexpp)
+        (*grep-subdir* subdirp)
+        (*grep-name-only* nil))
+    (scan-files pattern (split-string files #\; t " ") directory)))

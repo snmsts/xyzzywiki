@@ -1,0 +1,27 @@
+*mapcan [#ae43b9d8]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NAKANO]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: typo
+-投稿日: 2003-10-11 (土) 17:25:26
+-バージョン: 
+
+**メッセージ [#e77f4c27]
+mapcan と mapcar の違いの説明について
+後者は mapcar です
+
+ 使用例：
+   ;;; mapcanとmapcarとの違い
+   (mapcan #'(lambda (x) (and (characterp x) (list (char-name x))))
+           '(456 #\A 789 #\b #\c 123))
+   => ("latin_capital_letter_a" "latin_small_letter_b" "latin_small_letter_c")
+   (mapcan #'(lambda (x) (and (characterp x) (list (char-name x))))
+           '(456 #\A 789 #\b #\c 123))
+   => (nil ("latin_capital_letter_a") nil ("latin_small_letter_b") ("latin_small_letter_c") nil)
+----
+-ありがとうございます。コピペミスでした。 -- [[山本]] &new{2003-11-05 (水) 23:14:29};
+-公開しました。 -- [[山本]] &new{2004-11-15 (月) 05:25:07};
+
+#comment

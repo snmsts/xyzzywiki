@@ -1,0 +1,68 @@
+[[tips]]
+
+
+メニューバーの「表示」から選択可能なバッファの折り返し状態をトグルします。
+別の所で佐野さんに作ってもらったんですが、こっちに載せたら?って事なので、載せました。
+
+
+
+  ;;siteinit.lや.xyzzyに書くって事で。
+  ;;佐野さんから頂いた。
+  (defun next-buffer-fold-type ()
+    (interactive)
+    (case
+        (cond
+         ((set-buffer-fold-type-none-update) 0)
+         ((set-buffer-fold-type-column-update) 1)
+         ((set-buffer-fold-type-window-update) 2))
+      (0 (set-buffer-fold-type-window)(message "ウィンドウ幅にした"))
+      (1 (set-buffer-fold-type-none)(message "折り返し無しにした"))
+      (2 (set-buffer-fold-type-column)(message "指定位置にした"))
+      ))
+  (global-set-key #\C-F3 'next-buffer-fold-type)
+  
+  ;;逆バージョン（一応入れておくって事で）
+  (defun previous-buffer-fold ()
+    (interactive)
+    (case
+        (cond
+         ((set-buffer-fold-type-none-update) 0)
+         ((set-buffer-fold-type-column-update) 1)
+         ((set-buffer-fold-type-window-update) 2))
+      (2 (set-buffer-fold-type-none) (message "折り返し無しにした"))
+      (0 (set-buffer-fold-type-column) (message "指定位置にした"))
+      (1 (set-buffer-fold-type-window) (message "ウィンドウ幅にした"))
+      ))
+
+C-F3を押すと、順に、ウィンドウ幅→指定位置右折り返し無し、となります。~
+お好みで、逆バージョンに割り当てるとか、途中の(message 〜〜)を変更してください。
+
+-前バージョンだけど、良いよね。 -- [[稲原]] &new{2003-11-18 (火) 17:04:31};
+-良いよ。 -- [[佐野]] &new{2003-11-18 (火) 22:39:51};
+- 同じ結果を得る、別のコードを考えてみました。 -- [[yap]] &new{2006-05-07 (日) 11:23:56};
+ (defun toggle-buffer-fold-type ()
+   (interactive)
+   (let* ((table (list
+                  (cons nil               "折り返し無し")
+                  (cons t                 "ウィンドウ幅で折り返し")
+                  (cons buffer-fold-width "指定位置で折り返し")))
+          (current (position (buffer-fold-width) (mapcar #'car table)))
+          (next (mod (1+ current) (length table))))
+     (set-buffer-fold-width (car (nth next table)))
+     (message (cdr (nth next table)))))
+
+ (defun toggle-buffer-fold-type (&optional dir)
+   (interactive "p")
+   (let* ((table `((nil                . "折り返し無し")
+ 		  (t                  . "ウィンドウ幅で折り返し")
+ 		  (,buffer-fold-width . "指定位置で折り返し")))
+ 	 (current (nth (mod
+ 			(+(position (buffer-fold-width) table
+ 				    :test (lambda (x y) (eql x (car y))))(if dir 1 -1))
+ 			(length table))
+ 		       table)))
+     (set-buffer-fold-width (car current))
+     (message (cdr current))))
+- なるほど…ということで書いてみました。 -- [[佐野]] &new{2006-05-07 (日) 12:47:00};
+-- おー、バッククォート構文使えばいいんですね！ マクロでないと使えないものだと思いこんでいました。 -- [[yap]] &new{2006-05-07 (日) 13:47:59};
+- 頻繁に荒らされるので凍結しました -- [[佐野]] &new{2008-05-17 (土) 01:23:36};

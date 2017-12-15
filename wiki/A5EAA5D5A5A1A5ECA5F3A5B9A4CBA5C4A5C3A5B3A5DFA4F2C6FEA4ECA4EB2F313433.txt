@@ -1,0 +1,56 @@
+*string<, buffer-modified-p [#me1ca034]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[レム]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: typo
+-投稿日: 2005-08-20 06:36:49 (土)
+-バージョン: 
+
+**メッセージ [#q6c39ed4]
+-string<の例にスペースが足りないところがあります。
+-buffer-modified-pはt/nilではなくmodified-countを返すような気がします。
+
+以上の二点です。
+----
+-ありがとうございます。修正しておきます。 -- [[NANRI]] &new{2005-08-20 13:46:16 (土)};
+-mule の説明って必要かなぁ -- [[NANRI]] &new{2005-08-21 11:56:31 (日)};
+ <chapter>
+ <title>buffer-modified-p</title>
+ <type>Function</type>
+ <arguments>buffer-modified-p &amp;optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ バッファが変更を加えられているかどうかを返します。
+ バッファが変更されていない時は nil を、変更されている時はバッファの編集
+ 回数(buffer-modified-countの値)を返します。
+ </description>
+ <seealso>set-buffer-modified-p</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+-オプションのバッファを指定できて、指定しない場合はカレントバッファを見ることは書いておいて損はないと思います。 -- [[レム]] &new{2005-08-21 12:43:20 (日)};
+-muleの説明はなんとなし読みにくいですねぇ…補完的な側面が強いものは兎も角、ほとんどの場合は繰り返しになっているので、補完的な説明だけを切り出して噛み砕く作業をして、引用な部分は全部消したいと思っています。基本筋で… -- [[佐野]] &new{2005-08-21 13:20:32 (日)};
+-それじゃあとりあえずこんな感じで。＞カレントバッファを見ることは... -- [[NANRI]] &new{2005-08-21 13:35:05 (日)};
+ <chapter>
+ <title>buffer-modified-p</title>
+ <type>Function</type>
+ <arguments>buffer-modified-p &amp;optional BUFFER</arguments>
+ <package>editor</package>
+ <description>
+ バッファ BUFFER が変更を加えられているかどうかを返します。
+ バッファが変更されていない時は nil を、変更されている時はバッファの編集
+ 回数(buffer-modified-countの値)を返します。
+ BUFFER が指定されない、もしくは nil が指定された時はカレントバッファの結
+ 果を返します。
+ </description>
+ <seealso>set-buffer-modified-p</seealso>
+ <link></link>
+ <section>バッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+-取り込みました。→[[refwiki:buffer-modified-p]], [[refwiki:string<]] -- [[NANRI]] &new{2005-09-04 20:29:17 (日)};
+
+#comment

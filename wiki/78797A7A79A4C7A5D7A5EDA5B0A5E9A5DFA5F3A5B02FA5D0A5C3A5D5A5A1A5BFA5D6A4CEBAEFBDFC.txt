@@ -1,0 +1,24 @@
+*バッファタブの削除 [#z090237b]
+#contents
+
+**概要 [#r507dcf6]
+タブブラウザやIDEのように、バッファタブをマウスで閉じられるように設定します。
+
+**右クリック [#eb4dafdc]
+あるバッファタブ上で、マウスの右クリックからボップアップメニューを表示し、そのタブを削除します。
+
+-NetInstallerで、bufmenu をインストールすることが出来ます。
+-詳しくは[[Script Laboratory>http://scrlab.g-7.ne.jp/]]の[[Common Lispと格闘>http://scrlab.g-7.ne.jp/diary/200308.php#D10]]を参考にしてください。
+
+#ref(buffertab.png)
+
+**ホイールクリック [#h1d5e7da]
+タブをダブルクリックやホイールクリックで削除します。
+-[[tips/バッファタブを拡張]]
+
+**関連情報 [#m5d490ab]
+-[[Common Lispと格闘>http://scrlab.g-7.ne.jp/diary/200308.php#D10]]
+-[[tips/バッファタブを拡張]]
+
+**コメント [#jfc81dc1]
+#comment

@@ -1,0 +1,34 @@
+*count [#b599bedb]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[nakano]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-07-25 (日) 02:32:34
+-バージョン: 
+
+**メッセージ [#k7af4e74]
+ <chapter>
+ <title>count</title>
+ <type>Function</type>
+ <arguments>count ITEM SEQUENCE &amp;key :FROM-END :TEST :TEST-NOT :START :END :KEY</arguments>
+ <package>lisp</package>
+ <description>
+   ITEMとのテストを満足するSEQUENCE中の要素数を返します．結果は非負の整数です．
+ 
+   FROM-END : 他の関数との互換性のために用意されたもので，結果に影響しません．
+   TEST     : テストを行う2項演算子
+   START    : テストする開始位置
+   END      : テストの終了位置
+ 
+ </description>
+ <seealso>count-if</seealso>
+ <seealso>count-if-not</seealso>
+ <link></link>
+ <section>シーケンス</section>
+ <file>sequence.l</file>
+ </chapter>
+----
+
+#comment

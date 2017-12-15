@@ -1,0 +1,72 @@
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (require "rijn")
+  (in-package "user")
+  (import '(*encrypted-file-list* save-buffer-with-encryption
+	    find-file-with-decryption)
+	  "rijndael"))
+
+(in-package "rijndael")
+
+;(defvar-local *buffer-needs-encryption* nil) ; この変数いらなくない？
+(defvar *encrypted-file-list* nil
+  "暗号化するファイルのフルパスにマッチする正規表現のリスト
+
+設定例: My Documents/passwords を暗号化
+  (pushnew (merge-pathnames \"passwords\" (get-special-folder-location :personal))
+	   *encrypted-file-list*
+	   :test 'path-equal)")
+
+(defun file-encrypted-p (filename)
+  (dolist (pattern *encrypted-file-list*)
+    (when (string-matchp pattern filename)
+      (return-from file-encrypted-p t))))
+
+(let (key-alist)
+  (flet ((buffer-needs-encryption-p (&optional (buf (selected-buffer)))
+	   (dolist (x key-alist)
+	     (when (eq (car x) buf)
+	       (return-from buffer-needs-encryption-p t))))
+	 (get-key ()
+	   (or (cdr (assoc (selected-buffer) key-alist :test #'eq))
+	       (getpass)))
+	 (set-key (key &optional (buf (selected-buffer)))
+	   (let ((x (assoc buf key-alist :test #'eq)))
+	     (if x (setf (cdr x) key)
+	       (progn
+		 (push (cons buf key) key-alist)
+		 key)))))
+    (defun save-buffer-with-encryption ()
+      (when (buffer-needs-encryption-p);*buffer-needs-encryption*
+	(let ((key (get-key)))
+	  (write-file-and-encrypt (get-buffer-alternate-file-name) key t)
+	  (set-buffer-modified-p nil)
+;;;	    (setq *buffer-needs-encryption* t)
+	  (set-key key))))
+    (defun find-file-with-decryption (filename)
+      (let ((last-buffer (selected-buffer))
+	    (exist-p (file-exist-p filename)))
+	(when exist-p
+	  (setq filename (truename filename)))
+	(unless (file-encrypted-p filename)
+	  (return-from find-file-with-decryption nil))
+	(let ((buf (get-alternate-file-buffer (namestring filename))))
+	  (when buf
+	    (set-buffer buf)
+	    (return-from find-file-with-decryption buf)))
+	(si:*activate-toplevel)	; filer から開いたときのため
+	(let ((key (getpass)))
+	  (if exist-p
+	      (read-encrypted-file filename key)
+	    (progn
+	      (set-buffer (create-new-buffer (file-namestring filename)))))
+	  (set-key key)
+	  (set-buffer-alternate-file-name filename)
+;;;	    (setq *buffer-needs-encryption* t)
+	  ))
+      (selected-buffer))
+    ))
+
+;;(add-hook '*before-save-buffer-hook* 'save-buffer-with-encryption)
+(add-hook '*save-buffer-no-filenames-hook* 'save-buffer-with-encryption)
+(add-hook '*before-find-file-hook* 'find-file-with-decryption)

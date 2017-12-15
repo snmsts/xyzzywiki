@@ -1,0 +1,56 @@
+
+□ はじめに
+
+本プログラムはフリーソフトウェアとします。ご自由にお使いください。
+プログラムの改造や配布もご自由にどうぞ。ただし、これらのプログラムは無保証であり、
+使用したことにより生じた損害について、作者は一切の責任を負いません。また、これら
+のプログラムを販売することで利益を得るといった商行為は禁止いたします。 
+
+これは，Hiroiさんの赤黒木を元にnakanoが機能を追加したものです．
+赤黒木を実装し，改変・再配布を許可してくださった Hiroi さんに感謝します．
+
+このプログラムに関するバグ報告は m-nakano@yan.ne.jp へお願いします．
+
+
+□ このプログラムの説明
+
+これは平衡木の一種である 赤黒木(2色木) の実装です．
+赤黒木が良く分からない場合は，Hiroiさんの説明や以下のデモを参照してください．
+・Hiroiさんの説明 http://www.geocities.jp/m_hiroi/clisp/clispb03.html
+・デモ http://www.ececs.uc.edu/~franco/C321/html/RedBlack/redblack.html
+
+データに全順序関係が定義できる場合にお使いください．検索はハッシュほどでは
+ないですが，log2 N 回ほどの比較でできます．
+
+
+データとして nil を取ることや，同じデータを何度も追加することも可能です．
+
+
+
+□ インストール
+ディレクトリ rbtree を site-lisp にコピーし， (require "rbtree/rbtree") と 
+.xyzzy か siteinit.l に記述してください． siteinit.l に記述した場合は
+ダンプ&xyzzyの再起動をしてください．
+
+~/site-lisp/rbtree/
+ ├ rbt-node.l
+ ├ rbt-node.lc
+ ├ rbt-struct.l
+ ├ rbt-struct.lc
+ ├ rbtree-sample.l
+ ├ rbtree.l
+ ├ rbtree.lc
+ └ README
+
+
+□ アンインストール
+.xyzzy か siteinit.l に記述した (require "rbtree/rbtree") を削除し，
+ディレクトリrbtree を削除してください．
+
+□ 更新履歴
+ ver 0.99beta  初版作成
+
+□ 使用例
+  rbtree-sample.l をご覧ください．
+
+

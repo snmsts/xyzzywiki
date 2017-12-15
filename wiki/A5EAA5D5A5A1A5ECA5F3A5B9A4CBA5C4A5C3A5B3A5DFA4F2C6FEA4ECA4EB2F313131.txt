@@ -1,0 +1,21 @@
+* &#x2a;-text-attribute の section [#d61699eb]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-03-02 01:37:41 (水)
+-バージョン: 
+
+**メッセージ [#a8a7b107]
+現在、clear-all-text-attributes, delete-text-attributes, find-text-attribute の三つはシステムセクションに
+find-text-attribute-point, modify-text-attributes, set-text-attribute の三つはテキストセクションに
+分類されています。これらは同じセクションにあった方がいいと思うのですがいかがでしょう。
+
+自分としてはテキストセクションの方がふさわしいかなと思っているのですが。
+----
+-私もテキストセクションの方が良いと思いました。 -- [[佐野]] &new{2005-03-14 05:25:47 (月)};
+-もうちょっと間を空けたほうがいいかなとも思っていたんですが、取り込みます。＞[[refwiki:find-text-attribute]], [[refwiki:delete-text-attributes]], [[refwiki:clear-all-text-attributes]] -- [[NANRI]] &new{2005-03-14 11:12:38 (月)};
+
+#comment

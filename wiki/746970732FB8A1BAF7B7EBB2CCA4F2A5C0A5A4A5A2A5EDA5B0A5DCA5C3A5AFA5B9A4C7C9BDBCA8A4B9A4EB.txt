@@ -1,0 +1,251 @@
+[[tips]]
+
+最新版を[[こちら>http://members3.jcom.home.ne.jp/2116826401/dsearch.html]]に移動しました。
+
+search-dialog に「一覧表示」・「設定保存」・「行(文字列)単位」・「検索方法」を追加
+#ref(dsearch0.png,nolink);
+
+検索結果をダイアログボックスで表示（行単位・文字列単位）
+#ref(dsearch1.png,nolink);
+#ref(dsearch2.png,nolink);
+
+検索語とヒットした件数をステータスバーに表示
+#ref(dsearch3.png,nolink);
+
+検索結果から選択して任意の位置にジャンプ
+#ref(dsearch4.png,nolink);
+
+----
+2005-07-10 11:30:49 (日)
+
+isearch 時に強調後 dsearch-delete-highlight-matches しても直ちに反映されなかったので修正
+
+2005-03-27 19:14:27 (日)
+
+- AND または OR 検索を行う機能を追加（詳しくはコード中の説明を読んで下さい）
+- 検索方法などを指定して検索する機能を追加
+- 大文字小文字を区別して強調を行うように変更
+- dsearch-again の時、*last-dsearch-string* で再検索するように変更
+
+2005-03-17 23:09:14 (木)
+
+- ファイルを一つに統合。強調表示の方式は *dsearch-highlight-method* で指定して下さい（t だと regexp-keyword-listを、nil だと set-text-attributeを使う）。
+- 本体のバージョンアップに伴い、ダイアログのフォントなどの変更。
+- 細かい挙動修正。
+
+2005-03-10 01:49:02 (木)
+
+- ダイアログに「上検索」・「下検索」・「元に戻す」を追加
+- ダイアログの位置などを指定する機能を追加
+
+2005-03-09 00:10:57 (水)
+
+regexp-keyword-list を使用する方のみテスト公開
+
+2005-02-28 00:06:05 (月)
+
+- 関数名 dsearch-highlight-match・dsearch-delete-highlight-match を dsearch-highlight-matches・dsearch-delete-highlight-matches に変更
+
+- dsearch-goto-return-point を廃止して、M-x dsearch-goto-previous-point でバッファ毎に、前に（M-x dsearch-goto-next-point で後に）ダイアログボックスを表示した位置に戻るように変更
+
+2005-01-31 (月) 22:37:57
+
+- set-text-attribute を使う方を大文字小文字を区別せずに強調するように修正。
+- 強調の仕様は、両方とも「大文字小文字を区別する」「単語単位で検索する」を無視して強調、同一バッファ・同一文字列で再検索した場合は強調処理を行わない（set-text-attribute を使う方で paren.l などにより強調が消されてしまう場合には、dsearch-delete-highlight-match をしてから再検索すると再び強調されます）となっています。
+
+2005-01-30 (日) 11:21:42
+
+細かい調整など
+
+2005-01-29 (土) 21:46:20
+
+- regexp-keyword-list を使うと regexp-keyword-list で強調されている文字列（clickable-uri.l での uri など）がうまく強調できないので、一応 regexp-keyword-list を使うものとは別に set-text-attribute を使うもの（2005-01-29 (土) 22:32:20　*dsearch-attributes* を export し忘れていたので直しました）も置いてみました。
+
+2005-01-27 (木) 22:00:00
+
+- pickup-pattern.l の利用をやめて regexp-keyword-list を使用して検索語の強調表示をするように変更（paren.l などの set-text-attribute を使う Lisp と打ち消し合わないようにするため）。
+- 全ての検索時に検索語を強調する機能を追加。
+- dsearch-again の時 *last-search-regexp* または *last-search-string* で再検索するように変更。
+- その他、細かい変更。
+
+2004-12-17 (金) 22:45:13
+
+ダイアログボックスとリストボックスの幅を変数（*dsearch-dialog-width*、*dsearch-list-width*、*dsearch-front-list-width*）で指定できるように変更。
+
+2004-12-17 (金) 00:01:59
+
+(require "dialogs") の追加。複数行の表示に対応。その他細かい修正。
+
+2004-12-14 (火) 00:04:59
+
+検索結果（行単位）を表示行単位→論理行単位に変更。検索結果から表示形式を切り替える機能を追加。
+
+2004-12-11 (土) 21:30:17
+
+文字数のカウント、表示形式の選択（行単位 or 文字列単位）の機能を追加。
+
+2004-12-11 (土) 10:47:25
+
+少しだけ書き換えました（表示方法の変更、多少の機能追加）。
+
+2004-12-05 (日) 18:33:41
+
+message の所でエラーが出ることがある問題を修正。
+また、ダイアログボックスの大きさを決める数値に変数を使用することはできない（と思ったのですができたような気がします（多分）(^^ゞ）ようなので、画面の解像度に応じてその数値を変更する必要があるかもしれません。
+
+2004-11-27 (土) 18:40:05
+
+メッセージを追加しました（なんも変わってません(^^ゞ）。
+
+2004-11-27 (土) 10:42:56
+
+少し書き換えてみました。
+
+----
+#ref(dsearch.l)
+
+
+このlispを作成するにあたり、深江さんの psearch.l と須田さんの文字列取得検索、および OHKUBO Hiroshi さんの clickable-uri.l を参考にさせて頂きました。m(__)m
+
+----
+**おまけ [#p604900c]
+- grep 結果からジャンプするときに強調表示する（xyzzy Part10 709,710,711,716を参考にさせて頂きました。m(_ _)m）
+ (in-package "editor")
+ 
+ (defvar *error-pattern* nil)
+ 
+ (defun goto-error (next)
+   (when (and next *error-list*)
+     (setq *rerror-list* (cons (car *error-list*) *rerror-list*))
+     (setq *error-list* (cdr *error-list*)))
+   (when (and *rerror-list*
+ 	     (null *error-list*))
+     (rebuild-error-list))
+   (when *error-list*
+     (let ((error (car *error-list*)))
+       (if (= (count-windows 'arg) 1)
+ 	  (progn
+ 	    (split-window t)
+ 	    (set-buffer *error-buffer*))
+ 	(pop-to-buffer *error-buffer*))
+       (goto-line (cdr error))
+       (reverse-region (progn (goto-eol) (point))
+ 		      (progn (goto-bol) (point)))
+       (recenter)
+       (let ((scanner (and *highlight-error* *find-error-scanner*)))
+ 	(other-window)
+ 	(set-buffer (marker-buffer (car error)))
+ 	(goto-marker (car error))
+ 	(and scanner
+ 	     (funcall scanner (save-excursion (goto-eol) (point)))
+ 	     (eq *highlight-error* t)
+ 	     (show-match)))
+       (recenter)
+       (when *error-pattern*
+ 	(let ((pattern (car *error-pattern*))
+ 	      (setting (cdr *error-pattern*)))
+ 	  (setq *last-search-string* pattern)
+ 	  (setq *last-search-regexp* pattern)
+ 	  (dsearch-delete-highlight-matches (list pattern) setting)
+ 	  (dsearch-highlight-matches pattern setting)))
+       t)))
+ 
+ (defun highlight-grep ()
+   (let ((pattern (car *minibuffer-search-string-history*)))
+     (cond
+      ((equal *this-command* 'grep)
+       (setq *error-pattern* (cons pattern (list *case-fold-search*
+ 						t nil))))
+      ((equal *this-command* 'fgrep)
+       (setq *error-pattern* (cons pattern (list *case-fold-search*
+ 						nil nil))))
+      ((equal *this-command* 'ggrep-dialog)
+       (setq *error-pattern*
+ 	    (cons pattern (list *ggrep-case-fold-search*
+ 				*ggrep-regexp-search*
+ 				*ggrep-understand-escape-sequences*))))
+      (t
+       (setq *error-pattern*
+ 	    (cons pattern (list *grep-case-fold-search*
+ 				*grep-regexp-search*
+ 				*grep-understand-escape-sequences*)))))))
+ 
+ (add-hook '*grep-hook* 'highlight-grep)
+ (add-hook '*grepd-hook* 'highlight-grep)
+ (add-hook '*ggrep-hook* 'highlight-grep)
+ (add-hook '*ggrepd-hook* 'highlight-grep)
+ ;(add-hook '*egrep-hook* 'highlight-grep)
+ ;(add-hook '*egrepd-hook* 'highlight-grep)
+ (in-package "user")
+
+-isearchのとき強調表示（regexp-keyword-list で強調するために書きました。真っ当な方は [[isearch-deco.l>http://www.afis.to/~start/xyzzy/mode/isearch-deco.l]] を使われた方がいいです）
+ (in-package "editor")
+ (defun isearch-forward-point ()
+   (+ (point)
+      (length *isearch-current-match-string*)))
+ 
+ (defvar *isearch-use-regexp* nil)
+ (defun isearch-regexp-toggle () ;（2ch xyzzy Part10 727 より引用させて頂きました。m(_ _)m）
+   (interactive)
+   (and (boundp '*migemo-on*) *migemo-on*
+        (migemo-toggle nil))
+   (setq *isearch-use-regexp*
+ 	(not *isearch-use-regexp*)
+ 	*isearch-scanner-hook*
+ 	#'(lambda (p)
+ 	    (setq *isearch-regexp* *isearch-use-regexp*)
+ 	    p))
+   (message "isearch ~[nomal~;regexp~]"
+ 	   (if *isearch-use-regexp* 1 0)))
+ (define-key *isearch-map* '#\C-a 'isearch-regexp-toggle)
+ 
+ (defun isearch-forward (&optional reverse)
+   (interactive)
+   (let ((*isearch-current-string* "")
+ 	(*isearch-current-match-string* nil)
+ 	(*isearch-last-match* t)
+ 	(*isearch-no-clear* nil)
+ 	(*isearch-history-index* -1)
+ 	(*isearch-last-history* nil)
+ 	(*isearch-history-last-string* nil)
+ 	(*isearch-this-command* nil)
+ 	(*isearch-last-command* nil)
+ 	(*isearch-wrapped* nil)
+ 	(*isearch-status* nil)
+ 	(*isearch-direction* (not reverse)))
+     (setq *last-search-regexp-p* nil)
+     (unwind-protect
+ 	(catch 'isearch-exit
+ 	  (loop
+ 	    (reverse-region (point)
+ 			    (isearch-forward-point)
+ 			    t)
+ 	    (refresh-screen)
+ 	    (minibuffer-prompt "~:[Failing ~;~]~:[~;Wrapped ~]I-search~:[ backward~;~]: ~a"
+ 			       *isearch-last-match* *isearch-wrapped*
+ 			       *isearch-direction* *isearch-current-string*)
+ 	    (let ((*isearch-command-char* (read-char *keyboard*)))
+ 	      (setq *isearch-this-command* (lookup-keymap *isearch-map*
+ 							  *isearch-command-char* t))
+ 	      (if *isearch-this-command*
+ 		  (funcall *isearch-this-command*)
+ 		(isearch-self-insert *isearch-command-char*))
+ 	      (let ((str (if (and (boundp '*migemo-on*) *migemo-on*)
+ 			     (buffer-substring (point) (isearch-forward-point))
+ 			   *isearch-current-string*))
+ 		    (setting (list *case-fold-search*
+ 				   *isearch-use-regexp* nil)))
+ 		(dsearch-delete-highlight-matches (list str) setting)
+ 		(dsearch-highlight-matches str setting))
+ 	      (setq *isearch-last-command* *isearch-this-command*))))
+       (unless *isearch-no-clear*
+ 	(clear-reverse-region)
+ 	(add-history *isearch-current-string* '*isearch-history*)))))
+ (in-package "user")
+----
+-require dialogsをしていないと初っ端検索をしようとするとed::*last-search-string-pair*が定義されていないとか言われます。 -- [[佐野]] &new{2004-12-16 (木) 22:02:56};
+-指摘どもです。こちらでは dsearch.l を読み込む前に multiple-replace.l で (require "dialogs") をしていたため全く気付きませんでした。require は重ねて書いても問題なさそうなので dsearch.l にもこの記述を追加してみました。 -- [[作った（？）人]] &new{2004-12-17 (金) 00:00:05};
+- 変数が定義されてません、と言われて検索そのものが使えなくなってしまいます。今現在使えている人いますか？ --  &new{2009-07-22 (水) 14:53:39};
+- いつの間にか動くようになりました。謎ですが、このままいきます。お騒がせしました。 --  &new{2009-07-23 (木) 16:55:00};
+
+#comment

@@ -1,0 +1,61 @@
+[[tips]]
+
+Meadowでelectric-buffer-listに慣れていたので、同じような順でバッファ一覧
+が並ぶバッファ選択を作ってみました。&br;
+select-buffer-by-other-buffer-listを適当なキーにバインドしてお使いください。
+
+ (defvar *select-buffer-dialog-template*
+  '(dialog 0 0 355 165
+    (:caption "バッファ選択")
+    (:font 9 "MS Gothic")
+    (:control
+     (:static nil "MR Buffer            Size  Mode          File" #x50020000 9 4 349 8)
+     (:listbox list nil #x50b10001 3 14 349 138)
+     (:button IDOK "OK" #x50030001 247 146 50 14)
+     (:button IDCANCEL "キャンセル" #x50030000 300 146 50 14))))
+ 
+ (defun other-buffer-list ()
+  (let (result blist buffer)
+    (setq blist (buffer-list))
+    (setq buffer (selected-buffer))
+    (push buffer result)
+    (setq blist (remove buffer blist))
+    (setq buffer (other-buffer))
+    (loop
+      (if (or (not buffer) (member buffer result)) (return))
+      (push buffer result)
+      (setq buffer (other-buffer buffer))
+      (setq blist (remove buffer blist)))
+    (dolist (buffer blist)
+      (if (not (string= (buffer-name buffer) " " :end1 1))
+          (push buffer result)))
+    (reverse result)))
+ 
+ (defun select-buffer-by-other-buffer-list ()
+  (interactive)
+  (let (blist selected size)
+    (setq selected (selected-buffer))
+    (setq blist (other-buffer-list))
+    (multiple-value-bind (result data)
+        (dialog-box *select-buffer-dialog-template*
+                    (list (cons 'list (mapcar #'(lambda (x)
+                                                  (setq size (buffer-size x))
+                                                  (format nil "~:[ ~;.~]~:[ ~;*~]~:[ ~;%~] ~A~VT ~D~27T ~A~:[~;~41T ~:*~A~]"
+                                                          (eq x selected)
+                                                          (buffer-modified-p x)
+                                                          (buffer-local-value x 'buffer-read-only)
+                                                          (buffer-name x)
+                                                          (- 24 (if (zerop size) 0 (floor (log size 10)))) size
+                                                          (buffer-local-value x 'mode-name)
+                                                          (get-buffer-file-name x)
+                                                          )
+                                                  ) blist))
+                          '(list . 0))
+                    '((list :index t :must-match t :enable (IDOK))))
+      (when result
+        (switch-to-buffer (nth (cdr (assoc 'list data)) blist))))
+    ))
+
+----
+
+#comment

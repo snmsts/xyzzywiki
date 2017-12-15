@@ -1,0 +1,40 @@
+* prog2 の例の '>' [#e56ce7ec]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[lambda]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: typo
+-投稿日:     2007-05-10 (木) 11:10:23
+-バージョン: 
+
+** メッセージ [#mbb7b4d6]
+&gt; が &amp;gt; になってませんでした。
+
+ <chapter>
+ <title>prog2</title>
+ <type>Macro</type>
+ <arguments>prog2 FIRST SECOND &amp;body BODY</arguments>
+ <package>lisp</package>
+ <description>
+ フォームを順番に評価して二番目のフォームの結果を返します。
+ 
+ 使用例：
+   (prog2 (print "The first form")
+          (print "The second form")
+          (print "The third form"))
+   -&gt; "The first form"
+   -&gt; "The second form"
+   -&gt; "The third form"
+   =&gt; "The second form"
+ </description>
+ <seealso>progn</seealso>
+ <seealso>prog1</seealso>
+ <link></link>
+ <section>制御構造</section>
+ <file>evalmacs.l</file>
+ </chapter>
+
+----
+- どーもです。直しました。 -- [[NANRI]] &new{2007-05-11 (金) 03:44:47};
+
+#comment

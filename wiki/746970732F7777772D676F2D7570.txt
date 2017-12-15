@@ -1,0 +1,15 @@
+[[tips]]
+
+[[patch/24]] www-mode で「上のディレクトリに移動」のコマンド版。
+
+ ; ~/.wwwへ
+ (in-package "www")
+ (defun www-go-up (&optional url)
+   (interactive)
+   (setq url (or url www-url))
+   (when (and (string-match "^https?://" url)
+              (< 3 (count #\/ url)))
+     (setq *www-history-future-list* nil)
+     (www-history-back-add)
+     (www-open (substring url 0 (1+ (position #\/ (remove-trail-slash url) :from-end t))))))
+ (define-key *www-view-mode-map* #\M-u 'www-go-up)

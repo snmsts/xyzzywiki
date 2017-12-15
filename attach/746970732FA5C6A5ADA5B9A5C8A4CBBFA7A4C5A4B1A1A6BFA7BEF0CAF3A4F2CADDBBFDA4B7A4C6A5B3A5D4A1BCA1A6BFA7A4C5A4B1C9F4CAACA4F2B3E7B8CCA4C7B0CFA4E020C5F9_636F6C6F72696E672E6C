@@ -1,0 +1,344 @@
+;;; -*- Mode: Lisp; Package: EDITOR -*-
+;;;
+;;; coloring.l
+;;;
+;;; Last updated: "2004-11-27"
+;;;
+
+;;;
+;;; .xyzzy か siteinit.l に
+;;; (require "coloring")
+;;; と設定。
+;;;
+
+(provide "coloring")
+
+(in-package "editor")
+
+(defvar *color-popup-menu* nil)
+
+(defun color-string-popup ()
+  (interactive)
+  (unless *color-popup-menu*
+    (setq *color-popup-menu*
+	  (define-popup-menu
+	    (:item nil "赤(&1)"
+	     #'(lambda () (interactive)
+		 (color-string-selection :foreground 1))
+	     :selection)
+	    (:item nil "明るい緑(&2)"
+	     #'(lambda () (interactive)
+		 (color-string-selection :foreground 2))
+	     :selection)
+	    (:item nil "黄色(&3)"
+	     #'(lambda () (interactive)
+		 (color-string-selection :foreground 3))
+	     :selection)
+	    (:item nil "青(&4)"
+	     #'(lambda () (interactive)
+		 (color-string-selection :foreground 4))
+	     :selection)
+	    (:item nil "ピンク(&5)"
+	     #'(lambda () (interactive)
+		 (color-string-selection :foreground 5))
+	     :selection)
+	    (:item nil "明るい水色(&6)"
+	     #'(lambda () (interactive)
+		 (color-string-selection :foreground 6))
+	     :selection)
+	    (:item nil "白(&7)"
+	     #'(lambda () (interactive)
+		 (color-string-selection :foreground 7))
+	     :selection)
+	    (:item nil "黒(&8)"
+	     #'(lambda () (interactive)
+		 (color-string-selection :foreground 8))
+	     :selection)
+	    (:item nil "茶色(&9)"
+	     #'(lambda () (interactive)
+		 (color-string-selection :foreground 9))
+	     :selection)
+	    (:item nil "緑(&A)"
+	     #'(lambda () (interactive)
+		 (color-string-selection :foreground 10))
+	     :selection)
+	    (:item nil "黄土色(&B)"
+	     #'(lambda () (interactive)
+		 (color-string-selection :foreground 11))
+	     :selection)
+	    (:item nil "紺(&C)"
+	     #'(lambda () (interactive)
+		 (color-string-selection :foreground 12))
+	     :selection)
+	    (:item nil "紫(&D)"
+	     #'(lambda () (interactive)
+		 (color-string-selection :foreground 13))
+	     :selection)
+	    (:item nil "水色(&E)"
+	     #'(lambda () (interactive)
+		 (color-string-selection :foreground 14))
+	     :selection)
+	    (:item nil "灰色(&F)"
+	     #'(lambda () (interactive)
+		 (color-string-selection :foreground 15))
+	     :selection)
+	    :sep
+	    (:item nil "太(細)くする(&L)" 'color-bold 'color-find)
+	    (:item nil "下線をつける(消す)(&U)" 'color-underline 'color-find)
+	    (:item nil "取消線をつける(消す)(&O)" 'color-strike-out 'color-find)
+	    (:item nil "反転する(&R)" 'color-reverse 'color-find)
+	    :sep
+	    (:popup nil "前景色の変更(&G)"
+	     (:item nil "赤(&1)"
+	      #'(lambda () (interactive) (color-foreground-number 1))
+	      'color-find)
+	     (:item nil "明るい緑(&2)"
+	      #'(lambda () (interactive) (color-foreground-number 2))
+	      'color-find)
+	     (:item nil "黄色(&3)"
+	      #'(lambda () (interactive) (color-foreground-number 3))
+	      'color-find)
+	     (:item nil "青(&4)"
+	      #'(lambda () (interactive) (color-foreground-number 4))
+	      'color-find)
+	     (:item nil "ピンク(&5)"
+	      #'(lambda () (interactive) (color-foreground-number 5))
+	      'color-find)
+	     (:item nil "明るい水色(&6)"
+	      #'(lambda () (interactive) (color-foreground-number 6))
+	      'color-find)
+	     (:item nil "白(&7)"
+	      #'(lambda () (interactive) (color-foreground-number 7))
+	      'color-find)
+	     (:item nil "黒(&8)"
+	      #'(lambda () (interactive) (color-foreground-number 8))
+	      'color-find)
+	     (:item nil "茶色(&9)"
+	      #'(lambda () (interactive) (color-foreground-number 9))
+	      'color-find)
+	     (:item nil "緑(&A)"
+	      #'(lambda () (interactive) (color-foreground-number 10))
+	      'color-find)
+	     (:item nil "黄土色(&B)"
+	      #'(lambda () (interactive) (color-foreground-number 11))
+	      'color-find)
+	     (:item nil "紺(&C)"
+	      #'(lambda () (interactive) (color-foreground-number 12))
+	      'color-find)
+	     (:item nil "紫(&D)"
+	      #'(lambda () (interactive) (color-foreground-number 13))
+	      'color-find)
+	     (:item nil "水色(&E)"
+	      #'(lambda () (interactive) (color-foreground-number 14))
+	      'color-find)
+	     (:item nil "灰色(&F)"
+	      #'(lambda () (interactive) (color-foreground-number 15))
+	      'color-find))
+	    (:popup nil "背景色の変更(&H)"
+	     (:item nil "赤(&1)"
+	      #'(lambda () (interactive) (color-background-number 1))
+	      'color-find)
+	     (:item nil "明るい緑(&2)"
+	      #'(lambda () (interactive) (color-background-number 2))
+	      'color-find)
+	     (:item nil "黄色(&3)"
+	      #'(lambda () (interactive) (color-background-number 3))
+	      'color-find)
+	     (:item nil "青(&4)"
+	      #'(lambda () (interactive) (color-background-number 4))
+	      'color-find)
+	     (:item nil "ピンク(&5)"
+	      #'(lambda () (interactive) (color-background-number 5))
+	      'color-find)
+	     (:item nil "明るい水色(&6)"
+	      #'(lambda () (interactive) (color-background-number 6))
+	      'color-find)
+	     (:item nil "白(&7)"
+	      #'(lambda () (interactive) (color-background-number 7))
+	      'color-find)
+	     (:item nil "黒(&8)"
+	      #'(lambda () (interactive) (color-background-number 8))
+	      'color-find)
+	     (:item nil "茶色(&9)"
+	      #'(lambda () (interactive) (color-background-number 9))
+	      'color-find)
+	     (:item nil "緑(&A)"
+	      #'(lambda () (interactive) (color-background-number 10))
+	      'color-find)
+	     (:item nil "黄土色(&B)"
+	      #'(lambda () (interactive) (color-background-number 11))
+	      'color-find)
+	     (:item nil "紺(&C)"
+	      #'(lambda () (interactive) (color-background-number 12))
+	      'color-find)
+	     (:item nil "紫(&D)"
+	      #'(lambda () (interactive) (color-background-number 13))
+	      'color-find)
+	     (:item nil "水色(&E)"
+	      #'(lambda () (interactive) (color-background-number 14))
+	      'color-find)
+	     (:item nil "灰色(&F)"
+	      #'(lambda () (interactive) (color-background-number 15))
+	      'color-find))
+	    :sep
+	    (:item nil "削除(&W)" 'color-delete 'color-find)
+	    (:item nil "全削除(&Z)" 'color-clear
+	     #'(lambda () (unless (or (find-text-attribute nil)
+				      (find-text-attribute 'cl))
+			    :disable)))
+	    (:item nil "保存(&S)" 'color-save
+	     #'(lambda () (unless (get-buffer-file-name) :disable))))))
+  (track-popup-menu *color-popup-menu*))
+
+(defun color-find ()
+  (unless (find-text-attribute-point (point)) :disable))
+
+(defun color-string-selection (&rest attr)
+  (apply #'set-text-attribute
+	 (selection-point) (selection-mark) nil attr))
+
+(global-set-key #\S-RBtnDown 'color-string-popup)
+
+(defun color-resume ()
+  (let ((fname (get-buffer-file-name))
+	col attr is)
+    (when (and fname
+	       (file-exist-p (setq col (concat fname ".col"))))
+      (handler-case
+	  (with-open-file (is col :direction :input)
+	    (setq attr (read is))
+	    (mapc #'(lambda (x)
+		      (apply #'set-text-attribute x))
+		  attr))
+	(error ()
+	  (clear-all-text-attributes)))))
+  t)
+
+(add-hook '*find-file-hooks* 'color-resume)
+
+(defun color-bold ()
+  (interactive)
+  (let* ((attr (multiple-value-list
+		(find-text-attribute-point (point))))
+	 (bold (nth 5 attr)))
+    (when attr
+      (set-text-attribute (car attr) (cadr attr) (caddr attr)
+			  :foreground (nth 3 attr)
+			  :background (nth 4 attr)
+			  :bold (not bold)
+			  :underline (nth 6 attr)
+			  :strike-out (nth 7 attr)
+			  :prefix (nth 8 attr)
+			  :extend (nth 9 attr))
+      )))
+
+(defun color-underline ()
+  (interactive)
+  (let* ((attr (multiple-value-list
+		(find-text-attribute-point (point))))
+	 (underline (nth 6 attr)))
+    (when attr
+      (set-text-attribute (car attr) (cadr attr) (caddr attr)
+			  :foreground (nth 3 attr)
+			  :background (nth 4 attr)
+			  :bold (nth 5 attr)
+			  :underline (not underline)
+			  :strike-out (nth 7 attr)
+			  :prefix (nth 8 attr)
+			  :extend (nth 9 attr))
+      )))
+
+(defun color-strike-out ()
+  (interactive)
+  (let* ((attr (multiple-value-list
+		(find-text-attribute-point (point))))
+	 (strike-out (nth 7 attr)))
+    (when attr
+      (set-text-attribute (car attr) (cadr attr) (caddr attr)
+			  :foreground (nth 3 attr)
+			  :background (nth 4 attr)
+			  :bold (nth 5 attr)
+			  :underline (nth 6 attr)
+			  :strike-out (not strike-out)
+			  :prefix (nth 8 attr)
+			  :extend (nth 9 attr))
+      )))
+
+(defun color-reverse ()
+  (interactive)
+  (let* ((attr (multiple-value-list
+		(find-text-attribute-point (point))))
+	 (foreground (nth 3 attr))
+	 (background (nth 4 attr)))
+    (when attr
+      (set-text-attribute (car attr) (cadr attr) (caddr attr)
+			  :foreground background
+			  :background foreground
+			  :bold (nth 5 attr)
+			  :underline (nth 6 attr)
+			  :strike-out (nth 7 attr)
+			  :prefix (nth 8 attr)
+			  :extend (nth 9 attr))
+      )))
+
+(defun color-foreground-number (num)
+  (let* ((attr (multiple-value-list
+		(find-text-attribute-point (point)))))
+    (when attr
+      (set-text-attribute (car attr) (cadr attr) (caddr attr)
+			  :foreground num
+			  :background (nth 4 attr)
+			  :bold (nth 5 attr)
+			  :underline (nth 6 attr)
+			  :strike-out (nth 7 attr)
+			  :prefix (nth 8 attr)
+			  :extend (nth 9 attr))
+      )))
+
+(defun color-background-number (num)
+  (let ((attr (multiple-value-list
+	       (find-text-attribute-point (point)))))
+    (when attr
+      (set-text-attribute (car attr) (cadr attr) (caddr attr)
+			  :foreground (nth 3 attr)
+			  :background num
+			  :bold (nth 5 attr)
+			  :underline (nth 6 attr)
+			  :strike-out (nth 7 attr)
+			  :prefix (nth 8 attr)
+			  :extend (nth 9 attr))
+      )))
+
+(defun color-delete ()
+  (interactive)
+  (delete-text-attribute-point (point)))
+
+(defun color-clear ()
+  (interactive)
+  (delete-text-attributes nil)
+  (delete-text-attributes 'cl))
+
+(defun color-save ()
+  (interactive)
+  (mapc #'(lambda (x) (apply #'set-text-attribute x))
+	(mapc #'(lambda (x) (if (null (caddr x)) (setf (caddr x) 'cl)))
+	      (list-text-attributes)))
+  (color-write))
+
+(defun color-write ()
+  (let ((fname (get-buffer-file-name))
+	(attr (delete nil (mapcar #'(lambda (x) (if (eq (caddr x) 'cl) x))
+				  (list-text-attributes))))
+	col)
+    (when fname
+      (setq col (concat fname ".col"))
+      (if attr
+	  (with-open-file (s col :direction :output)
+	    (format s "~S" attr))
+	(if (file-exist-p col) (delete-file col))
+	)
+      )))
+
+(add-hook '*after-save-buffer-hook* 'color-write)
+
+;;;

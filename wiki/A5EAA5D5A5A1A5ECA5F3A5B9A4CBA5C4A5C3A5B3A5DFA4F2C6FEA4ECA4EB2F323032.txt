@@ -1,0 +1,38 @@
+* process-marker [#p39fcfc1]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2006-04-21 (金) 07:04:20
+-バージョン: 
+
+** メッセージ [#sef7442b]
+ <chapter>
+ <title>process-marker</title>
+ <type>Function</type>
+ <arguments>process-marker PROCESS</arguments>
+ <package>editor</package>
+ <description>
+ プロセスに関連付けられたマーカーを返します。
+ プロセスの出力はマーカー位置に挿入され、
+ マーカー位置は挿入したテキスト長だけ進みます。
+ 
+ process-filter をセットした場合は、マーカーに対する処理は起こりません。
+ 必要な場合は、通常 process-filter で自分で処理します。
+ プロセスに関連付けられたマーカーは、 delete-marker で削除することはできません。
+ </description>
+ <seealso>make-marker</seealso>
+ <seealso>make-process</seealso>
+ <seealso>delete-marker</seealso>
+ <seealso>process-filter</seealso>
+ <link></link>
+ <section>プロセス</section>
+ <file>builtin.l</file>
+ </chapter>
+
+--------
+- どーもです。 -- [[NANRI]] &new{2006-04-23 (日) 23:05:45};
+
+#comment

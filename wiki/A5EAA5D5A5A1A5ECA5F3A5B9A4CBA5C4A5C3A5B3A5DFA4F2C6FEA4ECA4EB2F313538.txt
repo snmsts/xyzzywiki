@@ -1,0 +1,22 @@
+*text-attributes [#ubbed249]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: typo
+-投稿日: 2005-10-16 21:34:14 (日)
+-バージョン: 20050929
+
+**メッセージ [#a25996a5]
+以下の二箇所、 text-attributes の "s" が抜けているようです。
+
+-■modify-text-attributes の四行目~
+modify-text-attributeで:strike-out tとしても、
+
+-■set-text-attribute の二行目~
+付けた属性はdelete-text-attributeで消せます。 
+----
+-どーもです。さくっと直しました。→[[modify-text-attributes>refwiki:modify-text-attributes]], [[set-text-attribute>refwiki:set-text-attribute]] -- [[NANRI]] &new{2005-10-17 00:02:54 (月)};
+
+#comment

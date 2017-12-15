@@ -1,0 +1,40 @@
+* 特定文字数で折り返しされているものの修正方法 [#l3f09b5c]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2005-05-02 17:58:21 (月)
+
+** メッセージ [#zdb067c6]
+特定文字数で折り返しされているものの修正方法
+について教えて下さい。
+
+たとえばDOSの実行結果などをコピペした場合、デフォルトで80
+文字で折り返されます。
+
+これを一発で変換したいと思い以下の様なものを作ってみました。
+
+ (defun my-test (text1 &optional)
+   (interactive "s文字数: ")
+   (progn
+ 	(progn (setq text1 (decode-escape-sequence (concat "\\(.\\{" text1 "\\}\\)\\n") t))
+ 	  (perform-replace  text1 "\\1" nil t (interactive-p) t)
+ 	  )
+ 	)
+   )
+
+しかし、上記だと、2byteの文字が含まれた場合、うまく動作しません。
+何か良い方法はありますでしょうか。
+
+----
+ (defun foo (col)
+   (interactive "n文字数: ")
+   (goto-char (point-max))
+   (while (previous-line)
+     (goto-eol)
+     (and (<= col (current-column))
+          (char= (following-char) #\LFD)
+          (delete-char))))
+-たまたまその文字数の行なのか、折り返されてその文字数になった行なのかの区別ができないので、不完全です。 -- [[NANRI]] &new{2005-05-02 19:30:27 (月)};
+-2byteの文字でもOKですね。有難う御座います。リクツがイマイチ分かりませんがリファレンスとニラメッコでもしてみます。 -- [[質問者]] &new{2005-05-06 11:47:05 (金)};
+
+#comment

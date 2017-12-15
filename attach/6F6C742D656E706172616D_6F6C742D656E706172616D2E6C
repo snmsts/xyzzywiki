@@ -1,0 +1,73 @@
+;; -*- olt-mode : lisp-dots; -*-
+#|
+設定例
+(require "olt-enparam")
+|#
+
+(provide "olt-enparam")
+(in-package "editor")
+
+(require "olt/olt")
+
+(export '*olt-parameter-alist*)
+
+(defvar *olt-parameter-alist* nil "olt-modeに指定する文字列と呼び出す関数のalist")
+(defvar *olt-parameter* nil "現在のバッファの olt-mode名")
+
+(defun set-olt-make-function ()
+  (let ((fun (cdr (assoc *olt-parameter* *olt-parameter-alist* :test #'equal))))
+    (if fun
+        (progn
+          ;(msgbox "olt parameter : ~A~%olt function : ~A" *olt-parameter* fun)
+          (setq olt::*olt-make-function* fun))
+      (msgbox "Cannot find ~W in ~W" *olt-parameter* *olt-parameter-alist*))))
+
+(defun olt-param-setting (str)
+  (make-local-variable '*olt-parameter*)
+  ;(setq *olt-parameter* (intern str (find-package "user")))
+  (setq *olt-parameter* str)
+  ;(msgbox "set olt parameter : ~A" *olt-parameter*)
+  (add-hook 'olt::*olt-open-hook* 'ed::set-olt-make-function))
+
+
+
+;;. enparamに olt-mode を追加
+(pushnew (cons "olt-mode" #'olt-param-setting)
+         *auto-mode-parameter-alist* :key #'car :test #'equal)
+
+;;. lisp-modeに対するデフォルトの olt を削除
+(delete-hook 'ed:*lisp-mode-hook* 'olt::olt-setting-lisp-mode)
+
+;;. olt-modeに指定できるデフォルトの文字列を設定
+(setq *olt-parameter-alist*
+      '(("lisp-dots" . olt::olt-make-regexp-lisp-dots)
+        ("lisp"      . olt::olt-make-lisp-mode)
+        ("auto"      . olt::olt-make-auto)
+        ("html"      . olt::olt-setting-html-mode)
+        ("css"       . olt::olt-setting-css-mode)
+        ("latex"     . olt::olt-setting-LaTeX-mode)
+        ))
+
+
+
+
+(in-package "outline-tree")
+
+;;. lisp-dots
+(defun olt-make-regexp-lisp-dots (root-hitem)
+  (olt-make-regexp-internal
+   :root-hitem root-hitem
+   :layer-regexp-list
+   '(
+     "^;;\\.[ \t]*\\([^.].*\\)[ \t;]*$"
+     "^;;\\.\\.[ \t]*\\([^.].*\\)$"
+     "^;;\\.\\.\\.[ \t]*\\([^.].*\\)$"
+     "^;;\\.\\.\\.\\.[ \t]*\\([^.].*\\)$"
+     "^;;\\.\\.\\.\\.\\.[ \t]*\\([^.].*\\)$"
+     )
+   :layer-regexp-list-case-fold t
+   :layer-regexp-list-order :non-miss))
+
+(defun olt-setting-lisp-dots ()
+  (setq *olt-make-function* 'olt-make-regexp-lisp-dots))
+

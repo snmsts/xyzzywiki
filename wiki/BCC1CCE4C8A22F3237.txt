@@ -1,0 +1,54 @@
+* 改行コードを指定して開き直すには 
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 完了
+-投稿日: 2004-06-08 (火) 12:07:22
+
+** メッセージ 
+メニューから指定してもう一度開くしかないのでしょうか．
+
+一時ファイルになった web ページのソースを見ると，
+^M がいっぱいなことがあります．
+
+M-x replace-string C-q C-m (^M) RET RET を押せばきれいに
+なりますし，保存するなら C-x C-k n で crlf にすればいい
+問題ではありますが，できればいいなと思いました．
+
+
+また，*-dos, *-mac, *-unix としていないのは
+なぜですか．
+----
+-ファイルの方の改行コードがおかしくなくても誤認識することがあるのでしょうか？　それはともかく、こんな感じかなというのを作っておきました。改行コードを指定するときは C-u (universal-argument) が必要です。C-u C-x C-f : エンコーディング指定でファイルをオープンとか、C-u M-x revert-buffer : エンコーディング指定でバッファを読み直すとかに動作を合わせました。 -- [[NANRI]] &new{2004-06-09 (水) 00:01:58};
+ (defun my-find-other-file (filename &optional encoding nomsg)
+   (interactive "FFind other file: \n0zEncoding: "
+     :title0 "Find other file"
+     :default0 (and *find-other-file-requires-file-name*
+                    (get-buffer-file-name)))
+   (let ((eol-code *eol-guess*)
+         (eol-list (list "*eol-lf*" "*eol-crlf*" "*eol-cr*" "*eol-guess*")))
+     (when (eq *prefix-args* 'universal-argument)
+       (setq eol-code (symbol-value (intern (completing-read "eol-code: "
+                                                             eol-list
+                                                             :must-match t)))))
+     (let ((*expected-eol-code* eol-code))
+       (declare (special *expected-eol-code*))
+       (when (kill-buffer (selected-buffer))
+         (find-file filename encoding nomsg)))))
+ 
+ (defun my-revert-buffer (&optional encoding)
+   (interactive "0zEncoding: ")
+   (let ((eol-code *eol-guess*)
+         (eol-list (list "*eol-lf*" "*eol-crlf*" "*eol-cr*" "*eol-guess*")))
+     (when (eq *prefix-args* 'universal-argument)
+       (setq eol-code (symbol-value (intern (completing-read "eol-code: "
+                                                             eol-list
+                                                             :must-match t)))))
+     (let ((*expected-fileio-encoding* (or encoding *expected-fileio-encoding*))
+           (*expected-eol-code* eol-code))
+       (declare (special *expected-fileio-encoding* *expected-eol-code*))
+       (if revert-buffer-function
+           (funcall revert-buffer-function)
+         (revert-buffer-normal)))))
+-ばっちりでした．ありがとうございました．*expected-eol-code* を書き換えておいて revert-buffer するのがスマートなんですね． --  &new{2004-06-15 (火) 22:29:14};
+
+#comment

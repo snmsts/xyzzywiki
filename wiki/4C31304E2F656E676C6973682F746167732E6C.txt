@@ -1,0 +1,26 @@
+[[L10N/english]]
+
+ tags.l:55:      (error "~Aが見つかりません" *tags-file-name*))
+-~A is not found. --  &new{2005-03-04 20:56:10 (金)};
+
+#comment
+ tags.l:112:    (:caption "ﾀｸﾞｼﾞｬﾝﾌﾟ")
+-Tag Jump --  &new{2005-03-04 20:56:35 (金)};
+
+#comment
+ tags.l:113:    (:font 9 "ＭＳ Ｐゴシック")
+-MS Sans Serif --  &new{2005-03-04 21:01:09 (金)};
+
+#comment
+ tags.l:116:     (:button IDOK "移動(&G)" #x50030001 198 7 52 14)
+-&Go --  &new{2005-03-04 21:00:39 (金)};
+
+#comment
+ tags.l:117:     (:button IDCANCEL "ｷｬﾝｾﾙ" #x50030000 198 27 52 14))))
+-Cancel --  &new{2005-03-04 21:01:34 (金)};
+
+#comment
+ tags.l:175:	       (message "~:[~*~;~:*~A~A~]~Aが見つかりません"
+-~:[~*~;~:*~A~A~]~A is not found. --  &new{2005-03-04 20:58:34 (金)};
+
+#comment

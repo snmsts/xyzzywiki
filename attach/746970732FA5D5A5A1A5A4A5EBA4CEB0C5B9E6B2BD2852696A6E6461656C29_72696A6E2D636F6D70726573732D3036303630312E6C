@@ -1,0 +1,126 @@
+;;; rijn-compress.l
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (require "rijn"))
+
+(in-package "rijndael")
+(defun create-archive-and-encrypt (archive-file files directory &optional key)
+  (create-archive archive-file files directory)
+  (unwind-protect
+      (encrypt-file archive-file
+		    (concat archive-file ".rjn")
+		    (or key (getpass "Password for archive: ")))
+    (delete-file archive-file  :if-does-not-exist :skip :if-access-denied :error)))
+
+(defun extract-archive-with-decryption (archive-file to-directory &optional key &rest files)
+  (let ((temp (substring archive-file 0 -4))) ; イマイチ
+    (decrypt-file archive-file temp
+		  (or key (getpass "Password for archive: ")))
+    (unwind-protect
+	(apply #'extract-archive temp to-directory files)
+      (delete-file temp :if-does-not-exist :skip :if-access-denied :error))))
+
+(in-package "editor")
+(defun filer-get-archive-name-and-key ()
+  (multiple-value-bind (result data)
+      (dialog-box '(dialog 0 0 251 120
+		    (:caption "ファイルを圧縮して暗号化")
+		    (:font 9 "MS UI Gothic")
+		    (:control
+		     (:static nil "ファイル名(&N):" #x50020000 7 64 38 8)
+		     (:edit name nil #x50810080 7 74 160 14)
+		     (:static nil "パスワード:" #x50020000 7 90 116 8)
+		     (:edit pass nil #x508100a0 7 100 144 14)
+		     (:button IDOK "OK" #x50010001 194 7 50 14)
+		     (:button IDCANCEL "キャンセル" #x50010000 194 24 50 14)
+		     (:static nil "作成するディレクトリ(&D):" #x50020000 8 7 64 8)
+		     (:combobox dir nil #x50210102 8 18 160 85)
+		     (:button ref "参照..." #x50010000 169 17 22 14)
+		     (:static nil "基準ディレクトリ(&B):" #x50020000 7 35 53 8)
+		     (:edit base nil #x50810080 7 45 160 14)
+		     (:button baseref "参照..." #x50010000 169 45 22 14)))
+		  (list (cons 'dir (filer-get-directory))
+			(cons 'dir *filer-archive-directory-history*)
+			(cons 'base (filer-get-directory)))
+		  '((name :non-null "アーカイブファイル名を入力してください" :enable (IDOK))
+		    (ref :related dir :directory-name-dialog (:title "参照"))
+		    (baseref :related base :directory-name-dialog (:title "参照"))))
+    (when result
+      (let* ((dir (cdr (assoc 'dir data)))
+	     (file (merge-pathnames (cdr (assoc 'name data)) dir)))
+	(add-history dir '*filer-archive-directory-history*)
+	(values (cond ((string-matchp "\\.lzh$" file) file)
+		      ((string-matchp "\\.zip$" file) file)
+		      ((string-matchp "\\.cab$" file) file)
+		      ((string-matchp "\\.tar$" file) file)
+		      ((string-matchp "\\.tar\\.gz$" file) file)
+		      ((string-matchp "\\.tar\\.bz2$" file) file)
+		      ((string-matchp "\\.tar\\.Z$" file) file)
+		      ((string-matchp "\\.tbz$" file) file)
+		      ((string-matchp "\\.tgz$" file) file)
+		      ((string-matchp "\\.taz$" file) file)
+		      ((string-matchp "\\.bza$" file) file)
+		      ((string-matchp "\\.gza$" file) file)
+		      ((string-matchp "\\.yz1$" file) file)
+		      ((string-matchp "\\.7z$" file) file)
+		      ((string-matchp "\\.exe$" file) file)
+		      (t (concat file ".lzh")))
+		(merge-pathnames (cdr (assoc 'base data))
+				 (filer-get-directory))
+		(cdr (assoc 'pass data)))))))
+
+(defun filer-create-archive-and-encrypt ()
+  (let ((marks (filer-get-mark-files)))
+    (when marks
+      (multiple-value-bind (arc base key)
+	  (filer-get-archive-name-and-key)
+	(when arc
+	  (filer-subscribe-to-reload (directory-namestring arc))
+	  (let ((sfx (string-matchp "\\.exe$" arc)))
+	    (when sfx
+	      (setf (subseq arc (- (length arc) 3)) "lzh"))
+	    (rijndael::create-archive-and-encrypt
+	     arc
+	     (if (string-matchp "\\.cab$" arc)
+		 (mapcar #'(lambda (f)
+			     (if (file-directory-p f)
+				 (merge-pathnames "*.*" f)
+			       f))
+			 marks)
+	       marks)
+	     base
+	     key)
+	    (when sfx
+	      (convert-to-SFX arc "-gw"))
+	    (filer-clear-all-marks)))))))
+
+
+(defun filer-extract-archive-with-decryption (&optional (not-current t))
+  (let ((files (filer-get-mark-files)))
+    (when files
+      (let ((dir (filer-get-directory not-current)))
+	(multiple-value-bind (result data)
+	    (dialog-box '(dialog 0 0 210 40
+			  (:caption "ファイルを復号して解凍")
+			  (:font 9 "MS UI Gothic")
+			  (:control
+			   (:static nil "パスワード:" #x50020000 7 7 200 8)
+			   (:edit pass nil #x508100a0 7 17 144 14)
+			   (:button IDOK "OK" #x50010001 153 7 50 14)
+			   (:button IDCANCEL "キャンセル" #x50010000 153 24 50 14)))
+			nil
+			'((out :non-null "出力ファイル名を入力して" :enable (IDOK))))
+	  (when result
+	    (filer-subscribe-to-reload dir t)
+	    (dolist (file files)
+	      (when (or (null ed::*filer-query-before-process*)
+			(yes-or-no-p "アーカイブファイル~%~A~%を~%~A~%に解凍しますか?"
+				     file dir))
+		(rijndael::extract-archive-with-decryption
+		 file dir (cdr (assoc 'pass data))
+		 )))
+	    (filer-clear-all-marks)))))))
+
+
+;; (define-key filer-keymap #\M-e 'ed::filer-extract-archive-with-decryption)
+;; (define-key filer-keymap #\M-o 'ed::filer-create-archive-and-encrypt)

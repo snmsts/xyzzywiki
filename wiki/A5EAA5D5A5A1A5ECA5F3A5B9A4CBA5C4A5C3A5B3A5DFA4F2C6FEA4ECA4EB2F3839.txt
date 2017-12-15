@@ -1,0 +1,31 @@
+*current-line-columns [#dba7f5fa]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[OHKUBO]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2004-11-22 (月) 19:04:45
+-バージョン: 20041115
+
+**メッセージ [#o53cf8c1]
+ <chapter>
+ <title>current-line-columns</title>
+ <type>Function</type>
+ <arguments>current-line-columns NIL</arguments>
+ <package>editor</package>
+ <description>
+ 現在の表示行の桁数を返します。
+ 改行文字 (#\LFD) は 2 桁と扱われます。
+ </description>
+ <seealso>current-column</seealso>
+ <seealso>char-columns</seealso>
+ <link></link>
+ <section>ポジション</section>
+ <file>builtin.l</file>
+ </chapter>
+
+----
+-[[refwiki:current-line-columns]] に取り込みました。 -- [[NANRI]] &new{2004-12-18 (土) 01:54:33};
+
+#comment

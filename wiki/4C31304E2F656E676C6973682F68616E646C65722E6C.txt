@@ -1,0 +1,10 @@
+[[L10N/english]]
+
+ handler.l:17:    (error "不正なコンディションハンドラフォームです"))
+- "incorrect condition handler form " --  &new{2007-08-28 (火) 22:18:40};
+
+#comment
+ handler.l:29:	     (error ":no-errorが最後の句ではありません"))
+- 'no-error' was not last phrase --  &new{2007-08-28 (火) 22:19:20};
+
+#comment

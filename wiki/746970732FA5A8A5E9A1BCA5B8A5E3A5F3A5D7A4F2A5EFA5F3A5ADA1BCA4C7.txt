@@ -1,0 +1,51 @@
+[[tips]]
+
+F10 F11 を押し分けないでエラーに飛べます。
+
+ (defun jump-error (&optional previous-error-p)
+  (interactive "p")
+  (cond (previous-error-p
+         (next-error t))
+        ((find-errors2)
+         (first-error))
+        (t (next-error))))
+ 
+ (defun jump-prev-error ()
+  (interactive)
+  (jump-error t))
+ 
+ ;;find-errors を改造したエラー検索
+ ;;カーソルのある行以下10行以内にエラーがありそうかどうかを見るだけ。
+ ;;もし、バッファの最後まで検索したい場合は "dotimes (i 10)" の部分を
+ ;;"loop" に変更してください。
+ (defun find-errors2 ()
+   (save-excursion
+     (let (file name regexp file-regnum)
+       (flet ((check ()
+                (setf name (string-trim " \t" (match-string file-regnum)))
+                (when (if (string-match "^<.+>$" name)
+                          (find-buffer (subseq name 1 (- (length name) 1)))
+                        (and (setf file (substitute-string name "[/\\]+" "/"))
+                             (file-exist-p file)
+                             (not (file-directory-p file))))
+                  (return-from find-errors2 t))))
+       (goto-bol)
+       (dotimes (i 10)
+         (dolist (x *error-regexp-list*)
+           (setf regexp (first x)
+                 file-regnum (second x))
+           (when (looking-at regexp)
+             (check)
+             (while (string-match regexp name)
+               (check))))
+         (unless (forward-line)
+           (return)))))))
+ 
+ ;(global-set-key #\F10 'jump-error)
+ ;前エラー
+ ;(global-set-key #\S-F10 'jump-prev-error)
+
+----
+- バッファを見てなかったので修正。 --  &new{2006-09-04 (月) 18:30:58};
+
+#comment

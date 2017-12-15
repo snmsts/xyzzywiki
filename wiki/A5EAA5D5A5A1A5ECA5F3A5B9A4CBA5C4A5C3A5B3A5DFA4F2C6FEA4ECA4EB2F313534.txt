@@ -1,0 +1,32 @@
+* *load-pathname* [#v9f30f17]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 新規項目
+-投稿日: 2005-09-29 23:00:05 (木)
+-バージョン: 20050929
+
+**メッセージ [#fe218d78]
+ <chapter>
+ <title>*load-pathname*</title>
+ <type>Variable</type>
+ <arguments></arguments>
+ <package>lisp</package>
+ <description>
+ 現在読み込み中のファイル名（もしくはストリーム名）が入ります。
+ 
+ load-file内でバインドされます。
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ファイルシステム</section>
+ <file></file>
+ </chapter>
+
+----
+-fileにlread.ccと書きたいのですが…宣言とは微妙に違うし…builtinとも違うしlispレイヤーでは宣言すらないし… -- [[佐野]] &new{2005-09-29 23:02:55 (木)};
+- 取り込みました→[[refwiki:*load-pathname*]] -- [[NANRI]] &new{2005-11-13 (日) 21:53:49};
+
+#comment

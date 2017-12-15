@@ -1,0 +1,222 @@
+;; 何年か前に作ったものです。
+;; プログラムも Lisp も素人なんで、色々大目にみてやってください。
+;; しばらく xyzzy を弄れる環境にないので、
+;; このコードは捨てるなり再利用するなり、ご自由にどうぞ。
+
+(provide "iswitchb")
+(in-package "editor")
+
+(export '(iswitchb-buffer
+	  *iswitchb-use-regexp*
+	  *iswitchb-case-fold*
+	  *iswitchb-mode-map*
+	  *iswitchb-tag-selection-attribute*
+	  *iswitchb-tag-selection1-attribute*))
+
+(defvar-local *iswitchb-use-regexp* nil)
+(defvar-local *iswitchb-case-fold* t)
+
+(defvar *iswitchb-tag-selection-attribute*
+  '(:bold t :foreground 24))
+(defvar *iswitchb-tag-selection1-attribute*
+  '(:bold t :foreground 25))
+
+
+(defvar *iswitchb-executed* nil)
+(defvar *iswitchb-exit* nil)
+
+(defvar-local *iswitchb-mode* nil)
+(defvar-local *iswitchb-buffer-list* nil)
+(defvar-local *iswitchb-completion-list* nil)
+(defvar-local *iswitchb-eof* nil)
+(defvar-local *iswitchb-executed-buffer* nil)
+(defvar-local *iswitchb-other-buffer* nil)
+
+(defvar *iswitchb-mode-map* nil)
+(unless *iswitchb-mode-map*
+  (setq *iswitchb-mode-map* (make-sparse-keymap)))
+(define-key *iswitchb-mode-map* #\C-s 'iswitchb-next-match)
+(define-key *iswitchb-mode-map* #\C-r 'iswitchb-prev-match)
+(define-key *iswitchb-mode-map* #\C-t 'iswitchb-toggle-regexp)
+(define-key *iswitchb-mode-map* #\C-c 'iswitchb-toggle-case)
+(define-key *iswitchb-mode-map* #\C-k 'iswitchb-kill-buffer)
+(define-key *iswitchb-mode-map* #\TAB 'iswitchb-complete)
+(define-key *iswitchb-mode-map* #\RET 'iswitchb-select-buffer)
+
+
+(defun iswitchb-update-buflist ()
+  (setq *iswitchb-buffer-list*
+	(remove-if #'(lambda (x) (string= (buffer-name x) " " :end1 1))
+		   (buffer-list)))
+  (when *iswitchb-executed-buffer*
+    (setq *iswitchb-buffer-list*
+	  (remove *iswitchb-executed-buffer* *iswitchb-buffer-list*))
+    (setq *iswitchb-buffer-list*
+	  (append *iswitchb-buffer-list* (list *iswitchb-executed-buffer*))))
+  (when *iswitchb-other-buffer*
+    (setq *iswitchb-buffer-list*
+	  (remove *iswitchb-other-buffer* *iswitchb-buffer-list*))
+    (setq *iswitchb-buffer-list*
+	  (append (list *iswitchb-other-buffer*)
+		  *iswitchb-buffer-list*))))
+
+(defun iswitchb-make-completion-list (input)
+  (setq *iswitchb-completion-list* nil)
+  (if (string= input "")
+      (setq *iswitchb-completion-list* *iswitchb-buffer-list*)
+    (progn
+      (unless *iswitchb-use-regexp*
+	(setq input (regexp-quote input)))
+      (dolist (buf *iswitchb-buffer-list*)
+	(if (ignore-errors
+	     (if *iswitchb-case-fold*
+		 (string-matchp input (buffer-name buf))
+	       (string-match input (buffer-name buf))))
+	    (setq *iswitchb-completion-list*
+		  (append *iswitchb-completion-list* (list buf))))))))
+
+(defun iswitchb-insert-buffer-list ()
+  (let (str beg end)
+    (save-excursion
+      (goto-char (point-max))
+      (unless *iswitchb-completion-list*
+	(insert "[No match]")
+	(message "")
+	(return-from iswitchb-insert-buffer-list))
+      (setq beg (1+ (point-max)))
+      (setq end (+ beg (length (buffer-name (car *iswitchb-completion-list*)))))
+      (dolist (buf *iswitchb-completion-list*
+		   (setq str (concat "{" (string-trim "," str) "}")))
+	(setq str (concat str (buffer-name buf) ",")))
+      (insert str)
+      (message (concat
+		(string (buffer-local-value
+			 (car *iswitchb-completion-list*) 'buffer-mode))
+		":" (get-buffer-file-name (car *iswitchb-completion-list*))))
+      (apply #'set-text-attribute beg end 'iswitchb
+	     (if (= (length *iswitchb-completion-list*) 1)
+		 *iswitchb-tag-selection1-attribute*
+	       *iswitchb-tag-selection-attribute*)))))
+
+(defun iswitchb-rotate-list (direct)
+  (setq *iswitchb-buffer-list*
+	(case direct
+	  ('right (append (cdr *iswitchb-buffer-list*)
+			  (list (car *iswitchb-buffer-list*))))
+	  ('left (append (last *iswitchb-buffer-list*)
+			 (nbutlast *iswitchb-buffer-list*)))
+	  (t *iswitchb-buffer-list*))))
+
+(defun iswitchb-tidy ()
+  (save-excursion
+    (delete-region (marker-point *iswitchb-eof*) (point-max))))
+
+(defun iswitchb-exhibit ()
+  (let ((input (buffer-substring (point-min) (point-max))))
+    (set-marker *iswitchb-eof* (point-max))
+    (iswitchb-make-completion-list input)
+    (iswitchb-insert-buffer-list)))
+
+(defun iswitchb-next-match ()
+  (interactive)
+  (iswitchb-rotate-list 'right))
+
+(defun iswitchb-prev-match ()
+  (interactive)
+  (iswitchb-rotate-list 'left))
+
+(defun iswitchb-toggle-regexp ()
+  (interactive)
+  (setq *iswitchb-use-regexp* (eq *iswitchb-use-regexp* nil)))
+
+(defun iswitchb-toggle-case ()
+  (interactive)
+  (setq *iswitchb-case-fold* (eq *iswitchb-case-fold* nil)))
+
+(defun iswitchb-kill-buffer ()
+  (interactive)
+  (let ((buf (car *iswitchb-completion-list*)))
+    (and buf
+	 (kill-buffer buf)
+	 (setq *iswitchb-buffer-list*
+	       (remove buf *iswitchb-buffer-list*)))))
+
+(defun iswitchb-select-buffer ()
+  (interactive)
+  (setq *iswitchb-exit* nil)
+  (let ((input (buffer-substring (point-min) (point-max))))
+    (iswitchb-make-completion-list input)
+    (if *iswitchb-completion-list*
+	(setq *iswitchb-exit* (car *iswitchb-completion-list*))
+      (and input
+	   (y-or-n-p "No buffer matching `~A', create one?" input)
+	   (setq *iswitchb-exit* (create-new-buffer input))))
+    (minibuffer-exit)))
+
+(defun iswitchb-complete ()
+  (interactive)
+  (if (= (length *iswitchb-completion-list*) 1)
+      (iswitchb-select-buffer)
+    (print-completion-list
+     (mapcar #'buffer-name
+	     (if *iswitchb-completion-list*
+		 *iswitchb-completion-list*
+	       *iswitchb-buffer-list*))
+     "" "" :never)))
+
+(defun iswitchb-buffer ()
+  (interactive)
+  (unless *iswitchb-executed*
+    (setq *iswitchb-executed* t)
+    (add-hook '*enter-minibuffer-hook* 'iswitchb-setup)
+    (add-hook '*exit-minibuffer-hook*  'iswitchb-unsetup)
+
+    (read-string "iswitchb: " :history t)
+    
+    (delete-hook '*enter-minibuffer-hook* 'iswitchb-setup)
+    (delete-hook '*exit-minibuffer-hook*  'iswitchb-unsetup)
+    
+    (if (bufferp *iswitchb-exit*)
+	(switch-to-buffer *iswitchb-exit*))))
+
+(defun iswitchb-mode (&optional (arg nil sv))
+  (interactive "p")
+  (toggle-mode '*iswitchb-mode* arg sv)
+  (if *iswitchb-mode*
+      (progn
+	(make-local-variable '*pre-command-hook*)
+	(make-local-variable '*post-command-hook*)
+	(add-hook '*pre-command-hook*  'iswitchb-tidy)
+	(add-hook '*post-command-hook* 'iswitchb-exhibit)
+	(set-minor-mode-map *iswitchb-mode-map*)
+	(setq *iswitchb-eof* (make-marker))
+	(iswitchb-update-buflist)
+	(iswitchb-exhibit))
+    (progn
+      ;;(delete-hook '*pre-command-hook*  'iswitchb-tidy)
+      ;;(delete-hook '*post-command-hook* 'iswitchb-exhibit)
+      (unset-minor-mode-map *iswitchb-mode-map*)
+      (delete-marker *iswitchb-eof*)))
+  t)
+
+(pushnew '(*iswitchb-mode* . "iswitchb") *minor-mode-alist* :key #'car)
+
+
+(defun iswitchb-setup (buffer history)
+  (when *iswitchb-executed*
+    (let ((oldbuf (selected-buffer))
+	  (otherbuf (other-buffer)))
+      (save-excursion
+	(save-window-excursion
+	  (set-buffer buffer)
+	  (setq *iswitchb-executed-buffer* oldbuf)
+	  (setq *iswitchb-other-buffer* otherbuf)
+	  (iswitchb-mode t))))
+      (setq *iswitchb-executed* nil)))
+
+(defun iswitchb-unsetup (buffer contents)
+  (when *iswitchb-mode*
+    (iswitchb-mode nil)))
+
+(global-set-key '(#\C-x #\b) 'iswitchb-buffer)
+

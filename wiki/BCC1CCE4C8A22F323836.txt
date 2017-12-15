@@ -1,0 +1,16 @@
+* 出力時の文字コード [#wfd7515e]
+-ページ: [[質問箱]]
+-投稿者: [[anonymous]]
+-状態: 提案
+-投稿日: 2010-09-19 (日) 01:44:49
+
+** メッセージ [#fb6dc424]
+xyzzyのlispのprintとかprincとかで出力するときに文字コードを
+指定することは出来ますか?
+----
+- ２ちゃんねるでも書きましたが、xyzzy lispはexternal-formatをサポートしていないのでできません。どうしてもという場合は以下のようにします。 --  &new{2010-09-19 (日) 03:23:32};
+ (with-open-file (out "utf8n.txt" :direction :output)
+   (princ (map-internal-to-utf-8 "日本語の文章") out)
+   (terpri out))
+
+#comment

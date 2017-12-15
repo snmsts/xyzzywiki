@@ -1,0 +1,67 @@
+[[tips]]
+
+.xyzzyかsiteinit.lにどうぞ。
+
+ (in-package "editor")
+ (defun filer-get-current-file-name ()
+  (file-namestring
+   (remove-trail-slash (filer-get-current-file))))
+ (defun filer-delete-kept-cursor ()
+  (let ((marked (mapcar #'(lambda (x)
+                            (file-namestring
+                             (remove-trail-slash x)))
+                        (filer-get-mark-files)))
+        (current (filer-get-current-file-name))
+        (eof (progn
+               (filer-goto-eof)
+               (filer-get-current-file-name)))
+        ;(bof (progn
+        ;       (filer-goto-bof)
+        ;       (filer-get-current-file-name)))
+        tmp goto)
+    (filer-goto-file current)
+    (loop
+      (setf tmp (filer-get-current-file-name))
+      (cond ((string= eof tmp) (return))
+            ((not (find tmp marked :test 'string=)) (setf goto tmp) (return)))
+      (filer-forward-line))
+    (unless goto
+      (filer-goto-file current)
+      (loop
+        (setf tmp (filer-get-current-file-name))
+        (cond ;((string= bof tmp) (return))
+              ((filer-current-file-dot-dot-p) (return))
+              ((not (find tmp marked :test 'string=)) (setf goto tmp) (return)))
+        (filer-forward-line -1)))
+    (long-operation
+      (let ((marks (filer-get-mark-files)))
+        (when (and marks
+                   (if *filer-query-delete-precisely*
+                       (filer-query-delete marks)
+                     (yes-or-no-p "~A" (concat "選択されたファイルを削除しまっせ"
+                                               (and *filer-delete-mask*
+                                                    (filer-delete-mask-string *filer-delete-mask*
+                                                                              "\n削除マスク: "))))))
+          (filer-subscribe-to-reload (filer-get-directory) t)
+          (let ((if-access-denied (if *filer-delete-read-only-files*
+                                      :force :error))
+                (delete-non-empty-directory
+                 *filer-delete-non-empty-directory*))
+            (declare (special if-access-denied
+                              delete-non-empty-directory))
+            (filer-do-delete marks))
+          (message "done.")
+          (when goto
+            (filer-goto-file goto)))))))
+ (define-key filer-keymap #\D 'filer-delete-kept-cursor)
+ (in-package "user")
+----
+- 見たところ　filer-delete を上書きしているだけだけど、　例えば filer-delete-kept-cursor にしてそれを (define-key filer-keymap #\D 'filer-delete-kept-cursor) とすれば、上書きしなくてすむんじゃないの。 -- [[中野]] &new{2006-06-15 (木) 01:30:02};
+- wikiなんだから気づいた人が修正すればいいんじゃないの？ --  &new{2006-06-15 (木) 13:23:41};
+- 正しいかどうか自信の無いあたりとか作者さん（もしくは今後のtips書きの皆様）に考えて欲しいこととかを書く場合修正して終わりが正解だとは思いません。コメントも大事ですよね。 -- [[佐野]] &new{2006-06-15 (木) 13:37:39};
+- 上書きしても特に問題は無いと思ったのですが、私の気付いていないデメリットがあったり、そういう慣例的なものがあったりするのでしょうか？ -- [[書いた者です]] &new{2006-06-15 (木) 14:10:15};
+- この件はこれでよいですけど、こういうやり取りが残っていることで「標準関数の上書きは辞めよう」と思う人が出てくる可能性があるのはよいことだよね…と思っています。 -- [[佐野]] &new{2006-06-15 (木) 14:19:10};
+- 遠まわし過ぎますかね… -- [[佐野]] &new{2006-06-15 (木) 14:20:58};
+- bof のファイル名(?)を filer-get-current-file-name でとると親フォルダ名が返るので、カレントフォルダにそれと同名のファイルがある場合、bof まで検索されない可能性があります。ので bof のチェックを filer-current-file-dot-dot-p でするように変更しました。 --  &new{2006-09-04 (月) 04:07:19};
+
+#comment

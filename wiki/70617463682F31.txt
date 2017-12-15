@@ -1,0 +1,45 @@
+*clickableurlの色付表示を新たに入力したものに対しても有効に [#l651a991]
+
+-ページ: [[patch]]
+-投稿者: [[佐野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: 機能追加
+-投稿日: 2005-06-10 23:05:04 (金)
+-バージョン: 
+
+**メッセージ [#n552fe98]
+tipsからの移動です。整理の意味合い以外なにもありません。
+
+何かと組み合わせると痛い目見そう（佐野
+ ;0.2.2.202以降だっけか。（っつかもはや関係ないでしょ）
+ (defun ed::clickable-url-set-attribute-any-mode 
+   (&key (from (point-min)) (to (point-max)))
+   "URL、メールアドレスを強調表示"
+   (interactive)
+   (let ((tmp (compile-regexp-keyword-list
+ 	      `((,ed::*clickable-url-url-regexp*
+ 		 t (:color 4 0 :underline))))))
+     (make-local-variable 'regexp-keyword-list)
+     (or
+      (and
+       (boundp 'regexp-keyword-list)
+       (setq regexp-keyword-list
+ 	    (append regexp-keyword-list tmp)))
+      (setq regexp-keyword-list
+ 	   tmp))))
+----
+そのうち regexp-keyword で書き直そうと思ってました。
+set-text-attribute つかうよりも痛い目率は低いと思います。
+
+いつかそのうちに clickable-url の方も書き換えますね。
+(2003/3/29 OHKUBO Hiroshi)
+----
+よろしくお願いします。
+対応が出来たら消えます。（佐野 03/03/29
+-ようやく、とりあえず的に書き換えてみました。 -- [[OHKUBO]] &new{2004-09-25 (土) 10:34:05};
+-clickable-uri として、もう少しまともに対応しておきました。 -- [[OHKUBO]] &new{2005-01-21 (金) 23:32:53};
+
+----
+
+#comment

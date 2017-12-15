@@ -1,0 +1,325 @@
+* ミニバッファから読み込む系の :history [#s7cc8004]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-10-12 (木) 01:04:19
+-バージョン: 
+
+** メッセージ [#sb51c18a]
+xyzzyの使い方が分からぬやし 励ましあえ その9の676
+ <chapter>
+ <title>completing-read</title>
+ <type>Function</type>
+ <arguments>completing-read PROMPT COMPLETIONS &amp;key :case-fold :default :history :must-match</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーの入力を読み取ります。
+ 
+   PROMPT      : 表示するプロンプト
+   COMPLETIONS : 補完入力のためのリスト
+   :case-fold  : non nilなら大文字小文字を区別しない
+   :default    : 初期値の指定
+   :history    : 履歴情報
+                 minibuffer-history-variableプロパティを持つシンボルを指定します
+   :must-match : non nilならCOMPLETIONS以外受け付けない
+ </description>
+ <seealso>read-string</seealso>
+ <seealso>interactive</seealso>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-directory-name</title>
+ <type>Function</type>
+ <arguments>read-directory-name PROMPT &amp;key :default :title :history</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーがディレクトリ名を入力するのを
+ 待ちます。入力中は TAB キーでディレクトリ名を補完できます。 "~" はユーザ
+ ーのホームディレクトリに、 ".." は親ディレクトリに変換されます。ユーザー
+ の入力したディレクトリ名を返します。
+ (interactive "D") に相当します。
+ 
+   PROMPT     : プロンプト
+   :default   : 初期表示するディレクトリ名
+   :history   : 履歴情報
+                minibuffer-history-variableプロパティを持つシンボルを指定します
+ 
+ 使用例：
+   ;;; ミニバッファからディレクトリ名を読み取る。
+   (read-directory-name "directory: ")
+   =&gt; "C:/applications/xyzzy/etc"
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-file-name</title>
+ <type>Function</type>
+ <arguments>read-file-name PROMPT &amp;key :default :title :history</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーがファイル名を入力するのを待ち
+ ます。入力中は TAB キーでファイル名を補完できます。 "~" はユーザーのホー
+ ムディレクトリに、 ".." は親ディレクトリに変換されます。ユーザーの入力し
+ たファイル名を返します。
+ (interactive "F") に相当します。
+ 
+   PROMPT     : プロンプト
+   :default   : 初期表示するファイル名
+   :title     : 一画面ファイラのタイトル
+   :history   : 履歴情報
+                minibuffer-history-variableプロパティを持つシンボルを指定します
+ 
+ 使用例：
+   ;;; ミニバッファからファイル名を読み取る。
+   (read-file-name "filename: ")
+   =&gt; "C:/applications/xyzzy/xyzzy.exe"
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-string</title>
+ <type>Function</type>
+ <arguments>read-string PROMPT &amp;key :default :history</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーが文字列を入力するのを待ちます。
+ ユーザーの入力した文字列を返します。
+ (interactive "s") に相当します。
+ 
+   PROMPT     : プロンプト
+   :default   : 初期値とする文字列
+   :history   : 履歴情報
+                minibuffer-history-variableプロパティを持つシンボルを指定します
+ 
+ 使用例：
+   ;;; ミニバッファからURLを入力する。
+   (read-string "URL: ")
+   =&gt; "http://www.yahoo.co.jp"
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-buffer-name</title>
+ <type>Function</type>
+ <arguments>read-buffer-name PROMPT &amp;key :default :history</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーがバッファ名を入力するのを待ち
+ ます。ユーザーの入力したバッファを返します。入力したバッファが存在しない
+ 場合は、文字列をそのまま返します。
+ (interactive "B") に相当します。
+ 
+   PROMPT     : プロンプト
+   :default   : 初期値とする文字列
+   :history   : 履歴情報
+                minibuffer-history-variableプロパティを持つシンボルを指定します
+ 
+ 使用例:
+   ;;; ミニバッファからバッファ名を読み込む
+   (read-buffer-name "Buffer: ")   ; ←*scratch* と入力
+   =&gt;#&lt;buffer: *scratch*&gt;
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-char-encoding</title>
+ <type>Function</type>
+ <arguments>read-char-encoding PROMPT &amp;key :history</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーが文字エンコーディングを入力す
+ るのを待ちます。ユーザーの入力した文字エンコーディングを返します。補完の
+ リストは *char-encoding-list* を参照しているようです。
+ (interactive "z") に相当します。
+ 
+   PROMPT     : プロンプト
+   :history   : 履歴情報
+                minibuffer-history-variableプロパティを持つシンボルを指定します
+ 
+ 使用例:
+   ;;; ミニバッファから文字エンコーディングを読み込む
+   (read-char-encoding "Encoding: ") ; ←utf8n と入力
+   =&gt;#.(make-utf8-encoding "utf8n" "Unicode (UTF-8N)" :signature nil :windows t :byte-order nil :cjk :jp)
+ </description>
+ <seealso>*char-encoding-list*</seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-command-name</title>
+ <type>Function</type>
+ <arguments>read-command-name PROMPT &amp;key :default :history</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーがコマンドを入力するのを待ちま
+ す。ユーザーの入力したコマンドのシンボルを返します。<!-- 多値で返ってくるけど二つめは説明する自信が無いので省略 -->
+ (「コマンド」は「interactive宣言された関数」の意味で使ってます)
+ (interactive "C") に相当します。
+ 
+   PROMPT     : プロンプト
+   :default   : 初期値とする文字列
+   :history   : 履歴情報
+                minibuffer-history-variableプロパティを持つシンボルを指定します
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-exist-buffer-name</title>
+ <type>Function</type>
+ <arguments>read-exist-buffer-name PROMPT &amp;key :default :history</arguments>
+ <package>editor</package>
+ <description>
+ read-buffer-name とほとんど同じですが、 read-exist-buffer-name はすでに
+ 存在するバッファ名しか指定できません。
+ (interactive "b") に相当します。
+ 
+   PROMPT     : プロンプト
+   :default   : 初期値とする文字列
+   :history   : 履歴情報
+                minibuffer-history-variableプロパティを持つシンボルを指定します
+ </description>
+ <seealso>read-buffer-name</seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-exist-file-name</title>
+ <type>Function</type>
+ <arguments>read-exist-file-name PROMPT &amp;key :default :title :history</arguments>
+ <package>editor</package>
+ <description>
+ read-file-name とほとんど同じですが、 read-exist-file-name はすでに存在
+ しているファイルしか指定できません。
+ (interactive "f") に相当します。
+ 
+   PROMPT     : プロンプト
+   :default   : 初期値とする文字列
+   :title     : 一画面ファイラのタイトル
+   :history   : 履歴情報
+                minibuffer-history-variableプロパティを持つシンボルを指定します
+ </description>
+ <seealso>read-file-name</seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-file-name-list</title>
+ <type>Function</type>
+ <arguments>read-file-name-list PROMPT &amp;key :default :title :history</arguments>
+ <package>editor</package>
+ <description>
+ read-file-name とほとんど同じですが、 read-file-name-list は複数のファイ
+ ルを指定できます。複数のファイルを指定した場合は、そのリストを返します。
+ (interactive "l") に相当します。
+ 
+   PROMPT     : プロンプト
+   :default   : 初期値とする文字列
+   :title     : 一画面ファイラのタイトル
+   :history   : 履歴情報
+                minibuffer-history-variableプロパティを持つシンボルを指定します
+ </description>
+ <seealso>read-file-name</seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-function-name</title>
+ <type>Function</type>
+ <arguments>read-function-name PROMPT &amp;key :default :history</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーが関数名を入力するのを待ちます。
+ ユーザーの入力した関数のシンボルを返します。<!-- 多値で返ってくるけど二つめは説明する自信が無いので省略 -->
+ (interactive "a") に相当します。
+ 
+   PROMPT     : プロンプト
+   :default   : 初期値とする文字列
+   :history   : 履歴情報
+                minibuffer-history-variableプロパティを持つシンボルを指定します
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-symbol-name</title>
+ <type>Function</type>
+ <arguments>read-symbol-name PROMPT &amp;key :default :history</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーがシンボルを入力するのを待ちます。
+ ユーザーの入力したシンボルを返します。<!-- 多値で返ってくるけど二つめは説明する自信が無いので省略 -->
+ (interactive "S") に相当します。
+ 
+   PROMPT     : プロンプト
+   :default   : 初期値とする文字列
+   :history   : 履歴情報
+                minibuffer-history-variableプロパティを持つシンボルを指定します
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+ 
+ <chapter>
+ <title>read-variable-name</title>
+ <type>Function</type>
+ <arguments>read-variable-name PROMPT &amp;key :default :history</arguments>
+ <package>editor</package>
+ <description>
+ ミニバッファにプロンプトを表示してユーザーが変数を入力するのを待ちます。
+ ユーザーの入力した変数のシンボルを返します。<!-- 多値で返ってくるけど二つめは説明する自信が無いので省略 -->
+ (interactive "v") に相当します。
+ 
+   PROMPT     : プロンプト
+   :default   : 初期値とする文字列
+   :history   : 履歴情報
+                minibuffer-history-variableプロパティを持つシンボルを指定します
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>ミニバッファ</section>
+ <file>builtin.l</file>
+ </chapter>
+
+--------
+- minibuffer-history-variable属性は正しい表現なんですけど、読んでも理解できない人が多そうなのが悩みどころですね。  あと676の独自のヒストリを用意する方法をリファレンスから参照させたいですが、どんなふうに項目用意すればいいんでしょう。 -- [[中野]] &new{2006-10-13 (金) 15:29:15};
+- リファレンスでは「プロパティ」を使っているようなので、気休めに属性→プロパティに変更しておきました。用語のフォローはどの程度やるべきなのかは今のところ不明ですね。独自のヒストリを用意する方法の項目は、簡単なものならminibuffer-history-variableでOKだと思いますが、総合的ならTipsにしてしまった方が納まりが良いように思います。*session-file-history*でやっちゃうということもありかな。 -- [[NANRI]] &new{2006-10-13 (金) 23:38:26};
+
+#comment

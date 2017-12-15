@@ -1,0 +1,63 @@
+* command-execute の加筆説明 [#be38dcf5]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-11-20 (日) 20:20:24
+-バージョン: 
+
+** メッセージ [#k9d9a4cd]
+ <chapter>
+ <title>command-execute</title>
+ <type>Function</type>
+ <arguments>command-execute COMMAND &amp;optional HOOK</arguments>
+ <package>editor</package>
+ <description>
+ エディタのコマンドを実行します。
+  
+   COMMAND  : 文字列の場合，COMMAND をキーボードマクロとして実行します。
+              シンボルの場合，COMMAND を interactive に実行します。
+   HOOK     : COMMANDがシンボルの場合のみ使われます。
+              HOOK には，2引数関数を指定し，第1引数はシンボル名，
+              第2引数にはプレフィックスアーギュメントがある場合は 
+              (list *prefix-value*) が，ない時は nil が入ります。
+              コマンドを実行後，HOOKが実行されます。
+              これ以上の詳細は不明です。
+ 
+ 使用例：
+   ;;; (command-execute "^X^F")と書いてfind-fileを実行してみます。
+   (command-execute "^X^F")
+  
+   ;;; interactiveなコマンドを実行してみます。
+   (command-execute 'next-line)
+ 
+   ;;; interactiveでないコマンドを実行してみます。
+   (command-execute 'goto-bol)
+   =&gt;不正なコマンドです: goto-bol
+ 
+   ;;; HOOKを使ってみます。 
+   (command-execute 'next-line #'(lambda (x y) (msgbox "~w\n~w" x y)))
+ 
+   ;;; 各自，C-j や C-u C-j で上記のコマンドを実行してみください。
+   
+ </description>
+ <seealso>interactive</seealso>
+ <seealso>execute-extended-command</seealso>
+ <seealso>call-last-kbd-macro</seealso>
+ <seealso>*prefix-args*</seealso>
+ <section>評価</section>
+ <file>builtin.l</file>
+ </chapter>
+--------
+- 試してみたところ、第二引数には (list *prefix-value*) が入ってるような気がします。 --  &new{2005-11-20 (日) 20:49:48};
+- どーもです。command-executeの戻り値は実行したコマンドの戻り値みたいですね。使用例のところで戻り値は不要かもしれません。 -- [[NANRI]] &new{2005-11-20 (日) 23:10:58};
+- ＞第二引数には~
+そうですね．あとわざわざリストにされているので， *prefix-value* 以外の値も入ることがあると思います．c++のソース見た限りでは理解できませんでしたが．~
+＞戻り値は不要かも~
+そうですね．そのほうが読みやすいかもしれません． -- [[中野]] &new{2005-11-21 (月) 01:01:09};
+- ツッコミを反映しました． -- [[中野]] &new{2005-11-21 (月) 12:20:13};
+- 取り込みました。 -- [[NANRI]] &new{2005-12-12 (月) 02:33:05};
+
+#comment

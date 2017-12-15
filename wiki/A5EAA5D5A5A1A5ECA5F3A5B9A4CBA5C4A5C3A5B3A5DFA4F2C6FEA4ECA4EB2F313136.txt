@@ -1,0 +1,41 @@
+*<section>の再考 [#d3103637]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[NANRI]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2005-04-25 21:43:18 (月)
+-バージョン: 
+
+**メッセージ [#g0303a5d]
+これらの関数のセクションを以下のように変更した方がいいと思うのですがいかがでしょう。
+ concatenate 文字列→シーケンス(定義がsequence.l)
+ logior 変数と定数→数値(定義がnumber.l)
+ logand 変数と定数→数値(定義がnumber.l)
+ parse-integer データ型→入出力(なんとなくより相応しいかと)
+ substitute-if-not リスト→シーケンス(定義がsequence.l)
+
+# substitute-if-not だけは関連する関数のセクションを見てうっかり変えちゃってしまったので、事後承諾みたいな感じになってしまいました。
+
+追加です。
+ yank-pop バッファ→リージョン(他のyankコマンドにそろえて)
+ kill-region テキスト→リージョン(region.l で定義されている)
+ quote-region テキスト→リージョン(region.l で定義されている)
+ delete-region テキスト→リージョン(kill-region にそろえたほうがいいでしょう)
+ copy-region-to-clipboard システム→リージョン(region.l で定義されている)
+ *kill-ring*, *kill-ring-max*, *selection-ring* 同じセクションに
+ buffer-substring テキスト→文字列 (文字列を返すので)
+ string-match, string-matchp 同じセクションに
+ call-interactively その他→評価 (定義を考慮するとcommand-executeとそろえたほうがいいでしょう)
+ with-open-stream システム→入出力 (stream.l で定義されている)
+ open システム→入出力 (streamを返すので。close と同じセクションにあったほうがいいでしょう)
+ 印刷時のヘッダやフッタに関する表記 検索・正規表現セクションは不適のように感じます。その他へ？
+
+----
+-handler-caseは「制御構造」に分類されていますが、「エラー」に入れた方がいいように思います。あと、mapcar系の関数は「制御構造」というより「リスト」や「シーケンス」に入れた方がしっくりくるのは私だけでしょうか？ --  &new{2005-05-18 17:13:12 (水)};
+-handler-caseについては同感です。mapcar系の関数については難しい所ですがCLtL2の場合Control Structureの章にあるようなので「制御構造」かなぁという気がします。 -- [[NANRI]] &new{2005-05-18 20:14:51 (水)};
+-そうでしたか。CLtL2は確認してませんでした。繰り返しの一種だとみなしているようですね。 --  &new{2005-05-18 20:39:35 (水)};
+-こんな感じにしました→[[refwiki:concatenate]], [[refwiki:logior]], [[refwiki:logand]], [[refwiki:parse-integer]], [[refwiki:substitute-if-not]], [[refwiki:yank-pop]], [[refwiki:kill-region]], [[refwiki:quote-region]], [[refwiki:delete-region]], [[refwiki:copy-region-to-clipboard]], [[refwiki:*kill-ring*]], [[refwiki:*kill-ring-max*]], [[refwiki:*selection-ring*]], [[refwiki:buffer-substring]], [[refwiki:string-match]], [[refwiki:string-matchp]], [[refwiki:call-interactively]], [[refwiki:with-open-stream]], [[refwiki:open]], [[refwiki:印刷時のヘッダやフッタに関する表記]], [[refwiki:handler-case]] -- [[NANRI]] &new{2005-06-11 23:25:20 (土)};
+
+#comment

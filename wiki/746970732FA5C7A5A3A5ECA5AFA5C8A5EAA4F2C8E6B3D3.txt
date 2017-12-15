@@ -1,0 +1,181 @@
+#freeze
+[[tips]]
+
+xyzzyの使い方が分からぬやし 励ましあえ その7 324,325 を改悪したものです。
+
+- M-x compare-directory でディレクトリを指定後 *compare-directory* バッファを出力 （「!」が更新、「+」が追加、「-」が削除）
+- *compare-directory* バッファの更新行で M-f でdiff、M-dで diff-detail-char（diff-detail が必要）
+- n（p） で次の（前の）不一致行に移動、q でバッファを閉じる
+
+ (defvar *compare-directory-mode-map* nil)
+ 
+ (defun compare-directory (new-dir old-dir)
+   (interactive "Dnew dir: \nDold dir: " :default0 "" :default1 "")
+   (setq new-dir (namestring new-dir))
+   (setq old-dir (namestring old-dir))
+   (long-operation
+     (let ((new-dir-list (directory new-dir :file-only t :recursive t))
+ 	  (old-dir-list (directory old-dir :file-only t :recursive t))
+ 	  update-list same-list add-list delete-list all-list)
+       (dolist (f new-dir-list)
+ 	(if (find f old-dir-list :test #'string=)
+ 	    (let ((new (concat new-dir "/" f)) (old (concat old-dir "/" f)))
+ 	      (if (compare-file new old)
+ 		  (push (cons f 1) same-list)
+ 		(push (cons f 2) update-list)))
+ 	  (push (cons f 3) add-list)))
+       (dolist (f old-dir-list)
+ 	(unless (find f new-dir-list :test #'string=)
+ 	  (push (cons f 4) delete-list)))
+       (and (null update-list) (null add-list) (null delete-list)
+ 	   (plain-error "違いはありません"))
+       (with-output-to-temp-buffer ("*compare-directory*" nil)
+ 	(format t "new dir: ~A ~A~%old dir: ~A ~A~%~%" new-dir (length new-dir-list) old-dir (length old-dir-list))
+ 	(format t "更新: ~A, 同じ: ~A, 追加: ~A, 削除: ~A~%~%"
+ 		(length update-list) (length same-list) (length add-list) (length delete-list))
+ 	(setq all-list (sort (append same-list update-list add-list delete-list) #'string-lessp :key #'car))
+ 	(dolist (x all-list)
+ 	  (let ((file (car x))
+ 		(sel (cdr x)))
+ 	    (format t "~A ~A~%" (case sel (1 " ") (2 "!") (3 "+") (4 "-")) file))))
+       (set-buffer "*compare-directory*")
+       (setq buffer-read-only t)
+       (setq *compare-directory-mode-map* (copy-keymap ed::*fundamental-mode-map*))
+       (define-key *compare-directory-mode-map* #\M-f
+ 		  #'(lambda () (interactive) (compare-directory-diff new-dir old-dir)))
+       (define-key *compare-directory-mode-map* #\M-d
+ 		  #'(lambda () (interactive) (compare-directory-diff new-dir old-dir)))
+       (define-key *compare-directory-mode-map* #\n 'compare-directory-next)
+       (define-key *compare-directory-mode-map* #\p 'compare-directory-previous)
+       (define-key *compare-directory-mode-map* #\q
+ 		  #'(lambda () (interactive) (delete-buffer (selected-buffer))))
+       (use-keymap *compare-directory-mode-map*))))
+ 
+ (defun compare-directory-diff (new-dir old-dir)
+   (let* ((file (buffer-substring (save-excursion (goto-bol) (point))
+ 				 (save-excursion (goto-eol) (point))))
+ 	 (f (if (>= (length file) 2) (subseq file 2)))
+ 	 (n (concat new-dir "/" f))
+ 	 (o (concat old-dir "/" f)))
+     (if (and f (file-exist-p n) (file-exist-p o))
+ 	(if (and (fboundp 'diff-detail-char) (eq *last-command-char* #\M-d))
+ 	    (diff-detail-char n o)
+ 	  (diff n o))
+       (plain-error "ファイルがないよん"))))
+ 
+ (defun compare-directory-next (&optional p)
+   (interactive)
+   (unless (scan-buffer (compile-regexp "^[!+-]")
+ 		       :no-dup t
+ 		       :reverse p)
+     (plain-error "ないっす")))
+ 
+ (defun compare-directory-previous ()
+   (interactive)
+   (compare-directory-next t))
+
+----
+- 大切に使わせてもらっていますvv 仕事で機能追加した部分があるので上げてみます -- [[使ってる人]] &new{2007-01-16 (火) 03:10:58};
+#ref(compare-utility.l);
+- そういえばマウス用に下みたいなLisp書いて使ってます -- [[使ってる人]] &new{2007-01-20 (土) 10:57:20};
+ ;; "2つ連続でディレクトリが指定されたら、compare-directoryするか聞く"
+ (defvar find-file-compare-directory-data nil)
+ (defun find-file-compare-directory ( filename )
+   ; ディレクトリ登録
+   (and (not find-file-compare-directory-data)
+       (file-directory-p filename)
+       (progn
+         (setf find-file-compare-directory-data filename)
+         (return-from find-file-compare-directory nil)))
+   ; ディレクトリのdiff
+   (and find-file-compare-directory-data
+       (file-directory-p filename)
+       (fboundp 'compare-directory)
+       (yes-or-no-p "ディレクトリのdiffかな？")
+       (progn
+         (compare-directory filename find-file-compare-directory-data)
+         (return-from find-file-compare-directory ed::*make-buffer-name*)
+         ))
+   (setf find-file-compare-directory-data nil)
+   nil)
+ (add-hook '*before-find-file-hook* 'find-file-compare-directory)
+- 細かな事ですが、モードマップはダンプファイルに含まれないようにロード時に作成しない方がいいと思いました。 --  {2007-01-21 (火) 00:10:58};
+
+ (defun compare-directory-mode ()
+   (set-buffer *make-buffer-name*)
+   (setq buffer-read-only t)
+   (make-compare-directory-mode-map)
+   (use-keymap *compare-directory-mode-map*))
+ 
+ ;; *compare-directory-mode-map*設定
+ (defun make-compare-directory-mode-map ()
+   (unless *compare-directory-mode-map*
+     (setf *compare-directory-mode-map* (make-sparse-keymap))
+     (define-key *compare-directory-mode-map* #\RET   'compare-directory-exec)
+     (define-key *compare-directory-mode-map* #\n     'compare-directory-next)
+     (define-key *compare-directory-mode-map* #\p     'compare-directory-previous)
+     (define-key *compare-directory-mode-map* #\r     'compare-directory-refresh)
+     (define-key *compare-directory-mode-map* #\t     'compare-directory-toggle-disp)
+     (define-key *compare-directory-mode-map* #\M     'compare-directory-mask-file)
+     (define-key *compare-directory-mode-map* #\q     'compare-directory-quit)
+     ))
+- >モードマップはダンプファイルに含まれないようにロード時に作成しない方がいい~
+そうなんだ･･･c-modeでやってたから、てっきりこれでよいのかと^^; -- [[使ってる人]] &new{2007-01-22 (月) 01:06:37};
+- いやそういう風習もあったんだけど、後で見返したら java.l とか違うね。どっちでもいいや。 でもこれは頻度や設定の変更しなさそうだから、自分は含めないようにした。 --  &new{2007-01-22 (月) 01:11:54};
+- 確かに変更しないですね。私はそれ採用の方向でｖｖ~マウス用Lispが古かったので修正(汗 -- [[使ってる人]] &new{2007-01-22 (月) 01:21:15};
+- マウス用も quitでエラー処理に入るよりは バッファを返す方が正道な気がする。という訳でなおしちゃいました。あとautoload化してみた。マウスからもキーボードからも問題ないみたい。 --  &new{2007-01-22 (月) 02:11:54};
+ (in-package "editor")
+ (export '(compare-directory))
+ (autoload 'compare-directory "compare-utility" t)
+ (in-package "user")
+- このページは2chで話題になっていたのを横からいただいて作成しました。compare-utility.lについてですがnconcはsetfかsetqした方がいいですね。それと、ハッシュテーブルはダンプファイルに含まれないようなので、siteinit.lからrequireするとうまく動かないような気がします。 それと自分では以下のようにして結果に色付けしています。
+ (defvar *comp-dir-update-file-background* 10)
+ (defvar *comp-dir-add-file-background* 12)
+ (defvar *comp-dir-delete-file-background* 13)
+ (defun compare-directory-mode()
+   (set-buffer *make-buffer-name*)
+   (while (scan-buffer (compile-regexp "^ \\([!+-]\\)")
+ 		      :no-dup t)
+     (let ((sel (position (match-string 1) *sel-attribute* :test #'string= :key #'car)))
+       (set-text-attribute (save-excursion (goto-bol) (point))
+ 			  (save-excursion (goto-eol) (point))
+ 			  'comp-dir :background (case sel
+ 						  (0 *comp-dir-update-file-background*)
+ 						  (2 *comp-dir-add-file-background*)
+ 						  (3 *comp-dir-delete-file-background*)))))
+   (goto-char (point-min))
+   (setq buffer-read-only t)
+   (use-keymap *compare-directory-mode-map*))
+~-- [[書いた（？）人]] &new{2007-01-22 (月) 19:01:42};
+- 賑やかになってきて嬉しい限り〜♪ >バッファを返す方が正道 そうなんですね。どうしようか迷ってたのでサンクスでしたｖｖ >autoload化 こうやって使うんだ…（ぇ)私は常用だからrequireでいいのかな。 >nconc 破壊型の使い方はこうなのかなーと思ったのだけど、違うのですね(汗 C言語でいうポインタ渡しみたいな感じに使っていたので、直しておきます。 >siteinit.lからrequireするとうまく動かないような気が。 試してみました。動いてますねぇ。それよりダンプされないことにびっくり！そうなんですね… >色付け そういえば載ってないなぁ(ぉ)私は正規表現色付けでやってみます -- [[使ってる人]] &new{2007-01-23 (火) 23:35:40};
+ (defun set-regexp-keyword-list()
+   (setf *regexp-keyword-list* nil)
+   (setf now-mode (format nil "~A" buffer-mode))
+   ; モード毎に設定
+   ; 省略
+   ; バッファ名毎に設定
+   (setf now-mode-name (buffer-name (selected-buffer)))
+   (when (member-if
+          #'(lambda (name) (string= name now-mode-name))
+          '("*compare-directory*"))
+     (setf *regexp-keyword-list*
+           (compile-regexp-keyword-list
+            '(("^ ! " nil (:color 0 1 :line) nil)
+              ("^ + " nil (:color 0 2 :line) nil)
+              ("^ - " nil (:color 0 3 :line) nil)
+              ("^   " nil (:color 0 4 :line) nil)
+              ))))
+   *regexp-keyword-list*)
+ (defun add-regexp-keyword-list()
+   (unless (local-variable-p 'regexp-keyword-list)
+     (make-local-variable 'regexp-keyword-list))
+   (setf *keyword-list* (set-regexp-keyword-list))
+   (setq regexp-keyword-list
+         (append regexp-keyword-list *keyword-list*))
+   nil)
+ (add-hook 'compare-directory-hook 'add-regexp-keyword-list)
+- 上を追加する時はcompare-directory-modeに(run-hooks 'compare-directory-hook)追加してくださいね(一応 -- [[使ってる人]] &new{2007-01-24 (水) 00:25:39};
+- ハッシュテーブルはlispオブジェクトであり、ちゃんとダンプファイルに含まれますよーっ。含まれないのは、メニューとか。 --  &new{2007-01-24 (水) 03:03:38};
+- こちらではダンプファイル生成直後は動きますが、一度xyzzyを終了して再起動するとエラーが出ます。gethashで値が取得できていないようです。regexp-keyword-listは単語単位で色づけできない（「単語単位で検索する」のようなことができない）、キーワード色づけされている部分に色づけできないなどの問題がありますが、scan-buffer、set-text-attributeはかなり重い処理なので、この場合は速度の速いregexp-keyword-listの方がいいかもしれません。 -- [[書いた（？）人]] &new{2007-01-24 (水) 19:26:12};
+- >gethashで値が取得できていない。 たしかに(汗)ハッシュテーブルをやめてdefvarにしてみました。動作してる様子。佐野さんのlocalを意識して作っているので文字列はどこかに格納しておきたい… -- [[使ってる人]] &new{2007-01-25 (木) 00:13:22};
+#ref(compare-utility070125版.zip)

@@ -1,0 +1,43 @@
+* add-history [#b9252955]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-05-09 (火) 00:46:57
+-バージョン: 
+
+** メッセージ [#hed8ea7f]
+（詳細不明）を埋めました。
+
+ <chapter>
+ <title>add-history</title>
+ <type>Function</type>
+ <arguments>add-history ITEM VAR</arguments>
+ <package>editor</package>
+ <description>
+ VAR に ITEM を LRU順で追加します。 *minibuffer-maximum-history-count* 
+ を超えるときは、最も使用されていないヒストリを削除します。
+ 
+ また、 *minibuffer-enable-add-to-menu* が non-nil のときに、
+ (get VAR 'add-lru-menu-function) に関数が設定されていれば、
+ その関数を実行します。例えば、 *minibuffer-file-name-history* には、 
+ add-file-history-to-menu が設定されており、開いたファイルをメニューの
+ 「最近使ったファイル(F)」に登録しています。
+ 
+ 使用例：
+   (add-history file '*minibuffer-file-name-history*)
+   (add-history cmd '*minibuffer-execute-history*)
+ </description>
+ <seealso>*minibuffer-maximum-history-count*</seealso>
+ <seealso>*minibuffer-enable-add-to-menu*</seealso>
+ <section>変数と定数</section>
+ <file>minibuf.l</file>
+ </chapter>
+
+--------
+- どーもです。ITEMが重複する場合は先頭を残し、他の重複する要素を削除するということで、LRU順なんですね。 -- [[NANRI]] &new{2006-05-10 (水) 23:00:10};
+- その通りで〜す。 -- [[中野]] &new{2006-05-15 (月) 22:16:31};
+
+#comment

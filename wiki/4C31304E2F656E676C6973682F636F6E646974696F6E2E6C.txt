@@ -1,0 +1,64 @@
+[[L10N/english]]
+
+ condition.l:149:  (format s "`~S'のキャッチャを参照できません: ~S"
+-"Cannot resolve the catcher of ~s." --  &new{2005-09-16 19:51:02 (金)};
+
+#comment
+ condition.l:162:  (format s "`~S'のキャッチャは利用可能ではありません: ~S"
+- Unavailable catcher of ~S: ~S
+
+#comment
+ condition.l:183:      (error "~Aは型指定子です" name))
+- ~~A is a type specifier.
+
+#comment
+ condition.l:188:	(error "~Aの再定義はできません" name)))
+- Cannot redefine ~A.
+
+#comment
+ condition.l:190:      (error "~Aはコンディションではありません" parent-type))
+- Not a condition: ~A
+#comment
+ condition.l:205:	   (error "不正なdefine-conditionオプションです: ~A" x))))
+- Invalid define-condition option: ~A
+
+#comment
+ condition.l:223:			     (error "不正なスロット名です: ~S" name))
+- Invalid slot name: ~S
+
+#comment
+ condition.l:226:			   (error "不正なスロットです: ~S" x)))
+- Invalid slot: ~S
+
+#comment
+ condition.l:228:		      (error "スロット~Aが重複しています" name))
+- Duplicated slot: ~A
+
+#comment
+ condition.l:256:      (error "コンディションではありません: ~S" type))
+- Not a condition: ~S
+
+#comment
+ condition.l:259:	(error "コンストラクタがありません: ~S" type))
+- No constructor found: ~S
+
+#comment
+ condition.l:265:	     (format s "`~A'の値`~S'は~:[~S~;~:*~A~]ではありません"
+- 引数の順番も変わりました
+             (format s "The value `~S' of `~A' is not ~:[~S~;~:*~A~]."
+                     (check-type-error-datum c)
+                     (check-type-error-place c)
+                     (check-type-error-string c)
+                     (check-type-error-expected-type c))
+
+ (format nil "~D ~D ~D" 1 2 3)
+ =>"1 2 3"
+
+ (format nil "~*~D ~:2*~D~* ~D" 1 2 3)
+ =>"2 1 3"
+
+こういうことも出来ます。１個進めて2個戻して最後に1個進めるという感じでしょうか
+
+             (format s "~*The value `~S'~:2* of `~A'~* is not ~:[~S~;~:*~A~]."
+と。これでいいのかな。　　佐野
+#comment

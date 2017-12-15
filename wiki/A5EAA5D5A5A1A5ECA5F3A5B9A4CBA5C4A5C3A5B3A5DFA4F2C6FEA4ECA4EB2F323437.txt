@@ -1,0 +1,233 @@
+* 論理演算 [#aa3fec76]
+-ページ:     [[リファレンスにツッコミを入れる]]
+-投稿者:     [[シロ]]
+-優先順位:   低
+-状態:       完了
+-カテゴリー: ツッコミをいれる
+-投稿日:     2006-11-18 (土) 17:38:16
+-バージョン: 
+
+** メッセージ [#b25b7b4b]
+ <chapter>
+ <title>integer-length</title>
+ <type>Function</type>
+ <arguments>integer-length INTEGER</arguments>
+ <package>lisp</package>
+ <description>
+ 2進数で表した時の長さを返します。
+ 
+ 使用例:
+   (integer-length 7) =&gt; 3 ; #b00000111
+   (integer-length 8) =&gt; 4 ; #b00001000
+ </description>
+ <seealso></seealso>
+ <link></link>
+ <section>数値</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>lognot</title>
+ <type>Function</type>
+ <arguments>lognot INTEGER</arguments>
+ <package>lisp</package>
+ <description>
+ INTEGERの1の補数(2進数表現で0と1を反転させたもの)を返します。
+ 
+ 使用例:
+   ;;; INTEGER 00000011
+   ;;; 反転    11111100
+   ;;; 1の補数 00000011
+   ;;; 2の補数 00000100
+   (lognot #b0011)
+   =&gt; -4
+   (format nil "~8,'0b" -4)
+   =&gt; "0000-100"
+   (format nil "~4,'0b" (lognot -4))
+   =&gt; "0011"
+ </description>
+ <seealso>logand</seealso>
+ <seealso>logor</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>builtin.l</file>
+ </chapter>
+
+ <chapter>
+ <title>logxor</title>
+ <type>Function</type>
+ <arguments>logxor &rest ARGS</arguments>
+ <package>lisp</package>
+ <description>
+ ビット毎の排他的論理和を返します。
+ 
+ 使用例:
+   (format nil "~4,'0b" (logxor #b0011 #b0101))
+   =&gt; "0110"
+ </description>
+ <seealso>logeqv</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+
+ <chapter>
+ <title>logeqv</title>
+ <type>Function</type>
+ <arguments>logeqv &rest ARGS</arguments>
+ <package>lisp</package>
+ <description>
+ ビット毎の論理等価を返します。
+ 
+ 使用例:
+   (format nil "~4,'0b" (logeqv #b0011 #b0101))
+   =&gt; "-111"
+   (format nil "~4,'0b" (lognot (logxor #b0011 #b0101)))
+   =&gt; "-111"
+ </description>
+ <seealso>logxor</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+
+ <chapter>
+ <title>lognor</title>
+ <type>Function</type>
+ <arguments>lognor X Y</arguments>
+ <package>lisp</package>
+ <description>
+ ビット毎の否定的論理和(NOR)を返します。
+ 
+ 使用例:
+   ;;; X        0011
+   ;;; Y        0101
+   ;;; OR       0111
+   ;;; NOR      1000
+   ;;; 1の補数  0111
+   ;;; 2の補数  1000
+   (format nil "~4,'0b" (lognor #b0011 #b0101))
+   =&gt; "-1000"
+   (format nil "~4,'0b" (lognot (logior #b0011 #b0101)))
+   =&gt; "-1000"
+ </description>
+ <seealso>logior</seealso>
+ <seealso>lognand</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+
+ <chapter>
+ <title>lognand</title>
+ <type>Function</type>
+ <arguments>lognand X Y</arguments>
+ <package>lisp</package>
+ <description>
+ ビット毎の否定的論理積(NAND)を返します。
+ 
+ 使用例:
+   ;;; X        0011
+   ;;; Y        0101
+   ;;; AND      0001
+   ;;; NAND     1110
+   ;;; 1の補数  0001
+   ;;; 2の補数  0010
+   (format nil "~4,'0b" (lognand #b0011 #b0101))
+   =&gt; "0-10"
+   (format nil "~4,'0b" (lognot (logand #b0011 #b0101)))
+   =&gt; "0-10"
+ </description>
+ <seealso>logand</seealso>
+ <seealso>lognor</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+
+ <chapter>
+ <title>logandc1</title>
+ <arguments>logandc1 X Y</arguments>
+ <package>lisp</package>
+ <description>
+ Xの1の補数 と Y のビット毎の論理積を返します。
+ 
+ 使用例:
+   (format nil "~4,'0b" (logandc1 #b0011 #b0101))
+   =&gt; "0100"
+   (format nil "~4,'0b" (logand (lognot #b0011) #b0101))
+   =&gt; "0100"
+ </description>
+ <seealso>logand</seealso>
+ <seealso>logandc2</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+
+ <chapter>
+ <title>logandc2</title>
+ <arguments>logandc2 X Y</arguments>
+ <package>lisp</package>
+ <description>
+ X と Yの1の補数 のビット毎の論理積を返します。
+ 
+ 使用例:
+   (format nil "~4,'0b" (logandc2 #b0011 #b0101))
+   =&gt; "0010"
+   (format nil "~4,'0b" (logand #b0011 (lognot #b0101)))
+   =&gt; "0010"
+ </description>
+ <seealso>logand</seealso>
+ <seealso>logandc1</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+
+ <chapter>
+ <title>logorc1</title>
+ <type>Function</type>
+ <arguments>logorc1 X Y</arguments>
+ <package>lisp</package>
+ <description>
+ Xの1の補数 と Y のビット毎の論理和を返します。
+ 
+ 使用例:
+   (format nil "~4,'0B" (logorc1 #b0011 #b0101))
+   =&gt; "0-11"
+   (format nil "~4,'0b" (logior (lognot #b0011) #b0101))
+   =&gt; "0-11"
+ </description>
+ <seealso>logior</seealso>
+ <seealso>logorc2</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+
+ <chapter>
+ <title>logorc2</title>
+ <type>Function</type>
+ <arguments>logorc2 X Y</arguments>
+ <package>lisp</package>
+ <description>
+ X と Yの1の補数 のビット毎の論理和を返します。
+ 
+ 使用例:
+   (format nil "~4,'0B" (logorc2 #b0011 #b0101))
+   =&gt; "-101"
+   (format nil "~4,'0b" (logior #b0011 (lognot #b0101)))
+   =&gt; "-101"
+ </description>
+ <seealso>logior</seealso>
+ <seealso>logorc1</seealso>
+ <link></link>
+ <section>数値</section>
+ <file>number.l</file>
+ </chapter>
+
+----
+- どーもです。 -- [[NANRI]] &new{2006-11-18 (土) 20:49:00};
+
+#comment

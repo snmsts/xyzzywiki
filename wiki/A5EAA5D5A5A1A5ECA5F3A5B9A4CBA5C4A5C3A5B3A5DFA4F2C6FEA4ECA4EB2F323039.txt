@@ -1,0 +1,39 @@
+* find-file [#iee4c86f]
+
+-ページ: [[リファレンスにツッコミを入れる]]
+-投稿者: [[中野]]
+-優先順位: 低
+-状態: 完了
+-カテゴリー: ツッコミをいれる
+-投稿日: 2006-05-02 (火) 22:15:14
+-バージョン: 
+
+** メッセージ [#la414438]
+muleの説明だったのを書き直しました。
+ <chapter>
+ <title>find-file</title>
+ <type>Function</type>
+ <arguments>find-file FILENAME &amp;optional ENCODING NOMSG</arguments>
+ <package>editor</package>
+ <description>
+ 指定されたファイルを開き、カレントバッファをこのファイルにします。 [C-x C-f]
+ インタラクティブに呼び出すとファイル名をミニバッファで尋ねます。
+ プレフィックスアーギュメント付きで呼び出すと、ファイルの文字
+ コードを指定して開くことができます。
+ 
+   FILENAME : ファイル名、またはファイル名のリストです。
+   ENCODING : ファイルの文字コードを指定します。
+   NOMSG    : non-nil でステータスバーに状況などを出力しなくなります。
+ </description>
+ <seealso>find-other-file</seealso>
+ <seealso>find-file-other-window</seealso>
+ <seealso>ed::find-file-internal</seealso>
+ <seealso>*prefix-args*</seealso>
+ <section>ファイルシステム</section>
+ <file>files.l</file>
+ </chapter>
+
+--------
+- どーもです。C-u (universal-argument)に限らないようなのでそれだけ抜きました。 -- [[NANRI]] &new{2006-05-03 (水) 05:56:50};
+
+#comment

@@ -1,0 +1,47 @@
+; f77-fns.l
+(require "fortran")
+
+(pushnew '(fortran-maketags "*.f") *maketags-list* :key #'car)
+
+(defun fortran-maketags (file count)
+  (goto-char (point-min))
+  (while (scan-buffer "^ [ \t0-9]*\\(function\\|subroutine\\)[ \t]+" :regexp t :tail t :case-fold t)
+    (do-events)
+    (let ((opoint (point)))
+      (skip-chars-forward "A-Za-z0-9_")
+      (unless (= opoint (point))
+        (format t "~A~A~D" (buffer-substring opoint (point)) file opoint)
+        (incf count))))
+  count)
+
+(defun tags-find-fortran-point (class name functionp point)
+  (goto-char (- point *jump-tag-limit*))
+  (and (scan-buffer (concat "^ [ \t0-9]*\\(function\\||subroutine\\)[ \t]+"
+			    (regexp-quote name)
+			    "\\($\\|[ \t\r\n\f#]\\)")
+		    :regexp t
+		    :case-fold t
+		    :limit (+ point *jump-tag-limit*))
+       (point)))
+
+(defun fortran-build-summary-of-functions ()
+  (let ((result nil))
+    (save-excursion
+      (goto-char (point-min))
+      (while (scan-buffer "^ [ \t0-9]*\\(function\\|subroutine\\)[ \t]+\\([^ \t\n{(]+\\)"
+			  :regexp t :case-fold t :tail t)
+	(push (list (current-line-number) (match-string 2)) result)
+      )
+    )
+    (nreverse result)
+  ))
+
+(add-hook 'fortran-mode-hook 'fortran-add-list-function)
+(defun fortran-add-list-function ()
+  (make-local-variable 'tags-find-target)
+  (setq tags-find-target #'ed::c-tags-find-target)
+  (make-local-variable 'tags-find-point)
+  (setq tags-find-point #'tags-find-fortran-point)
+  (make-local-variable 'ed::build-summary-function)
+  (setq ed::build-summary-function 'fortran-build-summary-of-functions)
+)

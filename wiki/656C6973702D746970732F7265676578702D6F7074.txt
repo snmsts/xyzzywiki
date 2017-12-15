@@ -1,0 +1,22 @@
+-「GNU Emacs Lispリファレンスマニュアル」より
+ Function: regexp-opt strings &optional paren
+   
+ この関数は、文字列stringsのいずれかに一致する効率よい正規表現を返す。
+ これは、たとえばフォントロック（font-lock）モードなどで、可能な限り高速な一致や探索を行う必要がある場合に有用である。
+ 省略可能な引数parenがnil以外であると、返される正規表現はつねに少なくとも1つの括弧によるグループ構文で囲まれる。
+ つぎのregexp-optの簡略版定義は、実際の値に等価な（ただしそれほど効率よくない）正規表現を生成する。
+   
+ (defun regexp-opt (strings &optional paren)
+   (let ((open-paren (if paren "\\(" ""))
+         (close-paren (if paren "\\)" "")))
+     (concat open-paren
+             (mapconcat 'regexp-quote strings "\\|")
+             close-paren)))
+
+----
+- 上のはinfoからの全文引用だったんですね．とりあえず elisp.l がなくてもうごくようにしてみました．format文のゼロ終了指示，初めて使いましたがとても便利． --  &new{2005-11-12 (土) 08:44:34};
+ (defun regexp-opt (strings &optional paren)
+   (format nil (if paren "\\(~{~A~^\\|~}\\)" "~{~A~^\\|~}")
+           (mapcar #'regexp-quote strings)))
+
+#comment

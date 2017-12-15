@@ -1,0 +1,143 @@
+[[tips]]
+
+**概要 [#h742c34f]
+
+NetInstallerのプロキシ設定を、IEの接続設定(Windowsレジストリ)に合わせます。~
+
+それ用の公開スペシャル変数に適切な値を setq すればいいだけのことなのでしょうけれど、
+複数PC環境で xyzzy を使っていると、めんどうです。~
+どの環境でも同じ設定ファイルを持ち回れるといいんだが... と考えて、書きました。
+
+xyzzy を使い始めたばかりの初心者 yap と申します。~
+xyzzy Lisp の練習を兼ねて書いたものですので、いたらぬ点があったら、ぜひご指摘ください。
+
+**使い方 [#yed3ec8b]
+
+下のLispソースを NetInstaller の設定ファイルに貼り付けます。
+
+自分の場合、(si:system-root)/.netinst/config.l にしましたが、~/.netinst/config.l でもいいみたいです。 ~/.xyzzy に追加するやり方でもOKなはずです。
+
+ni::*ni-init-hook* を利用するやり方にしたのは、
+
+ M-x netinstaller
+
+する度に更新としたかったからです(xyzzyを再起動しなくていい)。
+
+**Lisp [#u8089b6c]
+
+ ;;; Windows registry から指定キーの値を得る下請け。
+ (defun value-in-registry (section key &optional root)
+   (let ((ret (make-hash-table :test #'equal)))
+     (mapcar #'(lambda (key)
+                 (setf (gethash key ret) (read-registry section key root)))
+             key)
+     ret))
+ 
+ ;;; プロキシの設定 - NetInstaller起動時に、Windows registry(IEの接続設定)から読み出して、設定。
+ (add-hook 'ni::*ni-init-hook*
+           #'(lambda ()
+               (let* ((reg (value-in-registry
+                            "Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings"
+                            '("ProxyEnable" "ProxyServer")
+                            :current-user))
+                      (enable (gethash "ProxyEnable" reg))
+                      (server (split-string (gethash "ProxyServer" reg) #\:)))
+                 (cond
+                  ((zerop enable)
+                   (setq ni::*http-proxy-host* nil ni::*http-proxy-port* nil))
+                  (t
+                   (setq ni::*http-proxy-host* (car server))
+                   (setq ni::*http-proxy-port* (ignore-errors
+                                                (parse-integer (cadr server)))))))))
+----
+ (defmacro with-registry ((section root) &rest args)
+   (let ((sym (gensym)))
+     `(let ((,sym (cons ,section ,root)))
+        (declare (special ,sym))
+        (flet ((get-reg (key) (read-registry (car ,sym) key (cdr ,sym))))
+ 	 ,@args))))
+ 
+ (defun ie-proxy-host-port-set (host port)
+   (with-registry
+    ("Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" :current-user)
+    (cond
+     ((zerop (get-reg "ProxyEnable"))
+      (set host nil)
+      (set port nil))
+     (t
+      (let ((server (split-string  (get-reg "ProxyServer") #\:)))
+        (set host (car server))
+        (set port (ignore-errors (parse-integer (cadr server))))
+        )))))
+ 
+ (add-hook 'ni::*ni-init-hook*
+ 	  #'(lambda ()
+ 	      (ie-proxy-host-port-set 'ni::*http-proxy-host* 'ni::*http-proxy-port*)))
+- 意味合いは同じだけどこんな感じにするかな？ -- [[佐野]] &new{2006-04-29 (土) 18:10:40};
+- ご指摘ありがとうございます。 確かに、もう一段あったほうが、他でも使い回しがききそうです。 -- [[yap]] &new{2006-04-29 (土) 21:44:57};
+- 結果引数 - 破壊的代入 - は嫌われないのでしょうか？
+できる限り避けた方がいいのかな？ と思っていました。「純粋な関数」観点から嫌う人がLispの世界では多いのかしら？という印象を受けましたので。 -- [[yap]] &new{2006-04-29 (土) 21:49:58};
+ (defun ie-proxy-host-port ()
+   (with-registry
+    ("Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" :current-user)
+    (cond
+     ((zerop (get-reg "ProxyEnable"))
+      (values nil nil))
+     (t
+      (let ((server (split-string  (get-reg "ProxyServer") #\:)))
+        (values (car server) (ignore-errors (parse-integer (cadr server))))
+        )))))
+ 
+ (add-hook 'ni::*ni-init-hook*
+ 	  #'(lambda ()
+ 	      (multiple-value-setq
+ 		  (ni::*http-proxy-host* ni::*http-proxy-port*)
+ 		(ie-proxy-host-port))))
+- んじゃこんな感じかな？ -- [[佐野]] &new{2006-04-30 (日) 00:31:29};
+- 個人的にはあんまし気にしてません。大体の場合代入して終わりたい関数だけれど後者の方が使い方めんどくない？とは思いますが、人それぞれの信仰にお任せします。 -- [[佐野]] &new{2006-04-30 (日) 00:47:20};
+- スペルミスを指摘されて泣きそうな私 -- [[佐野]] &new{2006-04-30 (日) 08:31:43};
+- いろいろ教えていただき、ありがとうございました。教条主義的な「純粋」は、あまり気にしないことにします。目的に応じて便利な方を選択すればいいわけですよね。 -- [[yap]] &new{2006-04-30 (日) 10:14:29};
+- defmacro って、むずかしー。 アタマじゃわかってもなかなかこれが。。。 これから勉強したいと思います。 -- [[yap]] &new{2006-04-30 (日) 10:17:15};
+-- 本題からズレると思いますが... わからないので、よろしければ教えてください。-- [[yap]] &new{2006-04-30 (日) 12:52:57};~
+最初の添削(?)例のマクロを読んで悩んでいます。以下でも得られる効果は同じではないかと思うんですが、書いていただいたものはどこが異なるのでしょうか？~
+(gensym), (declare special) ... といったあたりの目的や効果がピンとこず、悩んでます。 あれこれ検索して調べてはいるんですが... むずかしい...。~
+ (defmacro with-registry ((section root) &body body)
+   `(flet ((get-reg (key)
+             (read-registry ,section key ,root)))
+      ,@body))
+-- 多重評価の回避です。http://www.geocities.jp/shido_takafumi/lisp/macro2.html サンプルコードはこんな感じになると思いますがいかがでしょう。 -- [[NANRI]] &new{2006-04-30 (日) 14:25:13};
+ (defmacro with-msgbox-1 ((x) &body body)
+   `(flet ((msg ()
+             (msgbox "1: ~A" ,x)))
+      ,@body))
+ 
+ (let ((x '("a" "aa" "aaa" "abb")))
+   (setf (cddddr x) x)
+   (with-msgbox-1
+    ((pop x))
+    (msg)
+    (msg)
+    (msg)))
+ 
+ (defmacro with-msgbox-2 ((x) &rest args)
+   (let ((sym (gensym)))
+     `(let ((,sym ,x))
+        (declare (special ,sym))
+        (flet ((msg () (msgbox "2: ~A" ,sym)))
+          ,@args))))
+ 
+ (let ((x '("a" "aa" "aaa" "abb")))
+   (setf (cddddr x) x)
+   (with-msgbox-2
+    ((pop x))
+    (msg)
+    (msg)
+    (msg)))
+--- 「ガッテン」しました(カラダでの理解はもう少しかかりそうですが...)。 フォローありがとうございました。 -- [[yap]] &new{2006-04-30 (日) 14:52:11};
+- declare specialに意味があったかどうか自信が無い…どうせ外から参照（＝変更）できないのでなくても大丈夫か。 -- [[佐野]] &new{2006-04-30 (日) 14:51:35};
+-- NANRIさんのおかげで gensym の意味はわかったんですが、こっち(declare special)の方はまだ...。 あちこちたぐって調べて見るつもりです。 -- [[yap]] &new{2006-04-30 (日) 14:52:11};
+-- http://www.geocities.jp/m_hiroi/xyzzy_lisp/abclisp10.html ここいらで。fletで作った関数は他所の環境に行くと見れなかったりするので…というかこのサンプルでは明らかに使ってないです。sectionやrootを書き換える関数を作るときになると意味があるかな。（そんなことしない気がするけど） -- [[佐野]] &new{2006-04-30 (日) 16:19:56};
+--- レキシカルスコープを考えて... ということなんですね。理解できたと思います。ありがとうございました。 -- [[yap]] &new{2006-04-30 (日) 16:52:17};
+- プロキシ設定が一箇所に集約されてればいいのに... と思いました。
+ネットへアクセスするのはNetInstallerに限りませんが、個々の拡張がスペシャル変数を持っているので、複数環境あるとめんどうだなぁ...というのがxyzzy若葉マークな自分の印象です。 -- [[yap]] &new{2006-04-30 (日) 17:03:40};
+- 恐らく、皆がそう思っていますが、思うだけでとまっています。 --  &new{2006-04-30 (日) 20:15:11};

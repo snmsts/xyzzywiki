@@ -1,0 +1,221 @@
+[[tips]]
+
+最新版を[[こちら>http://homepage2.nifty.com/kimagurenixyzzy/regrep.html]]に移動しました。
+
+2005-05-21 18:03:00 (土)
+- namazu.l に対応。
+- regrep-open-file の追加（grep 関係バッファで M-x regrep-open-file すると、カーソル下のファイルを開きます。grep でファイル名だけ出力した場合に該当ファイルを開くために作りました。（余り役に立ちません(^^;））。
+
+2004-08-22 (日) 13:52:42
+- filer-grepのgrep結果にregrepをかけた場合に、F10などでgrep該当行にジャンプできなくなるバグを修正。
+- grep-dialogの設定のうち、大文字小文字を区別する(&C)・単語単位で検索する(&W)・正規表現(&E)・ｴｽｹｰﾌﾟｼｰｹﾝｽを理解しろ(&Y)の４つの設定を引き継いでregrepをかけるように変更。
+
+2004-05-19 (水) 22:15:50
+- grep-dialogでディレクトリを変更するとregrepができなくなるバグを修正。
+- ggrepに対応。（OHKUBO Hiroshiさんのggrepを参照させて頂きました。m(__)m）
+- *compilation*バッファにregrepをかける時は、*grep*・*ggrep*・*regrep*バッファを検索対象から外すようにしました。
+----
+
+- ここ（http://snmsts.orz.hm/~sana/wiki/?%C6%FC%B5%AD%A4%C3%A4%DD%A4%AF%2F2004-05-15）で頂いた情報と、grep.l、grepd.l を基にして作ってみました。
+
+　作者が書いた部分については自由に引用・改変・再配布などしても構わないものとします。
+
+　ご自身の責任にてお使い下さい。
+
+ ;;; -*- Mode: Lisp; Package: EDITOR -*-
+ 
+ ;; Last updated: <2005/05/21 17:50:22 +0900>
+ 
+ (provide "regrep")
+ 
+ (in-package "editor")
+ 
+ (export '(regrep
+ 	  regrep-open-file
+ 	  ))
+ 
+ (defvar *regrep-target-files* nil)
+ 
+ (defun regrep-file-list (buffer)
+   (message "ﾌｧｲﾙﾘｽﾄ作成中...")
+   (let ((regexp (unless (string= buffer "*NAMAZU SEARCH*")
+ 		  (if (or (string= buffer "*egrep*")
+ 			  (string= buffer "*eregrep*"))
+ 		      (compile-regexp "^.\\(.+?\\):\\([1-9][0-9]*\\):" t)
+ 		    (compile-regexp "^\\(.+?\\):\\([1-9][0-9]*\\):" t))))
+ 	default-directory target-list target (pre-target "")
+ 	target-buffer)
+     (flet ((get-target ()
+ 	     (if (scan-buffer regexp)
+ 		 (match-string 1)
+ 	       (buffer-substring (point) (progn (goto-eol) (point))))))
+       (save-excursion
+ 	(set-buffer buffer)
+ 	(if (string= buffer "*NAMAZU SEARCH*")
+ 	    (progn
+ 	      (setq *regrep-target-files* t)
+ 	      (dolist (x (list-text-attributes))
+ 		(when (eq (caddr x) 'user::namazu-file)
+ 		  (let* ((beg (first x))
+ 			 (end (second x))
+ 			 (file (buffer-substring beg end))
+ 			 (filename (string-trim "[/ \t]" (substitute-string file "|/" ":/"))))
+ 		    (push filename target-list)))))
+ 	  (progn
+ 	    (setq default-directory (default-directory))
+ 	    (goto-char (point-min))
+ 	    (while (and (setq target (get-target)) (string/= "" target))
+ 	      (when (string-not-equal target pre-target)
+ 		(setq pre-target target)
+ 		(if (string-match "^<\\(.+\\)>$" target)
+ 		    (if (setq target-buffer (find-buffer (match-string 1)))
+ 			(push target-buffer target-list))
+ 		  (progn
+ 		    (push (merge-pathnames target default-directory) target-list)
+ 		    (setq *regrep-target-files* t))))
+ 	      (goto-eol)
+ 	      (forward-char))))
+ 	(nreverse target-list)))))
+ 
+ (defun regrep (pattern)
+   (interactive "sregrep: " :default0 (or (selection-start-end (start end)
+ 					   (buffer-substring start end))
+ 					 (car *minibuffer-search-string-history*) "")
+     :history0 'search)
+   (setq *regrep-target-files* nil)
+   (let ((bufname (buffer-name (selected-buffer))))
+     (if (or (string= "*grep*" bufname)
+ 	    (string= "*compilation*" bufname)
+ 	    (string= "*ggrep*" bufname)
+ 	    (string= "*regrep*" bufname)
+ 	    (string= "*recompilation*" bufname)
+ 	    (string= "*egrep*" bufname)
+ 	    (string= "*eregrep*" bufname)
+ 	    (string= "*namazu-grep*" bufname)
+ 	    (string= "*NAMAZU SEARCH*" bufname))
+ 	(if (> (length pattern) 0)
+ 	    (regrep1 pattern bufname)
+ 	  (plain-error "文字列が入力されていません。"))
+       (plain-error "grep 関係バッファ又は *NAMAZU SEARCH* バッファを選択してください。"))))
+ 
+ (defun regrep1 (pattern bufname1)
+   (long-operation
+     (let* ((tlist (regrep-file-list bufname1))
+ 	   (common-path (when *regrep-target-files* (glob-common-path tlist)))
+ 	   (sbuffer (get-buffer-create (if *regrep-target-files* "*regrep*" "*recompilation*"))))
+       (unless tlist
+ 	(plain-error "ないよん")
+ 	(return-from regrep1))
+       (when *grep-understand-escape-sequences*
+ 	(setq pattern (decode-escape-sequence pattern *grep-regexp-search*)))
+       (when *grep-regexp-search*
+ 	(setq pattern (compile-regexp pattern *grep-case-fold-search*)))
+       (with-output-to-buffer (sbuffer)
+ 	(let ((scanner (grep-scanner pattern *grep-case-fold-search* *grep-word-search*)))
+ 	  (save-excursion
+ 	    (set-buffer sbuffer)
+ 	    (erase-buffer sbuffer)
+ 	    (set-buffer-fold-width nil)
+ 	    (setq buffer-read-only nil)
+ 	    (setq need-not-save t)
+ 	    (setq kept-undo-information nil)
+ 	    (setq auto-save nil)
+ 	    (when *regrep-target-files* (set-default-directory common-path))
+ 	    (make-local-variable '*find-error-scanner*)
+ 	    (setq *find-error-scanner* scanner)
+ 	    (if *regrep-target-files*
+ 		(let ((temp (create-new-buffer "*regrep temp*")))
+ 		  (set-buffer-fold-width nil temp)
+ 		  (dolist (file tlist)
+ 		    (let ((file-buffer (get-file-buffer file)))
+ 		      (if file-buffer
+ 			  (set-buffer file-buffer)
+ 			(progn
+ 			  (set-buffer temp)
+ 			  (erase-buffer temp)
+ 			  (ignore-errors (insert-file-contents file))))
+ 		      (save-excursion
+ 			(goto-char (point-min))
+ 			(message "scanning (~A)" (subseq file (length common-path)))
+ 			(grep-scan-file (subseq file (length common-path)) scanner))))
+ 		  (delete-buffer temp))
+ 	      (dolist (buffer tlist)
+ 		(let ((bufname (buffer-name buffer)))
+ 		  (unless (or (eq buffer sbuffer)
+ 			      (string= bufname "*grep*")
+ 			      (string= bufname "*compilation*")
+ 			      (string= bufname "*ggrep*")
+ 			      (string= bufname "*regrep*")
+ 			      (string= bufname "*recompilation*")
+ 			      (string= bufname "*egrep*")
+ 			      (string= bufname "*eregrep*")
+ 			      (string= bufname "*namazu-grep*")
+ 			      (string= bufname "*NAMAZU SEARCH*"))
+ 		    (message "Scanning (~A)" bufname)
+ 		    (set-buffer buffer)
+ 		    (save-excursion
+ 		      (goto-char (point-min))
+ 		      (grep-scan-file (concatenate 'string "<" bufname ">") scanner))))))
+ 	    )))
+       (set-buffer sbuffer)
+       (goto-char (point-min))
+       (set-buffer-modified-p nil))
+     (if *regrep-target-files*
+ 	(progn
+ 	  (run-hooks '*grepd-hook*)
+ 	  (message "done"))
+       (progn
+ 	(run-hooks '*grep-hook*)
+ 	(message "completed.")))))
+ 
+ (defun regrep-open-file ()
+   (interactive)
+   (let ((bufname (buffer-name (selected-buffer))))
+     (if (or (string= "*grep*" bufname)
+ 	    (string= "*compilation*" bufname)
+ 	    (string= "*ggrep*" bufname)
+ 	    (string= "*regrep*" bufname)
+ 	    (string= "*recompilation*" bufname)
+ 	    (string= "*egrep*" bufname)
+ 	    (string= "*eregrep*" bufname)
+ 	    (string= "*namazu-grep*" bufname))
+ 	(let ((regexp (if (or (string= bufname "*egrep*")
+ 			      (string= bufname "*eregrep*"))
+ 			  (compile-regexp "^.\\(.+?\\):\\([1-9][0-9]*\\):" t)
+ 			(compile-regexp "^\\(.+?\\):\\([1-9][0-9]*\\):" t)))
+ 	      target file buffer)
+ 	  (save-excursion
+ 	    (goto-bol)
+ 	    (setq target (if (scan-buffer regexp)
+ 			     (match-string 1)
+ 			   (buffer-substring (point) (progn (goto-eol) (point)))))
+ 	    (if (string-match "^<\\(.+\\)>$" target)
+ 		(setq buffer (find-buffer (match-string 1)))
+ 	      (progn
+ 		(setq file (merge-pathnames target (default-directory)))
+ 		(find-file file)
+ 		(setq buffer (get-file-buffer file)))))
+ 	  (pop-to-buffer buffer t))
+       (plain-error "grep 関係バッファを選択してください。"))))
+
+*インストール方法 [#fba91b29]
++ 上記のコードをコピーして、~/site-lispに regrep.l という名前で保存する。
++ 必要に応じてバイトコンパイルする。
++ .xyzzy または siteinit.l に以下の記述を追加する。
+ (require "regrep")
++ siteinit.l に記述した場合は xyzzy を再ダンプする。
+
+*使い方 [#y1013b74]
+- Grep 関係バッファ又は *NAMAZU SEARCH* バッファを選択して、M-x regrep で新たな検索語を入力すると、Grep結果又は *NAMAZU SEARCH* バッファに表示されているファイルを対象に再度Grepをかけて、*regrep* 又は *recompilation* バッファを出力します。
+- *regrep* 又は *recompilation* バッファに対して再度 regrep がかけられます。
+- 後は通常のGrepと同じです。
+*ツッコミ [#rda153ff]
+-grep-scan-fileとgrep-scannerの定義はいらない気がします。 -- [[佐野]] &new{2004-05-16 (日) 21:12:00};
+-ほんとですね。grep や grep-dialog が export されているから、その中に含まれるそれらの関数の定義は不要ということですかね。もうちょっとリファレンスを読んだほうがいいみたいです。 -- [[xyzzy Part 10 931]] &new{2004-05-16 (日) 23:12:33};
+-嘘を書いているなと思いつつ放置したままだったのですが、grep-scan-file・grep-scannerやregrep1などの関数は同じPackage「EDITOR」の中にあり、相互に参照可能なためgrep-scan-file・grep-scannerの定義は不要ということではないかと思います。あまり自信はないので不安な方はここ（http://hie.s64.xrea.com/xyzzy/reference/html/idx-packages.html）やここ（http://www.geocities.jp/m_hiroi/xyzzy_lisp/abclisp17.html#chap34）で調べてみてください。 -- [[xyzzy Part 10 931]] &new{2004-08-22 (日) 14:05:23};
+-今だと OHKUBO さんの ggrep.l 中 ggrep-narrow や ggrep-buffer で絞込み検索ができますね。 --  &new{2004-08-22 (日) 21:21:32};
+-ggrep がアップデートされているのは今日知りまして、早速インストールしました。もちろん以前から ggrep は使用させて頂いているのですが、個人的に grep-hook、grepd-hook に引っ掛けて検索語のハイライトなどということをやったり（OHKUBO さんの pickup-pattern を利用させて頂いています）、nazoking さんの grep-mode.l を使用させて頂いてダブルクリックでgrep結果にジャンプなどということをやっているので、regrep も結構使っています。 -- [[xyzzy Part 10 931]] &new{2004-08-22 (日) 22:58:55};
+- grep 上下キー --  &new{2008-03-15 (土) 09:30:32};
+- ごめんなさい誤爆 --  &new{2008-03-15 (土) 09:31:26};
+
+#comment

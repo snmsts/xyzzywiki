@@ -1,0 +1,37 @@
+[[tips]]
+
+- [[思いつくままxyzzy>http://www.jaist.ac.jp/~m-nakano/cgi-bin/blog/]]の [[keep-selection.l>http://www.jaist.ac.jp/~m-nakano/lisp/keep-selection.l]] を使用させて頂いて、マウスホイールで画面をスクロールさせてもセレクションが解除されないようにしてみました（[[keep-selection.l>http://www.jaist.ac.jp/~m-nakano/lisp/keep-selection.l]] が必要です）。
+-- 今はこのページに添付されています． 
+#ref(keep-selection.l)
+-  また、スクロールバーで画面をスクロールさせた場合にも同じことが出来ないかと思ったのですが、grepをかけてみてもそれらしい関数・変数が見つからなかったため、代わりに PageUp PageDown をしてもセレクションが解除されないようにしてみました。
+
+----
+
+ ;; .xyzzy やsiteinit.l に以下のように記述してください。
+ 
+ (require "keep-selection")
+ 
+ (in-package "editor") 
+ 
+ (defun mouse-wheel-scroll (window n lines)
+   (or lines
+       (setq lines (window-lines window)))
+   (with-selected-window
+     (set-window window)
+     (move-kept-selection #'scroll-window (* n lines))))
+ 
+ (setq mouse-wheel-handler #'mouse-wheel-scroll)
+ 
+ (defun previous-page-kept-selection ()
+   (interactive)
+   (move-kept-selection #'previous-page))
+ 
+ (in-package "user")
+ 
+ (global-set-key #\PageUp 'previous-page-kept-selection)
+ (global-set-key #\PageDown 'next-page-kept-selection)
+-うぉっ！便利！早速使わせて頂いておりますっ。 -- [[soso]] &new{2005-05-30 16:24:02 (月)};
+- す、すばらしい。 -- [[hironemu]] &new{2011-01-22 (土) 23:34:41};
+- ありがとうございます。 -- [[nome]] &new{2012-05-17 (木) 01:42:31};
+
+#comment

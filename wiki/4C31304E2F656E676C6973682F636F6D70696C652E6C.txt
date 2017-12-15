@@ -1,0 +1,118 @@
+[[L10N/english]]
+
+ compile.l:178:		  (and arg (yes-no-or-cancel-p "~Aをコンパイルしますか?" src)))
+-Compile ~A? --  &new{2005-03-08 05:13:26 (火)};
+
+#comment
+ compile.l:191:      :datum "ファイルが見つかりません"
+-The file is not found. --  &new{2005-03-08 05:13:41 (火)};
+
+#comment
+ compile.l:255:	   (error "空でない環境で定義された関数はコンパイルできません"))
+-Function defined at nonnull environment cannot be compiled. --  &new{2005-03-08 05:22:20 (火)};
+
+#comment
+ compile.l:278:	 (error "~Sはコンパイルできません" definition)))
+-~S cannot be compiled --  &new{2005-03-08 05:22:39 (火)};
+
+#comment
+ compile.l:605:		(compile-error "EVAL-WHENフォームの形式が不正です: ~S" f))
+-The format of EVAL-WHEN form is invalid: ~S --  &new{2005-03-08 05:23:41 (火)};
+
+#comment
+ compile.l:661:	   (compile-error "不正な関数コールです: ~S" form)))))
+-Invalid function call: ~S --  &new{2005-03-08 05:24:03 (火)};
+
+#comment
+ compile.l:714:      (compile-error "LETフォームの形式が不正です: ~S" form))
+-The format of LET form is invalid: ~S --  &new{2005-03-08 05:24:35 (火)};
+
+#comment
+ compile.l:747:;;;      (compile-error "LET*フォームの形式が不正です: ~S" form))
+-The format of LET* form is invalid: ~S --  &new{2005-03-08 05:24:47 (火)};
+
+#comment
+ compile.l:753:;;;	  (tag (make-tag (gensym "LET"))))
+-LET --  &new{2005-03-08 05:24:56 (火)};
+
+#comment
+ compile.l:781:      (compile-error "LET*フォームの形式が不正です: ~S" form))
+-The format of LET form is invalid: ~S --  &new{2005-03-08 05:25:15 (火)};
+
+#comment
+ compile.l:817:      (compile-error "MULTIPLE-VALUE-BINDフォームの形式が不正です: ~S" form))
+-The format of MULTIPLE-VALUE-BIND form is invalid: ~S --  &new{2005-03-08 05:25:41 (火)};
+
+#comment
+ compile.l:853:      (compile-error "MULTIPLE-VALUE-SETQフォームの形式が不正です: ~S" form))
+-The format of MULTIPLE-VALUE-SETQ form is invalid: ~S --  &new{2005-03-08 05:26:00 (火)};
+
+#comment
+ compile.l:862:      (compile-error "MULTIPLE-VALUE-CALLフォームの形式が不正です: ~S" form))
+-The format of MULTIPLE-VALUE-CALL form is invalid: ~S --  &new{2005-03-08 05:26:18 (火)};
+
+#comment
+ compile.l:874:      (compile-error "MULTIPLE-VALUE-PROG1フォームの形式が不正です: ~S" form))
+-The format of MULTIPLE-VALUE-PROG1 form is invalid: ~S --  &new{2005-03-08 05:26:32 (火)};
+
+#comment
+ compile.l:905:      (compile-error "TAGBODYフォームの形式が不正です: ~S" form))
+-The format of TAGBODY form is invalid: ~S --  &new{2005-03-08 05:26:41 (火)};
+
+#comment
+ compile.l:917:      (compile-error "BLOCKフォームの形式が不正です: ~S" form))
+-The format of BLOCK form is invalid: ~S --  &new{2005-03-08 05:26:50 (火)};
+
+#comment
+ compile.l:925:      (compile-error "RETURN-FROMフォームの形式が不正です: ~S" form))
+-The format of RETURN-FROM form is invalid: ~S --  &new{2005-03-08 05:27:01 (火)};
+
+#comment
+ compile.l:938:	   (compile-error "RETURN-FROMフォームの形式が不正です: ~S" form)))
+-The format of RETURN-FROM form is invalid: ~S --  &new{2005-03-08 05:27:25 (火)};
+
+#comment
+ compile.l:965:	   (compile-error "IFフォームの形式が不正です: ~S" form)))))
+-The format of IF form is invalid: ~S --  &new{2005-03-08 05:27:35 (火)};
+
+#comment
+ compile.l:969:    (compile-error "QUOTEフォームの形式が不正です: ~S" form))
+-The format of QUOTE form is invalid: ~S --  &new{2005-03-08 05:27:45 (火)};
+
+#comment
+ compile.l:974:      (compile-error "UNWIND-PROTECTフォームの形式が不正です: ~S" form))
+-The format of UNWIND-PROTECT form is invalid: ~S --  &new{2005-03-08 05:27:58 (火)};
+
+#comment
+ compile.l:987:      (compile-error "CATCHフォームの形式が不正です: ~S" form))
+-The format of CATCH form is invalid: ~S --  &new{2005-03-08 05:28:09 (火)};
+
+#comment
+ compile.l:997:      (compile-error "THROWフォームの形式が不正です: ~S" form))
+-The format of THROW form is invalid: ~S --  &new{2005-03-08 05:28:19 (火)};
+
+#comment
+ compile.l:1005:      (compile-error "EVAL-WHENフォームの形式が不正です: ~S" form))
+-The format of EVAL-WHEN form is invalid: ~S --  &new{2005-03-08 05:28:28 (火)};
+
+#comment
+ compile.l:1014:    (compile-error "FUNCTIONフォームの形式が不正です: ~S" form))
+-The format of FUNCTION form is invalid: ~S --  &new{2005-03-08 05:28:36 (火)};
+
+#comment
+ compile.l:1035:    (compile-error "~Aフォームの形式が不正です: ~S" fnam form))
+-The format of ~A form is invalid: ~S --  &new{2005-03-08 05:29:18 (火)};
+
+#comment
+ compile.l:1041:	(compile-error "~Aフォームの形式が不正です: ~S" fnam def))
+-The format of ~A form is invalid: ~S --  &new{2005-03-08 05:29:33 (火)};
+
+#comment
+ compile.l:1045:	  (compile-error "関数名が不正です: ~S" name))
+-Invalid function name: ~S --  &new{2005-03-08 05:30:32 (火)};
+
+#comment
+ compile.l:1048:	  (compile-error "不正な関数です: ~S" body))
+-Invalid function: ~S --  &new{2005-03-08 05:30:45 (火)};
+
+#comment

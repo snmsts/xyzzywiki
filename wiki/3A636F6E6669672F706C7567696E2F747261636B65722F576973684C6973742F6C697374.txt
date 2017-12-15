@@ -1,0 +1,2 @@
+|~[state]|~[name]|~[_past]|~[summary]|h
+|[state]|[name]|RIGHT:[_past]|[[[summary]>[_page]]]|
